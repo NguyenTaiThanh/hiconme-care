@@ -1,21 +1,32 @@
-cat << 'EOF' > index.html
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HICON M&E - Giải Pháp Cơ Điện & Hệ Thống Báo Cáo Bảo Trì Số Hóa</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        brand: { navy: '#0f2b48', blue: '#13548a', accent: '#00a8cc', gold: '#f39c12', light: '#f4f7f9', dark: '#0a192f' }
+                        brand: {
+                            navy: '#0f2b48',
+                            blue: '#13548a',
+                            accent: '#00a8cc',
+                            gold: '#f39c12',
+                            light: '#f4f7f9',
+                            dark: '#0a192f'
+                        }
                     },
-                    fontFamily: { sans: ['Roboto', 'sans-serif'] }
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                    }
                 }
             }
         }
@@ -28,13 +39,22 @@ cat << 'EOF' > index.html
                         url('https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=1600&auto=format&fit=crop');
             background-size: cover; background-position: center;
         }
-        .page-section { opacity: 0; transform: translateY(24px) scale(0.99); transition: opacity 0.45s cubic-bezier(0.25, 1, 0.5, 1), transform 0.45s cubic-bezier(0.25, 1, 0.5, 1); will-change: opacity, transform; }
+
+        .page-section {
+            opacity: 0;
+            transform: translateY(24px) scale(0.99);
+            transition: opacity 0.45s cubic-bezier(0.25, 1, 0.5, 1), transform 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+            will-change: opacity, transform;
+        }
         .page-section.active-section { opacity: 1; transform: translateY(0) scale(1); }
+
         .btn-interactive { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
         .btn-interactive:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -5px rgba(0, 168, 204, 0.4); }
         .btn-interactive:active { transform: translateY(1px) scale(0.97); }
+
         .card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .card-hover:hover { transform: translateY(-6px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+
         .scan-glow { position: relative; overflow: hidden; }
         .scan-glow::after {
             content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
@@ -42,6 +62,7 @@ cat << 'EOF' > index.html
             transform: rotate(30deg); animation: shimmer 3.5s infinite;
         }
         @keyframes shimmer { 0% { transform: translate(-100%, -100%) rotate(30deg); } 100% { transform: translate(100%, 100%) rotate(30deg); } }
+
         .nav-link { position: relative; }
         .nav-link::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -2px; left: 0; background-color: #00a8cc; transition: width 0.3s ease; }
         .nav-link:hover::after, .nav-link.active::after { width: 100%; }
@@ -50,6 +71,7 @@ cat << 'EOF' > index.html
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans flex flex-col min-h-screen">
 
+    <!-- TOP BAR -->
     <div class="bg-brand-dark text-gray-300 text-xs py-2 px-4 border-b border-gray-800 hidden md:block">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-6">
@@ -66,16 +88,22 @@ cat << 'EOF' > index.html
         </div>
     </div>
 
+    <!-- MAIN HEADER -->
     <header class="glass-header sticky top-0 z-50 text-white shadow-xl">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
+                <!-- LOGO -->
                 <div class="flex items-center space-x-3 cursor-pointer group" onclick="navigateTo('home')">
-                    <div class="w-12 h-12 bg-gradient-to-tr from-brand-blue to-brand-accent rounded-xl flex items-center justify-center font-bold text-2xl text-white shadow-lg border border-cyan-400/40">H</div>
+                    <div class="w-12 h-12 bg-gradient-to-tr from-brand-blue to-brand-accent rounded-xl flex items-center justify-center font-bold text-2xl text-white shadow-lg border border-cyan-400/40">
+                        H
+                    </div>
                     <div>
                         <div class="text-xl font-black tracking-wider text-white">HICON <span class="text-brand-accent">M&E</span></div>
                         <div class="text-[10px] uppercase text-gray-300 tracking-widest font-light">Cơ Điện & Bảo Trì Công Nghiệp</div>
                     </div>
                 </div>
+
+                <!-- DESKTOP NAV -->
                 <nav class="hidden md:flex space-x-8 font-medium text-sm tracking-wide">
                     <button onclick="navigateTo('home')" id="nav-home" class="nav-link active py-2 hover:text-brand-accent transition">TRANG CHỦ</button>
                     <button onclick="navigateTo('about')" id="nav-about" class="nav-link py-2 hover:text-brand-accent transition">GIỚI THIỆU</button>
@@ -89,6 +117,8 @@ cat << 'EOF' > index.html
                     </button>
                     <button onclick="navigateTo('contact')" id="nav-contact" class="nav-link py-2 hover:text-brand-accent transition">LIÊN HỆ</button>
                 </nav>
+
+                <!-- MOBILE MENU BUTTON -->
                 <div class="md:hidden flex items-center space-x-2">
                     <button onclick="openAdminModal()" class="bg-amber-500 text-brand-dark px-2.5 py-1.5 rounded-lg font-bold text-xs flex items-center">
                         <i class="fas fa-edit mr-1"></i> Cập nhật
@@ -102,6 +132,8 @@ cat << 'EOF' > index.html
                 </div>
             </div>
         </div>
+
+        <!-- MOBILE NAV -->
         <div id="mobile-menu" class="hidden md:hidden bg-brand-dark/95 border-t border-gray-800 px-4 pt-2 pb-4 space-y-2 text-sm font-medium">
             <button onclick="navigateTo('home'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-gray-300">TRANG CHỦ</button>
             <button onclick="navigateTo('about'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-gray-300">GIỚI THIỆU</button>
@@ -113,7 +145,10 @@ cat << 'EOF' > index.html
         </div>
     </header>
 
+    <!-- MAIN CONTENT -->
     <main class="flex-grow">
+        
+        <!-- SECTION 1: TRANG CHỦ -->
         <div id="section-home" class="page-section hidden">
             <div class="hero-gradient text-white py-24 px-4 text-center relative">
                 <div class="max-w-4xl mx-auto">
@@ -165,6 +200,7 @@ cat << 'EOF' > index.html
             </div>
         </div>
 
+        <!-- SECTION 2: GIỚI THIỆU -->
         <div id="section-about" class="page-section hidden py-12 bg-white">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="text-center mb-10">
@@ -189,11 +225,12 @@ cat << 'EOF' > index.html
             </div>
         </div>
 
+        <!-- SECTION 3: DỊCH VỤ -->
         <div id="section-services" class="page-section hidden py-12 bg-gray-50">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="text-center mb-12">
                     <span class="text-brand-blue font-bold text-sm uppercase">Năng Lực HICON M&E</span>
-                    <h2 class="text-3xl font-extrabold text-brand-navy mt-1">DỊCH VỤ CƠ ĐIỆN & BẢO TRÀ CHUYÊN SÂU</h2>
+                    <h2 class="text-3xl font-extrabold text-brand-navy mt-1">DỊCH VỤ CƠ ĐIỆN & BẢO TRÌ CHUYÊN SÂU</h2>
                     <div class="w-16 h-1 bg-brand-accent mx-auto mt-2 rounded-full"></div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -216,6 +253,7 @@ cat << 'EOF' > index.html
             </div>
         </div>
 
+        <!-- SECTION 4: DỰ ÁN -->
         <div id="section-projects" class="page-section hidden py-12 bg-white">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="text-center mb-12">
@@ -240,8 +278,11 @@ cat << 'EOF' > index.html
             </div>
         </div>
 
+        <!-- SECTION 5: CỔNG BÁO CÁO QR CODE -->
         <div id="section-maintenance-portal" class="page-section hidden py-10 bg-slate-100 min-h-[80vh]">
             <div class="max-w-7xl mx-auto px-4">
+                
+                <!-- PORTAL BANNER -->
                 <div class="bg-gradient-to-r from-brand-navy via-brand-blue to-slate-800 text-white p-6 sm:p-8 rounded-3xl shadow-2xl mb-8 border border-cyan-500/30">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                         <div>
@@ -253,6 +294,7 @@ cat << 'EOF' > index.html
                                 Nhập Mã QR Thiết Bị được dán tại nhà máy để xem ngay nhật ký kiểm tra real-time, thông số đo đạc & hình ảnh hiện trường.
                             </p>
                         </div>
+
                         <div class="w-full md:w-auto bg-white/10 p-2 rounded-2xl backdrop-blur-md border border-white/20">
                             <div class="flex gap-2">
                                 <input type="text" id="device-code-input" placeholder="Nhập Mã QR (VD: TS-2026-HVAC)" class="px-4 py-2.5 rounded-xl text-sm text-gray-800 w-full md:w-64 focus:outline-none">
@@ -262,15 +304,20 @@ cat << 'EOF' > index.html
                             </div>
                         </div>
                     </div>
+
+                    <!-- LIST DEVICES DYNAMICALLY -->
                     <div class="mt-6 pt-4 border-t border-white/10 flex flex-wrap items-center gap-2 text-xs">
                         <span class="text-gray-300 font-medium">Danh Sách Mã QR Hiện Có:</span>
-                        <div id="quick-device-buttons" class="flex flex-wrap gap-2"></div>
+                        <div id="quick-device-buttons" class="flex flex-wrap gap-2">
+                            <!-- Injected by JS -->
+                        </div>
                         <button onclick="openAdminModal()" class="bg-amber-500 hover:bg-amber-400 text-brand-dark font-bold px-3 py-1 rounded-lg transition ml-auto flex items-center">
                             <i class="fas fa-edit mr-1"></i> Cập nhật thông tin/trạng thái thiết bị
                         </button>
                     </div>
                 </div>
 
+                <!-- REPORT RESULTS DISPLAY -->
                 <div id="report-container" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div class="lg:col-span-1 space-y-6">
                         <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-200 card-hover">
@@ -306,6 +353,8 @@ cat << 'EOF' > index.html
 
                     <div class="lg:col-span-2">
                         <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-6 space-y-6">
+                            
+                            <!-- HẠNG MỤC BẢO TRÌ THỰC TẾ -->
                             <div>
                                 <h4 class="text-sm font-bold text-brand-navy uppercase mb-3 flex items-center justify-between">
                                     <span><i class="fas fa-tasks text-brand-accent mr-2"></i> Hạng Mục Bảo Trì & Nội Dung Thực Hiện</span>
@@ -326,6 +375,7 @@ cat << 'EOF' > index.html
                                 </div>
                             </div>
 
+                            <!-- THÔNG SỐ KỸ THUẬT -->
                             <div>
                                 <h4 class="text-sm font-bold text-brand-navy uppercase mb-3"><i class="fas fa-list-check text-brand-accent mr-2"></i> Thông Số Đo Đạc Thực Tế</h4>
                                 <div class="overflow-x-auto">
@@ -355,9 +405,11 @@ cat << 'EOF' > index.html
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
 
+        <!-- SECTION 6: LIÊN HỆ -->
         <div id="section-contact" class="page-section hidden py-12 bg-white">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="text-center mb-12">
@@ -375,22 +427,29 @@ cat << 'EOF' > index.html
                 </div>
             </div>
         </div>
+
     </main>
 
+    <!-- ==================== MODAL FORM ADMIN / CẬP NHẬT THIẾT BỊ ==================== -->
     <div id="admin-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden border border-gray-200 my-8">
+            
+            <!-- STEP 1: AUTHENTICATION (BẢO MẬT AN TOÀN, KHÔNG LỘ PASS) -->
             <div id="admin-step-auth" class="p-8 text-center">
                 <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
                     <i class="fas fa-user-lock"></i>
                 </div>
-                <h3 class="text-xl font-bold text-brand-navy mb-2">ĐĂNG NHẬP</h3>
+                <h3 class="text-xl font-bold text-brand-navy mb-2">ĐĂNG NHẬP QUẢN TRỊ</h3>
                 <p class="text-xs text-gray-500 mb-6">Nhập mật khẩu nội bộ HICON M&E để cập nhật thông tin/trạng thái thiết bị.</p>
+                
                 <div class="max-w-xs mx-auto space-y-4">
-                    <input type="password" id="admin-password-input" placeholder="Mật khẩu (Mặc định: hicon2026)" class="w-full text-center text-sm p-3 border-2 border-gray-300 rounded-xl focus:border-amber-500 focus:outline-none">
+                    <input type="password" id="admin-password-input" placeholder="Nhập mật khẩu quản trị..." class="w-full text-center text-sm p-3 border-2 border-gray-300 rounded-xl focus:border-amber-500 focus:outline-none">
+                    
                     <div class="flex gap-2">
                         <button onclick="closeAdminModal()" class="w-1/2 bg-gray-200 text-gray-700 py-2.5 rounded-xl text-xs font-bold">Hủy</button>
                         <button onclick="verifyPassword()" class="w-1/2 bg-amber-500 hover:bg-amber-600 text-brand-dark py-2.5 rounded-xl text-xs font-bold shadow-md">Đăng Nhập</button>
                     </div>
+
                     <div class="pt-2 border-t border-gray-100">
                         <button onclick="showChangePassView()" class="text-xs text-brand-blue font-bold hover:underline flex items-center justify-center mx-auto">
                             <i class="fas fa-key mr-1"></i> Đổi mật khẩu đăng nhập
@@ -399,25 +458,28 @@ cat << 'EOF' > index.html
                 </div>
             </div>
 
+            <!-- STEP 1.5: CHANGE PASSWORD VIEW (BẢO MẬT AN TOÀN, KHÔNG LỘ PIN) -->
             <div id="admin-step-changepass" class="p-8 text-center hidden">
                 <div class="w-16 h-16 bg-blue-100 text-brand-blue rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
                     <i class="fas fa-shield-alt"></i>
                 </div>
                 <h3 class="text-xl font-bold text-brand-navy mb-2">ĐỔI MẬT KHẨU QUẢN TRỊ</h3>
                 <p class="text-xs text-gray-500 mb-6">Vui lòng nhập Mã PIN xác nhận bảo mật và Mật khẩu mới.</p>
+                
                 <div class="max-w-xs mx-auto space-y-3 text-left">
                     <div>
-                        <label class="block text-[11px] font-bold text-gray-700 mb-1">Mã PIN xác nhận (Mặc định: 1111) (*)</label>
-                        <input type="password" id="changepass-pin" maxlength="4" placeholder="Nhập PIN 1111" class="w-full text-center text-sm p-2.5 border border-gray-300 rounded-xl font-mono focus:border-brand-blue focus:outline-none">
+                        <label class="block text-[11px] font-bold text-gray-700 mb-1">Mã PIN bảo mật xác nhận (*)</label>
+                        <input type="password" id="changepass-pin" maxlength="4" placeholder="Nhập mã PIN bảo mật..." class="w-full text-center text-sm p-2.5 border border-gray-300 rounded-xl font-mono focus:border-brand-blue focus:outline-none">
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-gray-700 mb-1">Mật khẩu mới (*)</label>
-                        <input type="password" id="changepass-new" placeholder="Nhập mật khẩu mới" class="w-full p-2.5 border border-gray-300 rounded-xl text-sm focus:border-brand-blue focus:outline-none">
+                        <input type="password" id="changepass-new" placeholder="Nhập mật khẩu mới..." class="w-full p-2.5 border border-gray-300 rounded-xl text-sm focus:border-brand-blue focus:outline-none">
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-gray-700 mb-1">Xác nhận Mật khẩu mới (*)</label>
-                        <input type="password" id="changepass-confirm" placeholder="Nhập lại mật khẩu mới" class="w-full p-2.5 border border-gray-300 rounded-xl text-sm focus:border-brand-blue focus:outline-none">
+                        <input type="password" id="changepass-confirm" placeholder="Nhập lại mật khẩu mới..." class="w-full p-2.5 border border-gray-300 rounded-xl text-sm focus:border-brand-blue focus:outline-none">
                     </div>
+
                     <div class="flex gap-2 pt-3">
                         <button onclick="backToAuthView()" class="w-1/2 bg-gray-200 text-gray-700 py-2.5 rounded-xl text-xs font-bold">Quay Lại</button>
                         <button onclick="handleChangePassword()" class="w-1/2 bg-brand-blue hover:bg-brand-navy text-white py-2.5 rounded-xl text-xs font-bold shadow-md">Lưu Mật Khẩu</button>
@@ -425,6 +487,7 @@ cat << 'EOF' > index.html
                 </div>
             </div>
 
+            <!-- STEP 2: UPDATE FORM -->
             <div id="admin-step-form" class="hidden">
                 <div class="bg-brand-navy text-white p-5 flex justify-between items-center">
                     <div>
@@ -476,6 +539,7 @@ cat << 'EOF' > index.html
                         </div>
                     </div>
 
+                    <!-- QUẢN LÝ HẠNG MỤC BẢO TRÌ (THÊM / XÓA ĐỘNG) -->
                     <div class="bg-slate-50 p-4 rounded-xl border border-gray-200 space-y-3">
                         <div class="flex justify-between items-center">
                             <div>
@@ -486,7 +550,10 @@ cat << 'EOF' > index.html
                                 <i class="fas fa-plus mr-1"></i> Thêm Hạng Mục
                             </button>
                         </div>
-                        <div id="form-tasks-container" class="space-y-2"></div>
+                        
+                        <div id="form-tasks-container" class="space-y-2">
+                            <!-- Injected dynamically -->
+                        </div>
                     </div>
 
                     <div>
@@ -494,13 +561,16 @@ cat << 'EOF' > index.html
                         <textarea id="form-note" rows="2" placeholder="VD: Đã hoàn tất quy trình bảo dưỡng định kỳ, thiết bị vận hành ổn định..." class="w-full p-2.5 border border-gray-300 rounded-lg"></textarea>
                     </div>
 
+                    <!-- PHOTO UPLOAD FROM ALBUM WITH DELETE FUNCTION -->
                     <div class="bg-slate-50 p-4 rounded-xl border-2 border-dashed border-gray-300 text-center">
                         <label class="block font-bold text-brand-navy mb-1"><i class="fas fa-images text-brand-accent mr-1"></i> TẢI ẢNH CHỤP HIỆN TRƯỜNG TỪ ALBUM</label>
                         <p class="text-[10px] text-gray-500 mb-3">Có thể chọn nhiều ảnh. Bấm dấu (x) nếu muốn xóa ảnh chọn nhầm.</p>
+                        
                         <input type="file" id="form-file-input" multiple accept="image/*" onchange="previewImages(event)" class="hidden">
                         <button type="button" onclick="document.getElementById('form-file-input').click()" class="bg-brand-blue hover:bg-brand-navy text-white px-4 py-2 rounded-lg font-bold text-xs shadow-md">
                             <i class="fas fa-folder-open mr-1"></i> Chọn Ảnh Từ Thư Viện
                         </button>
+
                         <div id="photo-preview-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4"></div>
                     </div>
 
@@ -515,6 +585,7 @@ cat << 'EOF' > index.html
         </div>
     </div>
 
+    <!-- FOOTER -->
     <footer class="bg-brand-dark text-gray-400 text-xs py-8 border-t border-gray-800">
         <div class="max-w-7xl mx-auto px-4 text-center sm:text-left flex flex-col sm:flex-row justify-between items-center gap-4">
             <div>
@@ -528,14 +599,26 @@ cat << 'EOF' > index.html
         </div>
     </footer>
 
+    <!-- JAVASCRIPT LOGIC -->
     <script>
-        const CONFIRM_PIN = "1111";
-        function getStoredPassword() { return localStorage.getItem('hicon_admin_pass') || 'hicon2026'; }
-        function setStoredPassword(newPass) { localStorage.setItem('hicon_admin_pass', newPass); }
+        const CONFIRM_PIN = "1111"; // Mã PIN ngầm định bảo mật
+
+        function getStoredPassword() {
+            return localStorage.getItem('hicon_admin_pass') || 'hicon2026';
+        }
+
+        function setStoredPassword(newPass) {
+            localStorage.setItem('hicon_admin_pass', newPass);
+        }
 
         const defaultDevices = {
             'TS-2026-HVAC': {
-                name: 'Cụm Bơm Chilled Water #01', code: 'TS-2026-HVAC', location: 'Phòng Máy Chiller - Nhà máy Tesa Tape', client: 'Tesa Tape DEEP C Hải Phòng', tech: 'Kỹ sư Vũ Văn Tiến (HICON M&E)', date: '2026-10-22',
+                name: 'Cụm Bơm Chilled Water #01',
+                code: 'TS-2026-HVAC',
+                location: 'Phòng Máy Chiller - Nhà máy Tesa Tape',
+                client: 'Tesa Tape DEEP C Hải Phòng',
+                tech: 'Kỹ sư Vũ Văn Tiến (HICON M&E)',
+                date: '2026-10-22',
                 statusBadge: '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800"><i class="fas fa-check-circle mr-1"></i> HOẠT ĐỘNG TỐT</span>',
                 note: 'Đã hoàn thành kiểm tra toàn bộ cụm bơm, tra mỡ màng đệm và đo dòng điện 3 pha ổn định.',
                 tasks: [
@@ -556,7 +639,12 @@ cat << 'EOF' > index.html
                 photos: ['https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=600&auto=format&fit=crop']
             },
             'TS-2026-FIRE': {
-                name: 'Máy Bơm PCCC Động Cơ Diesel', code: 'TS-2026-FIRE', location: 'Trạm Bơm PCCC Trung Tâm', client: 'Tesa Tape DEEP C Hải Phòng', tech: 'Kỹ sư Nguyễn Văn Nam (HICON M&E)', date: '2026-10-20',
+                name: 'Máy Bơm PCCC Động Cơ Diesel',
+                code: 'TS-2026-FIRE',
+                location: 'Trạm Bơm PCCC Trung Tâm',
+                client: 'Tesa Tape DEEP C Hải Phòng',
+                tech: 'Kỹ sư Nguyễn Văn Nam (HICON M&E)',
+                date: '2026-10-20',
                 statusBadge: '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-800"><i class="fas fa-exclamation-triangle mr-1"></i> CẦN LƯU Ý</span>',
                 note: 'Áp lực tuyến ống ổn định. Bình ắc quy đề nổ điện áp thấp cần thay thế mới.',
                 tasks: [
@@ -574,65 +662,190 @@ cat << 'EOF' > index.html
             }
         };
 
-        function getDeviceDatabase() { const saved = localStorage.getItem('hicon_device_db'); if (saved) { try { return JSON.parse(saved); } catch(e) {} } return defaultDevices; }
-        function saveDeviceDatabase(db) { localStorage.setItem('hicon_device_db', JSON.stringify(db)); }
+        function getDeviceDatabase() {
+            const saved = localStorage.getItem('hicon_device_db');
+            if (saved) {
+                try { return JSON.parse(saved); } catch(e) {}
+            }
+            return defaultDevices;
+        }
+
+        function saveDeviceDatabase(db) {
+            localStorage.setItem('hicon_device_db', JSON.stringify(db));
+        }
+
         let uploadedPhotosBase64 = [];
 
         function navigateTo(sectionId) {
             document.querySelectorAll('.page-section').forEach(sec => sec.classList.add('hidden'));
             const target = document.getElementById('section-' + sectionId);
-            if (target) { target.classList.remove('hidden'); void target.offsetWidth; target.classList.add('active-section'); }
+            if (target) {
+                target.classList.remove('hidden');
+                void target.offsetWidth;
+                target.classList.add('active-section');
+            }
+
             document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
             const activeNav = document.getElementById('nav-' + sectionId);
             if (activeNav) activeNav.classList.add('active');
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
 
         function renderQuickButtons() {
-            const db = getDeviceDatabase(); const container = document.getElementById('quick-device-buttons'); container.innerHTML = '';
+            const db = getDeviceDatabase();
+            const container = document.getElementById('quick-device-buttons');
+            container.innerHTML = '';
+
             Object.keys(db).forEach(code => {
                 const btn = document.createElement('button');
                 btn.className = "btn-interactive bg-white/10 hover:bg-white/20 text-cyan-300 px-3 py-1 rounded-lg border border-cyan-400/30 font-mono transition";
-                btn.innerText = code; btn.onclick = () => loadSampleDevice(code); container.appendChild(btn);
+                btn.innerText = code;
+                btn.onclick = () => loadSampleDevice(code);
+                container.appendChild(btn);
             });
         }
 
         function renderDeviceReport(data) {
-            document.getElementById('device-name').innerText = data.name; document.getElementById('device-code').innerText = 'MÃ QR: ' + data.code;
-            document.getElementById('device-location').innerText = data.location; document.getElementById('device-client').innerText = data.client;
-            document.getElementById('device-tech').innerText = data.tech; document.getElementById('device-date').innerText = data.date;
-            document.getElementById('device-status-badge').innerHTML = data.statusBadge; document.getElementById('engineer-note').innerText = data.note;
-            const tasksBody = document.getElementById('report-tasks-body'); tasksBody.innerHTML = '';
-            const tasks = data.tasks || []; document.getElementById('task-count-badge').innerText = tasks.length + ' Hạng Mục';
-            if (tasks.length === 0) { tasksBody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-400">Chưa có hạng mục bảo trì nào được cập nhật.</td></tr>`; }
-            else { tasks.forEach((t, idx) => { tasksBody.innerHTML += `<tr class="hover:bg-slate-50 border-b border-gray-100"><td class="p-3 text-center font-bold text-gray-500">${idx + 1}</td><td class="p-3 font-bold text-brand-navy">${t.title}</td><td class="p-3 text-gray-600">${t.detail}</td><td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">${t.status || 'Đạt'}</span></td></tr>`; }); }
-            const tbody = document.getElementById('specs-table-body'); tbody.innerHTML = '';
-            (data.specs || []).forEach(s => { tbody.innerHTML += `<tr class="hover:bg-slate-50 border-b border-gray-100"><td class="p-3 font-medium text-gray-800">${s.item}</td><td class="p-3 text-gray-500">${s.std}</td><td class="p-3 font-bold text-brand-navy">${s.val}</td><td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${s.isOk ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">${s.status}</span></td></tr>`; });
-            const gallery = document.getElementById('photo-gallery'); gallery.innerHTML = '';
-            (data.photos || []).forEach((src, idx) => { gallery.innerHTML += `<div class="relative rounded-xl overflow-hidden border border-gray-200 card-hover"><img src="${src}" class="w-full h-44 object-cover"><div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 p-2 text-white text-[10px]">Ảnh kiểm tra #${idx + 1}</div></div>`; });
+            document.getElementById('device-name').innerText = data.name;
+            document.getElementById('device-code').innerText = 'MÃ QR: ' + data.code;
+            document.getElementById('device-location').innerText = data.location;
+            document.getElementById('device-client').innerText = data.client;
+            document.getElementById('device-tech').innerText = data.tech;
+            document.getElementById('device-date').innerText = data.date;
+            document.getElementById('device-status-badge').innerHTML = data.statusBadge;
+            document.getElementById('engineer-note').innerText = data.note;
+
+            const tasksBody = document.getElementById('report-tasks-body');
+            tasksBody.innerHTML = '';
+            const tasks = data.tasks || [];
+            document.getElementById('task-count-badge').innerText = tasks.length + ' Hạng Mục';
+
+            if (tasks.length === 0) {
+                tasksBody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-400">Chưa có hạng mục bảo trì nào được cập nhật.</td></tr>`;
+            } else {
+                tasks.forEach((t, idx) => {
+                    tasksBody.innerHTML += `
+                        <tr class="hover:bg-slate-50 border-b border-gray-100">
+                            <td class="p-3 text-center font-bold text-gray-500">${idx + 1}</td>
+                            <td class="p-3 font-bold text-brand-navy">${t.title}</td>
+                            <td class="p-3 text-gray-600">${t.detail}</td>
+                            <td class="p-3 text-center">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">${t.status || 'Đạt'}</span>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            const tbody = document.getElementById('specs-table-body');
+            tbody.innerHTML = '';
+            (data.specs || []).forEach(s => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50 border-b border-gray-100">
+                        <td class="p-3 font-medium text-gray-800">${s.item}</td>
+                        <td class="p-3 text-gray-500">${s.std}</td>
+                        <td class="p-3 font-bold text-brand-navy">${s.val}</td>
+                        <td class="p-3 text-center">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${s.isOk ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">${s.status}</span>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            const gallery = document.getElementById('photo-gallery');
+            gallery.innerHTML = '';
+            (data.photos || []).forEach((src, idx) => {
+                gallery.innerHTML += `
+                    <div class="relative rounded-xl overflow-hidden border border-gray-200 card-hover">
+                        <img src="${src}" class="w-full h-44 object-cover">
+                        <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 p-2 text-white text-[10px]">
+                            Ảnh kiểm tra #${idx + 1}
+                        </div>
+                    </div>
+                `;
+            });
         }
 
-        function searchDevice() { const input = document.getElementById('device-code-input').value.trim().toUpperCase(); const db = getDeviceDatabase(); if (db[input]) renderDeviceReport(db[input]); else alert('Không tìm thấy dữ liệu mã QR này!'); }
-        function loadSampleDevice(code) { document.getElementById('device-code-input').value = code; const db = getDeviceDatabase(); if (db[code]) renderDeviceReport(db[code]); }
-        function openAdminModal() { document.getElementById('admin-modal').classList.remove('hidden'); document.getElementById('admin-step-auth').classList.remove('hidden'); document.getElementById('admin-step-changepass').classList.add('hidden'); document.getElementById('admin-step-form').classList.add('hidden'); document.getElementById('admin-password-input').value = ''; document.getElementById('form-date').value = new Date().toISOString().split('T')[0]; }
-        function closeAdminModal() { document.getElementById('admin-modal').classList.add('hidden'); }
-        function showChangePassView() { document.getElementById('admin-step-auth').classList.add('hidden'); document.getElementById('admin-step-changepass').classList.remove('hidden'); document.getElementById('changepass-pin').value = ''; document.getElementById('changepass-new').value = ''; document.getElementById('changepass-confirm').value = ''; }
-        function backToAuthView() { document.getElementById('admin-step-changepass').classList.add('hidden'); document.getElementById('admin-step-auth').classList.remove('hidden'); }
+        function searchDevice() {
+            const input = document.getElementById('device-code-input').value.trim().toUpperCase();
+            const db = getDeviceDatabase();
+            if (db[input]) {
+                renderDeviceReport(db[input]);
+            } else {
+                alert('Không tìm thấy dữ liệu mã QR này! Bạn có thể chọn "Cập nhật thông tin/trạng thái thiết bị" để tạo mới.');
+            }
+        }
+
+        function loadSampleDevice(code) {
+            document.getElementById('device-code-input').value = code;
+            const db = getDeviceDatabase();
+            if (db[code]) renderDeviceReport(db[code]);
+        }
+
+        function openAdminModal() {
+            document.getElementById('admin-modal').classList.remove('hidden');
+            document.getElementById('admin-step-auth').classList.remove('hidden');
+            document.getElementById('admin-step-changepass').classList.add('hidden');
+            document.getElementById('admin-step-form').classList.add('hidden');
+            document.getElementById('admin-password-input').value = '';
+            document.getElementById('form-date').value = new Date().toISOString().split('T')[0];
+        }
+
+        function closeAdminModal() {
+            document.getElementById('admin-modal').classList.add('hidden');
+        }
+
+        function showChangePassView() {
+            document.getElementById('admin-step-auth').classList.add('hidden');
+            document.getElementById('admin-step-changepass').classList.remove('hidden');
+            document.getElementById('changepass-pin').value = '';
+            document.getElementById('changepass-new').value = '';
+            document.getElementById('changepass-confirm').value = '';
+        }
+
+        function backToAuthView() {
+            document.getElementById('admin-step-changepass').classList.add('hidden');
+            document.getElementById('admin-step-auth').classList.remove('hidden');
+        }
 
         function handleChangePassword() {
-            const pin = document.getElementById('changepass-pin').value.trim(); const newPass = document.getElementById('changepass-new').value; const confirmPass = document.getElementById('changepass-confirm').value;
-            if (pin !== CONFIRM_PIN) { alert('Mã PIN xác nhận không đúng!'); return; }
-            if (!newPass) { alert('Vui lòng nhập mật khẩu mới!'); return; }
-            if (newPass !== confirmPass) { alert('Mật khẩu mới không khớp!'); return; }
-            setStoredPassword(newPass); alert('Đổi mật khẩu thành công!'); backToAuthView();
+            const pin = document.getElementById('changepass-pin').value.trim();
+            const newPass = document.getElementById('changepass-new').value;
+            const confirmPass = document.getElementById('changepass-confirm').value;
+
+            if (pin !== CONFIRM_PIN) {
+                alert('Mã PIN xác nhận không đúng! Lỗi truy cập bảo mật.');
+                return;
+            }
+
+            if (!newPass) {
+                alert('Vui lòng nhập mật khẩu mới!');
+                return;
+            }
+
+            if (newPass !== confirmPass) {
+                alert('Mật khẩu mới và xác nhận mật khẩu không khớp!');
+                return;
+            }
+
+            setStoredPassword(newPass);
+            alert('Đổi mật khẩu thành công! Hãy dùng mật khẩu mới để đăng nhập.');
+            backToAuthView();
         }
 
         function verifyPassword() {
-            const pass = document.getElementById('admin-password-input').value; const currentPass = getStoredPassword();
+            const pass = document.getElementById('admin-password-input').value;
+            const currentPass = getStoredPassword();
+
             if (pass === currentPass) {
-                document.getElementById('admin-step-auth').classList.add('hidden'); document.getElementById('admin-step-form').classList.remove('hidden');
+                document.getElementById('admin-step-auth').classList.add('hidden');
+                document.getElementById('admin-step-form').classList.remove('hidden');
+                
                 loadDefaultFormTasks([
                     { title: 'Vệ sinh tổng quan vỏ máy', detail: 'Lau chùi sạch sẽ bụi bẩn, kiểm tra ngoại quan.' },
                     { title: 'Kiểm tra cơ khí / Trục động cơ', detail: 'Kiểm tra độ rơ, độ rung bất thường.' },
@@ -643,52 +856,143 @@ cat << 'EOF' > index.html
                     { title: 'Kiểm tra hệ thống van & áp suất', detail: 'Đảm bảo áp suất đường ống nằm trong dải tiêu chuẩn.' },
                     { title: 'Vệ sinh lưới lọc / Phin lọc', detail: 'Xả cặn, làm sạch thiết bị lọc cặn.' }
                 ]);
-            } else { alert('Mật khẩu không đúng!'); }
+            } else {
+                alert('Mật khẩu không đúng! Vui lòng kiểm tra lại.');
+            }
         }
 
         function addMaintenanceTaskRow(title = '', detail = '') {
-            const container = document.getElementById('form-tasks-container'); const rowId = 'task-row-' + Date.now() + Math.random().toString(36).substring(2, 5);
-            const div = document.createElement('div'); div.id = rowId; div.className = "flex gap-2 items-center bg-white p-2 rounded-lg border border-gray-200 shadow-sm";
-            div.innerHTML = `<input type="text" placeholder="Tên hạng mục" value="${title}" class="task-title-input w-1/3 p-2 border border-gray-300 rounded text-xs font-bold focus:outline-none focus:border-brand-blue"><input type="text" placeholder="Nội dung thực hiện chi tiết..." value="${detail}" class="task-detail-input w-full p-2 border border-gray-300 rounded text-xs focus:outline-none focus:border-brand-blue"><button type="button" onclick="document.getElementById('${rowId}').remove()" class="bg-red-100 hover:bg-red-200 text-red-600 px-2.5 py-2 rounded text-xs font-bold transition"><i class="fas fa-trash-alt"></i></button>`;
+            const container = document.getElementById('form-tasks-container');
+            const rowId = 'task-row-' + Date.now() + Math.random().toString(36).substring(2, 5);
+            
+            const div = document.createElement('div');
+            div.id = rowId;
+            div.className = "flex gap-2 items-center bg-white p-2 rounded-lg border border-gray-200 shadow-sm";
+            div.innerHTML = `
+                <input type="text" placeholder="Tên hạng mục (VD: Vệ sinh vỏ máy)" value="${title}" class="task-title-input w-1/3 p-2 border border-gray-300 rounded text-xs font-bold focus:outline-none focus:border-brand-blue">
+                <input type="text" placeholder="Nội dung thực hiện chi tiết..." value="${detail}" class="task-detail-input w-full p-2 border border-gray-300 rounded text-xs focus:outline-none focus:border-brand-blue">
+                <button type="button" onclick="document.getElementById('${rowId}').remove()" class="bg-red-100 hover:bg-red-200 text-red-600 px-2.5 py-2 rounded text-xs font-bold transition" title="Xóa hạng mục này">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            `;
             container.appendChild(div);
         }
 
-        function loadDefaultFormTasks(tasks) { const container = document.getElementById('form-tasks-container'); container.innerHTML = ''; tasks.forEach(t => addMaintenanceTaskRow(t.title, t.detail)); }
-
-        function previewImages(event) {
-            const files = event.target.files; Array.from(files).forEach(file => { const reader = new FileReader(); reader.onload = function(e) { uploadedPhotosBase64.push(e.target.result); renderPhotoPreviews(); }; reader.readAsDataURL(file); }); event.target.value = '';
+        function loadDefaultFormTasks(tasks) {
+            const container = document.getElementById('form-tasks-container');
+            container.innerHTML = '';
+            tasks.forEach(t => addMaintenanceTaskRow(t.title, t.detail));
         }
 
-        function removeUploadedPhoto(index) { uploadedPhotosBase64.splice(index, 1); renderPhotoPreviews(); }
+        function previewImages(event) {
+            const files = event.target.files;
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64Str = e.target.result;
+                    uploadedPhotosBase64.push(base64Str);
+                    renderPhotoPreviews();
+                };
+                reader.readAsDataURL(file);
+            });
+            event.target.value = '';
+        }
+
+        function removeUploadedPhoto(index) {
+            uploadedPhotosBase64.splice(index, 1);
+            renderPhotoPreviews();
+        }
 
         function renderPhotoPreviews() {
-            const previewGrid = document.getElementById('photo-preview-grid'); previewGrid.innerHTML = '';
+            const previewGrid = document.getElementById('photo-preview-grid');
+            previewGrid.innerHTML = '';
+            
             uploadedPhotosBase64.forEach((src, idx) => {
-                const div = document.createElement('div'); div.className = "relative rounded-xl overflow-hidden h-24 border border-gray-300 group bg-black";
-                div.innerHTML = `<img src="${src}" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition"><button type="button" onclick="removeUploadedPhoto(${idx})" class="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs shadow-lg transition"><i class="fas fa-times"></i></button><div class="absolute bottom-0 inset-x-0 bg-black/60 text-white text-[9px] text-center py-0.5">Ảnh #${idx + 1}</div>`;
+                const div = document.createElement('div');
+                div.className = "relative rounded-xl overflow-hidden h-24 border border-gray-300 group bg-black";
+                div.innerHTML = `
+                    <img src="${src}" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition">
+                    <button type="button" onclick="removeUploadedPhoto(${idx})" class="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs shadow-lg transition" title="Xóa ảnh này">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <div class="absolute bottom-0 inset-x-0 bg-black/60 text-white text-[9px] text-center py-0.5">Ảnh #${idx + 1}</div>
+                `;
                 previewGrid.appendChild(div);
             });
         }
 
         function handleSaveDevice(e) {
-            e.preventDefault(); const code = document.getElementById('form-code').value.trim().toUpperCase(); const name = document.getElementById('form-name').value.trim(); const location = document.getElementById('form-location').value.trim(); const client = document.getElementById('form-client').value.trim(); const tech = document.getElementById('form-tech').value.trim(); const date = document.getElementById('form-date').value; const statusVal = document.getElementById('form-status').value; const note = document.getElementById('form-note').value.trim();
+            e.preventDefault();
+
+            const code = document.getElementById('form-code').value.trim().toUpperCase();
+            const name = document.getElementById('form-name').value.trim();
+            const location = document.getElementById('form-location').value.trim();
+            const client = document.getElementById('form-client').value.trim();
+            const tech = document.getElementById('form-tech').value.trim();
+            const date = document.getElementById('form-date').value;
+            const statusVal = document.getElementById('form-status').value;
+            const note = document.getElementById('form-note').value.trim();
+
             let statusBadge = '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800"><i class="fas fa-check-circle mr-1"></i> HOẠT ĐỘNG TỐT</span>';
-            if (statusVal === 'WARN') statusBadge = '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-800"><i class="fas fa-exclamation-triangle mr-1"></i> CẦN LƯU Ý KỸ THUẬT</span>';
-            else if (statusVal === 'BAD') statusBadge = '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-red-100 text-red-800"><i class="fas fa-times-circle mr-1"></i> CẦN SỬA CHỮA NGAY</span>';
+            if (statusVal === 'WARN') {
+                statusBadge = '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-800"><i class="fas fa-exclamation-triangle mr-1"></i> CẦN LƯU Ý KỸ THUẬT</span>';
+            } else if (statusVal === 'BAD') {
+                statusBadge = '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-red-100 text-red-800"><i class="fas fa-times-circle mr-1"></i> CẦN SỬA CHỮA NGAY</span>';
+            }
 
-            const taskRows = document.querySelectorAll('#form-tasks-container > div'); let collectedTasks = [];
-            taskRows.forEach(row => { const tTitle = row.querySelector('.task-title-input').value.trim(); const tDetail = row.querySelector('.task-detail-input').value.trim(); if (tTitle) collectedTasks.push({ title: tTitle, detail: tDetail || 'Đã kiểm tra kỹ thuật đạt yêu cầu.', status: 'Đạt' }); });
+            const taskRows = document.querySelectorAll('#form-tasks-container > div');
+            let collectedTasks = [];
+            taskRows.forEach(row => {
+                const tTitle = row.querySelector('.task-title-input').value.trim();
+                const tDetail = row.querySelector('.task-detail-input').value.trim();
+                if (tTitle) {
+                    collectedTasks.push({ title: tTitle, detail: tDetail || 'Đã kiểm tra kỹ thuật đạt yêu cầu.', status: 'Đạt' });
+                }
+            });
 
-            const db = getDeviceDatabase(); let finalPhotos = uploadedPhotosBase64;
-            if (finalPhotos.length === 0 && db[code] && db[code].photos) finalPhotos = db[code].photos;
-            else if (finalPhotos.length === 0) finalPhotos = ['https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=600&auto=format&fit=crop'];
+            const db = getDeviceDatabase();
 
-            db[code] = { name: name, code: code, location: location, client: client, tech: tech, date: date, statusBadge: statusBadge, note: note || 'Đã kiểm tra vận hành hệ thống đạt tiêu chuẩn.', tasks: collectedTasks.length > 0 ? collectedTasks : [{ title: 'Vệ sinh tổng quan thiết bị', detail: 'Lau chùi sạch sẽ.', status: 'Đạt' }], specs: [{ item: 'Kiểm tra tổng quan thiết bị', std: 'Tiêu chuẩn TCVN', val: 'Đạt yêu cầu', status: 'Đạt', isOk: true }, { item: 'Thông số điện / Áp suất vận hành', std: 'Theo hồ sơ', val: 'Ổn định', status: 'Đạt', isOk: true }], photos: finalPhotos };
-            saveDeviceDatabase(db); renderQuickButtons(); closeAdminModal(); navigateTo('maintenance-portal'); loadSampleDevice(code); alert(`Đã lưu thành công thiết bị mã: ${code} với ${collectedTasks.length} hạng mục bảo trì!`);
+            let finalPhotos = uploadedPhotosBase64;
+            if (finalPhotos.length === 0 && db[code] && db[code].photos) {
+                finalPhotos = db[code].photos;
+            } else if (finalPhotos.length === 0) {
+                finalPhotos = ['https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=600&auto=format&fit=crop'];
+            }
+
+            db[code] = {
+                name: name,
+                code: code,
+                location: location,
+                client: client,
+                tech: tech,
+                date: date,
+                statusBadge: statusBadge,
+                note: note || 'Đã kiểm tra vận hành hệ thống đạt tiêu chuẩn.',
+                tasks: collectedTasks.length > 0 ? collectedTasks : [
+                    { title: 'Vệ sinh tổng quan thiết bị', detail: 'Lau chùi sạch sẽ.', status: 'Đạt' }
+                ],
+                specs: [
+                    { item: 'Kiểm tra tổng quan thiết bị', std: 'Tiêu chuẩn TCVN', val: 'Đạt yêu cầu', status: 'Đạt', isOk: true },
+                    { item: 'Thông số điện / Áp suất vận hành', std: 'Theo hồ sơ', val: 'Ổn định', status: 'Đạt', isOk: true }
+                ],
+                photos: finalPhotos
+            };
+
+            saveDeviceDatabase(db);
+            renderQuickButtons();
+            closeAdminModal();
+
+            navigateTo('maintenance-portal');
+            loadSampleDevice(code);
+
+            alert(`Đã lưu thành công thiết bị mã: ${code} với ${collectedTasks.length} hạng mục bảo trì!`);
         }
 
-        window.onload = function() { renderQuickButtons(); navigateTo('home'); loadSampleDevice('TS-2026-HVAC'); }
+        window.onload = function() {
+            renderQuickButtons();
+            navigateTo('home');
+            loadSampleDevice('TS-2026-HVAC');
+        }
     </script>
 </body>
 </html>
-EOF
