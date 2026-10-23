@@ -720,7 +720,7 @@
             </div>
         </div>
 
-        <!-- ==================== SECTION 4: DỰ ÁN (07 DỰ ÁN THỰC TẾ HICON M&E + TIMELINE & GRID) ==================== -->
+        <!-- ==================== SECTION 4: DỰ ÁN ==================== -->
         <div id="section-projects" class="page-section hidden py-14 bg-slate-50">
             <div class="max-w-7xl mx-auto px-4">
                 
@@ -762,8 +762,6 @@
                         </button>
                     </div>
                 </div>
-
-                <input type="file" id="project-photo-upload-input" accept="image/*" onchange="handleProjectPhotoUpload(event)" class="hidden">
 
                 <div id="projects-grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
 
@@ -1241,7 +1239,6 @@
         let currentSelectedLetter = 'ALL';
         let deviceToDeleteCode = null;
 
-        /* ==================== DỮ LIỆU 07 DỰ ÁN THỰC TẾ CỦA HICON M&E ==================== */
         const hiconProjectsData = [
             {
                 id: 'proj-luxshare',
@@ -1380,7 +1377,6 @@
                 ? hiconProjectsData 
                 : hiconProjectsData.filter(p => p.category === currentProjectCategory);
 
-            // 1. Render Grid View
             const gridEl = document.getElementById('projects-grid-container');
             if (gridEl) {
                 gridEl.innerHTML = '';
@@ -1408,8 +1404,8 @@
                                     </span>
                                 </div>
 
-                                <button type="button" onclick="triggerProjectImageChange('${proj.id}')" class="absolute top-3 right-3 bg-black/55 hover:bg-amber-500 hover:text-brand-dark text-white text-[10px] font-bold px-2.5 py-1.5 rounded-xl backdrop-blur-sm transition flex items-center shadow" title="Tải ảnh thực tế của dự án này từ máy">
-                                    <i class="fas fa-camera mr-1"></i> Đổi ảnh
+                                <button type="button" onclick="triggerProjectImageChange('${proj.id}')" class="absolute top-3 right-3 bg-black/65 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition flex items-center shadow-lg z-20 cursor-pointer" title="Tải ảnh thực tế của dự án này từ máy">
+                                    <i class="fas fa-camera mr-1.5"></i> Đổi ảnh
                                 </button>
 
                                 <div class="absolute bottom-3 left-4 right-4 text-white">
@@ -1451,7 +1447,6 @@
                 });
             }
 
-            // 2. Render Brochure Timeline View
             const timelineEl = document.getElementById('projects-timeline-items');
             if (timelineEl) {
                 timelineEl.innerHTML = '';
@@ -1466,8 +1461,8 @@
                         <div class="w-full md:w-5/12 group">
                             <div class="relative h-56 sm:h-64 overflow-hidden shadow-xl border-4 border-white ${isEven ? 'brochure-leaf-left' : 'brochure-leaf-right'} bg-slate-900 card-pro-hover">
                                 <img src="${imgSrc}" alt="${proj.title}" class="w-full h-full object-cover card-img-zoom transition-transform duration-700">
-                                <button type="button" onclick="triggerProjectImageChange('${proj.id}')" class="absolute top-3 right-3 bg-black/60 hover:bg-amber-500 hover:text-brand-dark text-white text-[10px] font-bold px-2.5 py-1 rounded-lg backdrop-blur-sm transition">
-                                    <i class="fas fa-camera mr-1"></i> Đổi ảnh
+                                <button type="button" onclick="triggerProjectImageChange('${proj.id}')" class="absolute top-3 right-3 bg-black/65 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition flex items-center shadow-lg z-20 cursor-pointer">
+                                    <i class="fas fa-camera mr-1.5"></i> Đổi ảnh
                                 </button>
                             </div>
                         </div>
@@ -1529,7 +1524,8 @@
 
         function triggerProjectImageChange(projId) {
             projectUploadTargetId = projId;
-            document.getElementById('project-photo-upload-input').click();
+            const inputEl = document.getElementById('project-photo-upload-input');
+            if (inputEl) inputEl.click();
         }
 
         function handleProjectPhotoUpload(event) {
