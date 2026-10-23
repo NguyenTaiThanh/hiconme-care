@@ -135,6 +135,21 @@
         .bar-anim-1 { animation: barBounce 1.5s ease-in-out infinite; transform-origin: bottom; }
         .bar-anim-2 { animation: barBounce 1.5s ease-in-out 0.3s infinite; transform-origin: bottom; }
         .bar-anim-3 { animation: barBounce 1.5s ease-in-out 0.6s infinite; transform-origin: bottom; }
+
+        /* HIỆU ỨNG RIÊNG CHO TRANG DỰ ÁN (PROJECTS) */
+        @keyframes fadeUpProject {
+            from { opacity: 0; transform: translateY(24px) scale(0.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .project-card-anim {
+            animation: fadeUpProject 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .brochure-leaf-left {
+            border-radius: 36px 8px 36px 8px;
+        }
+        .brochure-leaf-right {
+            border-radius: 8px 36px 8px 36px;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans flex flex-col min-h-screen relative">
@@ -495,11 +510,10 @@
             </div>
         </div>
 
-        <!-- ==================== SECTION 2: GIỚI THIỆU (CẬP NHẬT THEO THƯ NGỎ & HỒ SƠ THỰC TẾ HICON) ==================== -->
+        <!-- ==================== SECTION 2: GIỚI THIỆU ==================== -->
         <div id="section-about" class="page-section hidden py-14 bg-slate-50">
             <div class="max-w-7xl mx-auto px-4">
                 
-                <!-- TIÊU ĐỀ PHẦN GIỚI THIỆU -->
                 <div class="text-center mb-12">
                     <span class="inline-flex items-center bg-brand-navy text-cyan-300 text-xs font-bold px-3.5 py-1 rounded-full uppercase tracking-widest shadow-sm mb-3">
                         <i class="fas fa-calendar-check mr-2 text-amber-400"></i> Thành lập từ ngày 22/12/2015
@@ -510,16 +524,12 @@
                     <div class="w-24 h-1 bg-brand-accent mx-auto mt-3 rounded-full"></div>
                 </div>
 
-                <!-- KHỐI NỘI DUNG CHÍNH: THƯ NGỎ & DANH MỤC DỊCH VỤ CUNG CẤP -->
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
                     
-                    <!-- CỘT TRÁI (7 PHẦN): THƯ NGỎ & NĂNG LỰC CỐT LÕI -->
                     <div class="lg:col-span-7 bg-white rounded-3xl shadow-xl border border-gray-200 p-6 sm:p-9 flex flex-col justify-between relative overflow-hidden">
-                        <!-- Đường viền trang trí trên cùng -->
                         <div class="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-brand-navy via-brand-accent to-amber-500"></div>
                         
                         <div class="space-y-5">
-                            <!-- Lời chào mở đầu -->
                             <div class="flex items-start justify-between border-b border-gray-100 pb-4">
                                 <div>
                                     <p class="text-xs font-bold uppercase tracking-widest text-brand-accent mb-1">THƯ NGỎ & GIỚI THIỆU</p>
@@ -542,7 +552,6 @@
                                 <strong class="text-brand-navy">HICON</strong> là đơn vị chuyên <strong>thi công, lắp đặt, kiểm tra, bảo trì và sửa chữa</strong> các dịch vụ hệ thống cho:
                             </p>
 
-                            <!-- Các loại hình công trình phục vụ -->
                             <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-1">
                                 <div class="bg-slate-50 border border-gray-200 rounded-xl p-2.5 flex items-center space-x-2 text-xs font-bold text-brand-navy">
                                     <i class="fas fa-industry text-brand-accent text-sm"></i>
@@ -567,7 +576,6 @@
                             </p>
                         </div>
 
-                        <!-- 4 Trụ cột phương châm + Lời kết -->
                         <div class="mt-6 pt-5 border-t border-gray-100">
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-5">
                                 <div class="bg-brand-navy text-white p-2.5 rounded-xl text-center shadow-sm">
@@ -602,7 +610,6 @@
                         </div>
                     </div>
 
-                    <!-- CỘT PHẢI (5 PHẦN): 7 DỊCH VỤ HICON CUNG CẤP -->
                     <div class="lg:col-span-5 flex flex-col justify-between space-y-6">
                         <div class="bg-brand-navy text-white rounded-3xl shadow-xl p-6 sm:p-8 border border-cyan-500/30 flex-grow flex flex-col justify-between">
                             <div>
@@ -614,9 +621,7 @@
                                     <span class="bg-amber-500 text-brand-dark font-black text-xs px-2.5 py-1 rounded-lg">07 LĨNH VỰC</span>
                                 </div>
 
-                                <!-- Danh sách 7 dịch vụ chuẩn theo tài liệu -->
                                 <div class="space-y-3">
-                                    <!-- Dịch vụ 1 -->
                                     <div class="bg-white/10 hover:bg-white/15 border border-white/10 rounded-2xl p-3.5 flex items-center space-x-3.5 transition group">
                                         <div class="w-10 h-10 rounded-xl bg-amber-500 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
                                             <i class="fas fa-bolt"></i>
@@ -626,7 +631,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Dịch vụ 2 -->
                                     <div class="bg-white/10 hover:bg-white/15 border border-white/10 rounded-2xl p-3.5 flex items-center space-x-3.5 transition group">
                                         <div class="w-10 h-10 rounded-xl bg-red-500 text-white flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
                                             <i class="fas fa-fire-extinguisher"></i>
@@ -636,7 +640,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Dịch vụ 3 -->
                                     <div class="bg-white/10 hover:bg-white/15 border border-white/10 rounded-2xl p-3.5 flex items-center space-x-3.5 transition group">
                                         <div class="w-10 h-10 rounded-xl bg-cyan-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
                                             <i class="fas fa-fan"></i>
@@ -646,7 +649,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Dịch vụ 4 -->
                                     <div class="bg-white/10 hover:bg-white/15 border border-white/10 rounded-2xl p-3.5 flex items-center space-x-3.5 transition group">
                                         <div class="w-10 h-10 rounded-xl bg-blue-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
                                             <i class="fas fa-network-wired"></i>
@@ -656,7 +658,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Dịch vụ 5 -->
                                     <div class="bg-white/10 hover:bg-white/15 border border-white/10 rounded-2xl p-3.5 flex items-center space-x-3.5 transition group">
                                         <div class="w-10 h-10 rounded-xl bg-emerald-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
                                             <i class="fas fa-tachometer-alt"></i>
@@ -666,7 +667,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Dịch vụ 6 -->
                                     <div class="bg-white/10 hover:bg-white/15 border border-white/10 rounded-2xl p-3.5 flex items-center space-x-3.5 transition group">
                                         <div class="w-10 h-10 rounded-xl bg-sky-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
                                             <i class="fas fa-tint"></i>
@@ -676,7 +676,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Dịch vụ 7 -->
                                     <div class="bg-white/10 hover:bg-white/15 border border-white/10 rounded-2xl p-3.5 flex items-center space-x-3.5 transition group">
                                         <div class="w-10 h-10 rounded-xl bg-purple-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
                                             <i class="fas fa-video"></i>
@@ -688,7 +687,6 @@
                                 </div>
                             </div>
 
-                            <!-- Box cam kết dưới chân danh mục -->
                             <div class="mt-6 pt-4 border-t border-white/15 flex items-center justify-between text-xs text-cyan-200">
                                 <span><i class="fas fa-check-double mr-1.5 text-amber-400"></i> Đáp ứng tiêu chuẩn TCVN & ISO</span>
                                 <button onclick="navigateTo('maintenance-portal')" class="text-amber-400 hover:underline font-bold flex items-center">
@@ -730,26 +728,101 @@
             </div>
         </div>
 
-        <!-- SECTION 4: DỰ ÁN -->
-        <div id="section-projects" class="page-section hidden py-12 bg-white">
+        <!-- ==================== SECTION 4: DỰ ÁN (07 DỰ ÁN THỰC TẾ HICON M&E + TIMELINE & GRID) ==================== -->
+        <div id="section-projects" class="page-section hidden py-14 bg-slate-50">
             <div class="max-w-7xl mx-auto px-4">
-                <div class="text-center mb-12">
-                    <span class="text-brand-blue font-bold text-sm uppercase">Hồ Sơ Năng Lực</span>
-                    <h2 class="text-3xl font-extrabold text-brand-navy mt-1">DỰ ÁN BẢO TRÌ TIÊU BIỂU</h2>
-                    <div class="w-16 h-1 bg-brand-accent mx-auto mt-2 rounded-full"></div>
+                
+                <!-- HEADER DỰ ÁN -->
+                <div class="text-center mb-10">
+                    <span class="inline-flex items-center bg-amber-500/15 text-amber-600 border border-amber-400/40 text-xs font-extrabold px-4 py-1 rounded-full uppercase tracking-widest mb-2">
+                        <i class="fas fa-award mr-1.5"></i> Hồ Sơ Năng Lực Thực Tế
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-black text-brand-navy tracking-tight">
+                        DỰ ÁN TIÊU BIỂU <span class="text-amber-500 font-light">| PROJECTS</span>
+                    </h2>
+                    <p class="text-gray-500 text-xs sm:text-sm mt-2 max-w-2xl mx-auto">
+                        Các công trình nhà máy công nghiệp FDI, tổ hợp khách sạn, tòa nhà thương mại và bệnh viện trọng điểm do <strong>HICON M&E</strong> trực tiếp triển khai thi công & bảo trì.
+                    </p>
+                    <div class="w-24 h-1 bg-amber-500 mx-auto mt-3 rounded-full"></div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="bg-gray-50 rounded-2xl p-6 border border-gray-200 card-pro-hover">
-                        <span class="text-xs font-bold text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-md">ĐANG BẢO TRÌ</span>
-                        <h3 class="font-bold text-brand-navy text-lg mt-1">Nhà Máy Tesa Tape Hải Phòng</h3>
-                        <p class="text-xs text-gray-500 mt-1"><i class="fas fa-map-marker-alt mr-1"></i> KCN DEEP C, Hải Phòng</p>
-                        <p class="text-xs text-gray-600 mt-2">Vận hành & bảo trì toàn diện hệ thống PCCC, Chilled Water & Điều hòa HVAC.</p>
+
+                <!-- THANH CÔNG CỤ: BỘ LỌC DANH MỤC & CHUYỂN ĐỔI CHẾ ĐỘ XEM -->
+                <div class="bg-white p-4 rounded-2xl shadow-md border border-gray-200 mb-10 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <!-- Bộ lọc loại hình công trình -->
+                    <div class="flex flex-wrap items-center justify-center gap-2">
+                        <button onclick="setProjectCategory('ALL')" id="proj-filter-ALL" class="btn-interactive px-4 py-2 rounded-xl text-xs font-extrabold bg-brand-navy text-white shadow">
+                            Tất Cả Dự Án (07)
+                        </button>
+                        <button onclick="setProjectCategory('INDUSTRIAL')" id="proj-filter-INDUSTRIAL" class="btn-interactive px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 text-gray-700 hover:bg-slate-200">
+                            <i class="fas fa-industry mr-1 text-brand-accent"></i> Nhà Máy & KCN (03)
+                        </button>
+                        <button onclick="setProjectCategory('COMMERCIAL')" id="proj-filter-COMMERCIAL" class="btn-interactive px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 text-gray-700 hover:bg-slate-200">
+                            <i class="fas fa-hotel mr-1 text-amber-500"></i> Khách Sạn & Cao Tầng (03)
+                        </button>
+                        <button onclick="setProjectCategory('MEDICAL')" id="proj-filter-MEDICAL" class="btn-interactive px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 text-gray-700 hover:bg-slate-200">
+                            <i class="fas fa-hospital mr-1 text-emerald-600"></i> Y Tế & Công Cộng (01)
+                        </button>
                     </div>
-                    <div class="bg-gray-50 rounded-2xl p-6 border border-gray-200 card-pro-hover">
-                        <span class="text-xs font-bold text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-md">ĐANG BẢO TRÌ</span>
-                        <h3 class="font-bold text-brand-navy text-lg mt-1">Nhà Máy Chế Biến Linh Kiện Điện Tử VSIP</h3>
-                        <p class="text-xs text-gray-500 mt-1"><i class="fas fa-map-marker-alt mr-1"></i> KCN VSIP, Bắc Ninh</p>
-                        <p class="text-xs text-gray-600 mt-2">Bảo dưỡng hệ thống điện trạm biến áp 22kV, tủ phân phối MSB và Khí nén.</p>
+
+                    <!-- Nút chuyển đổi chế độ hiển thị: Thẻ Lưới Hiện Đại vs Trục Sơ Đồ Brochure -->
+                    <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-gray-200 shrink-0">
+                        <button onclick="setProjectViewMode('GRID')" id="proj-view-GRID" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-brand-dark shadow-sm transition flex items-center">
+                            <i class="fas fa-th-large mr-1.5"></i> Xem Thẻ Lưới
+                        </button>
+                        <button onclick="setProjectViewMode('TIMELINE')" id="proj-view-TIMELINE" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-gray-600 hover:text-brand-navy transition flex items-center">
+                            <i class="fas fa-stream mr-1.5"></i> Sơ Đồ Trục Dọc
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Input ẩn phục vụ đổi ảnh từng dự án nếu người dùng muốn tải ảnh riêng -->
+                <input type="file" id="project-photo-upload-input" accept="image/*" onchange="handleProjectPhotoUpload(event)" class="hidden">
+
+                <!-- 1. CHẾ ĐỘ XEM THẺ LƯỚI HIỆN ĐẠI (GRID VIEW) -->
+                <div id="projects-grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Được render tự động bằng JS từ mảng 7 dự án thực tế -->
+                </div>
+
+                <!-- 2. CHẾ ĐỘ XEM SƠ ĐỒ TRỤC DỌC (BROCHURE TIMELINE VIEW - GIỐNG ẢNH GỐC HICON) -->
+                <div id="projects-timeline-container" class="hidden relative max-w-5xl mx-auto py-6">
+                    <!-- Trục thẳng đứng ở giữa -->
+                    <div class="hidden md:block absolute left-1/2 top-4 bottom-4 w-1 bg-gray-300 -translate-x-1/2 rounded-full"></div>
+                    <div id="projects-timeline-items" class="space-y-12 relative">
+                        <!-- Được render tự động bằng JS -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- MODAL XEM CHI TIẾT DỰ ÁN -->
+        <div id="project-detail-modal" class="fixed inset-0 z-[75] bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+            <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden border border-gray-200 my-8 animate-in fade-in zoom-in duration-200">
+                <div class="relative h-64 sm:h-72 bg-slate-900">
+                    <img id="proj-modal-img" src="" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/40 to-transparent"></div>
+                    <button onclick="closeProjectDetailModal()" class="absolute top-4 right-4 bg-black/50 hover:bg-red-600 text-white w-9 h-9 rounded-full flex items-center justify-center transition">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <div class="absolute bottom-4 left-6 right-6 text-white">
+                        <span id="proj-modal-badge" class="bg-amber-500 text-brand-dark text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">DỰ ÁN TIÊU BIỂU</span>
+                        <h3 id="proj-modal-title" class="text-2xl font-black mt-2">--</h3>
+                        <p id="proj-modal-address" class="text-xs text-cyan-200 mt-1 flex items-center"><i class="fas fa-map-marker-alt mr-1.5 text-amber-400"></i> --</p>
+                    </div>
+                </div>
+                <div class="p-6 space-y-4 text-xs sm:text-sm">
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-gray-200">
+                        <h4 class="font-extrabold text-brand-navy uppercase text-xs mb-2"><i class="fas fa-cogs text-brand-accent mr-1.5"></i> Hạng Mục Cơ Điện & Bảo Trì Triển Khai:</h4>
+                        <p id="proj-modal-desc" class="text-gray-700 leading-relaxed">--</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2" id="proj-modal-tags"></div>
+                    <div class="pt-3 border-t border-gray-100 flex justify-between items-center">
+                        <button onclick="triggerProjectImageChange(currentModalProjectId)" class="btn-interactive bg-slate-100 hover:bg-amber-100 text-brand-navy font-bold px-4 py-2 rounded-xl text-xs flex items-center border border-gray-300">
+                            <i class="fas fa-camera mr-1.5 text-amber-500"></i> Đổi ảnh dự án này từ máy
+                        </button>
+                        <button onclick="closeProjectDetailModal()" class="btn-interactive bg-brand-navy text-white font-bold px-6 py-2.5 rounded-xl text-xs">
+                            Đóng
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1188,6 +1261,329 @@
         let currentSelectedLetter = 'ALL';
         let deviceToDeleteCode = null;
 
+        /* ==================== DỮ LIỆU 07 DỰ ÁN THỰC TẾ CỦA HICON M&E ==================== */
+        const hiconProjectsData = [
+            {
+                id: 'proj-luxshare',
+                title: 'LUXSHARE - ICT FACTORY',
+                address: 'Van Trung IP, Bac Giang (KCN Vân Trung, Bắc Giang)',
+                category: 'INDUSTRIAL',
+                categoryName: 'Nhà Máy Công Nghiệp FDI',
+                status: 'ĐÃ TRIỂN KHAI & BẢO TRÌ',
+                defaultImg: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1000&auto=format&fit=crop',
+                fallbackAlt: 'Tổ hợp nhà máy công nghiệp Luxshare-ICT Bắc Giang',
+                desc: 'Thi công lắp đặt, kiểm tra định kỳ và bảo trì hệ thống cơ điện (M&E), điều hòa thông gió nhà xưởng (HVAC/AHU), hệ thống điện phân phối và PCCC tiêu chuẩn quốc tế cho tổ hợp nhà máy sản xuất linh kiện điện tử quy mô lớn.',
+                tags: ['Hệ thống HVAC & Chiller', 'Tủ điện MSB/DB', 'Hệ thống PCCC', 'Bảo trì định kỳ']
+            },
+            {
+                id: 'proj-songhong',
+                title: '7 CỤM 23 NHÀ XƯỞNG MAY SÔNG HỒNG',
+                address: '105 Nguyễn Đức Thuận, Thống Nhất, Thành phố Nam Định',
+                category: 'INDUSTRIAL',
+                categoryName: 'Tổ Hợp Nhà Xưởng Sản Xuất',
+                status: 'ĐÃ TRIỂN KHAI & BẢO TRÌ',
+                defaultImg: 'https://images.unsplash.com/photo-1565514020179-026b92b84bb6?q=80&w=1000&auto=format&fit=crop',
+                fallbackAlt: '7 Cụm 23 Nhà Xưởng May Sông Hồng Nam Định',
+                desc: 'Triển khai đồng bộ hệ thống kỹ thuật cơ điện công trình, thông gió làm mát nhà xưởng, mạng lưới điện chiếu sáng công nghiệp, hệ thống khí nén và phòng cháy chữa cháy cho 7 cụm 23 nhà xưởng May Sông Hồng.',
+                tags: ['23 Nhà xưởng', 'Điện công nghiệp', 'Thông gió làm mát', 'Hệ thống PCCC & Khí nén']
+            },
+            {
+                id: 'proj-benhvien',
+                title: 'BỆNH VIỆN Y HỌC CỔ TRUYỀN BỘ CÔNG AN',
+                address: '278 Lương Thế Vinh, Hà Nội',
+                category: 'MEDICAL',
+                categoryName: 'Công Trình Y Tế & Công Cộng',
+                status: 'ĐÃ TRIỂN KHAI & BẢO TRÌ',
+                defaultImg: 'https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?q=80&w=1000&auto=format&fit=crop',
+                fallbackAlt: 'Bệnh Viện Y Học Cổ Truyền Bộ Công An Hà Nội',
+                desc: 'Cung cấp dịch vụ lắp đặt, vận hành và bảo trì hệ thống điều hòa thông gió phòng sạch y tế, hệ thống điện & điện nhẹ (ELV), cấp thoát nước, xử lý nước thải y tế và hệ thống PCCC đảm bảo an toàn liên tục 24/7.',
+                tags: ['HVAC Y tế', 'Điện & Điện nhẹ', 'Cấp thoát nước & XLNT', 'An toàn PCCC']
+            },
+            {
+                id: 'proj-watson',
+                title: 'THE WATSON HOTEL',
+                address: 'Hoàng Quốc Việt, Bãi Cháy, Hạ Long, Quảng Ninh',
+                category: 'COMMERCIAL',
+                categoryName: 'Khách Sạn Cao Cấp',
+                status: 'ĐÃ TRIỂN KHAI & BẢO TRÌ',
+                defaultImg: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1000&auto=format&fit=crop',
+                fallbackAlt: 'Khách sạn The Watson Hotel Bãi Cháy Hạ Long',
+                desc: 'Thực hiện kiểm tra, bảo trì và vận hành hệ thống Chiller/VRV trung tâm, hệ thống cấp nước nóng trung tâm, tủ điện phân phối, chiếu sáng kiến trúc mặt đứng và hệ thống báo cháy tự động tiêu chuẩn khách sạn 5 sao.',
+                tags: ['Điều hòa trung tâm', 'Chiếu sáng mặt đứng', 'Điện nhẹ & CCTV', 'Bảo trì khách sạn']
+            },
+            {
+                id: 'proj-dragoncastle',
+                title: 'THE DRAGON CASTLE HẠ LONG',
+                address: 'Đường Cái Lân, Bãi Cháy, Hạ Long, Quảng Ninh',
+                category: 'COMMERCIAL',
+                categoryName: 'Tổ Hợp Chung Cư & Thương Mại',
+                status: 'ĐÃ TRIỂN KHAI & BẢO TRÌ',
+                defaultImg: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=1000&auto=format&fit=crop',
+                fallbackAlt: 'Tổ hợp The Dragon Castle Hạ Long',
+                desc: 'Triển khai dịch vụ kỹ thuật cơ điện tòa nhà cao tầng, hệ thống thông gió tầng hầm, tăng áp cầu thang, trạm bơm PCCC, hệ thống cấp thoát nước và camera giám sát an ninh toàn khu.',
+                tags: ['M&E Tòa nhà cao tầng', 'Thông gió & Tăng áp', 'Hệ thống PCCC', 'Camera giám sát']
+            },
+            {
+                id: 'proj-3cc',
+                title: '3CC BUILDING',
+                address: 'The Manor Central Park, Đại Kim, Hoàng Mai, Hà Nội',
+                category: 'COMMERCIAL',
+                categoryName: 'Tòa Nhà Thương Mại & Văn Phòng',
+                status: 'ĐÃ TRIỂN KHAI & BẢO TRÌ',
+                defaultImg: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1000&auto=format&fit=crop',
+                fallbackAlt: 'Tòa nhà 3CC Building The Manor Central Park Hà Nội',
+                desc: 'Lắp đặt, kiểm tra và bảo trì hệ thống cơ điện hiện đại, điều hòa thông gió trung tâm, hệ thống chiếu sáng cảnh quan nhạc nước và quản lý kỹ thuật tòa nhà theo tiêu chuẩn chất lượng ISO.',
+                tags: ['HVAC Trung tâm', 'Điện & Chiếu sáng', 'Cấp thoát nước', 'Vận hành tòa nhà']
+            },
+            {
+                id: 'proj-tesa',
+                title: 'DỰ ÁN TESA (TESA TAPE FACTORY)',
+                address: 'Lô đất CN2A, KCN và dịch vụ hàng hải (DEEP C2B), KKT Đình Vũ - Cát Hải, Đông Hải, Hải Phòng',
+                category: 'INDUSTRIAL',
+                categoryName: 'Nhà Máy Công Nghiệp Trọng Điểm',
+                status: 'ĐANG BẢO TRÌ SỐ HÓA QR',
+                defaultImg: 'https://images.unsplash.com/photo-1513828583688-c52646db42da?q=80&w=1000&auto=format&fit=crop',
+                fallbackAlt: 'Nhà máy Tesa Tape KCN DEEP C2B Hải Phòng',
+                desc: 'Vận hành và bảo trì toàn diện hệ thống Cơ Điện (M&E), cụm bơm Chilled Water, hệ thống điều hòa thông gió AHU/MAU, trạm bơm PCCC Electric/Diesel (Tornatech) và ứng dụng 100% mã QR số hóa nhật ký kiểm tra.',
+                tags: ['Số hóa QR 100%', 'Chilled Water & AHU', 'Trạm bơm PCCC', 'Bảo trì toàn diện 24/7']
+            }
+        ];
+
+        let currentProjectCategory = 'ALL';
+        let currentProjectViewMode = 'GRID';
+        let currentModalProjectId = null;
+        let projectUploadTargetId = null;
+
+        function getProjectImage(proj) {
+            const customImg = localStorage.getItem('hicon_proj_img_' + proj.id);
+            return customImg || proj.defaultImg;
+        }
+
+        function setProjectCategory(cat) {
+            currentProjectCategory = cat;
+            ['ALL', 'INDUSTRIAL', 'COMMERCIAL', 'MEDICAL'].forEach(c => {
+                const btn = document.getElementById('proj-filter-' + c);
+                if (btn) {
+                    if (c === cat) {
+                        btn.className = "btn-interactive px-4 py-2 rounded-xl text-xs font-extrabold bg-brand-navy text-white shadow";
+                    } else {
+                        btn.className = "btn-interactive px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 text-gray-700 hover:bg-slate-200";
+                    }
+                }
+            });
+            renderProjectsSection();
+        }
+
+        function setProjectViewMode(mode) {
+            currentProjectViewMode = mode;
+            const btnGrid = document.getElementById('proj-view-GRID');
+            const btnTimeline = document.getElementById('proj-view-TIMELINE');
+            const gridContainer = document.getElementById('projects-grid-container');
+            const timelineContainer = document.getElementById('projects-timeline-container');
+
+            if (mode === 'GRID') {
+                btnGrid.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-brand-dark shadow-sm transition flex items-center";
+                btnTimeline.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold text-gray-600 hover:text-brand-navy transition flex items-center";
+                gridContainer.classList.remove('hidden');
+                timelineContainer.classList.add('hidden');
+            } else {
+                btnTimeline.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-brand-dark shadow-sm transition flex items-center";
+                btnGrid.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold text-gray-600 hover:text-brand-navy transition flex items-center";
+                gridContainer.classList.add('hidden');
+                timelineContainer.classList.remove('hidden');
+            }
+            renderProjectsSection();
+        }
+
+        function renderProjectsSection() {
+            const filtered = currentProjectCategory === 'ALL' 
+                ? hiconProjectsData 
+                : hiconProjectsData.filter(p => p.category === currentProjectCategory);
+
+            // 1. Render Grid View
+            const gridEl = document.getElementById('projects-grid-container');
+            gridEl.innerHTML = '';
+
+            filtered.forEach((proj, idx) => {
+                const imgSrc = getProjectImage(proj);
+                const isTesa = proj.id === 'proj-tesa';
+                const card = document.createElement('div');
+                card.style.animationDelay = `${idx * 70}ms`;
+                card.className = `project-card-anim card-pro-hover bg-white rounded-3xl overflow-hidden border ${isTesa ? 'border-2 border-brand-accent shadow-xl' : 'border-gray-200 shadow-md'} flex flex-col justify-between group`;
+
+                const tagsHtml = proj.tags.map(t => `<span class="bg-slate-100 text-brand-navy text-[10px] font-bold px-2.5 py-1 rounded-lg border border-gray-200">${t}</span>`).join('');
+
+                card.innerHTML = `
+                    <div>
+                        <div class="h-56 overflow-hidden relative bg-slate-900">
+                            <img src="${imgSrc}" alt="${proj.fallbackAlt}" class="w-full h-full object-cover card-img-zoom transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/25 to-transparent"></div>
+                            
+                            <!-- Số thứ tự & Loại dự án -->
+                            <div class="absolute top-3 left-3 flex items-center gap-2">
+                                <span class="w-8 h-8 rounded-xl bg-amber-500 text-brand-dark font-black text-xs flex items-center justify-center shadow-lg">
+                                    0${idx + 1}
+                                </span>
+                                <span class="bg-black/60 backdrop-blur-md text-cyan-300 text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-wider border border-white/15">
+                                    ${proj.categoryName}
+                                </span>
+                            </div>
+
+                            <!-- Nút đổi ảnh dự án trực tiếp -->
+                            <button type="button" onclick="triggerProjectImageChange('${proj.id}')" class="absolute top-3 right-3 bg-black/55 hover:bg-amber-500 hover:text-brand-dark text-white text-[10px] font-bold px-2.5 py-1.5 rounded-xl backdrop-blur-sm transition flex items-center shadow" title="Tải ảnh thực tế của dự án này từ máy">
+                                <i class="fas fa-camera mr-1"></i> Đổi ảnh
+                            </button>
+
+                            <!-- Tên dự án nổi trên nền ảnh -->
+                            <div class="absolute bottom-3 left-4 right-4 text-white">
+                                <span class="inline-block text-[9px] font-extrabold px-2 py-0.5 rounded bg-emerald-500/90 text-white mb-1">
+                                    <i class="fas fa-check-circle mr-1"></i> ${proj.status}
+                                </span>
+                                <h3 class="text-lg font-black tracking-wide leading-snug group-hover:text-amber-400 transition">${proj.title}</h3>
+                            </div>
+                        </div>
+
+                        <div class="p-5">
+                            <div class="flex items-start text-xs text-gray-600 font-medium mb-3 bg-amber-50/70 p-2.5 rounded-xl border border-amber-200/70">
+                                <i class="fas fa-map-marker-alt text-amber-500 mt-0.5 mr-2 shrink-0 text-sm"></i>
+                                <span class="text-brand-navy font-semibold leading-snug">${proj.address}</span>
+                            </div>
+                            <p class="text-xs text-gray-600 leading-relaxed line-clamp-3 mb-4">
+                                ${proj.desc}
+                            </p>
+                            <div class="flex flex-wrap gap-1.5">
+                                ${tagsHtml}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="px-5 py-3.5 bg-slate-50 border-t border-gray-100 flex justify-between items-center">
+                        <button onclick="openProjectDetailModal('${proj.id}')" class="text-xs font-extrabold text-brand-blue hover:text-brand-accent flex items-center transition">
+                            <i class="fas fa-info-circle mr-1.5"></i> Xem Chi Tiết Hạng Mục
+                        </button>
+                        ${isTesa ? `
+                            <button onclick="navigateTo('maintenance-portal')" class="btn-interactive bg-brand-accent text-brand-dark font-extrabold px-3 py-1 rounded-lg text-[11px] flex items-center shadow-sm">
+                                <i class="fas fa-qrcode mr-1"></i> Tra Cứu QR
+                            </button>
+                        ` : `
+                            <span class="text-[11px] font-bold text-emerald-600"><i class="fas fa-shield-alt mr-1"></i> Chuẩn ISO</span>
+                        `}
+                    </div>
+                `;
+                gridEl.appendChild(card);
+            });
+
+            // 2. Render Brochure Timeline View (Giống hệt thiết kế sơ đồ trục dọc trong ảnh của anh)
+            const timelineEl = document.getElementById('projects-timeline-items');
+            timelineEl.innerHTML = '';
+
+            filtered.forEach((proj, idx) => {
+                const imgSrc = getProjectImage(proj);
+                const isEven = idx % 2 === 0; // Chẵn: Ảnh bên trái - Tên màu cam bên phải; Lẻ: Tên màu cam bên trái - Ảnh bên phải
+                const row = document.createElement('div');
+                row.style.animationDelay = `${idx * 80}ms`;
+                row.className = "project-card-anim flex flex-col md:flex-row items-center justify-between gap-6 relative";
+
+                const imageBox = `
+                    <div class="w-full md:w-5/12 group">
+                        <div class="relative h-56 sm:h-64 overflow-hidden shadow-xl border-4 border-white ${isEven ? 'brochure-leaf-left' : 'brochure-leaf-right'} bg-slate-900 card-pro-hover">
+                            <img src="${imgSrc}" alt="${proj.title}" class="w-full h-full object-cover card-img-zoom transition-transform duration-700">
+                            <button type="button" onclick="triggerProjectImageChange('${proj.id}')" class="absolute top-3 right-3 bg-black/60 hover:bg-amber-500 hover:text-brand-dark text-white text-[10px] font-bold px-2.5 py-1 rounded-lg backdrop-blur-sm transition">
+                                <i class="fas fa-camera mr-1"></i> Đổi ảnh
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                const infoBox = `
+                    <div class="w-full md:w-5/12 ${isEven ? 'md:text-left' : 'md:text-right'} flex flex-col ${isEven ? 'md:items-start' : 'md:items-end'}">
+                        <div onclick="openProjectDetailModal('${proj.id}')" class="cursor-pointer bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-600 hover:to-amber-500 text-white font-black text-base sm:text-lg px-6 py-3 rounded-full shadow-lg transition transform hover:-translate-y-1 inline-flex items-center gap-2">
+                            ${!isEven ? `<i class="fas fa-caret-left text-white"></i>` : ''}
+                            <span>${proj.title}</span>
+                            ${isEven ? `<i class="fas fa-caret-right text-white"></i>` : ''}
+                        </div>
+                        <p class="text-brand-navy font-bold text-xs sm:text-sm mt-2.5 px-2">
+                            <i class="fas fa-map-marker-alt text-amber-500 mr-1"></i> ${proj.address}
+                        </p>
+                        <p class="text-gray-500 text-xs mt-1.5 px-2 max-w-md leading-relaxed">
+                            ${proj.desc}
+                        </p>
+                    </div>
+                `;
+
+                const centerNode = `
+                    <div class="hidden md:flex w-12 h-12 rounded-full bg-white border-4 border-amber-500 shadow-xl items-center justify-center z-10 shrink-0 font-black text-brand-navy text-xs">
+                        0${idx + 1}
+                    </div>
+                `;
+
+                if (isEven) {
+                    row.innerHTML = `${imageBox} ${centerNode} ${infoBox}`;
+                } else {
+                    row.innerHTML = `${infoBox} ${centerNode} ${imageBox}`;
+                }
+
+                timelineEl.appendChild(row);
+            });
+        }
+
+        function openProjectDetailModal(projId) {
+            const proj = hiconProjectsData.find(p => p.id === projId);
+            if (!proj) return;
+            currentModalProjectId = projId;
+
+            document.getElementById('proj-modal-img').src = getProjectImage(proj);
+            document.getElementById('proj-modal-badge').innerText = proj.categoryName;
+            document.getElementById('proj-modal-title').innerText = proj.title;
+            document.getElementById('proj-modal-address').innerHTML = `<i class="fas fa-map-marker-alt mr-1.5 text-amber-400"></i> ${proj.address}`;
+            document.getElementById('proj-modal-desc').innerText = proj.desc;
+
+            const tagsEl = document.getElementById('proj-modal-tags');
+            tagsEl.innerHTML = proj.tags.map(t => `<span class="bg-cyan-50 text-brand-blue font-bold text-xs px-3 py-1 rounded-xl border border-cyan-200"><i class="fas fa-check text-brand-accent mr-1"></i>${t}</span>`).join('');
+
+            document.getElementById('project-detail-modal').classList.remove('hidden');
+        }
+
+        function closeProjectDetailModal() {
+            document.getElementById('project-detail-modal').classList.add('hidden');
+        }
+
+        function triggerProjectImageChange(projId) {
+            projectUploadTargetId = projId;
+            document.getElementById('project-photo-upload-input').click();
+        }
+
+        function handleProjectPhotoUpload(event) {
+            const file = event.target.files[0];
+            if (!file || !projectUploadTargetId) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const maxW = 900;
+                    const scale = maxW / img.width;
+                    canvas.width = maxW;
+                    canvas.height = img.height * scale;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.82);
+
+                    localStorage.setItem('hicon_proj_img_' + projectUploadTargetId, compressedBase64);
+                    renderProjectsSection();
+
+                    if (currentModalProjectId === projectUploadTargetId) {
+                        document.getElementById('proj-modal-img').src = compressedBase64;
+                    }
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        }
+
+        /* ==================== UPLOAD ẢNH NHÂN LỰC TRANG CHỦ ==================== */
         function uploadHrPhoto(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -1837,6 +2233,7 @@
 
         window.onload = function() {
             loadSavedHrPhoto();
+            renderProjectsSection();
             updateTotalCountDisplay();
             navigateTo('home');
             clearDeviceReportDefault();
