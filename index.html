@@ -90,7 +90,6 @@
         }
         .shake-error { animation: errorShake 0.45s ease-in-out; }
 
-        /* HIỆU ỨNG CHUYỂN ĐỘNG KỸ THUẬT CHO 6 MỤC */
         @keyframes qrLaserScan {
             0%, 100% { top: 8%; opacity: 0.9; }
             50% { top: 85%; opacity: 1; }
@@ -136,20 +135,13 @@
         .bar-anim-2 { animation: barBounce 1.5s ease-in-out 0.3s infinite; transform-origin: bottom; }
         .bar-anim-3 { animation: barBounce 1.5s ease-in-out 0.6s infinite; transform-origin: bottom; }
 
-        /* HIỆU ỨNG RIÊNG CHO TRANG DỰ ÁN (PROJECTS) */
         @keyframes fadeUpProject {
             from { opacity: 0; transform: translateY(24px) scale(0.97); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
-        .project-card-anim {
-            animation: fadeUpProject 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        .brochure-leaf-left {
-            border-radius: 36px 8px 36px 8px;
-        }
-        .brochure-leaf-right {
-            border-radius: 8px 36px 8px 36px;
-        }
+        .project-card-anim { animation: fadeUpProject 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .brochure-leaf-left { border-radius: 36px 8px 36px 8px; }
+        .brochure-leaf-right { border-radius: 8px 36px 8px 36px; }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans flex flex-col min-h-screen relative">
@@ -732,7 +724,6 @@
         <div id="section-projects" class="page-section hidden py-14 bg-slate-50">
             <div class="max-w-7xl mx-auto px-4">
                 
-                <!-- HEADER DỰ ÁN -->
                 <div class="text-center mb-10">
                     <span class="inline-flex items-center bg-amber-500/15 text-amber-600 border border-amber-400/40 text-xs font-extrabold px-4 py-1 rounded-full uppercase tracking-widest mb-2">
                         <i class="fas fa-award mr-1.5"></i> Hồ Sơ Năng Lực Thực Tế
@@ -746,9 +737,7 @@
                     <div class="w-24 h-1 bg-amber-500 mx-auto mt-3 rounded-full"></div>
                 </div>
 
-                <!-- THANH CÔNG CỤ: BỘ LỌC DANH MỤC & CHUYỂN ĐỔI CHẾ ĐỘ XEM -->
                 <div class="bg-white p-4 rounded-2xl shadow-md border border-gray-200 mb-10 flex flex-col md:flex-row justify-between items-center gap-4">
-                    <!-- Bộ lọc loại hình công trình -->
                     <div class="flex flex-wrap items-center justify-center gap-2">
                         <button onclick="setProjectCategory('ALL')" id="proj-filter-ALL" class="btn-interactive px-4 py-2 rounded-xl text-xs font-extrabold bg-brand-navy text-white shadow">
                             Tất Cả Dự Án (07)
@@ -764,7 +753,6 @@
                         </button>
                     </div>
 
-                    <!-- Nút chuyển đổi chế độ hiển thị: Thẻ Lưới Hiện Đại vs Trục Sơ Đồ Brochure -->
                     <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-gray-200 shrink-0">
                         <button onclick="setProjectViewMode('GRID')" id="proj-view-GRID" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-brand-dark shadow-sm transition flex items-center">
                             <i class="fas fa-th-large mr-1.5"></i> Xem Thẻ Lưới
@@ -775,21 +763,13 @@
                     </div>
                 </div>
 
-                <!-- Input ẩn phục vụ đổi ảnh từng dự án nếu người dùng muốn tải ảnh riêng -->
                 <input type="file" id="project-photo-upload-input" accept="image/*" onchange="handleProjectPhotoUpload(event)" class="hidden">
 
-                <!-- 1. CHẾ ĐỘ XEM THẺ LƯỚI HIỆN ĐẠI (GRID VIEW) -->
-                <div id="projects-grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Được render tự động bằng JS từ mảng 7 dự án thực tế -->
-                </div>
+                <div id="projects-grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
 
-                <!-- 2. CHẾ ĐỘ XEM SƠ ĐỒ TRỤC DỌC (BROCHURE TIMELINE VIEW - GIỐNG ẢNH GỐC HICON) -->
                 <div id="projects-timeline-container" class="hidden relative max-w-5xl mx-auto py-6">
-                    <!-- Trục thẳng đứng ở giữa -->
                     <div class="hidden md:block absolute left-1/2 top-4 bottom-4 w-1 bg-gray-300 -translate-x-1/2 rounded-full"></div>
-                    <div id="projects-timeline-items" class="space-y-12 relative">
-                        <!-- Được render tự động bằng JS -->
-                    </div>
+                    <div id="projects-timeline-items" class="space-y-12 relative"></div>
                 </div>
 
             </div>
@@ -1402,129 +1382,128 @@
 
             // 1. Render Grid View
             const gridEl = document.getElementById('projects-grid-container');
-            gridEl.innerHTML = '';
+            if (gridEl) {
+                gridEl.innerHTML = '';
+                filtered.forEach((proj, idx) => {
+                    const imgSrc = getProjectImage(proj);
+                    const isTesa = proj.id === 'proj-tesa';
+                    const card = document.createElement('div');
+                    card.style.animationDelay = `${idx * 70}ms`;
+                    card.className = `project-card-anim card-pro-hover bg-white rounded-3xl overflow-hidden border ${isTesa ? 'border-2 border-brand-accent shadow-xl' : 'border-gray-200 shadow-md'} flex flex-col justify-between group`;
 
-            filtered.forEach((proj, idx) => {
-                const imgSrc = getProjectImage(proj);
-                const isTesa = proj.id === 'proj-tesa';
-                const card = document.createElement('div');
-                card.style.animationDelay = `${idx * 70}ms`;
-                card.className = `project-card-anim card-pro-hover bg-white rounded-3xl overflow-hidden border ${isTesa ? 'border-2 border-brand-accent shadow-xl' : 'border-gray-200 shadow-md'} flex flex-col justify-between group`;
+                    const tagsHtml = proj.tags.map(t => `<span class="bg-slate-100 text-brand-navy text-[10px] font-bold px-2.5 py-1 rounded-lg border border-gray-200">${t}</span>`).join('');
 
-                const tagsHtml = proj.tags.map(t => `<span class="bg-slate-100 text-brand-navy text-[10px] font-bold px-2.5 py-1 rounded-lg border border-gray-200">${t}</span>`).join('');
+                    card.innerHTML = `
+                        <div>
+                            <div class="h-56 overflow-hidden relative bg-slate-900">
+                                <img src="${imgSrc}" alt="${proj.fallbackAlt}" class="w-full h-full object-cover card-img-zoom transition-transform duration-700">
+                                <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/25 to-transparent"></div>
+                                
+                                <div class="absolute top-3 left-3 flex items-center gap-2">
+                                    <span class="w-8 h-8 rounded-xl bg-amber-500 text-brand-dark font-black text-xs flex items-center justify-center shadow-lg">
+                                        0${idx + 1}
+                                    </span>
+                                    <span class="bg-black/60 backdrop-blur-md text-cyan-300 text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-wider border border-white/15">
+                                        ${proj.categoryName}
+                                    </span>
+                                </div>
 
-                card.innerHTML = `
-                    <div>
-                        <div class="h-56 overflow-hidden relative bg-slate-900">
-                            <img src="${imgSrc}" alt="${proj.fallbackAlt}" class="w-full h-full object-cover card-img-zoom transition-transform duration-700">
-                            <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/25 to-transparent"></div>
-                            
-                            <!-- Số thứ tự & Loại dự án -->
-                            <div class="absolute top-3 left-3 flex items-center gap-2">
-                                <span class="w-8 h-8 rounded-xl bg-amber-500 text-brand-dark font-black text-xs flex items-center justify-center shadow-lg">
-                                    0${idx + 1}
-                                </span>
-                                <span class="bg-black/60 backdrop-blur-md text-cyan-300 text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-wider border border-white/15">
-                                    ${proj.categoryName}
-                                </span>
+                                <button type="button" onclick="triggerProjectImageChange('${proj.id}')" class="absolute top-3 right-3 bg-black/55 hover:bg-amber-500 hover:text-brand-dark text-white text-[10px] font-bold px-2.5 py-1.5 rounded-xl backdrop-blur-sm transition flex items-center shadow" title="Tải ảnh thực tế của dự án này từ máy">
+                                    <i class="fas fa-camera mr-1"></i> Đổi ảnh
+                                </button>
+
+                                <div class="absolute bottom-3 left-4 right-4 text-white">
+                                    <span class="inline-block text-[9px] font-extrabold px-2 py-0.5 rounded bg-emerald-500/90 text-white mb-1">
+                                        <i class="fas fa-check-circle mr-1"></i> ${proj.status}
+                                    </span>
+                                    <h3 class="text-lg font-black tracking-wide leading-snug group-hover:text-amber-400 transition">${proj.title}</h3>
+                                </div>
                             </div>
 
-                            <!-- Nút đổi ảnh dự án trực tiếp -->
-                            <button type="button" onclick="triggerProjectImageChange('${proj.id}')" class="absolute top-3 right-3 bg-black/55 hover:bg-amber-500 hover:text-brand-dark text-white text-[10px] font-bold px-2.5 py-1.5 rounded-xl backdrop-blur-sm transition flex items-center shadow" title="Tải ảnh thực tế của dự án này từ máy">
-                                <i class="fas fa-camera mr-1"></i> Đổi ảnh
-                            </button>
-
-                            <!-- Tên dự án nổi trên nền ảnh -->
-                            <div class="absolute bottom-3 left-4 right-4 text-white">
-                                <span class="inline-block text-[9px] font-extrabold px-2 py-0.5 rounded bg-emerald-500/90 text-white mb-1">
-                                    <i class="fas fa-check-circle mr-1"></i> ${proj.status}
-                                </span>
-                                <h3 class="text-lg font-black tracking-wide leading-snug group-hover:text-amber-400 transition">${proj.title}</h3>
+                            <div class="p-5">
+                                <div class="flex items-start text-xs text-gray-600 font-medium mb-3 bg-amber-50/70 p-2.5 rounded-xl border border-amber-200/70">
+                                    <i class="fas fa-map-marker-alt text-amber-500 mt-0.5 mr-2 shrink-0 text-sm"></i>
+                                    <span class="text-brand-navy font-semibold leading-snug">${proj.address}</span>
+                                </div>
+                                <p class="text-xs text-gray-600 leading-relaxed line-clamp-3 mb-4">
+                                    ${proj.desc}
+                                </p>
+                                <div class="flex flex-wrap gap-1.5">
+                                    ${tagsHtml}
+                                </div>
                             </div>
                         </div>
 
-                        <div class="p-5">
-                            <div class="flex items-start text-xs text-gray-600 font-medium mb-3 bg-amber-50/70 p-2.5 rounded-xl border border-amber-200/70">
-                                <i class="fas fa-map-marker-alt text-amber-500 mt-0.5 mr-2 shrink-0 text-sm"></i>
-                                <span class="text-brand-navy font-semibold leading-snug">${proj.address}</span>
+                        <div class="px-5 py-3.5 bg-slate-50 border-t border-gray-100 flex justify-between items-center">
+                            <button onclick="openProjectDetailModal('${proj.id}')" class="text-xs font-extrabold text-brand-blue hover:text-brand-accent flex items-center transition">
+                                <i class="fas fa-info-circle mr-1.5"></i> Xem Chi Tiết Hạng Mục
+                            </button>
+                            ${isTesa ? `
+                                <button onclick="navigateTo('maintenance-portal')" class="btn-interactive bg-brand-accent text-brand-dark font-extrabold px-3 py-1 rounded-lg text-[11px] flex items-center shadow-sm">
+                                    <i class="fas fa-qrcode mr-1"></i> Tra Cứu QR
+                                </button>
+                            ` : `
+                                <span class="text-[11px] font-bold text-emerald-600"><i class="fas fa-shield-alt mr-1"></i> Chuẩn ISO</span>
+                            `}
+                        </div>
+                    `;
+                    gridEl.appendChild(card);
+                });
+            }
+
+            // 2. Render Brochure Timeline View
+            const timelineEl = document.getElementById('projects-timeline-items');
+            if (timelineEl) {
+                timelineEl.innerHTML = '';
+                filtered.forEach((proj, idx) => {
+                    const imgSrc = getProjectImage(proj);
+                    const isEven = idx % 2 === 0;
+                    const row = document.createElement('div');
+                    row.style.animationDelay = `${idx * 80}ms`;
+                    row.className = "project-card-anim flex flex-col md:flex-row items-center justify-between gap-6 relative";
+
+                    const imageBox = `
+                        <div class="w-full md:w-5/12 group">
+                            <div class="relative h-56 sm:h-64 overflow-hidden shadow-xl border-4 border-white ${isEven ? 'brochure-leaf-left' : 'brochure-leaf-right'} bg-slate-900 card-pro-hover">
+                                <img src="${imgSrc}" alt="${proj.title}" class="w-full h-full object-cover card-img-zoom transition-transform duration-700">
+                                <button type="button" onclick="triggerProjectImageChange('${proj.id}')" class="absolute top-3 right-3 bg-black/60 hover:bg-amber-500 hover:text-brand-dark text-white text-[10px] font-bold px-2.5 py-1 rounded-lg backdrop-blur-sm transition">
+                                    <i class="fas fa-camera mr-1"></i> Đổi ảnh
+                                </button>
                             </div>
-                            <p class="text-xs text-gray-600 leading-relaxed line-clamp-3 mb-4">
+                        </div>
+                    `;
+
+                    const infoBox = `
+                        <div class="w-full md:w-5/12 ${isEven ? 'md:text-left' : 'md:text-right'} flex flex-col ${isEven ? 'md:items-start' : 'md:items-end'}">
+                            <div onclick="openProjectDetailModal('${proj.id}')" class="cursor-pointer bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-600 hover:to-amber-500 text-white font-black text-base sm:text-lg px-6 py-3 rounded-full shadow-lg transition transform hover:-translate-y-1 inline-flex items-center gap-2">
+                                ${!isEven ? `<i class="fas fa-caret-left text-white"></i>` : ''}
+                                <span>${proj.title}</span>
+                                ${isEven ? `<i class="fas fa-caret-right text-white"></i>` : ''}
+                            </div>
+                            <p class="text-brand-navy font-bold text-xs sm:text-sm mt-2.5 px-2">
+                                <i class="fas fa-map-marker-alt text-amber-500 mr-1"></i> ${proj.address}
+                            </p>
+                            <p class="text-gray-500 text-xs mt-1.5 px-2 max-w-md leading-relaxed">
                                 ${proj.desc}
                             </p>
-                            <div class="flex flex-wrap gap-1.5">
-                                ${tagsHtml}
-                            </div>
                         </div>
-                    </div>
+                    `;
 
-                    <div class="px-5 py-3.5 bg-slate-50 border-t border-gray-100 flex justify-between items-center">
-                        <button onclick="openProjectDetailModal('${proj.id}')" class="text-xs font-extrabold text-brand-blue hover:text-brand-accent flex items-center transition">
-                            <i class="fas fa-info-circle mr-1.5"></i> Xem Chi Tiết Hạng Mục
-                        </button>
-                        ${isTesa ? `
-                            <button onclick="navigateTo('maintenance-portal')" class="btn-interactive bg-brand-accent text-brand-dark font-extrabold px-3 py-1 rounded-lg text-[11px] flex items-center shadow-sm">
-                                <i class="fas fa-qrcode mr-1"></i> Tra Cứu QR
-                            </button>
-                        ` : `
-                            <span class="text-[11px] font-bold text-emerald-600"><i class="fas fa-shield-alt mr-1"></i> Chuẩn ISO</span>
-                        `}
-                    </div>
-                `;
-                gridEl.appendChild(card);
-            });
-
-            // 2. Render Brochure Timeline View (Giống hệt thiết kế sơ đồ trục dọc trong ảnh của anh)
-            const timelineEl = document.getElementById('projects-timeline-items');
-            timelineEl.innerHTML = '';
-
-            filtered.forEach((proj, idx) => {
-                const imgSrc = getProjectImage(proj);
-                const isEven = idx % 2 === 0; // Chẵn: Ảnh bên trái - Tên màu cam bên phải; Lẻ: Tên màu cam bên trái - Ảnh bên phải
-                const row = document.createElement('div');
-                row.style.animationDelay = `${idx * 80}ms`;
-                row.className = "project-card-anim flex flex-col md:flex-row items-center justify-between gap-6 relative";
-
-                const imageBox = `
-                    <div class="w-full md:w-5/12 group">
-                        <div class="relative h-56 sm:h-64 overflow-hidden shadow-xl border-4 border-white ${isEven ? 'brochure-leaf-left' : 'brochure-leaf-right'} bg-slate-900 card-pro-hover">
-                            <img src="${imgSrc}" alt="${proj.title}" class="w-full h-full object-cover card-img-zoom transition-transform duration-700">
-                            <button type="button" onclick="triggerProjectImageChange('${proj.id}')" class="absolute top-3 right-3 bg-black/60 hover:bg-amber-500 hover:text-brand-dark text-white text-[10px] font-bold px-2.5 py-1 rounded-lg backdrop-blur-sm transition">
-                                <i class="fas fa-camera mr-1"></i> Đổi ảnh
-                            </button>
+                    const centerNode = `
+                        <div class="hidden md:flex w-12 h-12 rounded-full bg-white border-4 border-amber-500 shadow-xl items-center justify-center z-10 shrink-0 font-black text-brand-navy text-xs">
+                            0${idx + 1}
                         </div>
-                    </div>
-                `;
+                    `;
 
-                const infoBox = `
-                    <div class="w-full md:w-5/12 ${isEven ? 'md:text-left' : 'md:text-right'} flex flex-col ${isEven ? 'md:items-start' : 'md:items-end'}">
-                        <div onclick="openProjectDetailModal('${proj.id}')" class="cursor-pointer bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-600 hover:to-amber-500 text-white font-black text-base sm:text-lg px-6 py-3 rounded-full shadow-lg transition transform hover:-translate-y-1 inline-flex items-center gap-2">
-                            ${!isEven ? `<i class="fas fa-caret-left text-white"></i>` : ''}
-                            <span>${proj.title}</span>
-                            ${isEven ? `<i class="fas fa-caret-right text-white"></i>` : ''}
-                        </div>
-                        <p class="text-brand-navy font-bold text-xs sm:text-sm mt-2.5 px-2">
-                            <i class="fas fa-map-marker-alt text-amber-500 mr-1"></i> ${proj.address}
-                        </p>
-                        <p class="text-gray-500 text-xs mt-1.5 px-2 max-w-md leading-relaxed">
-                            ${proj.desc}
-                        </p>
-                    </div>
-                `;
+                    if (isEven) {
+                        row.innerHTML = `${imageBox} ${centerNode} ${infoBox}`;
+                    } else {
+                        row.innerHTML = `${infoBox} ${centerNode} ${imageBox}`;
+                    }
 
-                const centerNode = `
-                    <div class="hidden md:flex w-12 h-12 rounded-full bg-white border-4 border-amber-500 shadow-xl items-center justify-center z-10 shrink-0 font-black text-brand-navy text-xs">
-                        0${idx + 1}
-                    </div>
-                `;
-
-                if (isEven) {
-                    row.innerHTML = `${imageBox} ${centerNode} ${infoBox}`;
-                } else {
-                    row.innerHTML = `${infoBox} ${centerNode} ${imageBox}`;
-                }
-
-                timelineEl.appendChild(row);
-            });
+                    timelineEl.appendChild(row);
+                });
+            }
         }
 
         function openProjectDetailModal(projId) {
@@ -1583,7 +1562,6 @@
             event.target.value = '';
         }
 
-        /* ==================== UPLOAD ẢNH NHÂN LỰC TRANG CHỦ ==================== */
         function uploadHrPhoto(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -2090,7 +2068,7 @@
                 loadDefaultFormTasks([
                     { title: 'Vệ sinh tổng quan vỏ máy', detail: 'Lau chùi sạch sẽ bụi bẩn, kiểm tra ngoại quan.' },
                     { title: 'Kiểm tra cơ khí / Trục động cơ', detail: 'Kiểm tra độ rơ, độ rung bất thường.' },
-                    { title: 'Tra mỡ / Dầu bôi trơn', detail: 'Bổ sung mỡ bò chịu nhiệt tại các gối đỡ ổ bi.' },
+                    { title: 'Tra mỡ / Dầu bôi trơn', detail: 'Bổ sung mỡ bò chịu nhiệt chuyên dụng cho 2 gối đỡ ổ bi.' },
                     { title: 'Đo điện trở cách điện', detail: 'Đo kiểm tra an toàn điện bằng đồng hồ chuyên dụng.' },
                     { title: 'Kiểm tra dòng điện vận hành', detail: 'Đo dòng tải thực tế các pha đảm bảo trong định mức.' },
                     { title: 'Kiểm tra bu lông, đai ốc', detail: 'Siết chặt lại các điểm đấu nối và chân đế.' },
