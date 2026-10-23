@@ -32,140 +32,73 @@
         }
     </script>
     <style>
-        /* GLASS & BACKGROUND STYLES */
-        html {
-            scroll-behavior: smooth;
-        }
-        .glass-header {
-            background: rgba(15, 43, 72, 0.95);
-            backdrop-filter: blur(12px);
-        }
+        html { scroll-behavior: smooth; }
+        .glass-header { background: rgba(15, 43, 72, 0.95); backdrop-filter: blur(12px); }
         .hero-gradient {
             background: linear-gradient(135deg, rgba(15, 43, 72, 0.92) 0%, rgba(19, 84, 138, 0.85) 100%), 
                         url('https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=1600&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
+            background-size: cover; background-position: center;
         }
 
-        /* ULTIMATE PAGE TRANSITION ANIMATION */
         .page-section {
             opacity: 0;
             transform: translateY(24px) scale(0.99);
             transition: opacity 0.45s cubic-bezier(0.25, 1, 0.5, 1), transform 0.45s cubic-bezier(0.25, 1, 0.5, 1);
             will-change: opacity, transform;
         }
+        .page-section.active-section { opacity: 1; transform: translateY(0) scale(1); }
 
-        .page-section.active-section {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
+        .btn-interactive { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+        .btn-interactive:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -5px rgba(0, 168, 204, 0.4); }
+        .btn-interactive:active { transform: translateY(1px) scale(0.97); }
 
-        .tab-content-anim {
-            animation: tabFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
+        .card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .card-hover:hover { transform: translateY(-6px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
 
-        @keyframes tabFadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* CUSTOM BUTTON HOVER EFFECT & CLICK SHINK */
-        .btn-interactive {
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .btn-interactive:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px -5px rgba(0, 168, 204, 0.4);
-        }
-        .btn-interactive:active {
-            transform: translateY(1px) scale(0.97);
-        }
-
-        /* CARD HOVER LIFT EFFECT */
-        .card-hover {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .card-hover:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-
-        /* SHIMMER SCAN EFFECT FOR QR BUTTON */
-        .scan-glow {
-            position: relative;
-            overflow: hidden;
-        }
+        .scan-glow { position: relative; overflow: hidden; }
         .scan-glow::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
-                60deg,
-                transparent 30%,
-                rgba(255, 255, 255, 0.3) 50%,
-                transparent 70%
-            );
-            transform: rotate(30deg);
-            animation: shimmer 3.5s infinite;
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: linear-gradient(60deg, transparent 30%, rgba(255, 255, 255, 0.3) 50%, transparent 70%);
+            transform: rotate(30deg); animation: shimmer 3.5s infinite;
         }
-        @keyframes shimmer {
-            0% { transform: translate(-100%, -100%) rotate(30deg); }
-            100% { transform: translate(100%, 100%) rotate(30deg); }
-        }
+        @keyframes shimmer { 0% { transform: translate(-100%, -100%) rotate(30deg); } 100% { transform: translate(100%, 100%) rotate(30deg); } }
 
-        /* NAV LINK UNDERLINE ANIMATION */
-        .nav-link {
-            position: relative;
-        }
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -2px;
-            left: 0;
-            background-color: #00a8cc;
-            transition: width 0.3s ease;
-        }
-        .nav-link:hover::after, .nav-link.active::after {
-            width: 100%;
-        }
-        .nav-link.active {
-            color: #00a8cc;
-        }
+        .nav-link { position: relative; }
+        .nav-link::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -2px; left: 0; background-color: #00a8cc; transition: width 0.3s ease; }
+        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+        .nav-link.active { color: #00a8cc; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans flex flex-col min-h-screen selection:bg-brand-accent selection:text-white">
+<body class="bg-gray-50 text-gray-800 font-sans flex flex-col min-h-screen">
 
     <!-- TOP BAR -->
     <div class="bg-brand-dark text-gray-300 text-xs py-2 px-4 border-b border-gray-800 hidden md:block">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-6">
-                <span class="hover:text-white transition"><i class="fas fa-phone-alt text-brand-accent mr-2"></i>Hotline: 0988.123.456</span>
-                <span class="hover:text-white transition"><i class="fas fa-envelope text-brand-accent mr-2"></i>contact@hiconme.vn</span>
+                <span><i class="fas fa-phone-alt text-brand-accent mr-2"></i>Hotline: 0988.123.456</span>
+                <span><i class="fas fa-envelope text-brand-accent mr-2"></i>contact@hiconme.vn</span>
                 <span><i class="fas fa-map-marker-alt text-brand-accent mr-2"></i>KCN DEEP C, Hải Phòng - Hà Nội</span>
             </div>
             <div class="flex items-center space-x-4">
                 <span class="bg-emerald-600 text-white px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide animate-pulse">CỔNG BÁO CÁO SỐ HÓA QR</span>
-                <a href="#maintenance-portal" onclick="navigateTo('maintenance-portal')" class="hover:text-brand-accent transition flex items-center"><i class="fas fa-qrcode mr-1"></i> Tra Cứu QR</a>
+                <button onclick="openAdminModal()" class="bg-amber-500 hover:bg-amber-600 text-brand-dark px-3 py-1 rounded-md font-bold text-[11px] transition flex items-center shadow-md">
+                    <i class="fas fa-lock mr-1.5"></i> CẬP NHẬT THIẾT BỊ (NV)
+                </button>
             </div>
         </div>
     </div>
 
     <!-- MAIN HEADER -->
-    <header class="glass-header sticky top-0 z-50 text-white shadow-xl transition-all duration-300">
+    <header class="glass-header sticky top-0 z-50 text-white shadow-xl">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
                 <!-- LOGO -->
                 <div class="flex items-center space-x-3 cursor-pointer group" onclick="navigateTo('home')">
-                    <div class="w-12 h-12 bg-gradient-to-tr from-brand-blue to-brand-accent rounded-xl flex items-center justify-center font-bold text-2xl text-white shadow-lg border border-cyan-400/40 group-hover:scale-105 group-hover:rotate-3 transition duration-300">
+                    <div class="w-12 h-12 bg-gradient-to-tr from-brand-blue to-brand-accent rounded-xl flex items-center justify-center font-bold text-2xl text-white shadow-lg border border-cyan-400/40">
                         H
                     </div>
                     <div>
-                        <div class="text-xl font-black tracking-wider text-white group-hover:text-brand-accent transition">HICON <span class="text-brand-accent">M&E</span></div>
+                        <div class="text-xl font-black tracking-wider text-white">HICON <span class="text-brand-accent">M&E</span></div>
                         <div class="text-[10px] uppercase text-gray-300 tracking-widest font-light">Cơ Điện & Bảo Trì Công Nghiệp</div>
                     </div>
                 </div>
@@ -179,15 +112,21 @@
                     <button onclick="navigateTo('maintenance-portal')" id="nav-maintenance-portal" class="nav-link py-2 text-brand-accent font-bold hover:text-white transition flex items-center">
                         <i class="fas fa-qrcode mr-1.5 text-lg"></i> BÁO CÁO BẢO TRÌ
                     </button>
+                    <button onclick="openAdminModal()" class="text-amber-400 font-bold hover:text-white transition flex items-center py-2">
+                        <i class="fas fa-plus-circle mr-1 text-base"></i> THÊM BÁO CÁO
+                    </button>
                     <button onclick="navigateTo('contact')" id="nav-contact" class="nav-link py-2 hover:text-brand-accent transition">LIÊN HỆ</button>
                 </nav>
 
                 <!-- MOBILE MENU BUTTON -->
                 <div class="md:hidden flex items-center space-x-2">
-                    <button onclick="navigateTo('maintenance-portal')" class="bg-brand-accent text-brand-dark p-2 rounded-lg font-bold text-xs flex items-center shadow-md active:scale-95 transition">
+                    <button onclick="openAdminModal()" class="bg-amber-500 text-brand-dark px-2.5 py-1.5 rounded-lg font-bold text-xs flex items-center">
+                        <i class="fas fa-plus mr-1"></i> Update
+                    </button>
+                    <button onclick="navigateTo('maintenance-portal')" class="bg-brand-accent text-brand-dark p-2 rounded-lg font-bold text-xs flex items-center">
                         <i class="fas fa-qrcode text-base"></i>
                     </button>
-                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="text-gray-300 hover:text-white focus:outline-none p-2 rounded-lg active:bg-white/10 transition">
+                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="text-gray-300 hover:text-white p-2">
                         <i class="fas fa-bars text-2xl"></i>
                     </button>
                 </div>
@@ -195,99 +134,67 @@
         </div>
 
         <!-- MOBILE NAV -->
-        <div id="mobile-menu" class="hidden md:hidden bg-brand-dark/95 backdrop-blur-lg border-t border-gray-800 px-4 pt-2 pb-4 space-y-2 text-sm font-medium transition-all duration-300">
-            <button onclick="navigateTo('home'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-gray-300 hover:text-brand-accent border-b border-gray-800/50">TRANG CHỦ</button>
-            <button onclick="navigateTo('about'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-gray-300 hover:text-brand-accent border-b border-gray-800/50">GIỚI THIỆU</button>
-            <button onclick="navigateTo('services'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-gray-300 hover:text-brand-accent border-b border-gray-800/50">DỊCH VỤ M&E</button>
-            <button onclick="navigateTo('projects'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-gray-300 hover:text-brand-accent border-b border-gray-800/50">DỰ ÁN</button>
-            <button onclick="navigateTo('maintenance-portal'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-brand-accent font-bold border-b border-gray-800/50"><i class="fas fa-qrcode mr-2"></i> TRA CỨU BÁO CÁO QR</button>
-            <button onclick="navigateTo('contact'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-gray-300 hover:text-brand-accent">LIÊN HỆ</button>
+        <div id="mobile-menu" class="hidden md:hidden bg-brand-dark/95 border-t border-gray-800 px-4 pt-2 pb-4 space-y-2 text-sm font-medium">
+            <button onclick="navigateTo('home'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-gray-300">TRANG CHỦ</button>
+            <button onclick="navigateTo('about'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-gray-300">GIỚI THIỆU</button>
+            <button onclick="navigateTo('services'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-gray-300">DỊCH VỤ M&E</button>
+            <button onclick="navigateTo('projects'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-gray-300">DỰ ÁN</button>
+            <button onclick="navigateTo('maintenance-portal'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-brand-accent font-bold"><i class="fas fa-qrcode mr-2"></i> TRA CỨU BÁO CÁO QR</button>
+            <button onclick="openAdminModal(); toggleMobileMenu()" class="block w-full text-left py-2.5 text-amber-400 font-bold"><i class="fas fa-lock mr-2"></i> TẠO / CẬP NHẬT BÁO CÁO (NV)</button>
+            <button onclick="navigateTo('contact'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-gray-300">LIÊN HỆ</button>
         </div>
     </header>
 
-    <!-- CONTENT SECTIONS -->
+    <!-- MAIN CONTENT -->
     <main class="flex-grow">
         
         <!-- SECTION 1: TRANG CHỦ -->
         <div id="section-home" class="page-section hidden">
-            <!-- HERO BANNER -->
-            <div class="hero-gradient text-white py-24 px-4 sm:px-6 lg:px-8 text-center relative overflow-hidden">
-                <div class="max-w-4xl mx-auto relative z-10">
-                    <span class="inline-block bg-brand-accent/20 text-brand-accent border border-brand-accent/40 rounded-full px-4 py-1.5 text-xs font-semibold mb-6 tracking-wide uppercase shadow-inner hover:scale-105 transition duration-300 cursor-pointer">
+            <div class="hero-gradient text-white py-24 px-4 text-center relative">
+                <div class="max-w-4xl mx-auto">
+                    <span class="inline-block bg-brand-accent/20 text-brand-accent border border-brand-accent/40 rounded-full px-4 py-1.5 text-xs font-semibold mb-6 uppercase">
                         <i class="fas fa-check-circle mr-1.5"></i> Chuẩn Hóa Báo Cáo Số Hóa Cho Chủ Đầu Tư
                     </span>
-                    <h1 class="text-3xl sm:text-5xl font-black leading-tight mb-6 tracking-tight">
+                    <h1 class="text-3xl sm:text-5xl font-black leading-tight mb-6">
                         NHÀ THẦU CƠ ĐIỆN M&E <br>
                         <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-200">BẢO TRÌ CÔNG NGHIỆP CHUYÊN NGHIỆP</span>
                     </h1>
-                    <p class="text-base sm:text-lg text-gray-200 mb-8 max-w-2xl mx-auto font-light leading-relaxed">
-                        Chuyên thi công, vận hành và bảo trì toàn diện hệ thống HVAC, PCCC, Điện công nghiệp, Chiller và Cấp thoát nước cho nhà máy, tòa nhà. Quản lý minh bạch 100% qua QR Code.
+                    <p class="text-base sm:text-lg text-gray-200 mb-8 max-w-2xl mx-auto font-light">
+                        Chuyên thi công, vận hành và bảo trì toàn diện hệ thống HVAC, PCCC, Điện công nghiệp, Chiller. Quản lý minh bạch 100% qua QR Code.
                     </p>
                     <div class="flex flex-col sm:flex-row justify-center gap-4">
                         <button onclick="navigateTo('maintenance-portal')" class="scan-glow btn-interactive bg-brand-accent hover:bg-cyan-400 text-brand-dark font-extrabold px-8 py-4 rounded-xl shadow-2xl flex items-center justify-center text-base">
                             <i class="fas fa-qrcode mr-2.5 text-xl"></i> Quét / Tra Cứu Mã QR Bảo Trì
                         </button>
-                        <button onclick="navigateTo('services')" class="btn-interactive bg-white/10 hover:bg-white/20 text-white font-semibold px-8 py-4 rounded-xl border border-white/30 backdrop-blur-sm text-base">
-                            Khám Phá Dịch Vụ
+                        <button onclick="openAdminModal()" class="btn-interactive bg-amber-500 hover:bg-amber-600 text-brand-dark font-bold px-8 py-4 rounded-xl text-base shadow-xl flex items-center justify-center">
+                            <i class="fas fa-plus-circle mr-2 text-xl"></i> Cập Nhật Dữ Liệu Thiết Bị
                         </button>
                     </div>
                 </div>
             </div>
-
-            <!-- FEATURES / HIGHLIGHTS -->
+            
             <div class="py-16 bg-white">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="max-w-7xl mx-auto px-4">
                     <div class="text-center mb-12">
                         <h2 class="text-2xl sm:text-3xl font-bold text-brand-navy">TẠI SAO CHỦ ĐẦU TƯ TIN TƯỞNG HICON M&E?</h2>
                         <div class="w-20 h-1 bg-brand-accent mx-auto mt-3 rounded-full"></div>
                     </div>
-
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div class="card-hover p-6 rounded-2xl bg-brand-light border border-gray-200/80 group">
-                            <div class="w-14 h-14 bg-brand-navy text-brand-accent rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 group-hover:bg-brand-accent group-hover:text-brand-navy transition duration-300 shadow-md">
-                                <i class="fas fa-qrcode"></i>
-                            </div>
+                        <div class="card-hover p-6 rounded-2xl bg-brand-light border border-gray-200">
+                            <div class="w-14 h-14 bg-brand-navy text-brand-accent rounded-xl flex items-center justify-center text-2xl mb-4"><i class="fas fa-qrcode"></i></div>
                             <h3 class="text-xl font-bold text-brand-navy mb-2">Số Hóa Báo Cáo Minh Bạch</h3>
-                            <p class="text-gray-600 text-sm leading-relaxed">Tất cả thiết bị đều dán mã QR. Chủ đầu tư quét mã xem ngay nhật ký kiểm tra, thông số kỹ thuật, hình ảnh hiện trường và chữ ký nghiệm thu real-time.</p>
+                            <p class="text-gray-600 text-sm">Tất cả thiết bị đều dán mã QR. Chủ đầu tư quét mã xem ngay nhật ký kiểm tra, thông số kỹ thuật, hình ảnh hiện trường real-time.</p>
                         </div>
-
-                        <div class="card-hover p-6 rounded-2xl bg-brand-light border border-gray-200/80 group">
-                            <div class="w-14 h-14 bg-brand-navy text-brand-accent rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 group-hover:bg-brand-accent group-hover:text-brand-navy transition duration-300 shadow-md">
-                                <i class="fas fa-user-shield"></i>
-                            </div>
+                        <div class="card-hover p-6 rounded-2xl bg-brand-light border border-gray-200">
+                            <div class="w-14 h-14 bg-brand-navy text-brand-accent rounded-xl flex items-center justify-center text-2xl mb-4"><i class="fas fa-user-shield"></i></div>
                             <h3 class="text-xl font-bold text-brand-navy mb-2">Đội Ngũ Kỹ Sư Chuẩn Hóa</h3>
-                            <p class="text-gray-600 text-sm leading-relaxed">Kỹ sư M&E được đào tạo bài bản, tuân thủ nghiêm ngặt quy trình an toàn lao động, nắm rõ các tiêu chuẩn TCVN & NFPA về bảo dưỡng thiết bị.</p>
+                            <p class="text-gray-600 text-sm">Kỹ sư M&E tuân thủ nghiêm ngặt quy trình an toàn lao động, nắm rõ các tiêu chuẩn TCVN & NFPA về bảo dưỡng thiết bị.</p>
                         </div>
-
-                        <div class="card-hover p-6 rounded-2xl bg-brand-light border border-gray-200/80 group">
-                            <div class="w-14 h-14 bg-brand-navy text-brand-accent rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 group-hover:bg-brand-accent group-hover:text-brand-navy transition duration-300 shadow-md">
-                                <i class="fas fa-clock"></i>
-                            </div>
+                        <div class="card-hover p-6 rounded-2xl bg-brand-light border border-gray-200">
+                            <div class="w-14 h-14 bg-brand-navy text-brand-accent rounded-xl flex items-center justify-center text-2xl mb-4"><i class="fas fa-clock"></i></div>
                             <h3 class="text-xl font-bold text-brand-navy mb-2">Phản Ứng Sự Cố 24/7</h3>
-                            <p class="text-gray-600 text-sm leading-relaxed">Cam kết có mặt xử lý sự cố khẩn cấp trong vòng 1-2h đối với các nhà máy trong khu công nghiệp, đảm bảo chuỗi sản xuất không bị gián đoạn.</p>
+                            <p class="text-gray-600 text-sm">Cam kết có mặt xử lý sự cố khẩn cấp trong vòng 1-2h đối với các nhà máy trong khu công nghiệp, không làm gián đoạn sản xuất.</p>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- STATS NUMBERS -->
-            <div class="bg-brand-navy text-white py-12 relative overflow-hidden">
-                <div class="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8 text-center relative z-10">
-                    <div class="hover:scale-105 transition duration-300">
-                        <div class="text-3xl sm:text-4xl font-extrabold text-brand-accent">10+</div>
-                        <div class="text-xs sm:text-sm text-gray-300 mt-1 uppercase font-medium">Năm Kinh Nghiệm</div>
-                    </div>
-                    <div class="hover:scale-105 transition duration-300">
-                        <div class="text-3xl sm:text-4xl font-extrabold text-brand-accent">150+</div>
-                        <div class="text-xs sm:text-sm text-gray-300 mt-1 uppercase font-medium">Nhà Máy & Tòa Nhà</div>
-                    </div>
-                    <div class="hover:scale-105 transition duration-300">
-                        <div class="text-3xl sm:text-4xl font-extrabold text-brand-accent">10,000+</div>
-                        <div class="text-xs sm:text-sm text-gray-300 mt-1 uppercase font-medium">Mã Thiết Bị Dán QR</div>
-                    </div>
-                    <div class="hover:scale-105 transition duration-300">
-                        <div class="text-3xl sm:text-4xl font-extrabold text-brand-accent">99.8%</div>
-                        <div class="text-xs sm:text-sm text-gray-300 mt-1 uppercase font-medium">Chủ Đầu Tư Hài Lòng</div>
                     </div>
                 </div>
             </div>
@@ -295,100 +202,52 @@
 
         <!-- SECTION 2: GIỚI THIỆU -->
         <div id="section-about" class="page-section hidden py-12 bg-white">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto px-4">
                 <div class="text-center mb-10">
                     <span class="text-brand-blue font-bold text-sm tracking-widest uppercase">Về Chúng Tôi</span>
                     <h2 class="text-3xl font-extrabold text-brand-navy mt-1">CÔNG TY CỔ PHẦN HICON M&E</h2>
                     <div class="w-16 h-1 bg-brand-accent mx-auto mt-2 rounded-full"></div>
                 </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                     <div>
                         <h3 class="text-2xl font-bold text-brand-navy mb-4">Đối Tác Tin Cậy Trong Lĩnh Vực Cơ Điện Công Nghiệp</h3>
                         <p class="text-gray-600 mb-4 leading-relaxed">
-                            <strong>HICON M&E</strong> là nhà thầu chuyên nghiệp hàng đầu tại Việt Nam cung cấp giải pháp trọn gói về thiết kế, thi công, vận hành và bảo trì hệ thống Cơ Điện (M&E) cho các nhà máy công nghiệp, dự án FDI, trung tâm thương mại và tòa nhà cao tầng.
+                            <strong>HICON M&E</strong> là nhà thầu chuyên nghiệp cung cấp giải pháp trọn gói về thiết kế, thi công, vận hành và bảo trì hệ thống Cơ Điện (M&E) cho các nhà máy công nghiệp, dự án FDI, tòa nhà cao tầng.
                         </p>
                         <p class="text-gray-600 mb-6 leading-relaxed">
-                            Với phương châm <em>"An toàn - Chính xác - Số hóa - Bền vững"</em>, chúng tôi không chỉ bảo dưỡng thiết bị theo định kỳ mà còn đi đầu trong việc ứng dụng công nghệ 4.0 (QR Code, IoT Report) để minh bạch hóa toàn bộ dữ liệu kiểm tra cho Chủ đầu tư và Ban quản lý nhà máy.
+                            Ứng dụng công nghệ chuyển đổi số 4.0 (Báo cáo QR Code, Nhật ký bảo trì điện tử) để minh bạch hóa toàn bộ dữ liệu kiểm tra cho Chủ đầu tư và Ban quản lý nhà máy.
                         </p>
-                        <div class="space-y-3">
-                            <div class="flex items-center text-sm font-semibold text-brand-navy hover:translate-x-1 transition">
-                                <i class="fas fa-check-circle text-brand-accent mr-3 text-base"></i> Đạt chứng nhận ISO 9001:2015 & ISO 45001:2018
-                            </div>
-                            <div class="flex items-center text-sm font-semibold text-brand-navy hover:translate-x-1 transition">
-                                <i class="fas fa-check-circle text-brand-accent mr-3 text-base"></i> Hệ thống báo cáo online không phụ thuộc giấy tờ
-                            </div>
-                            <div class="flex items-center text-sm font-semibold text-brand-navy hover:translate-x-1 transition">
-                                <i class="fas fa-check-circle text-brand-accent mr-3 text-base"></i> Đội ngũ kỹ sư cơ điện giàu kinh nghiệm thực chiến
-                            </div>
-                        </div>
                     </div>
-                    <div class="overflow-hidden rounded-2xl shadow-2xl group">
-                        <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=1200&auto=format&fit=crop" alt="HICON M&E Engineers" class="object-cover w-full h-96 group-hover:scale-105 transition duration-500">
+                    <div>
+                        <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=1200&auto=format&fit=crop" class="rounded-2xl shadow-2xl object-cover w-full h-96">
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- SECTION 3: DỊCH VỤ M&E -->
+        <!-- SECTION 3: DỊCH VỤ -->
         <div id="section-services" class="page-section hidden py-12 bg-gray-50">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto px-4">
                 <div class="text-center mb-12">
-                    <span class="text-brand-blue font-bold text-sm tracking-widest uppercase">Năng Lực HICON M&E</span>
-                    <h2 class="text-3xl font-extrabold text-brand-navy mt-1">DỊCH VỤ CƠ ĐIỆN & BẢO TRÌ CHUYÊN SÂU</h2>
+                    <span class="text-brand-blue font-bold text-sm uppercase">Năng Lực HICON M&E</span>
+                    <h2 class="text-3xl font-extrabold text-brand-navy mt-1">DỊCH VỤ CƠ ĐIỆN & BẢO TRÀ CHUYÊN SÂU</h2>
                     <div class="w-16 h-1 bg-brand-accent mx-auto mt-2 rounded-full"></div>
                 </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Card 1 -->
-                    <div class="card-hover bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between group">
-                        <div>
-                            <div class="h-48 overflow-hidden relative">
-                                <img src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                            </div>
-                            <div class="p-6">
-                                <span class="text-xs font-bold text-brand-accent bg-cyan-50 px-2.5 py-1 rounded-md">HỆ THỐNG HVAC & CHILLER</span>
-                                <h3 class="text-xl font-bold text-brand-navy mt-2 mb-2">Bảo Trì Điều Hòa Thông Gió</h3>
-                                <p class="text-gray-600 text-sm leading-relaxed mb-4">Bảo dưỡng định kỳ Chiller, AHU, FCU, quạt thông gió nhà xưởng, cân bằng lưu lượng gió và vệ sinh phin lọc định kỳ.</p>
-                            </div>
-                        </div>
-                        <div class="px-6 pb-6">
-                            <button onclick="navigateTo('contact')" class="text-brand-blue font-bold text-sm hover:text-brand-accent flex items-center group-hover:translate-x-1 transition">Liên hệ tư vấn <i class="fas fa-arrow-right ml-2 text-xs"></i></button>
-                        </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100 card-hover">
+                        <span class="text-xs font-bold text-brand-accent bg-cyan-50 px-2.5 py-1 rounded-md">HVAC & CHILLER</span>
+                        <h3 class="text-xl font-bold text-brand-navy mt-2 mb-2">Bảo Trì Điều Hòa Thông Gió</h3>
+                        <p class="text-gray-600 text-sm">Bảo dưỡng định kỳ Chiller, AHU, FCU, quạt thông gió nhà xưởng, cân bằng lưu lượng gió.</p>
                     </div>
-
-                    <!-- Card 2 -->
-                    <div class="card-hover bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between group">
-                        <div>
-                            <div class="h-48 overflow-hidden relative">
-                                <img src="https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                            </div>
-                            <div class="p-6">
-                                <span class="text-xs font-bold text-brand-accent bg-cyan-50 px-2.5 py-1 rounded-md">PCCC & BÁO CHÁY</span>
-                                <h3 class="text-xl font-bold text-brand-navy mt-2 mb-2">Bảo Trì Phòng Cháy Chữa Cháy</h3>
-                                <p class="text-gray-600 text-sm leading-relaxed mb-4">Kiểm tra máy bơm chữa cháy Electric/Diesel, tủ trung tâm Telefire, mạng lưới Sprinkler, bình chữa cháy, đầu báo khói.</p>
-                            </div>
-                        </div>
-                        <div class="px-6 pb-6">
-                            <button onclick="navigateTo('contact')" class="text-brand-blue font-bold text-sm hover:text-brand-accent flex items-center group-hover:translate-x-1 transition">Liên hệ tư vấn <i class="fas fa-arrow-right ml-2 text-xs"></i></button>
-                        </div>
+                    <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100 card-hover">
+                        <span class="text-xs font-bold text-brand-accent bg-cyan-50 px-2.5 py-1 rounded-md">PCCC & BÁO CHÁY</span>
+                        <h3 class="text-xl font-bold text-brand-navy mt-2 mb-2">Bảo Trì Phòng Cháy Chữa Cháy</h3>
+                        <p class="text-gray-600 text-sm">Kiểm tra máy bơm chữa cháy Electric/Diesel, tủ trung tâm Telefire, mạng lưới Sprinkler.</p>
                     </div>
-
-                    <!-- Card 3 -->
-                    <div class="card-hover bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between group">
-                        <div>
-                            <div class="h-48 overflow-hidden relative">
-                                <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                            </div>
-                            <div class="p-6">
-                                <span class="text-xs font-bold text-brand-accent bg-cyan-50 px-2.5 py-1 rounded-md">ĐIỆN & NĂNG LƯỢNG</span>
-                                <h3 class="text-xl font-bold text-brand-navy mt-2 mb-2">Điện Động Lực & Trạm Biến Áp</h3>
-                                <p class="text-gray-600 text-sm leading-relaxed mb-4">Bảo dưỡng trạm biến áp, tủ MSB, đo điện trở cách điện motor, kiểm tra dòng tải, cân pha và đo nhiệt độ mối nối bằng hồng ngoại.</p>
-                            </div>
-                        </div>
-                        <div class="px-6 pb-6">
-                            <button onclick="navigateTo('contact')" class="text-brand-blue font-bold text-sm hover:text-brand-accent flex items-center group-hover:translate-x-1 transition">Liên hệ tư vấn <i class="fas fa-arrow-right ml-2 text-xs"></i></button>
-                        </div>
+                    <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100 card-hover">
+                        <span class="text-xs font-bold text-brand-accent bg-cyan-50 px-2.5 py-1 rounded-md">ĐIỆN & NĂNG LƯỢNG</span>
+                        <h3 class="text-xl font-bold text-brand-navy mt-2 mb-2">Trạm Biến Áp & Tủ Điện</h3>
+                        <p class="text-gray-600 text-sm">Bảo dưỡng trạm biến áp, tủ MSB, đo điện trở cách điện motor, đo nhiệt độ hồng ngoại.</p>
                     </div>
                 </div>
             </div>
@@ -396,228 +255,128 @@
 
         <!-- SECTION 4: DỰ ÁN -->
         <div id="section-projects" class="page-section hidden py-12 bg-white">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto px-4">
                 <div class="text-center mb-12">
-                    <span class="text-brand-blue font-bold text-sm tracking-widest uppercase">Hồ Sơ Năng Lực</span>
+                    <span class="text-brand-blue font-bold text-sm uppercase">Hồ Sơ Năng Lực</span>
                     <h2 class="text-3xl font-extrabold text-brand-navy mt-1">DỰ ÁN BẢO TRÌ TIÊU BIỂU</h2>
                     <div class="w-16 h-1 bg-brand-accent mx-auto mt-2 rounded-full"></div>
                 </div>
-
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="card-hover flex flex-col md:flex-row bg-gray-50 rounded-2xl overflow-hidden border border-gray-200 group">
-                        <div class="w-full md:w-48 h-48 overflow-hidden shrink-0">
-                            <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                        </div>
-                        <div class="p-5 flex flex-col justify-between">
-                            <div>
-                                <span class="text-xs font-bold text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-md">ĐANG BẢO TRÌ</span>
-                                <h3 class="font-bold text-brand-navy text-lg mt-1">Nhà Máy Tesa Tape Hải Phòng</h3>
-                                <p class="text-xs text-gray-500 mt-1"><i class="fas fa-map-marker-alt mr-1"></i> KCN DEEP C, Hải Phòng</p>
-                                <p class="text-xs text-gray-600 mt-2">Gói thầu: Vận hành & bảo trì toàn diện hệ thống PCCC, Chilled Water & Điều hòa thông gió HVAC.</p>
-                            </div>
-                            <div class="mt-3 text-xs text-brand-blue font-semibold">Dán mã QR: 1,200+ vị trí thiết bị</div>
-                        </div>
+                    <div class="bg-gray-50 rounded-2xl p-6 border border-gray-200 card-hover">
+                        <span class="text-xs font-bold text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-md">ĐANG BẢO TRÌ</span>
+                        <h3 class="font-bold text-brand-navy text-lg mt-1">Nhà Máy Tesa Tape Hải Phòng</h3>
+                        <p class="text-xs text-gray-500 mt-1"><i class="fas fa-map-marker-alt mr-1"></i> KCN DEEP C, Hải Phòng</p>
+                        <p class="text-xs text-gray-600 mt-2">Vận hành & bảo trì toàn diện hệ thống PCCC, Chilled Water & Điều hòa HVAC.</p>
                     </div>
-
-                    <div class="card-hover flex flex-col md:flex-row bg-gray-50 rounded-2xl overflow-hidden border border-gray-200 group">
-                        <div class="w-full md:w-48 h-48 overflow-hidden shrink-0">
-                            <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                        </div>
-                        <div class="p-5 flex flex-col justify-between">
-                            <div>
-                                <span class="text-xs font-bold text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-md">ĐANG BẢO TRÌ</span>
-                                <h3 class="font-bold text-brand-navy text-lg mt-1">Nhà Máy Chế Biến Linh Kiện Điện Tử VSIP</h3>
-                                <p class="text-xs text-gray-500 mt-1"><i class="fas fa-map-marker-alt mr-1"></i> KCN VSIP, Bắc Ninh</p>
-                                <p class="text-xs text-gray-600 mt-2">Gói thầu: Bảo dưỡng hệ thống điện trạm biến áp 22kV, tủ phân phối MSB và hệ thống Khí nén.</p>
-                            </div>
-                            <div class="mt-3 text-xs text-brand-blue font-semibold">Dán mã QR: 850+ vị trí thiết bị</div>
-                        </div>
+                    <div class="bg-gray-50 rounded-2xl p-6 border border-gray-200 card-hover">
+                        <span class="text-xs font-bold text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-md">ĐANG BẢO TRÌ</span>
+                        <h3 class="font-bold text-brand-navy text-lg mt-1">Nhà Máy Chế Biến Linh Kiện Điện Tử VSIP</h3>
+                        <p class="text-xs text-gray-500 mt-1"><i class="fas fa-map-marker-alt mr-1"></i> KCN VSIP, Bắc Ninh</p>
+                        <p class="text-xs text-gray-600 mt-2">Bảo dưỡng hệ thống điện trạm biến áp 22kV, tủ phân phối MSB và Khí nén.</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- SECTION 5: ĐỔI MỚI SỐ HÓA - CỔNG BÁO CÁO QR CODE (MAIN FEATURE) -->
+        <!-- SECTION 5: CỔNG BÁO CÁO QR CODE -->
         <div id="section-maintenance-portal" class="page-section hidden py-10 bg-slate-100 min-h-[80vh]">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto px-4">
                 
                 <!-- PORTAL BANNER -->
                 <div class="bg-gradient-to-r from-brand-navy via-brand-blue to-slate-800 text-white p-6 sm:p-8 rounded-3xl shadow-2xl mb-8 border border-cyan-500/30">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                         <div>
-                            <span class="bg-brand-accent/20 text-brand-accent border border-brand-accent/40 text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wider">
-                                <i class="fas fa-qrcode mr-1"></i> Cổng Số Hóa Cho Chủ Đầu Tư & Ban Quản Lý
+                            <span class="bg-brand-accent/20 text-brand-accent border border-brand-accent/40 text-xs px-3 py-1 rounded-full font-semibold uppercase">
+                                <i class="fas fa-qrcode mr-1"></i> Cổng Số Hóa Cho Chủ Đầu Tư & BQL
                             </span>
-                            <h2 class="text-2xl sm:text-3xl font-extrabold mt-2">TRA CỨU & NGHỆM THU BÁO CÁO BẢO TRÌ</h2>
+                            <h2 class="text-2xl sm:text-3xl font-extrabold mt-2">TRA CỨU BÁO CÁO BẢO TRÌ THIẾT BỊ</h2>
                             <p class="text-gray-300 text-xs sm:text-sm mt-1 max-w-2xl">
-                                Nhập Mã QR Thiết Bị được dán tại nhà máy để xem ngay nhật ký kiểm tra real-time, thông số đo đạc, hình ảnh hiện trường & Ký nghiệm thu trực tuyến.
+                                Nhập Mã QR Thiết Bị được dán tại nhà máy để xem ngay nhật ký kiểm tra real-time, thông số đo đạc & hình ảnh hiện trường.
                             </p>
                         </div>
 
-                        <!-- SEARCH / QR TRIGGER -->
                         <div class="w-full md:w-auto bg-white/10 p-2 rounded-2xl backdrop-blur-md border border-white/20">
                             <div class="flex gap-2">
-                                <input type="text" id="device-code-input" placeholder="Nhập Mã Thiết Bị (VD: TS-2026-HVAC)" class="px-4 py-2.5 rounded-xl text-sm text-gray-800 w-full md:w-64 focus:outline-none focus:ring-2 focus:ring-brand-accent transition">
-                                <button onclick="searchDevice()" class="btn-interactive bg-brand-accent hover:bg-cyan-400 text-brand-dark font-extrabold px-5 py-2.5 rounded-xl text-sm flex items-center whitespace-nowrap shadow-lg">
+                                <input type="text" id="device-code-input" placeholder="Nhập Mã QR (VD: TS-2026-HVAC)" class="px-4 py-2.5 rounded-xl text-sm text-gray-800 w-full md:w-64 focus:outline-none">
+                                <button onclick="searchDevice()" class="btn-interactive bg-brand-accent text-brand-dark font-extrabold px-5 py-2.5 rounded-xl text-sm shadow-lg flex items-center whitespace-nowrap">
                                     <i class="fas fa-search mr-1.5"></i> Tra Cứu
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- QUICK SAMPLE BUTTONS -->
+                    <!-- LIST DEVICES DYNAMICALLY -->
                     <div class="mt-6 pt-4 border-t border-white/10 flex flex-wrap items-center gap-2 text-xs">
-                        <span class="text-gray-300 font-medium">Mẫu Thử Demo Quét QR:</span>
-                        <button onclick="loadSampleDevice('TS-2026-HVAC')" class="btn-interactive bg-white/10 hover:bg-white/20 text-cyan-300 px-3 py-1 rounded-lg border border-cyan-400/30 font-mono transition">TS-2026-HVAC (Bơm Chiller)</button>
-                        <button onclick="loadSampleDevice('TS-2026-FIRE')" class="btn-interactive bg-white/10 hover:bg-white/20 text-amber-300 px-3 py-1 rounded-lg border border-amber-400/30 font-mono transition">TS-2026-FIRE (Bơm PCCC Diesel)</button>
-                        <button onclick="loadSampleDevice('TESA-HP-01')" class="btn-interactive bg-white/10 hover:bg-white/20 text-emerald-300 px-3 py-1 rounded-lg border border-emerald-400/30 font-mono transition">TESA-HP-01 (Tủ Điện MSB)</button>
+                        <span class="text-gray-300 font-medium">Danh Sách Mã QR Hiện Có:</span>
+                        <div id="quick-device-buttons" class="flex flex-wrap gap-2">
+                            <!-- Injected by JS -->
+                        </div>
+                        <button onclick="openAdminModal()" class="bg-amber-500 hover:bg-amber-400 text-brand-dark font-bold px-3 py-1 rounded-lg transition ml-auto flex items-center">
+                            <i class="fas fa-plus-circle mr-1"></i> THÊM MÃ TẠI ĐÂY
+                        </button>
                     </div>
                 </div>
 
                 <!-- REPORT RESULTS DISPLAY -->
                 <div id="report-container" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    
-                    <!-- LEFT COLUMN: DEVICE SPECS & GENERAL INFO -->
                     <div class="lg:col-span-1 space-y-6">
-                        <!-- DEVICE CARD -->
-                        <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-200/80 card-hover">
+                        <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-200 card-hover">
                             <div class="flex justify-between items-start mb-4">
                                 <div>
                                     <span id="device-status-badge" class="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800">
                                         <i class="fas fa-check-circle mr-1"></i> HOẠT ĐỘNG TỐT
                                     </span>
-                                    <h3 id="device-name" class="text-xl font-extrabold text-brand-navy mt-2">Cụm Máy Bơm Chilled Water #01</h3>
-                                    <p id="device-code" class="text-xs text-gray-500 font-mono">MÃ QR: TS-2026-HVAC</p>
+                                    <h3 id="device-name" class="text-xl font-extrabold text-brand-navy mt-2">--</h3>
+                                    <p id="device-code" class="text-xs text-gray-500 font-mono">MÃ QR: --</p>
                                 </div>
-                                <div class="bg-slate-100 p-2 rounded-xl border border-gray-200 text-center shadow-inner">
+                                <div class="bg-slate-100 p-2 rounded-xl border border-gray-200 text-center">
                                     <i class="fas fa-qrcode text-3xl text-brand-navy"></i>
                                     <div class="text-[9px] text-gray-500 font-mono mt-0.5">VERIFIED</div>
                                 </div>
                             </div>
-
                             <hr class="my-4 border-gray-100">
-
                             <div class="space-y-3 text-xs">
-                                <div class="flex justify-between">
-                                    <span class="text-gray-500">Khu vực / Tòa nhà:</span>
-                                    <span id="device-location" class="font-semibold text-gray-800">Phòng Kỹ Thuật Chiller - Tầng Chốt</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-gray-500">Chủ Đầu Tư:</span>
-                                    <span id="device-client" class="font-semibold text-brand-navy">Nhà máy Tesa Tape DEEP C</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-gray-500">Đơn vị bảo trì:</span>
-                                    <span class="font-semibold text-brand-blue">Công ty Cổ phần HICON M&E</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-gray-500">Ngày bảo trì gần nhất:</span>
-                                    <span id="device-date" class="font-bold text-gray-800">22/10/2026</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-gray-500">Kỹ sư phụ trách:</span>
-                                    <span id="device-tech" class="font-semibold text-gray-800">Nguyễn Văn Kỹ Thuật (HICON)</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-gray-500">Đợt kiểm tra:</span>
-                                    <span class="font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md">Định kỳ Tháng 10/2026</span>
-                                </div>
+                                <div class="flex justify-between"><span class="text-gray-500">Khu vực:</span><span id="device-location" class="font-semibold text-gray-800">--</span></div>
+                                <div class="flex justify-between"><span class="text-gray-500">Chủ Đầu Tư:</span><span id="device-client" class="font-semibold text-brand-navy">--</span></div>
+                                <div class="flex justify-between"><span class="text-gray-500">Ngày bảo trì:</span><span id="device-date" class="font-bold text-gray-800">--</span></div>
+                                <div class="flex justify-between"><span class="text-gray-500">Kỹ sư phụ trách:</span><span id="device-tech" class="font-semibold text-gray-800">--</span></div>
                             </div>
                         </div>
 
-                        <!-- EXPORT PDF & DOWNLOAD ACTIONS -->
-                        <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-200/80 text-center card-hover">
-                            <h4 class="text-sm font-bold text-brand-navy mb-3">XUẤT BÁO CÁO CHÍNH THỨC</h4>
-                            <p class="text-xs text-gray-500 mb-4">Tải về file báo cáo PDF nghiệm thu kỹ thuật kèm đầy đủ hình ảnh và dấu xác nhận điện tử.</p>
-                            <button onclick="downloadReportPDF()" class="btn-interactive w-full bg-brand-navy hover:bg-brand-blue text-white font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center shadow-lg">
-                                <i class="fas fa-file-pdf text-red-400 text-base mr-2"></i> Tải Biên Bản Bảo Trì (PDF)
+                        <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-200 text-center">
+                            <h4 class="text-sm font-bold text-brand-navy mb-2">BIÊN BẢN BẢO TRÌ</h4>
+                            <button onclick="alert('Đang tải file PDF biên bản...')" class="btn-interactive w-full bg-brand-navy hover:bg-brand-blue text-white font-bold py-3 rounded-xl text-xs flex items-center justify-center">
+                                <i class="fas fa-file-pdf text-red-400 text-base mr-2"></i> Xuất Biên Bản (PDF)
                             </button>
                         </div>
                     </div>
 
-                    <!-- RIGHT COLUMN: DETAILED TECHNICAL LOGS & SIGNATURE -->
-                    <div class="lg:col-span-2 space-y-6">
-                        
-                        <!-- TAB NAVIGATION -->
-                        <div class="bg-white rounded-2xl shadow-md border border-gray-200/80 overflow-hidden">
-                            <div class="flex border-b border-gray-200 bg-gray-50/80 text-xs sm:text-sm font-bold text-gray-600">
-                                <button onclick="switchReportTab('specs')" id="tab-specs" class="flex-1 py-3.5 px-4 text-center border-b-2 border-brand-accent text-brand-blue bg-white transition duration-300">
-                                    <i class="fas fa-list-check mr-1.5"></i> CHI TIẾT THÔNG SỐ ĐO KIỂM
-                                </button>
-                                <button onclick="switchReportTab('photos')" id="tab-photos" class="flex-1 py-3.5 px-4 text-center border-b-2 border-transparent hover:text-brand-blue transition duration-300">
-                                    <i class="fas fa-camera mr-1.5"></i> HÌNH ẢNH HIỆN TRƯỜNG
-                                </button>
-                                <button onclick="switchReportTab('signature')" id="tab-signature" class="flex-1 py-3.5 px-4 text-center border-b-2 border-transparent hover:text-brand-blue transition duration-300">
-                                    <i class="fas fa-signature mr-1.5"></i> KÝ NGHIỆM THU
-                                </button>
+                    <div class="lg:col-span-2">
+                        <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-6">
+                            <h4 class="text-sm font-bold text-brand-navy uppercase mb-4"><i class="fas fa-list-check text-brand-accent mr-2"></i> Nhật Ký Thông Số Kỹ Thuật & Ảnh Kiểm Tra</h4>
+                            
+                            <div class="overflow-x-auto mb-6">
+                                <table class="w-full text-left text-xs border-collapse">
+                                    <thead>
+                                        <tr class="bg-slate-100 text-brand-navy border-b border-gray-200">
+                                            <th class="p-3 font-bold">Hạng Mục</th>
+                                            <th class="p-3 font-bold">Tiêu Chuẩn</th>
+                                            <th class="p-3 font-bold">Thực Tế</th>
+                                            <th class="p-3 font-bold text-center">Trạng Thái</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="specs-table-body" class="divide-y divide-gray-100"></tbody>
+                                </table>
                             </div>
 
-                            <!-- TAB CONTENT 1: SPECS TABLE -->
-                            <div id="content-specs" class="p-6 tab-content-anim">
-                                <div class="flex justify-between items-center mb-4">
-                                    <h4 class="text-sm font-bold text-brand-navy uppercase">Bảng Nhật Ký Kiểm Tra Kỹ Thuật Vận Hành</h4>
-                                    <span class="text-xs text-gray-500"><i class="fas fa-clock mr-1"></i>Cập nhật real-time</span>
-                                </div>
-
-                                <div class="overflow-x-auto">
-                                    <table class="w-full text-left text-xs border-collapse">
-                                        <thead>
-                                            <tr class="bg-slate-100 text-brand-navy border-b border-gray-200">
-                                                <th class="p-3 font-bold">Hạng Mục Kiểm Tra</th>
-                                                <th class="p-3 font-bold">Tiêu Chuẩn Chuẩn</th>
-                                                <th class="p-3 font-bold">Thực Tế Đo Đạc</th>
-                                                <th class="p-3 font-bold text-center">Trạng Thái</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="specs-table-body" class="divide-y divide-gray-100">
-                                            <!-- Dữ liệu JS tự inject -->
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <div class="mt-6 bg-slate-50 p-4 rounded-xl border border-gray-200/80">
-                                    <h5 class="text-xs font-bold text-brand-navy mb-1"><i class="fas fa-comment-dots text-brand-accent mr-1"></i> Đánh Giá & Khuyến Nghị Của Kỹ Sư HICON M&E:</h5>
-                                    <p id="engineer-note" class="text-xs text-gray-700 leading-relaxed">
-                                        Hệ thống vận hành trơn tru, áp suất đạt chuẩn tiêu chuẩn thiết kế. Đã tiến hành tra mỡ ổ bi định kỳ và xiết lại các đầu cốt tủ điện điều khiển. Đề xuất giữ nguyên lịch bảo trì định kỳ tháng sau.
-                                    </p>
-                                </div>
+                            <div class="bg-slate-50 p-4 rounded-xl border border-gray-200 mb-6">
+                                <h5 class="text-xs font-bold text-brand-navy mb-1"><i class="fas fa-comment-dots text-brand-accent mr-1"></i> Ghi Chú Kỹ Thuật:</h5>
+                                <p id="engineer-note" class="text-xs text-gray-700 leading-relaxed"></p>
                             </div>
 
-                            <!-- TAB CONTENT 2: PHOTOS -->
-                            <div id="content-photos" class="p-6 hidden tab-content-anim">
-                                <h4 class="text-sm font-bold text-brand-navy uppercase mb-4">Hình Ảnh Thực Tế Kiểm Tra Tại Hiện Trường</h4>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="photo-gallery">
-                                    <!-- Photos dynamic -->
-                                </div>
-                            </div>
-
-                            <!-- TAB CONTENT 3: SIGNATURE & ACCEPTANCE -->
-                            <div id="content-signature" class="p-6 hidden tab-content-anim">
-                                <h4 class="text-sm font-bold text-brand-navy uppercase mb-2">Chữ Ký Điện Tử Xác Nhận Nghiệm Thu Bảo Trì</h4>
-                                <p class="text-xs text-gray-500 mb-4">Dành cho Đại diện Ban Quản Lý Nhà Máy / Chủ Đầu Tư ký xác nhận khối lượng hoàn thành.</p>
-
-                                <div class="bg-slate-50 p-4 rounded-xl border border-gray-300/80 mb-4">
-                                    <label class="block text-xs font-bold text-gray-700 mb-1">Họ và tên người ký nghiệm thu:</label>
-                                    <input type="text" id="signer-name" placeholder="Nguyễn Văn A - Trưởng Phòng Cơ Điện Nhà Máy" class="w-full text-xs p-2.5 border border-gray-300 rounded-lg mb-3 focus:outline-none focus:ring-2 focus:ring-brand-blue">
-
-                                    <label class="block text-xs font-bold text-gray-700 mb-1">Vẽ chữ ký của bạn vào khung bên dưới:</label>
-                                    <div class="border-2 border-dashed border-gray-300 bg-white rounded-xl relative overflow-hidden shadow-inner">
-                                        <canvas id="signature-pad" class="w-full h-36 cursor-crosshair"></canvas>
-                                    </div>
-                                    <div class="flex justify-between items-center mt-2">
-                                        <button onclick="clearSignature()" class="btn-interactive text-xs text-red-600 hover:text-red-800 font-medium">
-                                            <i class="fas fa-eraser mr-1"></i> Xóa ký lại
-                                        </button>
-                                        <span class="text-[10px] text-gray-400">Ký bằng tay trên di động hoặc chuột máy tính</span>
-                                    </div>
-                                </div>
-
-                                <button onclick="submitAcceptance()" class="btn-interactive w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl text-xs shadow-lg flex items-center justify-center">
-                                    <i class="fas fa-check-circle mr-2 text-base"></i> TẢI & GỬI XÁC NHẬN NGHIỆM THU DIGITAL
-                                </button>
-                            </div>
+                            <h5 class="text-xs font-bold text-brand-navy mb-3"><i class="fas fa-camera text-brand-accent mr-1"></i> Hình Ảnh Hiện Trường Chụp Thực Tế:</h5>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="photo-gallery"></div>
                         </div>
-
                     </div>
                 </div>
 
@@ -626,131 +385,160 @@
 
         <!-- SECTION 6: LIÊN HỆ -->
         <div id="section-contact" class="page-section hidden py-12 bg-white">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto px-4">
                 <div class="text-center mb-12">
-                    <span class="text-brand-blue font-bold text-sm tracking-widest uppercase">Kết Nối Với HICON M&E</span>
+                    <span class="text-brand-blue font-bold text-sm uppercase">Kết Nối Với HICON M&E</span>
                     <h2 class="text-3xl font-extrabold text-brand-navy mt-1">LIÊN HỆ TƯ VẤN & BÁO GIÁ DỊCH VỤ</h2>
                     <div class="w-16 h-1 bg-brand-accent mx-auto mt-2 rounded-full"></div>
                 </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                    <div class="bg-gray-50 p-8 rounded-2xl border border-gray-200 card-hover">
-                        <h3 class="text-xl font-bold text-brand-navy mb-6">Gửi Yêu Cầu Hỗ Trợ Kỹ Thuật</h3>
-                        <form onsubmit="handleContactSubmit(event)" class="space-y-4">
-                            <div>
-                                <label class="block text-xs font-bold text-gray-700 mb-1">Tên Công Ty / Chủ Đầu Tư (*)</label>
-                                <input type="text" required placeholder="Tên nhà máy / doanh nghiệp" class="w-full text-xs p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-blue">
-                            </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-bold text-gray-700 mb-1">Người Liên Hệ (*)</label>
-                                    <input type="text" required placeholder="Họ và tên" class="w-full text-xs p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-blue">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold text-gray-700 mb-1">Số Điện Thoại (*)</label>
-                                    <input type="tel" required placeholder="0988..." class="w-full text-xs p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-blue">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-gray-700 mb-1">Nội Dung Cần Bảo Trì / Tư Vấn</label>
-                                <textarea rows="4" placeholder="Mô tả hệ thống PCCC, HVAC, Điện hoặc nhu cầu dán mã QR số hóa..." class="w-full text-xs p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-blue"></textarea>
-                            </div>
-                            <button type="submit" class="btn-interactive w-full bg-brand-navy hover:bg-brand-blue text-white font-bold py-3.5 rounded-xl text-xs shadow-xl">
-                                GỬI YÊU CẦU NGAY
-                            </button>
-                        </form>
-                    </div>
-
-                    <div class="space-y-6 flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-xl font-bold text-brand-navy mb-4">CÔNG TY CỔ PHẦN HICON M&E</h3>
-                            <p class="text-xs text-gray-600 leading-relaxed mb-6">
-                                Chuyên cung cấp giải pháp thi công, vận hành, ứng dụng công nghệ chuyển đổi số vào công tác bảo trì hệ thống Cơ Điện công nghiệp.
-                            </p>
-
-                            <div class="space-y-4 text-xs text-gray-700">
-                                <div class="flex items-start group">
-                                    <div class="w-8 h-8 bg-cyan-100 text-brand-blue rounded-lg flex items-center justify-center mr-3 shrink-0 group-hover:scale-110 group-hover:bg-brand-accent group-hover:text-white transition">
-                                        <i class="fas fa-map-marker-alt"></i>
-                                    </div>
-                                    <div>
-                                        <strong class="block text-brand-navy">Trụ sở chính:</strong>
-                                        Hà Nội & Văn phòng điều hành KCN DEEP C, Hải Phòng.
-                                    </div>
-                                </div>
-
-                                <div class="flex items-start group">
-                                    <div class="w-8 h-8 bg-cyan-100 text-brand-blue rounded-lg flex items-center justify-center mr-3 shrink-0 group-hover:scale-110 group-hover:bg-brand-accent group-hover:text-white transition">
-                                        <i class="fas fa-phone-alt"></i>
-                                    </div>
-                                    <div>
-                                        <strong class="block text-brand-navy">Hotline Kỹ Thuật 24/7:</strong>
-                                        0988.123.456 / (024) 3788.9999
-                                    </div>
-                                </div>
-
-                                <div class="flex items-start group">
-                                    <div class="w-8 h-8 bg-cyan-100 text-brand-blue rounded-lg flex items-center justify-center mr-3 shrink-0 group-hover:scale-110 group-hover:bg-brand-accent group-hover:text-white transition">
-                                        <i class="fas fa-envelope"></i>
-                                    </div>
-                                    <div>
-                                        <strong class="block text-brand-navy">Email Tiếp Nhận Báo Giá:</strong>
-                                        contact@hiconme.vn / service@hiconme.vn
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="bg-brand-navy text-white p-6 rounded-2xl shadow-xl card-hover">
-                            <h4 class="font-bold text-sm text-brand-accent mb-2"><i class="fas fa-headset mr-2"></i>Tổng Đài Sự Cố Khẩn Cấp</h4>
-                            <p class="text-xs text-gray-300">Đội ngũ kỹ sư trực đêm 24/7 sẵn sàng ứng cứu sự cố rò rỉ PCCC, chập cháy điện trạm biến áp hoặc mất lạnh Chiller.</p>
-                        </div>
-                    </div>
+                <div class="max-w-xl mx-auto bg-gray-50 p-8 rounded-2xl border border-gray-200">
+                    <form onsubmit="alert('Đã gửi liên hệ thành công!'); return false;" class="space-y-4">
+                        <input type="text" required placeholder="Tên Công ty / Nhà máy (*)" class="w-full text-xs p-3 border border-gray-300 rounded-xl">
+                        <input type="tel" required placeholder="Số điện thoại liên hệ (*)" class="w-full text-xs p-3 border border-gray-300 rounded-xl">
+                        <textarea rows="4" placeholder="Nội dung cần bảo trì..." class="w-full text-xs p-3 border border-gray-300 rounded-xl"></textarea>
+                        <button type="submit" class="btn-interactive w-full bg-brand-navy text-white font-bold py-3.5 rounded-xl text-xs">GỬI YÊU CẦU</button>
+                    </form>
                 </div>
             </div>
         </div>
 
     </main>
 
+    <!-- ==================== MODAL FORM ADMIN / CẬP NHẬT THIẾT BỊ ==================== -->
+    <div id="admin-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden border border-gray-200 my-8">
+            
+            <!-- STEP 1: PASSWORD AUTH -->
+            <div id="admin-step-auth" class="p-8 text-center">
+                <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
+                    <i class="fas fa-user-lock"></i>
+                </div>
+                <h3 class="text-xl font-bold text-brand-navy mb-2">ĐĂNG NHẬP CÔNG NHÂN VIÊN</h3>
+                <p class="text-xs text-gray-500 mb-6">Nhập mật khẩu nội bộ HICON M&E để tạo hoặc sửa thông tin báo cáo bảo trì thiết bị.</p>
+                
+                <div class="max-w-xs mx-auto space-y-4">
+                    <input type="password" id="admin-password-input" placeholder="Mật khẩu (Mặc định: hicon2026)" class="w-full text-center text-sm p-3 border-2 border-gray-300 rounded-xl focus:border-amber-500 focus:outline-none">
+                    <div class="flex gap-2">
+                        <button onclick="closeAdminModal()" class="w-1/2 bg-gray-200 text-gray-700 py-2.5 rounded-xl text-xs font-bold">Hủy</button>
+                        <button onclick="verifyPassword()" class="w-1/2 bg-amber-500 hover:bg-amber-600 text-brand-dark py-2.5 rounded-xl text-xs font-bold shadow-md">Xác Nhận</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 2: UPDATE FORM -->
+            <div id="admin-step-form" class="hidden">
+                <div class="bg-brand-navy text-white p-5 flex justify-between items-center">
+                    <div>
+                        <h3 class="font-extrabold text-base flex items-center"><i class="fas fa-plus-circle text-amber-400 mr-2"></i> THÊM / CẬP NHẬT DỮ LIỆU BẢO TRÌ</h3>
+                        <p class="text-[10px] text-gray-300">Nhập thông tin & chọn ảnh chụp trực tiếp từ album máy tính / điện thoại</p>
+                    </div>
+                    <button onclick="closeAdminModal()" class="text-gray-300 hover:text-white text-xl"><i class="fas fa-times"></i></button>
+                </div>
+
+                <form onsubmit="handleSaveDevice(event)" class="p-6 space-y-4 text-xs max-h-[75vh] overflow-y-auto">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-bold text-gray-700 mb-1">Mã QR Thiết Bị (* Dùng để quét)</label>
+                            <input type="text" id="form-code" required placeholder="VD: TS-2026-CHILLER02" class="w-full p-2.5 border border-gray-300 rounded-lg font-mono focus:ring-2 focus:ring-brand-blue uppercase">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-gray-700 mb-1">Tên Thiết Bị (*)</label>
+                            <input type="text" id="form-name" required placeholder="VD: Cụm Bơm Nước Chilled Water #02" class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-blue">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-bold text-gray-700 mb-1">Khu Vực Lắp Đặt (*)</label>
+                            <input type="text" id="form-location" required placeholder="VD: Phòng Máy Chiller Tầng Chốt" class="w-full p-2.5 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-gray-700 mb-1">Chủ Đầu Tư / Tên Nhà Máy</label>
+                            <input type="text" id="form-client" required value="Nhà máy Tesa Tape DEEP C Hải Phòng" class="w-full p-2.5 border border-gray-300 rounded-lg">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block font-bold text-gray-700 mb-1">Kỹ Sư Phụ Trách</label>
+                            <input type="text" id="form-tech" required placeholder="VD: Nguyễn Văn Kỹ Thuật" class="w-full p-2.5 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-gray-700 mb-1">Ngày Kiểm Tra</label>
+                            <input type="date" id="form-date" required class="w-full p-2.5 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-gray-700 mb-1">Trạng Thái Đánh Giá</label>
+                            <select id="form-status" class="w-full p-2.5 border border-gray-300 rounded-lg font-bold">
+                                <option value="OK">✅ HOẠT ĐỘNG TỐT</option>
+                                <option value="WARN">⚠️ CẦN LƯU Ý KỸ THUẬT</option>
+                                <option value="BAD">❌ CẦN SỬA CHỮA NGAY</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-1">Ghi Chú Kỹ Thuật & Đánh Giá</label>
+                        <textarea id="form-note" rows="2" placeholder="VD: Đã tra mỡ ổ bi, đo dòng điện 3 pha đạt tiêu chuẩn..." class="w-full p-2.5 border border-gray-300 rounded-lg"></textarea>
+                    </div>
+
+                    <!-- PHOTO UPLOAD FROM ALBUM -->
+                    <div class="bg-slate-50 p-4 rounded-xl border-2 border-dashed border-gray-300 text-center">
+                        <label class="block font-bold text-brand-navy mb-1"><i class="fas fa-images text-brand-accent mr-1"></i> TẢI ẢNH CHỤP HIỆN TRƯỜNG TỪ ALBUM</label>
+                        <p class="text-[10px] text-gray-500 mb-3">Có thể bấm chọn nhiều ảnh trực tiếp từ thư viện ảnh điện thoại hoặc máy tính</p>
+                        
+                        <input type="file" id="form-file-input" multiple accept="image/*" onchange="previewImages(event)" class="hidden">
+                        <button type="button" onclick="document.getElementById('form-file-input').click()" class="bg-brand-blue hover:bg-brand-navy text-white px-4 py-2 rounded-lg font-bold text-xs shadow-md">
+                            <i class="fas fa-folder-open mr-1"></i> Chọn Ảnh Từ Thư Viện
+                        </button>
+
+                        <div id="photo-preview-grid" class="grid grid-cols-3 gap-2 mt-4"></div>
+                    </div>
+
+                    <div class="pt-2 flex justify-end gap-3">
+                        <button type="button" onclick="closeAdminModal()" class="px-5 py-2.5 bg-gray-200 text-gray-700 rounded-xl font-bold">Hủy Bỏ</button>
+                        <button type="submit" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold shadow-lg flex items-center">
+                            <i class="fas fa-save mr-1.5"></i> LƯU & XUẤT MÃ QR
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- FOOTER -->
     <footer class="bg-brand-dark text-gray-400 text-xs py-8 border-t border-gray-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-left flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div class="max-w-7xl mx-auto px-4 text-center sm:text-left flex flex-col sm:flex-row justify-between items-center gap-4">
             <div>
                 <p class="font-bold text-white text-sm">CÔNG TY CỔ PHẦN HICON M&E</p>
-                <p class="text-gray-500 mt-0.5">© 2026 HICON M&E. Tất cả quyền được bảo lưu. Số hóa báo cáo bảo trì công nghiệp.</p>
+                <p class="text-gray-500 mt-0.5">© 2026 HICON M&E. Số hóa báo cáo bảo trì công nghiệp.</p>
             </div>
-            <div class="flex space-x-6 text-gray-400">
-                <a href="#" class="hover:text-brand-accent hover:scale-125 transition"><i class="fab fa-facebook text-base"></i></a>
-                <a href="#" class="hover:text-brand-accent hover:scale-125 transition"><i class="fab fa-youtube text-base"></i></a>
-                <a href="#" class="hover:text-brand-accent hover:scale-125 transition"><i class="fab fa-linkedin text-base"></i></a>
+            <div class="flex space-x-6">
+                <a href="#" class="hover:text-brand-accent"><i class="fab fa-facebook text-base"></i></a>
+                <a href="#" class="hover:text-brand-accent"><i class="fab fa-youtube text-base"></i></a>
             </div>
         </div>
     </footer>
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // DATA SAMPLES FOR DEMO
-        const deviceDatabase = {
+        // DEFAULT INITIAL DATA
+        const defaultDevices = {
             'TS-2026-HVAC': {
                 name: 'Cụm Bơm Chilled Water #01',
                 code: 'TS-2026-HVAC',
                 location: 'Phòng Máy Chiller - Nhà máy Tesa Tape',
                 client: 'Tesa Tape DEEP C Hải Phòng',
                 tech: 'Kỹ sư Vũ Văn Tiến (HICON M&E)',
-                date: '22/10/2026',
+                date: '2026-10-22',
                 statusBadge: '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800"><i class="fas fa-check-circle mr-1"></i> HOẠT ĐỘNG TỐT</span>',
-                note: 'Đã hoàn thành kiểm tra độ rung, tra mỡ màng đệm cơ khí, đo dòng điện 3 pha ổn định. Không phát hiện rò rỉ nước lạnh.',
+                note: 'Đã hoàn thành kiểm tra độ rung, tra mỡ màng đệm cơ khí, đo dòng điện 3 pha ổn định.',
                 specs: [
-                    { item: 'Áp suất đầu hút (Suction Press)', std: '2.5 - 3.5 bar', val: '3.1 bar', status: 'Đạt', isOk: true },
-                    { item: 'Áp suất đầu đẩy (Discharge Press)', std: '6.0 - 7.5 bar', val: '6.8 bar', status: 'Đạt', isOk: true },
-                    { item: 'Dòng điện vận hành Ampere', std: '35.0 - 42.0 A', val: '38.2 A', status: 'Đạt', isOk: true },
-                    { item: 'Độ rung thân bơm (Vibration)', std: '< 2.5 mm/s', val: '1.2 mm/s', status: 'Đạt', isOk: true },
-                    { item: 'Nhiệt độ ổ bi (Bearing Temp)', std: '< 65 °C', val: '48 °C', status: 'Đạt', isOk: true }
+                    { item: 'Áp suất đầu hút', std: '2.5 - 3.5 bar', val: '3.1 bar', status: 'Đạt', isOk: true },
+                    { item: 'Áp suất đầu đẩy', std: '6.0 - 7.5 bar', val: '6.8 bar', status: 'Đạt', isOk: true },
+                    { item: 'Dòng điện vận hành', std: '35.0 - 42.0 A', val: '38.2 A', status: 'Đạt', isOk: true }
                 ],
-                photos: [
-                    'https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=600&auto=format&fit=crop',
-                    'https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=600&auto=format&fit=crop'
-                ]
+                photos: ['https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=600&auto=format&fit=crop']
             },
             'TS-2026-FIRE': {
                 name: 'Máy Bơm PCCC Động Cơ Diesel',
@@ -758,101 +546,66 @@
                 location: 'Trạm Bơm PCCC Trung Tâm',
                 client: 'Tesa Tape DEEP C Hải Phòng',
                 tech: 'Kỹ sư Nguyễn Văn Nam (HICON M&E)',
-                date: '20/10/2026',
-                statusBadge: '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-800"><i class="fas fa-exclamation-triangle mr-1"></i> CẦN LƯU Ý KỸ THUẬT</span>',
-                note: 'Động cơ đề nổ tốt, áp lực nước đạt 10 bar. Tuy nhiên điện áp bình ắc quy dự phòng khởi động hơi thấp (22.8V). Khuyến nghị thay bình ắc quy mới trong tuần tới.',
+                date: '2026-10-20',
+                statusBadge: '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-800"><i class="fas fa-exclamation-triangle mr-1"></i> CẦN LƯU Ý</span>',
+                note: 'Áp lực nước 10 bar. Điện áp bình ắc quy đề nổ 22.8V (thấp), đề xuất thay bình mới.',
                 specs: [
-                    { item: 'Áp lực tuyến ống chữa cháy', std: '9.0 - 11.0 bar', val: '10.2 bar', status: 'Đạt', isOk: true },
-                    { item: 'Tốc độ vòng quay động cơ', std: '2900 - 3000 RPM', val: '2950 RPM', status: 'Đạt', isOk: true },
-                    { item: 'Điện áp ắc quy đề nổ 24V', std: '24.0 - 27.0 V', val: '22.8 V', status: 'Thấp', isOk: false },
-                    { item: 'Mức nhiên liệu dầu Diesel', std: '> 80%', val: '95%', status: 'Đạt', isOk: true }
+                    { item: 'Áp lực tuyến ống PCCC', std: '9.0 - 11.0 bar', val: '10.2 bar', status: 'Đạt', isOk: true },
+                    { item: 'Điện áp ắc quy đề nổ', std: '24.0 - 27.0 V', val: '22.8 V', status: 'Thấp', isOk: false }
                 ],
-                photos: [
-                    'https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?q=80&w=600&auto=format&fit=crop'
-                ]
-            },
-            'TESA-HP-01': {
-                name: 'Tủ Điện Phân Phối Hạ Thế MSB-01',
-                code: 'TESA-HP-01',
-                location: 'Phòng Máy Trạm Biến Áp 22kV',
-                client: 'Nhà máy Sản Xuất Hải Phòng',
-                tech: 'Kỹ sư Lê Hoàng Anh (HICON M&E)',
-                date: '21/10/2026',
-                statusBadge: '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800"><i class="fas fa-check-circle mr-1"></i> HOẠT ĐỘNG TỐT</span>',
-                note: 'Kiểm tra nhiệt độ mối nối bằng súng đo hồng ngoại, nhiệt độ cao nhất 42°C (an toàn). Đã vệ sinh hút bụi toàn bộ tủ điện.',
-                specs: [
-                    { item: 'Điện áp pha R-S-T', std: '380V ± 5%', val: '385 V', status: 'Đạt', isOk: true },
-                    { item: 'Nhiệt độ thanh cái Busbar', std: '< 60 °C', val: '41.5 °C', status: 'Đạt', isOk: true },
-                    { item: 'Độ cách điện Aptomat tổng', std: '> 10 MΩ', val: '50 MΩ', status: 'Đạt', isOk: true }
-                ],
-                photos: [
-                    'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=600&auto=format&fit=crop'
-                ]
+                photos: ['https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?q=80&w=600&auto=format&fit=crop']
             }
         };
 
-        // NAVIGATION CONTROL WITH SMOOTH FADE & SLIDE TRANSITION
-        let isNavigating = false;
+        // LOAD FROM LOCALSTORAGE OR USE DEFAULT
+        function getDeviceDatabase() {
+            const saved = localStorage.getItem('hicon_device_db');
+            if (saved) {
+                try { return JSON.parse(saved); } catch(e) {}
+            }
+            return defaultDevices;
+        }
 
+        function saveDeviceDatabase(db) {
+            localStorage.setItem('hicon_device_db', JSON.stringify(db));
+        }
+
+        let uploadedPhotosBase64 = [];
+
+        // NAVIGATION
         function navigateTo(sectionId) {
-            if (isNavigating) return;
-            
-            const currentSection = document.querySelector('.page-section:not(.hidden)');
-            const targetSection = document.getElementById('section-' + sectionId);
+            document.querySelectorAll('.page-section').forEach(sec => sec.classList.add('hidden'));
+            const target = document.getElementById('section-' + sectionId);
+            if (target) {
+                target.classList.remove('hidden');
+                void target.offsetWidth;
+                target.classList.add('active-section');
+            }
 
-            if (!targetSection || currentSection === targetSection) return;
-
-            isNavigating = true;
-
-            // Highlight nav bar button
             document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
             const activeNav = document.getElementById('nav-' + sectionId);
             if (activeNav) activeNav.classList.add('active');
 
-            // Scroll smoothly to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            // Fade out current section
-            if (currentSection) {
-                currentSection.classList.remove('active-section');
-                setTimeout(() => {
-                    currentSection.classList.add('hidden');
-                    
-                    // Show & Fade in target section
-                    targetSection.classList.remove('hidden');
-                    // Force browser repaint for smooth CSS transition
-                    void targetSection.offsetWidth;
-                    targetSection.classList.add('active-section');
-                    isNavigating = false;
-                }, 200);
-            } else {
-                targetSection.classList.remove('hidden');
-                void targetSection.offsetWidth;
-                targetSection.classList.add('active-section');
-                isNavigating = false;
-            }
         }
 
         function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
+            document.getElementById('mobile-menu').classList.toggle('hidden');
         }
 
-        // TAB SWITCHING IN REPORT WITH SMOOTH FADE ANIMATION
-        function switchReportTab(tabName) {
-            ['specs', 'photos', 'signature'].forEach(t => {
-                document.getElementById('content-' + t).classList.add('hidden');
-                document.getElementById('tab-' + t).className = "flex-1 py-3.5 px-4 text-center border-b-2 border-transparent hover:text-brand-blue transition duration-300";
+        // RENDER QUICK BUTTONS
+        function renderQuickButtons() {
+            const db = getDeviceDatabase();
+            const container = document.getElementById('quick-device-buttons');
+            container.innerHTML = '';
+
+            Object.keys(db).forEach(code => {
+                const btn = document.createElement('button');
+                btn.className = "btn-interactive bg-white/10 hover:bg-white/20 text-cyan-300 px-3 py-1 rounded-lg border border-cyan-400/30 font-mono transition";
+                btn.innerText = code;
+                btn.onclick = () => loadSampleDevice(code);
+                container.appendChild(btn);
             });
-
-            const activeContent = document.getElementById('content-' + tabName);
-            activeContent.classList.remove('hidden');
-            
-            document.getElementById('tab-' + tabName).className = "flex-1 py-3.5 px-4 text-center border-b-2 border-brand-accent text-brand-blue font-bold bg-white transition duration-300";
-
-            if (tabName === 'signature') {
-                initSignaturePad();
-            }
         }
 
         // LOAD DEVICE REPORT
@@ -866,34 +619,31 @@
             document.getElementById('device-status-badge').innerHTML = data.statusBadge;
             document.getElementById('engineer-note').innerText = data.note;
 
-            // Render Specs Table
+            // Specs
             const tbody = document.getElementById('specs-table-body');
             tbody.innerHTML = '';
-            data.specs.forEach(s => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-slate-50 transition duration-150';
-                tr.innerHTML = `
-                    <td class="p-3 font-medium text-gray-800">${s.item}</td>
-                    <td class="p-3 text-gray-500">${s.std}</td>
-                    <td class="p-3 font-bold text-brand-navy">${s.val}</td>
-                    <td class="p-3 text-center">
-                        <span class="px-2.5 py-1 rounded-md text-[10px] font-bold ${s.isOk ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">
-                            ${s.status}
-                        </span>
-                    </td>
+            (data.specs || []).forEach(s => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50 border-b border-gray-100">
+                        <td class="p-3 font-medium text-gray-800">${s.item}</td>
+                        <td class="p-3 text-gray-500">${s.std}</td>
+                        <td class="p-3 font-bold text-brand-navy">${s.val}</td>
+                        <td class="p-3 text-center">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${s.isOk ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">${s.status}</span>
+                        </td>
+                    </tr>
                 `;
-                tbody.appendChild(tr);
             });
 
-            // Render Photos
-            const photoGallery = document.getElementById('photo-gallery');
-            photoGallery.innerHTML = '';
-            data.photos.forEach((src, idx) => {
-                photoGallery.innerHTML += `
-                    <div class="relative group rounded-xl overflow-hidden border border-gray-200 shadow-sm card-hover">
-                        <img src="${src}" class="w-full h-44 object-cover group-hover:scale-110 transition duration-500">
-                        <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3 text-white text-[11px] font-medium">
-                            <i class="fas fa-camera mr-1"></i> Ảnh kiểm tra thực tế #${idx + 1}
+            // Photos
+            const gallery = document.getElementById('photo-gallery');
+            gallery.innerHTML = '';
+            (data.photos || []).forEach((src, idx) => {
+                gallery.innerHTML += `
+                    <div class="relative rounded-xl overflow-hidden border border-gray-200 card-hover">
+                        <img src="${src}" class="w-full h-44 object-cover">
+                        <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 p-2 text-white text-[10px]">
+                            Ảnh kiểm tra #${idx + 1}
                         </div>
                     </div>
                 `;
@@ -902,92 +652,129 @@
 
         function searchDevice() {
             const input = document.getElementById('device-code-input').value.trim().toUpperCase();
-            if (deviceDatabase[input]) {
-                renderDeviceReport(deviceDatabase[input]);
+            const db = getDeviceDatabase();
+            if (db[input]) {
+                renderDeviceReport(db[input]);
             } else {
-                alert('Không tìm thấy dữ liệu mã QR này! Bạn có thể thử các mã gợi ý: TS-2026-HVAC, TS-2026-FIRE, TESA-HP-01');
+                alert('Không tìm thấy dữ liệu mã QR này! Bạn có thể bấm nút "THÊM MÃ TẠI ĐÂY" để tạo mới.');
             }
         }
 
         function loadSampleDevice(code) {
             document.getElementById('device-code-input').value = code;
-            renderDeviceReport(deviceDatabase[code]);
+            const db = getDeviceDatabase();
+            if (db[code]) renderDeviceReport(db[code]);
         }
 
-        // CANVAS SIGNATURE PAD LOGIC
-        let canvas, ctx, isDrawing = false;
-
-        function initSignaturePad() {
-            canvas = document.getElementById('signature-pad');
-            if (!canvas) return;
-            ctx = canvas.getContext('2d');
+        // ================= ADMIN / UPDATE MODAL FUNCTIONS =================
+        function openAdminModal() {
+            document.getElementById('admin-modal').classList.remove('hidden');
+            document.getElementById('admin-step-auth').classList.remove('hidden');
+            document.getElementById('admin-step-form').classList.add('hidden');
+            document.getElementById('admin-password-input').value = '';
             
-            // Adjust canvas size
-            canvas.width = canvas.parentElement.clientWidth;
-            canvas.height = 144;
-
-            ctx.lineWidth = 2.5;
-            ctx.lineCap = 'round';
-            ctx.strokeStyle = '#0f2b48';
-
-            // Mouse Events
-            canvas.onmousedown = (e) => { isDrawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); };
-            canvas.onmousemove = (e) => { if(isDrawing) { ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); } };
-            canvas.onmouseup = () => isDrawing = false;
-
-            // Touch Events for Mobile
-            canvas.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                const rect = canvas.getBoundingClientRect();
-                const touch = e.touches[0];
-                isDrawing = true;
-                ctx.beginPath();
-                ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
-            });
-            canvas.addEventListener('touchmove', (e) => {
-                e.preventDefault();
-                if(!isDrawing) return;
-                const rect = canvas.getBoundingClientRect();
-                const touch = e.touches[0];
-                ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
-                ctx.stroke();
-            });
-            canvas.addEventListener('touchend', () => isDrawing = false);
+            // Set default date to today
+            document.getElementById('form-date').value = new Date().toISOString().split('T')[0];
         }
 
-        function clearSignature() {
-            if(ctx && canvas) {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+        function closeAdminModal() {
+            document.getElementById('admin-modal').classList.add('hidden');
+        }
+
+        function verifyPassword() {
+            const pass = document.getElementById('admin-password-input').value;
+            if (pass === 'hicon2026' || pass === '123456') {
+                document.getElementById('admin-step-auth').classList.add('hidden');
+                document.getElementById('admin-step-form').classList.remove('hidden');
+            } else {
+                alert('Mật khẩu không đúng! Vui lòng kiểm tra lại với Quản lý.');
             }
         }
 
-        function submitAcceptance() {
-            const signer = document.getElementById('signer-name').value.trim();
-            if (!signer) {
-                alert('Vui lòng điền họ tên người ký nghiệm thu!');
-                return;
-            }
-            alert(`Cảm ơn ${signer}! Biên bản nghiệm thu số hóa đã được xác nhận và đồng bộ lên hệ thống HICON M&E.`);
+        // READ PHOTOS FROM ALBUM FILE INPUT
+        function previewImages(event) {
+            const files = event.target.files;
+            const previewGrid = document.getElementById('photo-preview-grid');
+            previewGrid.innerHTML = '';
+            uploadedPhotosBase64 = [];
+
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64Str = e.target.result;
+                    uploadedPhotosBase64.push(base64Str);
+
+                    const div = document.createElement('div');
+                    div.className = "relative rounded-lg overflow-hidden h-20 border border-gray-300";
+                    div.innerHTML = `<img src="${base64Str}" class="w-full h-full object-cover">`;
+                    previewGrid.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
         }
 
-        function downloadReportPDF() {
-            alert('Hệ thống đang xuất file PDF Biên bản bảo trì. File sẽ tự động tải về thiết bị của bạn!');
-        }
-
-        function handleContactSubmit(e) {
+        // SAVE NEW / EDIT DEVICE
+        function handleSaveDevice(e) {
             e.preventDefault();
-            alert('Gửi yêu cầu thành công! Đội ngũ Kỹ sư HICON M&E sẽ liên hệ lại với bạn trong thời gian sớm nhất.');
+
+            const code = document.getElementById('form-code').value.trim().toUpperCase();
+            const name = document.getElementById('form-name').value.trim();
+            const location = document.getElementById('form-location').value.trim();
+            const client = document.getElementById('form-client').value.trim();
+            const tech = document.getElementById('form-tech').value.trim();
+            const date = document.getElementById('form-date').value;
+            const statusVal = document.getElementById('form-status').value;
+            const note = document.getElementById('form-note').value.trim();
+
+            let statusBadge = '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800"><i class="fas fa-check-circle mr-1"></i> HOẠT ĐỘNG TỐT</span>';
+            if (statusVal === 'WARN') {
+                statusBadge = '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-800"><i class="fas fa-exclamation-triangle mr-1"></i> CẦN LƯU Ý KỸ THUẬT</span>';
+            } else if (statusVal === 'BAD') {
+                statusBadge = '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-red-100 text-red-800"><i class="fas fa-times-circle mr-1"></i> CẦN SỬA CHỮA NGAY</span>';
+            }
+
+            const db = getDeviceDatabase();
+
+            // Retain default photos if no new photos selected
+            let finalPhotos = uploadedPhotosBase64;
+            if (finalPhotos.length === 0 && db[code] && db[code].photos) {
+                finalPhotos = db[code].photos;
+            } else if (finalPhotos.length === 0) {
+                finalPhotos = ['https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=600&auto=format&fit=crop'];
+            }
+
+            db[code] = {
+                name: name,
+                code: code,
+                location: location,
+                client: client,
+                tech: tech,
+                date: date,
+                statusBadge: statusBadge,
+                note: note || 'Đã kiểm tra vận hành hệ thống đạt tiêu chuẩn.',
+                specs: [
+                    { item: 'Kiểm tra tổng quan thiết bị', std: 'Tiêu chuẩn TCVN', val: 'Đạt yêu cầu', status: 'Đạt', isOk: true },
+                    { item: 'Thông số điện / Áp suất vận hành', std: 'Theo hồ sơ', val: 'Ổn định', status: 'Đạt', isOk: true }
+                ],
+                photos: finalPhotos
+            };
+
+            saveDeviceDatabase(db);
+            renderQuickButtons();
+            closeAdminModal();
+
+            // Jump to report view
+            navigateTo('maintenance-portal');
+            loadSampleDevice(code);
+
+            alert(`Lưu thành công thiết bị mã: ${code}! Mã QR đã sẵn sàng để tra cứu.`);
         }
 
         // INITIAL LOAD
         window.onload = function() {
-            const hash = window.location.hash.replace('#', '');
-            if (hash && document.getElementById('section-' + hash)) {
-                navigateTo(hash);
-            } else {
-                navigateTo('home');
-            }
-            renderDeviceReport(deviceDatabase['TS-2026-HVAC']);
+            renderQuickButtons();
+            navigateTo('home');
+            loadSampleDevice('TS-2026-HVAC');
         }
     </script>
 </body>
