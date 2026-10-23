@@ -82,7 +82,7 @@
             <div class="flex items-center space-x-4">
                 <span class="bg-emerald-600 text-white px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide animate-pulse">CỔNG BÁO CÁO SỐ HÓA QR</span>
                 <button onclick="openAdminModal()" class="bg-amber-500 hover:bg-amber-600 text-brand-dark px-3 py-1 rounded-md font-bold text-[11px] transition flex items-center shadow-md">
-                    <i class="fas fa-lock mr-1.5"></i> CẬP NHẬT THIẾT BỊ (NV)
+                    <i class="fas fa-edit mr-1.5"></i> Cập nhật thông tin/trạng thái thiết bị
                 </button>
             </div>
         </div>
@@ -113,7 +113,7 @@
                         <i class="fas fa-qrcode mr-1.5 text-lg"></i> BÁO CÁO BẢO TRÌ
                     </button>
                     <button onclick="openAdminModal()" class="text-amber-400 font-bold hover:text-white transition flex items-center py-2">
-                        <i class="fas fa-plus-circle mr-1 text-base"></i> THÊM BÁO CÁO
+                        <i class="fas fa-edit mr-1 text-base"></i> Cập nhật thông tin/trạng thái thiết bị
                     </button>
                     <button onclick="navigateTo('contact')" id="nav-contact" class="nav-link py-2 hover:text-brand-accent transition">LIÊN HỆ</button>
                 </nav>
@@ -121,7 +121,7 @@
                 <!-- MOBILE MENU BUTTON -->
                 <div class="md:hidden flex items-center space-x-2">
                     <button onclick="openAdminModal()" class="bg-amber-500 text-brand-dark px-2.5 py-1.5 rounded-lg font-bold text-xs flex items-center">
-                        <i class="fas fa-plus mr-1"></i> Update
+                        <i class="fas fa-edit mr-1"></i> Cập nhật
                     </button>
                     <button onclick="navigateTo('maintenance-portal')" class="bg-brand-accent text-brand-dark p-2 rounded-lg font-bold text-xs flex items-center">
                         <i class="fas fa-qrcode text-base"></i>
@@ -140,7 +140,7 @@
             <button onclick="navigateTo('services'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-gray-300">DỊCH VỤ M&E</button>
             <button onclick="navigateTo('projects'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-gray-300">DỰ ÁN</button>
             <button onclick="navigateTo('maintenance-portal'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-brand-accent font-bold"><i class="fas fa-qrcode mr-2"></i> TRA CỨU BÁO CÁO QR</button>
-            <button onclick="openAdminModal(); toggleMobileMenu()" class="block w-full text-left py-2.5 text-amber-400 font-bold"><i class="fas fa-lock mr-2"></i> TẠO / CẬP NHẬT BÁO CÁO (NV)</button>
+            <button onclick="openAdminModal(); toggleMobileMenu()" class="block w-full text-left py-2.5 text-amber-400 font-bold"><i class="fas fa-edit mr-2"></i> Cập nhật thông tin/trạng thái thiết bị</button>
             <button onclick="navigateTo('contact'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-gray-300">LIÊN HỆ</button>
         </div>
     </header>
@@ -167,7 +167,7 @@
                             <i class="fas fa-qrcode mr-2.5 text-xl"></i> Quét / Tra Cứu Mã QR Bảo Trì
                         </button>
                         <button onclick="openAdminModal()" class="btn-interactive bg-amber-500 hover:bg-amber-600 text-brand-dark font-bold px-8 py-4 rounded-xl text-base shadow-xl flex items-center justify-center">
-                            <i class="fas fa-plus-circle mr-2 text-xl"></i> Cập Nhật Dữ Liệu Thiết Bị
+                            <i class="fas fa-edit mr-2 text-xl"></i> Cập nhật thông tin/trạng thái thiết bị
                         </button>
                     </div>
                 </div>
@@ -312,7 +312,7 @@
                             <!-- Injected by JS -->
                         </div>
                         <button onclick="openAdminModal()" class="bg-amber-500 hover:bg-amber-400 text-brand-dark font-bold px-3 py-1 rounded-lg transition ml-auto flex items-center">
-                            <i class="fas fa-plus-circle mr-1"></i> THÊM MÃ TẠI ĐÂY
+                            <i class="fas fa-edit mr-1"></i> Cập nhật thông tin/trạng thái thiết bị
                         </button>
                     </div>
                 </div>
@@ -352,30 +352,56 @@
                     </div>
 
                     <div class="lg:col-span-2">
-                        <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-6">
-                            <h4 class="text-sm font-bold text-brand-navy uppercase mb-4"><i class="fas fa-list-check text-brand-accent mr-2"></i> Nhật Ký Thông Số Kỹ Thuật & Ảnh Kiểm Tra</h4>
+                        <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-6 space-y-6">
                             
-                            <div class="overflow-x-auto mb-6">
-                                <table class="w-full text-left text-xs border-collapse">
-                                    <thead>
-                                        <tr class="bg-slate-100 text-brand-navy border-b border-gray-200">
-                                            <th class="p-3 font-bold">Hạng Mục</th>
-                                            <th class="p-3 font-bold">Tiêu Chuẩn</th>
-                                            <th class="p-3 font-bold">Thực Tế</th>
-                                            <th class="p-3 font-bold text-center">Trạng Thái</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="specs-table-body" class="divide-y divide-gray-100"></tbody>
-                                </table>
+                            <!-- HẠNG MỤC BẢO TRÌ THỰC TẾ -->
+                            <div>
+                                <h4 class="text-sm font-bold text-brand-navy uppercase mb-3 flex items-center justify-between">
+                                    <span><i class="fas fa-tasks text-brand-accent mr-2"></i> Hạng Mục Bảo Trì & Nội Dung Thực Hiện</span>
+                                    <span id="task-count-badge" class="text-xs bg-cyan-100 text-brand-blue px-2.5 py-0.5 rounded-full font-bold">0 Hạng Mục</span>
+                                </h4>
+                                <div class="overflow-x-auto border border-gray-200 rounded-xl">
+                                    <table class="w-full text-left text-xs border-collapse">
+                                        <thead>
+                                            <tr class="bg-slate-100 text-brand-navy border-b border-gray-200">
+                                                <th class="p-3 font-bold w-12 text-center">STT</th>
+                                                <th class="p-3 font-bold w-1/3">Hạng Mục Bảo Trì</th>
+                                                <th class="p-3 font-bold">Nội Dung Thực Hiện Chi Tiết</th>
+                                                <th class="p-3 font-bold w-20 text-center">Trạng Thái</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="report-tasks-body" class="divide-y divide-gray-100"></tbody>
+                                    </table>
+                                </div>
                             </div>
 
-                            <div class="bg-slate-50 p-4 rounded-xl border border-gray-200 mb-6">
+                            <!-- THÔNG SỐ KỸ THUẬT -->
+                            <div>
+                                <h4 class="text-sm font-bold text-brand-navy uppercase mb-3"><i class="fas fa-list-check text-brand-accent mr-2"></i> Thông Số Đo Đạc Thực Tế</h4>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-left text-xs border-collapse">
+                                        <thead>
+                                            <tr class="bg-slate-100 text-brand-navy border-b border-gray-200">
+                                                <th class="p-3 font-bold">Chỉ Tiêu</th>
+                                                <th class="p-3 font-bold">Tiêu Chuẩn</th>
+                                                <th class="p-3 font-bold">Thực Tế</th>
+                                                <th class="p-3 font-bold text-center">Đánh Giá</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="specs-table-body" class="divide-y divide-gray-100"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-50 p-4 rounded-xl border border-gray-200">
                                 <h5 class="text-xs font-bold text-brand-navy mb-1"><i class="fas fa-comment-dots text-brand-accent mr-1"></i> Ghi Chú Kỹ Thuật:</h5>
                                 <p id="engineer-note" class="text-xs text-gray-700 leading-relaxed"></p>
                             </div>
 
-                            <h5 class="text-xs font-bold text-brand-navy mb-3"><i class="fas fa-camera text-brand-accent mr-1"></i> Hình Ảnh Hiện Trường Chụp Thực Tế:</h5>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="photo-gallery"></div>
+                            <div>
+                                <h5 class="text-xs font-bold text-brand-navy mb-3"><i class="fas fa-camera text-brand-accent mr-1"></i> Hình Ảnh Hiện Trường Chụp Thực Tế:</h5>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="photo-gallery"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -406,21 +432,57 @@
 
     <!-- ==================== MODAL FORM ADMIN / CẬP NHẬT THIẾT BỊ ==================== -->
     <div id="admin-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden border border-gray-200 my-8">
+        <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden border border-gray-200 my-8">
             
-            <!-- STEP 1: PASSWORD AUTH -->
+            <!-- STEP 1: AUTHENTICATION -->
             <div id="admin-step-auth" class="p-8 text-center">
                 <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
                     <i class="fas fa-user-lock"></i>
                 </div>
-                <h3 class="text-xl font-bold text-brand-navy mb-2">ĐĂNG NHẬP CÔNG NHÂN VIÊN</h3>
-                <p class="text-xs text-gray-500 mb-6">Nhập mật khẩu nội bộ HICON M&E để tạo hoặc sửa thông tin báo cáo bảo trì thiết bị.</p>
+                <h3 class="text-xl font-bold text-brand-navy mb-2">ĐĂNG NHẬP</h3>
+                <p class="text-xs text-gray-500 mb-6">Nhập mật khẩu nội bộ HICON M&E để cập nhật thông tin/trạng thái thiết bị.</p>
                 
                 <div class="max-w-xs mx-auto space-y-4">
                     <input type="password" id="admin-password-input" placeholder="Mật khẩu (Mặc định: hicon2026)" class="w-full text-center text-sm p-3 border-2 border-gray-300 rounded-xl focus:border-amber-500 focus:outline-none">
+                    
                     <div class="flex gap-2">
                         <button onclick="closeAdminModal()" class="w-1/2 bg-gray-200 text-gray-700 py-2.5 rounded-xl text-xs font-bold">Hủy</button>
-                        <button onclick="verifyPassword()" class="w-1/2 bg-amber-500 hover:bg-amber-600 text-brand-dark py-2.5 rounded-xl text-xs font-bold shadow-md">Xác Nhận</button>
+                        <button onclick="verifyPassword()" class="w-1/2 bg-amber-500 hover:bg-amber-600 text-brand-dark py-2.5 rounded-xl text-xs font-bold shadow-md">Đăng Nhập</button>
+                    </div>
+
+                    <div class="pt-2 border-t border-gray-100">
+                        <button onclick="showChangePassView()" class="text-xs text-brand-blue font-bold hover:underline flex items-center justify-center mx-auto">
+                            <i class="fas fa-key mr-1"></i> Đổi mật khẩu đăng nhập
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 1.5: CHANGE PASSWORD VIEW -->
+            <div id="admin-step-changepass" class="p-8 text-center hidden">
+                <div class="w-16 h-16 bg-blue-100 text-brand-blue rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 class="text-xl font-bold text-brand-navy mb-2">ĐỔI MẬT KHẨU QUẢN TRỊ</h3>
+                <p class="text-xs text-gray-500 mb-6">Vui lòng nhập Mã PIN xác nhận bảo mật và Mật khẩu mới.</p>
+                
+                <div class="max-w-xs mx-auto space-y-3 text-left">
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-700 mb-1">Mã PIN xác nhận (Mặc định: 1111) (*)</label>
+                        <input type="password" id="changepass-pin" maxlength="4" placeholder="Nhập PIN 1111" class="w-full text-center text-sm p-2.5 border border-gray-300 rounded-xl font-mono focus:border-brand-blue focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-700 mb-1">Mật khẩu mới (*)</label>
+                        <input type="password" id="changepass-new" placeholder="Nhập mật khẩu mới" class="w-full p-2.5 border border-gray-300 rounded-xl text-sm focus:border-brand-blue focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-700 mb-1">Xác nhận Mật khẩu mới (*)</label>
+                        <input type="password" id="changepass-confirm" placeholder="Nhập lại mật khẩu mới" class="w-full p-2.5 border border-gray-300 rounded-xl text-sm focus:border-brand-blue focus:outline-none">
+                    </div>
+
+                    <div class="flex gap-2 pt-3">
+                        <button onclick="backToAuthView()" class="w-1/2 bg-gray-200 text-gray-700 py-2.5 rounded-xl text-xs font-bold">Quay Lại</button>
+                        <button onclick="handleChangePassword()" class="w-1/2 bg-brand-blue hover:bg-brand-navy text-white py-2.5 rounded-xl text-xs font-bold shadow-md">Lưu Mật Khẩu</button>
                     </div>
                 </div>
             </div>
@@ -429,13 +491,13 @@
             <div id="admin-step-form" class="hidden">
                 <div class="bg-brand-navy text-white p-5 flex justify-between items-center">
                     <div>
-                        <h3 class="font-extrabold text-base flex items-center"><i class="fas fa-plus-circle text-amber-400 mr-2"></i> THÊM / CẬP NHẬT DỮ LIỆU BẢO TRÌ</h3>
-                        <p class="text-[10px] text-gray-300">Nhập thông tin & chọn ảnh chụp trực tiếp từ album máy tính / điện thoại</p>
+                        <h3 class="font-extrabold text-base flex items-center"><i class="fas fa-edit text-amber-400 mr-2"></i> CẬP NHẬT THÔNG TIN / TRẠNG THÁI THIẾT BỊ</h3>
+                        <p class="text-[10px] text-gray-300">Điền hạng mục bảo trì (8-13+ mục), thông số kỹ thuật & quản lý ảnh thực tế</p>
                     </div>
                     <button onclick="closeAdminModal()" class="text-gray-300 hover:text-white text-xl"><i class="fas fa-times"></i></button>
                 </div>
 
-                <form onsubmit="handleSaveDevice(event)" class="p-6 space-y-4 text-xs max-h-[75vh] overflow-y-auto">
+                <form onsubmit="handleSaveDevice(event)" class="p-6 space-y-5 text-xs max-h-[75vh] overflow-y-auto">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block font-bold text-gray-700 mb-1">Mã QR Thiết Bị (* Dùng để quét)</label>
@@ -477,22 +539,39 @@
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block font-bold text-gray-700 mb-1">Ghi Chú Kỹ Thuật & Đánh Giá</label>
-                        <textarea id="form-note" rows="2" placeholder="VD: Đã tra mỡ ổ bi, đo dòng điện 3 pha đạt tiêu chuẩn..." class="w-full p-2.5 border border-gray-300 rounded-lg"></textarea>
+                    <!-- QUẢN LÝ HẠNG MỤC BẢO TRÌ (THÊM / XÓA ĐỘNG) -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-gray-200 space-y-3">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="font-bold text-brand-navy"><i class="fas fa-tasks text-brand-accent mr-1"></i> DANH SÁCH HẠNG MỤC BẢO TRÌ THỰC TẾ</h4>
+                                <p class="text-[10px] text-gray-500">Thêm các hạng mục (vệ sinh vỏ, đo điện, tra mỡ...) và nội dung thực hiện tương ứng.</p>
+                            </div>
+                            <button type="button" onclick="addMaintenanceTaskRow()" class="bg-brand-accent hover:bg-cyan-600 text-brand-dark px-3 py-1.5 rounded-lg font-bold text-xs flex items-center shadow-sm">
+                                <i class="fas fa-plus mr-1"></i> Thêm Hạng Mục
+                            </button>
+                        </div>
+                        
+                        <div id="form-tasks-container" class="space-y-2">
+                            <!-- Injected dynamically -->
+                        </div>
                     </div>
 
-                    <!-- PHOTO UPLOAD FROM ALBUM -->
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-1">Ghi Chú Kỹ Thuật Tổng Quát</label>
+                        <textarea id="form-note" rows="2" placeholder="VD: Đã hoàn tất quy trình bảo dưỡng định kỳ, thiết bị vận hành ổn định..." class="w-full p-2.5 border border-gray-300 rounded-lg"></textarea>
+                    </div>
+
+                    <!-- PHOTO UPLOAD FROM ALBUM WITH DELETE FUNCTION -->
                     <div class="bg-slate-50 p-4 rounded-xl border-2 border-dashed border-gray-300 text-center">
                         <label class="block font-bold text-brand-navy mb-1"><i class="fas fa-images text-brand-accent mr-1"></i> TẢI ẢNH CHỤP HIỆN TRƯỜNG TỪ ALBUM</label>
-                        <p class="text-[10px] text-gray-500 mb-3">Có thể bấm chọn nhiều ảnh trực tiếp từ thư viện ảnh điện thoại hoặc máy tính</p>
+                        <p class="text-[10px] text-gray-500 mb-3">Có thể chọn nhiều ảnh. Bấm dấu (x) nếu muốn xóa ảnh chọn nhầm.</p>
                         
                         <input type="file" id="form-file-input" multiple accept="image/*" onchange="previewImages(event)" class="hidden">
                         <button type="button" onclick="document.getElementById('form-file-input').click()" class="bg-brand-blue hover:bg-brand-navy text-white px-4 py-2 rounded-lg font-bold text-xs shadow-md">
                             <i class="fas fa-folder-open mr-1"></i> Chọn Ảnh Từ Thư Viện
                         </button>
 
-                        <div id="photo-preview-grid" class="grid grid-cols-3 gap-2 mt-4"></div>
+                        <div id="photo-preview-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4"></div>
                     </div>
 
                     <div class="pt-2 flex justify-end gap-3">
@@ -522,7 +601,16 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // DEFAULT INITIAL DATA
+        const CONFIRM_PIN = "1111";
+
+        function getStoredPassword() {
+            return localStorage.getItem('hicon_admin_pass') || 'hicon2026';
+        }
+
+        function setStoredPassword(newPass) {
+            localStorage.setItem('hicon_admin_pass', newPass);
+        }
+
         const defaultDevices = {
             'TS-2026-HVAC': {
                 name: 'Cụm Bơm Chilled Water #01',
@@ -532,7 +620,17 @@
                 tech: 'Kỹ sư Vũ Văn Tiến (HICON M&E)',
                 date: '2026-10-22',
                 statusBadge: '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800"><i class="fas fa-check-circle mr-1"></i> HOẠT ĐỘNG TỐT</span>',
-                note: 'Đã hoàn thành kiểm tra độ rung, tra mỡ màng đệm cơ khí, đo dòng điện 3 pha ổn định.',
+                note: 'Đã hoàn thành kiểm tra toàn bộ cụm bơm, tra mỡ màng đệm và đo dòng điện 3 pha ổn định.',
+                tasks: [
+                    { title: 'Vệ sinh tổng quan vỏ máy', detail: 'Lau chùi bụi bẩn bám trên thân bơm và động cơ.', status: 'Đạt' },
+                    { title: 'Kiểm tra độ rò rỉ cơ khí', detail: 'Kiểm tra trục phớt, không thấy hiện tượng rò nước.', status: 'Đạt' },
+                    { title: 'Tra mỡ ổ bi / Bạc đạn', detail: 'Bổ sung mỡ chịu nhiệt chuyên dụng cho 2 gối đỡ ổ bi.', status: 'Đạt' },
+                    { title: 'Đo điện trở cách điện motor', detail: 'Đo bằng đồng hồ Megaohmmeter kết quả > 50 MΩ.', status: 'Đạt' },
+                    { title: 'Kiểm tra dòng điện vận hành', detail: 'Đo dòng 3 pha cân bằng ở mức 38.2A.', status: 'Đạt' },
+                    { title: 'Kiểm tra bu lông chân đế', detail: 'Siết chặt lại toàn bộ bu lông chống rung chân đế bơm.', status: 'Đạt' },
+                    { title: 'Kiểm tra van và đồng hồ áp suất', detail: 'Đồng hồ áp lực đầu hút/đẩy hoạt động chính xác.', status: 'Đạt' },
+                    { title: 'Vệ sinh lưới lọc Y', detail: 'Xả cặn bẩn tích tụ tại bầu lọc chữ Y đường ống hút.', status: 'Đạt' }
+                ],
                 specs: [
                     { item: 'Áp suất đầu hút', std: '2.5 - 3.5 bar', val: '3.1 bar', status: 'Đạt', isOk: true },
                     { item: 'Áp suất đầu đẩy', std: '6.0 - 7.5 bar', val: '6.8 bar', status: 'Đạt', isOk: true },
@@ -548,7 +646,14 @@
                 tech: 'Kỹ sư Nguyễn Văn Nam (HICON M&E)',
                 date: '2026-10-20',
                 statusBadge: '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-800"><i class="fas fa-exclamation-triangle mr-1"></i> CẦN LƯU Ý</span>',
-                note: 'Áp lực nước 10 bar. Điện áp bình ắc quy đề nổ 22.8V (thấp), đề xuất thay bình mới.',
+                note: 'Áp lực tuyến ống ổn định. Bình ắc quy đề nổ điện áp thấp cần thay thế mới.',
+                tasks: [
+                    { title: 'Kiểm tra mức nhiên liệu Diesel', detail: 'Dầu diesel trong bồn chứa đạt 85% dung tích.', status: 'Đạt' },
+                    { title: 'Kiểm tra mức nước giải nhiệt', detail: 'Nước làm mát máy phát đầy đủ, không rò rỉ.', status: 'Đạt' },
+                    { title: 'Kiểm tra điện áp ắc quy đề nổ', detail: 'Đo điện áp bình đạt 22.8V (Thấp hơn tiêu chuẩn 24V).', status: 'Cần chú ý' },
+                    { title: 'Kiểm tra hệ thống xả khí thải', detail: 'Đường ống xả khói không bị tắc nghẽn, rỉ sét.', status: 'Đạt' },
+                    { title: 'Chạy thử tự động (Auto Test)', detail: 'Khởi động máy bơm thành công qua tủ điều khiển Tornatech.', status: 'Đạt' }
+                ],
                 specs: [
                     { item: 'Áp lực tuyến ống PCCC', std: '9.0 - 11.0 bar', val: '10.2 bar', status: 'Đạt', isOk: true },
                     { item: 'Điện áp ắc quy đề nổ', std: '24.0 - 27.0 V', val: '22.8 V', status: 'Thấp', isOk: false }
@@ -557,7 +662,6 @@
             }
         };
 
-        // LOAD FROM LOCALSTORAGE OR USE DEFAULT
         function getDeviceDatabase() {
             const saved = localStorage.getItem('hicon_device_db');
             if (saved) {
@@ -572,7 +676,6 @@
 
         let uploadedPhotosBase64 = [];
 
-        // NAVIGATION
         function navigateTo(sectionId) {
             document.querySelectorAll('.page-section').forEach(sec => sec.classList.add('hidden'));
             const target = document.getElementById('section-' + sectionId);
@@ -593,7 +696,6 @@
             document.getElementById('mobile-menu').classList.toggle('hidden');
         }
 
-        // RENDER QUICK BUTTONS
         function renderQuickButtons() {
             const db = getDeviceDatabase();
             const container = document.getElementById('quick-device-buttons');
@@ -608,7 +710,6 @@
             });
         }
 
-        // LOAD DEVICE REPORT
         function renderDeviceReport(data) {
             document.getElementById('device-name').innerText = data.name;
             document.getElementById('device-code').innerText = 'MÃ QR: ' + data.code;
@@ -619,7 +720,28 @@
             document.getElementById('device-status-badge').innerHTML = data.statusBadge;
             document.getElementById('engineer-note').innerText = data.note;
 
-            // Specs
+            const tasksBody = document.getElementById('report-tasks-body');
+            tasksBody.innerHTML = '';
+            const tasks = data.tasks || [];
+            document.getElementById('task-count-badge').innerText = tasks.length + ' Hạng Mục';
+
+            if (tasks.length === 0) {
+                tasksBody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-400">Chưa có hạng mục bảo trì nào được cập nhật.</td></tr>`;
+            } else {
+                tasks.forEach((t, idx) => {
+                    tasksBody.innerHTML += `
+                        <tr class="hover:bg-slate-50 border-b border-gray-100">
+                            <td class="p-3 text-center font-bold text-gray-500">${idx + 1}</td>
+                            <td class="p-3 font-bold text-brand-navy">${t.title}</td>
+                            <td class="p-3 text-gray-600">${t.detail}</td>
+                            <td class="p-3 text-center">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">${t.status || 'Đạt'}</span>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
             const tbody = document.getElementById('specs-table-body');
             tbody.innerHTML = '';
             (data.specs || []).forEach(s => {
@@ -635,7 +757,6 @@
                 `;
             });
 
-            // Photos
             const gallery = document.getElementById('photo-gallery');
             gallery.innerHTML = '';
             (data.photos || []).forEach((src, idx) => {
@@ -656,7 +777,7 @@
             if (db[input]) {
                 renderDeviceReport(db[input]);
             } else {
-                alert('Không tìm thấy dữ liệu mã QR này! Bạn có thể bấm nút "THÊM MÃ TẠI ĐÂY" để tạo mới.');
+                alert('Không tìm thấy dữ liệu mã QR này! Bạn có thể chọn "Cập nhật thông tin/trạng thái thiết bị" để tạo mới.');
             }
         }
 
@@ -666,14 +787,12 @@
             if (db[code]) renderDeviceReport(db[code]);
         }
 
-        // ================= ADMIN / UPDATE MODAL FUNCTIONS =================
         function openAdminModal() {
             document.getElementById('admin-modal').classList.remove('hidden');
             document.getElementById('admin-step-auth').classList.remove('hidden');
+            document.getElementById('admin-step-changepass').classList.add('hidden');
             document.getElementById('admin-step-form').classList.add('hidden');
             document.getElementById('admin-password-input').value = '';
-            
-            // Set default date to today
             document.getElementById('form-date').value = new Date().toISOString().split('T')[0];
         }
 
@@ -681,39 +800,127 @@
             document.getElementById('admin-modal').classList.add('hidden');
         }
 
+        function showChangePassView() {
+            document.getElementById('admin-step-auth').classList.add('hidden');
+            document.getElementById('admin-step-changepass').classList.remove('hidden');
+            document.getElementById('changepass-pin').value = '';
+            document.getElementById('changepass-new').value = '';
+            document.getElementById('changepass-confirm').value = '';
+        }
+
+        function backToAuthView() {
+            document.getElementById('admin-step-changepass').classList.add('hidden');
+            document.getElementById('admin-step-auth').classList.remove('hidden');
+        }
+
+        function handleChangePassword() {
+            const pin = document.getElementById('changepass-pin').value.trim();
+            const newPass = document.getElementById('changepass-new').value;
+            const confirmPass = document.getElementById('changepass-confirm').value;
+
+            if (pin !== CONFIRM_PIN) {
+                alert('Mã PIN xác nhận không đúng! Lỗi truy cập bảo mật.');
+                return;
+            }
+
+            if (!newPass) {
+                alert('Vui lòng nhập mật khẩu mới!');
+                return;
+            }
+
+            if (newPass !== confirmPass) {
+                alert('Mật khẩu mới và xác nhận mật khẩu không khớp!');
+                return;
+            }
+
+            setStoredPassword(newPass);
+            alert('Đổi mật khẩu thành công! Hãy dùng mật khẩu mới để đăng nhập.');
+            backToAuthView();
+        }
+
         function verifyPassword() {
             const pass = document.getElementById('admin-password-input').value;
-            if (pass === 'hicon2026' || pass === '123456') {
+            const currentPass = getStoredPassword();
+
+            if (pass === currentPass) {
                 document.getElementById('admin-step-auth').classList.add('hidden');
                 document.getElementById('admin-step-form').classList.remove('hidden');
+                
+                loadDefaultFormTasks([
+                    { title: 'Vệ sinh tổng quan vỏ máy', detail: 'Lau chùi sạch sẽ bụi bẩn, kiểm tra ngoại quan.' },
+                    { title: 'Kiểm tra cơ khí / Trục động cơ', detail: 'Kiểm tra độ rơ, độ rung bất thường.' },
+                    { title: 'Tra mỡ / Dầu bôi trơn', detail: 'Bổ sung mỡ bò chịu nhiệt tại các gối đỡ ổ bi.' },
+                    { title: 'Đo điện trở cách điện', detail: 'Đo kiểm tra an toàn điện bằng đồng hồ chuyên dụng.' },
+                    { title: 'Kiểm tra dòng điện vận hành', detail: 'Đo dòng tải thực tế các pha đảm bảo trong định mức.' },
+                    { title: 'Kiểm tra bu lông, đai ốc', detail: 'Siết chặt lại các điểm đấu nối và chân đế.' },
+                    { title: 'Kiểm tra hệ thống van & áp suất', detail: 'Đảm bảo áp suất đường ống nằm trong dải tiêu chuẩn.' },
+                    { title: 'Vệ sinh lưới lọc / Phin lọc', detail: 'Xả cặn, làm sạch thiết bị lọc cặn.' }
+                ]);
             } else {
-                alert('Mật khẩu không đúng! Vui lòng kiểm tra lại với Quản lý.');
+                alert('Mật khẩu không đúng! Vui lòng kiểm tra lại.');
             }
         }
 
-        // READ PHOTOS FROM ALBUM FILE INPUT
+        function addMaintenanceTaskRow(title = '', detail = '') {
+            const container = document.getElementById('form-tasks-container');
+            const rowId = 'task-row-' + Date.now() + Math.random().toString(36).substring(2, 5);
+            
+            const div = document.createElement('div');
+            div.id = rowId;
+            div.className = "flex gap-2 items-center bg-white p-2 rounded-lg border border-gray-200 shadow-sm";
+            div.innerHTML = `
+                <input type="text" placeholder="Tên hạng mục (VD: Vệ sinh vỏ máy)" value="${title}" class="task-title-input w-1/3 p-2 border border-gray-300 rounded text-xs font-bold focus:outline-none focus:border-brand-blue">
+                <input type="text" placeholder="Nội dung thực hiện chi tiết..." value="${detail}" class="task-detail-input w-full p-2 border border-gray-300 rounded text-xs focus:outline-none focus:border-brand-blue">
+                <button type="button" onclick="document.getElementById('${rowId}').remove()" class="bg-red-100 hover:bg-red-200 text-red-600 px-2.5 py-2 rounded text-xs font-bold transition" title="Xóa hạng mục này">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            `;
+            container.appendChild(div);
+        }
+
+        function loadDefaultFormTasks(tasks) {
+            const container = document.getElementById('form-tasks-container');
+            container.innerHTML = '';
+            tasks.forEach(t => addMaintenanceTaskRow(t.title, t.detail));
+        }
+
         function previewImages(event) {
             const files = event.target.files;
-            const previewGrid = document.getElementById('photo-preview-grid');
-            previewGrid.innerHTML = '';
-            uploadedPhotosBase64 = [];
-
             Array.from(files).forEach(file => {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const base64Str = e.target.result;
                     uploadedPhotosBase64.push(base64Str);
-
-                    const div = document.createElement('div');
-                    div.className = "relative rounded-lg overflow-hidden h-20 border border-gray-300";
-                    div.innerHTML = `<img src="${base64Str}" class="w-full h-full object-cover">`;
-                    previewGrid.appendChild(div);
+                    renderPhotoPreviews();
                 };
                 reader.readAsDataURL(file);
             });
+            event.target.value = '';
         }
 
-        // SAVE NEW / EDIT DEVICE
+        function removeUploadedPhoto(index) {
+            uploadedPhotosBase64.splice(index, 1);
+            renderPhotoPreviews();
+        }
+
+        function renderPhotoPreviews() {
+            const previewGrid = document.getElementById('photo-preview-grid');
+            previewGrid.innerHTML = '';
+            
+            uploadedPhotosBase64.forEach((src, idx) => {
+                const div = document.createElement('div');
+                div.className = "relative rounded-xl overflow-hidden h-24 border border-gray-300 group bg-black";
+                div.innerHTML = `
+                    <img src="${src}" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition">
+                    <button type="button" onclick="removeUploadedPhoto(${idx})" class="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs shadow-lg transition" title="Xóa ảnh này">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <div class="absolute bottom-0 inset-x-0 bg-black/60 text-white text-[9px] text-center py-0.5">Ảnh #${idx + 1}</div>
+                `;
+                previewGrid.appendChild(div);
+            });
+        }
+
         function handleSaveDevice(e) {
             e.preventDefault();
 
@@ -733,9 +940,18 @@
                 statusBadge = '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-red-100 text-red-800"><i class="fas fa-times-circle mr-1"></i> CẦN SỬA CHỮA NGAY</span>';
             }
 
+            const taskRows = document.querySelectorAll('#form-tasks-container > div');
+            let collectedTasks = [];
+            taskRows.forEach(row => {
+                const tTitle = row.querySelector('.task-title-input').value.trim();
+                const tDetail = row.querySelector('.task-detail-input').value.trim();
+                if (tTitle) {
+                    collectedTasks.push({ title: tTitle, detail: tDetail || 'Đã kiểm tra kỹ thuật đạt yêu cầu.', status: 'Đạt' });
+                }
+            });
+
             const db = getDeviceDatabase();
 
-            // Retain default photos if no new photos selected
             let finalPhotos = uploadedPhotosBase64;
             if (finalPhotos.length === 0 && db[code] && db[code].photos) {
                 finalPhotos = db[code].photos;
@@ -752,6 +968,9 @@
                 date: date,
                 statusBadge: statusBadge,
                 note: note || 'Đã kiểm tra vận hành hệ thống đạt tiêu chuẩn.',
+                tasks: collectedTasks.length > 0 ? collectedTasks : [
+                    { title: 'Vệ sinh tổng quan thiết bị', detail: 'Lau chùi sạch sẽ.', status: 'Đạt' }
+                ],
                 specs: [
                     { item: 'Kiểm tra tổng quan thiết bị', std: 'Tiêu chuẩn TCVN', val: 'Đạt yêu cầu', status: 'Đạt', isOk: true },
                     { item: 'Thông số điện / Áp suất vận hành', std: 'Theo hồ sơ', val: 'Ổn định', status: 'Đạt', isOk: true }
@@ -763,14 +982,12 @@
             renderQuickButtons();
             closeAdminModal();
 
-            // Jump to report view
             navigateTo('maintenance-portal');
             loadSampleDevice(code);
 
-            alert(`Lưu thành công thiết bị mã: ${code}! Mã QR đã sẵn sàng để tra cứu.`);
+            alert(`Đã lưu thành công thiết bị mã: ${code} với ${collectedTasks.length} hạng mục bảo trì!`);
         }
 
-        // INITIAL LOAD
         window.onload = function() {
             renderQuickButtons();
             navigateTo('home');
