@@ -329,30 +329,29 @@
                     </div>
 
                     <!-- LIST DEVICES DYNAMICALLY -->
-                    <div class="mt-6 pt-4 border-t border-white/10 flex flex-wrap items-center gap-2 text-xs">
-                        <span class="text-gray-300 font-medium">Danh Sách Mã QR Hiện Có:</span>
-                        <div id="quick-device-buttons" class="flex flex-wrap gap-2"></div>
+                    <div class="mt-6 pt-4 border-t border-white/10 flex flex-wrap items-center gap-3 text-xs">
+                        <span id="total-devices-text" class="text-gray-200 font-semibold">Số lượng mã thiết bị hiện có: 0</span>
                         <button onclick="openAdminModal()" class="btn-interactive bg-amber-500 hover:bg-amber-400 text-brand-dark font-bold px-3 py-1.5 rounded-lg transition ml-auto flex items-center shadow-md">
                             <i class="fas fa-edit mr-1"></i> Cập nhật thông tin/trạng thái thiết bị
                         </button>
                     </div>
                 </div>
 
-                <!-- REPORT RESULTS DISPLAY -->
+                <!-- REPORT RESULTS DISPLAY (MẶC ĐỊNH TRỐNG KHI CHƯA TÌM KIẾM) -->
                 <div id="report-container" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div class="lg:col-span-1 space-y-6">
                         <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-200 card-hover">
                             <div class="flex justify-between items-start mb-4">
                                 <div>
-                                    <span id="device-status-badge" class="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800">
-                                        <i class="fas fa-check-circle mr-1"></i> HOẠT ĐỘNG TỐT
+                                    <span id="device-status-badge" class="px-2.5 py-1 rounded-md text-xs font-bold bg-gray-100 text-gray-500">
+                                        <i class="fas fa-info-circle mr-1"></i> CHƯA CHỌN THIẾT BỊ
                                     </span>
                                     <h3 id="device-name" class="text-xl font-extrabold text-brand-navy mt-2">--</h3>
                                     <p id="device-code" class="text-xs text-gray-500 font-mono">MÃ QR: --</p>
                                 </div>
                                 <div class="bg-slate-100 p-2 rounded-xl border border-gray-200 text-center">
-                                    <i class="fas fa-qrcode text-3xl text-brand-navy"></i>
-                                    <div class="text-[9px] text-gray-500 font-mono mt-0.5">VERIFIED</div>
+                                    <i class="fas fa-qrcode text-3xl text-gray-400"></i>
+                                    <div class="text-[9px] text-gray-400 font-mono mt-0.5">PENDING</div>
                                 </div>
                             </div>
                             <hr class="my-4 border-gray-100">
@@ -366,8 +365,8 @@
 
                         <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-200 text-center">
                             <h4 class="text-sm font-bold text-brand-navy mb-2">BIÊN BẢN BẢO TRÌ</h4>
-                            <button onclick="alert('Đang tải file PDF biên bản...')" class="btn-interactive w-full bg-brand-navy hover:bg-brand-blue text-white font-bold py-3 rounded-xl text-xs flex items-center justify-center">
-                                <i class="fas fa-file-pdf text-red-400 text-base mr-2"></i> Xuất Biên Bản (PDF)
+                            <button onclick="alert('Vui lòng chọn hoặc tra cứu thiết bị trước khi xuất biên bản!')" class="btn-interactive w-full bg-gray-300 text-gray-600 font-bold py-3 rounded-xl text-xs flex items-center justify-center cursor-not-allowed">
+                                <i class="fas fa-file-pdf text-gray-500 text-base mr-2"></i> Xuất Biên Bản (PDF)
                             </button>
                         </div>
                     </div>
@@ -379,7 +378,7 @@
                             <div>
                                 <h4 class="text-sm font-bold text-brand-navy uppercase mb-3 flex items-center justify-between">
                                     <span><i class="fas fa-tasks text-brand-accent mr-2"></i> Hạng Mục Bảo Trì & Nội Dung Thực Hiện</span>
-                                    <span id="task-count-badge" class="text-xs bg-cyan-100 text-brand-blue px-2.5 py-0.5 rounded-full font-bold">0 Hạng Mục</span>
+                                    <span id="task-count-badge" class="text-xs bg-gray-100 text-gray-500 px-2.5 py-0.5 rounded-full font-bold">0 Hạng Mục</span>
                                 </h4>
                                 <div class="overflow-x-auto border border-gray-200 rounded-xl">
                                     <table class="w-full text-left text-xs border-collapse">
@@ -391,7 +390,9 @@
                                                 <th class="p-3 font-bold w-20 text-center">Trạng Thái</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="report-tasks-body" class="divide-y divide-gray-100"></tbody>
+                                        <tbody id="report-tasks-body" class="divide-y divide-gray-100">
+                                            <tr><td colspan="4" class="p-6 text-center text-gray-400">Vui lòng nhập mã QR hoặc chọn thiết bị từ danh sách để xem báo cáo.</td></tr>
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>
@@ -409,19 +410,23 @@
                                                 <th class="p-3 font-bold text-center">Đánh Giá</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="specs-table-body" class="divide-y divide-gray-100"></tbody>
+                                        <tbody id="specs-table-body" class="divide-y divide-gray-100">
+                                            <tr><td colspan="4" class="p-6 text-center text-gray-400">Chưa có thông số đo đạc.</td></tr>
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>
 
                             <div class="bg-slate-50 p-4 rounded-xl border border-gray-200">
                                 <h5 class="text-xs font-bold text-brand-navy mb-1"><i class="fas fa-comment-dots text-brand-accent mr-1"></i> Ghi Chú Kỹ Thuật:</h5>
-                                <p id="engineer-note" class="text-xs text-gray-700 leading-relaxed"></p>
+                                <p id="engineer-note" class="text-xs text-gray-500 italic">Chưa có ghi chú.</p>
                             </div>
 
                             <div>
                                 <h5 class="text-xs font-bold text-brand-navy mb-3"><i class="fas fa-camera text-brand-accent mr-1"></i> Hình Ảnh Hiện Trường Chụp Thực Tế:</h5>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="photo-gallery"></div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center text-gray-400 text-xs py-6 bg-slate-50 rounded-xl border border-dashed border-gray-300" id="photo-gallery">
+                                    Chưa có hình ảnh hiện trường.
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -451,14 +456,14 @@
 
     </main>
 
-    <!-- ==================== MODAL: DANH SÁCH TỔNG HỢP THIẾT BỊ (MỤC CON) ==================== -->
+    <!-- ==================== MODAL: DANH SÁCH TỔNG HỢP THIẾT BỊ ==================== -->
     <div id="device-list-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden border border-gray-200 my-8 flex flex-col max-h-[85vh]">
             <!-- HEADER -->
             <div class="bg-brand-navy text-white p-5 flex justify-between items-center shrink-0">
                 <div>
                     <h3 class="font-extrabold text-base flex items-center"><i class="fas fa-list-ul text-brand-accent mr-2"></i> DANH SÁCH TỔNG HỢP THIẾT BỊ BẢO TRÌ</h3>
-                    <p id="modal-total-count" class="text-[11px] text-cyan-300 mt-0.5">Tổng số lượng: -- thiết bị</p>
+                    <p id="modal-total-count" class="text-[11px] text-cyan-300 mt-0.5">Tổng số lượng: 0 thiết bị</p>
                 </div>
                 <button onclick="closeDeviceListModal()" class="text-gray-300 hover:text-white text-xl p-1 rounded-lg transition"><i class="fas fa-times"></i></button>
             </div>
@@ -471,18 +476,22 @@
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"><i class="fas fa-search"></i></span>
                         <input type="text" id="modal-search-input" oninput="filterDeviceList()" placeholder="Tìm kiếm theo mã, tên thiết bị..." class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-xl text-xs focus:outline-none focus:border-brand-accent transition">
                     </div>
-                    <!-- THÔNG BÁO CHẾ ĐỘ QUẢN TRỊ -->
-                    <div id="admin-mode-badge" class="hidden items-center text-xs font-bold text-amber-700 bg-amber-100 px-3 py-1.5 rounded-xl border border-amber-300">
-                        <i class="fas fa-user-shield mr-1.5"></i> Đang ở chế độ Quản trị (Có quyền xóa thiết bị)
+
+                    <!-- NÚT ICON XOAY CHUYỂN CHẾ ĐỘ NGƯỜI XEM / QUẢN TRỊ -->
+                    <div class="flex items-center gap-2">
+                        <div id="list-mode-indicator" class="text-xs font-bold text-gray-600 bg-gray-200 px-3 py-1.5 rounded-xl flex items-center border border-gray-300">
+                            <i class="fas fa-eye mr-1.5 text-gray-500"></i> Chế độ Người xem
+                        </div>
+                        <button onclick="toggleListAdminMode()" class="btn-interactive bg-brand-navy hover:bg-brand-blue text-white w-9 h-9 rounded-xl flex items-center justify-center shadow-md transition" title="Chuyển đổi chế độ Quản trị / Người xem">
+                            <i id="mode-toggle-icon" class="fas fa-sync-alt"></i>
+                        </button>
                     </div>
                 </div>
 
-                <!-- BẢNG CHỮ CÁI ĐẦU (LỌC THEO CHỮ CÁI KÈM SỐ LƯỢNG) -->
+                <!-- BẢNG CHỮ CÁI ĐẦU -->
                 <div>
                     <div class="text-[11px] font-bold text-gray-500 mb-1.5">Lọc theo chữ cái đầu:</div>
-                    <div id="alphabet-filter-container" class="flex flex-wrap gap-1.5 text-xs">
-                        <!-- Injected dynamically -->
-                    </div>
+                    <div id="alphabet-filter-container" class="flex flex-wrap gap-1.5 text-xs"></div>
                 </div>
             </div>
 
@@ -500,9 +509,7 @@
                                 <th id="th-action-header" class="p-3 font-bold w-24 text-center hidden">Thao Tác</th>
                             </tr>
                         </thead>
-                        <tbody id="modal-device-tbody" class="divide-y divide-gray-100">
-                            <!-- Injected dynamically -->
-                        </tbody>
+                        <tbody id="modal-device-tbody" class="divide-y divide-gray-100"></tbody>
                     </table>
                 </div>
             </div>
@@ -527,7 +534,23 @@
             </p>
             <div class="flex gap-3 pt-2">
                 <button onclick="closeDeleteConfirmModal()" class="btn-interactive w-1/2 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2.5 rounded-xl text-xs font-bold">Hủy</button>
-                <button id="btn-confirm-delete" onclick="executeDeleteDevice()" class="btn-interactive w-1/2 bg-red-600 hover:bg-red-700 text-white py-2.5 rounded-xl text-xs font-bold shadow-lg">Đồng Ý</button>
+                <button onclick="executeDeleteDevice()" class="btn-interactive w-1/2 bg-red-600 hover:bg-red-700 text-white py-2.5 rounded-xl text-xs font-bold shadow-lg">Đồng Ý</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL ĐĂNG NHẬP NHẬP MẬT KHẨU QUẢN TRỊ (CHO NÚT XOAY CHUYỂN) ==================== -->
+    <div id="list-auth-modal" class="fixed inset-0 z-[70] bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl p-6 text-center space-y-4 border border-gray-200">
+            <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-2xl mx-auto shadow-inner">
+                <i class="fas fa-user-lock"></i>
+            </div>
+            <h3 class="text-base font-bold text-brand-navy">XÁC THỰC QUYỀN QUẢN TRỊ</h3>
+            <p class="text-xs text-gray-500">Nhập mật khẩu quản trị để chuyển sang chế độ xóa thiết bị.</p>
+            <input type="password" id="list-auth-password" placeholder="Nhập mật khẩu..." class="w-full text-center text-sm p-3 border-2 border-gray-300 rounded-xl focus:border-amber-500 focus:outline-none transition">
+            <div class="flex gap-2 pt-1">
+                <button onclick="closeListAuthModal()" class="btn-interactive w-1/2 bg-gray-200 text-gray-700 py-2.5 rounded-xl text-xs font-bold">Hủy</button>
+                <button onclick="verifyListAdminPassword()" class="btn-interactive w-1/2 bg-amber-500 hover:bg-amber-600 text-brand-dark py-2.5 rounded-xl text-xs font-bold shadow-md">Xác Nhận</button>
             </div>
         </div>
     </div>
@@ -703,7 +726,7 @@
     <script>
         const CONFIRM_PIN = "1111";
         let toastTimeout = null;
-        let isAdminLoggedIn = false; // Trạng thái kiểm tra quyền quản trị
+        let isListAdminMode = false; // Mặc định trong danh sách là Chế độ Người xem
         let currentSelectedLetter = 'ALL';
         let deviceToDeleteCode = null;
 
@@ -814,18 +837,13 @@
             document.getElementById('mobile-menu').classList.toggle('hidden');
         }
 
-        function renderQuickButtons() {
+        function updateTotalCountDisplay() {
             const db = getDeviceDatabase();
-            const container = document.getElementById('quick-device-buttons');
-            container.innerHTML = '';
-
-            Object.keys(db).forEach(code => {
-                const btn = document.createElement('button');
-                btn.className = "btn-interactive bg-white/10 hover:bg-white/20 text-cyan-300 px-3 py-1 rounded-lg border border-cyan-400/30 font-mono transition";
-                btn.innerText = code;
-                btn.onclick = () => loadSampleDevice(code);
-                container.appendChild(btn);
-            });
+            const count = Object.keys(db).length;
+            const el = document.getElementById('total-devices-text');
+            if (el) {
+                el.innerText = `Số lượng mã thiết bị hiện có: ${count}`;
+            }
         }
 
         function renderDeviceReport(data) {
@@ -877,6 +895,7 @@
 
             const gallery = document.getElementById('photo-gallery');
             gallery.innerHTML = '';
+            gallery.className = "grid grid-cols-1 sm:grid-cols-2 gap-4";
             (data.photos || []).forEach((src, idx) => {
                 gallery.innerHTML += `
                     <div class="relative rounded-xl overflow-hidden border border-gray-200 card-hover">
@@ -889,13 +908,39 @@
             });
         }
 
+        // MẶC ĐỊNH TRỐNG KHI CHƯA TÌM KIẾM
+        function clearDeviceReportDefault() {
+            document.getElementById('device-name').innerText = '--';
+            document.getElementById('device-code').innerText = 'MÃ QR: --';
+            document.getElementById('device-location').innerText = '--';
+            document.getElementById('device-client').innerText = '--';
+            document.getElementById('device-date').innerText = '--';
+            document.getElementById('device-tech').innerText = '--';
+            document.getElementById('device-status-badge').innerHTML = '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-gray-100 text-gray-500"><i class="fas fa-info-circle mr-1"></i> CHƯA CHỌN THIẾT BỊ</span>';
+            document.getElementById('engineer-note').innerText = 'Chưa có ghi chú.';
+            document.getElementById('task-count-badge').innerText = '0 Hạng Mục';
+
+            document.getElementById('report-tasks-body').innerHTML = `<tr><td colspan="4" class="p-6 text-center text-gray-400">Vui lòng nhập mã QR hoặc chọn thiết bị từ danh sách để xem báo cáo.</td></tr>`;
+            document.getElementById('specs-table-body').innerHTML = `<tr><td colspan="4" class="p-6 text-center text-gray-400">Chưa có thông số đo đạc.</td></tr>`;
+            
+            const gallery = document.getElementById('photo-gallery');
+            gallery.className = "grid grid-cols-1 sm:grid-cols-2 gap-4 text-center text-gray-400 text-xs py-6 bg-slate-50 rounded-xl border border-dashed border-gray-300";
+            gallery.innerHTML = 'Chưa có hình ảnh hiện trường.';
+        }
+
         function searchDevice() {
             const input = document.getElementById('device-code-input').value.trim().toUpperCase();
+            if (!input) {
+                showTopErrorToast('Vui lòng nhập mã QR thiết bị cần tra cứu!');
+                clearDeviceReportDefault();
+                return;
+            }
             const db = getDeviceDatabase();
             if (db[input]) {
                 renderDeviceReport(db[input]);
             } else {
                 showTopErrorToast('Không tìm thấy dữ liệu mã QR này! Hãy kiểm tra lại mã.');
+                clearDeviceReportDefault();
             }
         }
 
@@ -905,24 +950,12 @@
             if (db[code]) renderDeviceReport(db[code]);
         }
 
-        /* ==================== XỬ LÝ MỤC CON: DANH SÁCH TỔNG HỢP THIẾT BỊ ==================== */
+        /* ==================== XỬ LÝ MỤC CON: DANH SÁCH TỔNG HỢP & XOAY CHUYỂN CHẾ ĐỘ ==================== */
         function openDeviceListModal() {
             currentSelectedLetter = 'ALL';
             document.getElementById('modal-search-input').value = '';
-            
-            // Hiển thị trạng thái phân quyền quản trị trong modal
-            const adminBadge = document.getElementById('admin-mode-badge');
-            const thAction = document.getElementById('th-action-header');
-            if (isAdminLoggedIn) {
-                adminBadge.classList.remove('hidden');
-                adminBadge.classList.add('flex');
-                thAction.classList.remove('hidden');
-            } else {
-                adminBadge.classList.add('hidden');
-                adminBadge.classList.remove('flex');
-                thAction.classList.add('hidden');
-            }
-
+            isListAdminMode = false; // Mặc định luôn là người xem khi mở modal
+            updateListModeUI();
             renderDeviceListModalContent();
             document.getElementById('device-list-modal').classList.remove('hidden');
         }
@@ -931,43 +964,82 @@
             document.getElementById('device-list-modal').classList.add('hidden');
         }
 
+        function toggleListAdminMode() {
+            if (!isListAdminMode) {
+                // Đang ở người xem, muốn sang quản trị => hiện modal nhập mật khẩu
+                document.getElementById('list-auth-password').value = '';
+                document.getElementById('list-auth-modal').classList.remove('hidden');
+            } else {
+                // Đang ở quản trị => chuyển về người xem ngay lập tức
+                isListAdminMode = false;
+                updateListModeUI();
+                renderDeviceListModalContent();
+            }
+        }
+
+        function closeListAuthModal() {
+            document.getElementById('list-auth-modal').classList.add('hidden');
+        }
+
+        function verifyListAdminPassword() {
+            const pass = document.getElementById('list-auth-password').value;
+            const currentPass = getStoredPassword();
+            if (pass === currentPass) {
+                isListAdminMode = true;
+                closeListAuthModal();
+                updateListModeUI();
+                renderDeviceListModalContent();
+                showTopErrorToast('Đã chuyển sang chế độ Quản trị thành công!');
+            } else {
+                showTopErrorToast('Mật khẩu quản trị không chính xác!');
+            }
+        }
+
+        function updateListModeUI() {
+            const indicator = document.getElementById('list-mode-indicator');
+            const thAction = document.getElementById('th-action-header');
+            if (isListAdminMode) {
+                indicator.className = "text-xs font-bold text-amber-800 bg-amber-100 px-3 py-1.5 rounded-xl flex items-center border border-amber-300";
+                indicator.innerHTML = `<i class="fas fa-user-shield mr-1.5 text-amber-600"></i> Chế độ Quản trị (Có quyền xóa)`;
+                thAction.classList.remove('hidden');
+            } else {
+                indicator.className = "text-xs font-bold text-gray-600 bg-gray-200 px-3 py-1.5 rounded-xl flex items-center border border-gray-300";
+                indicator.innerHTML = `<i class="fas fa-eye mr-1.5 text-gray-500"></i> Chế độ Người xem`;
+                thAction.classList.add('hidden');
+            }
+        }
+
         function renderDeviceListModalContent() {
             const db = getDeviceDatabase();
             const devicesArray = Object.values(db);
             
-            // 1. Hiển thị tổng số lượng
+            // Tổng số lượng
             document.getElementById('modal-total-count').innerText = `Tổng số lượng: ${devicesArray.length} thiết bị`;
 
-            // 2. Tính toán số lượng thiết bị theo từng chữ cái đầu của Tên thiết bị hoặc Mã thiết bị
+            // Tính số lượng theo chữ cái đầu
             const letterCounts = {};
-            const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0-9";
-            
-            // Khởi tạo
-            for (let char of alphabet) { letterCounts[char] = 0; }
+            for (let char of "ABCDEFGHIJKLMNOPQRSTUVWXYZ0-9") { letterCounts[char] = 0; }
 
             devicesArray.forEach(dev => {
                 const firstChar = (dev.name || dev.code || '').trim().toUpperCase().charAt(0);
                 if (letterCounts[firstChar] !== undefined) {
                     letterCounts[firstChar]++;
                 } else {
-                    // Nếu là ký tự khác nhóm vào mục #
                     if (!letterCounts['#']) letterCounts['#'] = 0;
                     letterCounts['#']++;
                 }
             });
 
-            // 3. Render các nút lọc chữ cái đầu kèm số lượng
+            // Render bộ lọc chữ cái
             const filterContainer = document.getElementById('alphabet-filter-container');
             filterContainer.innerHTML = '';
 
-            // Nút "Tất cả"
             const allBtn = document.createElement('button');
             allBtn.className = `px-2.5 py-1 rounded-lg text-xs font-bold transition ${currentSelectedLetter === 'ALL' ? 'bg-brand-navy text-white shadow-md' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'}`;
             allBtn.innerHTML = `Tất cả (${devicesArray.length})`;
             allBtn.onclick = () => { currentSelectedLetter = 'ALL'; renderDeviceListModalContent(); };
             filterContainer.appendChild(allBtn);
 
-            // Render A-Z
             for (let char of "ABCDEFGHIJKLMNOPQRSTUVWXYZ") {
                 const count = letterCounts[char] || 0;
                 const btn = document.createElement('button');
@@ -981,7 +1053,7 @@
                 filterContainer.appendChild(btn);
             }
 
-            // 4. Lọc danh sách theo Chữ cái đã chọn & Ô tìm kiếm
+            // Lọc theo từ khóa tìm kiếm & chữ cái
             const searchQuery = document.getElementById('modal-search-input').value.trim().toLowerCase();
 
             let filtered = devicesArray.filter(dev => {
@@ -999,21 +1071,19 @@
                 }
             });
 
-            // 5. Sắp xếp danh sách theo bảng chữ cái (A-Z) dựa theo tên thiết bị
             filtered.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
 
-            // 6. Render bảng dữ liệu
             const tbody = document.getElementById('modal-device-tbody');
             tbody.innerHTML = '';
 
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="${isAdminLoggedIn ? 6 : 5}" class="p-6 text-center text-gray-400">Không tìm thấy thiết bị nào phù hợp.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="${isListAdminMode ? 6 : 5}" class="p-6 text-center text-gray-400">Không tìm thấy thiết bị nào phù hợp.</td></tr>`;
                 return;
             }
 
             filtered.forEach((dev, idx) => {
                 let actionTd = '';
-                if (isAdminLoggedIn) {
+                if (isListAdminMode) {
                     actionTd = `
                         <td class="p-3 text-center">
                             <button onclick="promptDeleteDevice('${dev.code}')" class="btn-interactive bg-red-100 hover:bg-red-200 text-red-600 px-2.5 py-1.5 rounded-lg text-xs font-bold transition shadow-sm" title="Xóa thiết bị này">
@@ -1040,7 +1110,6 @@
             renderDeviceListModalContent();
         }
 
-        // XỬ LÝ XÓA THIẾT BỊ KÈM HỘP THOẠI XÁC NHẬN
         function promptDeleteDevice(code) {
             deviceToDeleteCode = code;
             document.getElementById('delete-confirm-text').innerText = `Bạn có chắc chắn muốn xóa thiết bị có mã "${code}" không?`;
@@ -1058,7 +1127,7 @@
             if (db[deviceToDeleteCode]) {
                 delete db[deviceToDeleteCode];
                 saveDeviceDatabase(db);
-                renderQuickButtons();
+                updateTotalCountDisplay();
                 renderDeviceListModalContent();
                 showTopErrorToast(`Đã xóa thành công thiết bị mã: ${deviceToDeleteCode}`);
             }
@@ -1133,7 +1202,6 @@
             const currentPass = getStoredPassword();
 
             if (pass === currentPass) {
-                isAdminLoggedIn = true; // Đánh dấu đã đăng nhập quản trị thành công
                 passInput.classList.remove('shake-error', 'border-red-500');
                 document.getElementById('admin-step-auth').classList.add('hidden');
                 document.getElementById('admin-step-form').classList.remove('hidden');
@@ -1273,7 +1341,7 @@
             };
 
             saveDeviceDatabase(db);
-            renderQuickButtons();
+            updateTotalCountDisplay();
             closeAdminModal();
 
             navigateTo('maintenance-portal');
@@ -1283,9 +1351,9 @@
         }
 
         window.onload = function() {
-            renderQuickButtons();
+            updateTotalCountDisplay();
             navigateTo('home');
-            loadSampleDevice('TS-2026-HVAC');
+            clearDeviceReportDefault();
         }
     </script>
 </body>
