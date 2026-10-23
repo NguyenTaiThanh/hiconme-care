@@ -40,7 +40,6 @@
             background-size: cover; background-position: center;
         }
 
-        /* Smooth Page & Component Transitions */
         .page-section {
             opacity: 0;
             transform: translateY(16px) scale(0.995);
@@ -49,25 +48,12 @@
         }
         .page-section.active-section { opacity: 1; transform: translateY(0) scale(1); }
 
-        /* Button Micro-interactions */
-        .btn-interactive {
-            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .btn-interactive:hover {
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 10px 20px -5px rgba(0, 168, 204, 0.35);
-        }
-        .btn-interactive:active {
-            transform: translateY(1px) scale(0.96);
-        }
+        .btn-interactive { transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .btn-interactive:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 10px 20px -5px rgba(0, 168, 204, 0.35); }
+        .btn-interactive:active { transform: translateY(1px) scale(0.96); }
 
-        .card-hover {
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .card-hover:hover {
-            transform: translateY(-4px) scale(1.01);
-            box-shadow: 0 16px 24px -6px rgba(15, 43, 72, 0.12);
-        }
+        .card-hover { transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        .card-hover:hover { transform: translateY(-4px) scale(1.01); box-shadow: 0 16px 24px -6px rgba(15, 43, 72, 0.12); }
 
         .scan-glow { position: relative; overflow: hidden; }
         .scan-glow::after {
@@ -77,30 +63,24 @@
         }
         @keyframes shimmer { 0% { transform: translate(-100%, -100%) rotate(30deg); } 100% { transform: translate(100%, 100%) rotate(30deg); } }
 
-        /* Navigation Link States */
         .nav-link { position: relative; color: #d1d5db; transition: color 0.25s ease; }
         .nav-link:hover { color: #00a8cc; }
         .nav-link::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -2px; left: 0; background-color: #00a8cc; transition: width 0.25s ease; }
         .nav-link:hover::after, .nav-link.active::after { width: 100%; }
         .nav-link.active { color: #00a8cc; font-weight: 700; }
 
-        /* Toast Animation */
         @keyframes slideDownToast {
             from { transform: translate(-50%, -100%); opacity: 0; }
             to { transform: translate(-50%, 0); opacity: 1; }
         }
-        .toast-animate-in {
-            animation: slideDownToast 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
+        .toast-animate-in { animation: slideDownToast 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
         @keyframes errorShake {
             0%, 100% { transform: translateX(0); }
             20%, 60% { transform: translateX(-8px); }
             40%, 80% { transform: translateX(8px); }
         }
-        .shake-error {
-            animation: errorShake 0.45s ease-in-out;
-        }
+        .shake-error { animation: errorShake 0.45s ease-in-out; }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans flex flex-col min-h-screen relative">
@@ -124,9 +104,9 @@
     <div class="bg-brand-dark text-gray-300 text-xs py-2 px-4 border-b border-gray-800 hidden md:block">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-6">
-                <span><i class="fas fa-phone-alt text-brand-accent mr-2"></i>Hotline: 0868.117.116</span>
-                <span><i class="fas fa-envelope text-brand-accent mr-2"></i>contact@hiconmne.vn</span>
-                <span><i class="fas fa-map-marker-alt text-brand-accent mr-2"></i>Số nhà C.TT8-5 Khu C đường C5, Khu đô thị Himlam Vạn Phúc, Hà Đông, Hà Nội</span>
+                <span><i class="fas fa-phone-alt text-brand-accent mr-2"></i>Hotline: 0988.123.456</span>
+                <span><i class="fas fa-envelope text-brand-accent mr-2"></i>contact@hiconme.vn</span>
+                <span><i class="fas fa-map-marker-alt text-brand-accent mr-2"></i>KCN DEEP C, Hải Phòng - Hà Nội</span>
             </div>
             <div class="flex items-center space-x-4">
                 <span class="bg-emerald-600 text-white px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide animate-pulse">CỔNG BÁO CÁO SỐ HÓA QR</span>
@@ -149,7 +129,7 @@
                     </div>
                 </div>
 
-                <!-- DESKTOP NAV (ĐÃ SỬA: ĐƯA VỀ MẶC ĐỊNH TRẮNG, CHỈ SÁNG KHI ĐƯỢC CHỌN) -->
+                <!-- DESKTOP NAV -->
                 <nav class="hidden md:flex space-x-8 font-medium text-sm tracking-wide">
                     <button onclick="navigateTo('home')" id="nav-home" class="nav-link py-2">TRANG CHỦ</button>
                     <button onclick="navigateTo('about')" id="nav-about" class="nav-link py-2">GIỚI THIỆU</button>
@@ -269,7 +249,7 @@
             <div class="max-w-7xl mx-auto px-4">
                 <div class="text-center mb-12">
                     <span class="text-brand-blue font-bold text-sm uppercase">Năng Lực HICON M&E</span>
-                    <h2 class="text-3xl font-extrabold text-brand-navy mt-1">DỊCH VỤ CƠ ĐIỆN & BẢO TRÀ CHUYÊN SÂU</h2>
+                    <h2 class="text-3xl font-extrabold text-brand-navy mt-1">DỊCH VỤ CƠ ĐIỆN & BẢO TRÌ CHUYÊN SÂU</h2>
                     <div class="w-16 h-1 bg-brand-accent mx-auto mt-2 rounded-full"></div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -334,13 +314,17 @@
                             </p>
                         </div>
 
-                        <div class="w-full md:w-auto bg-white/10 p-2 rounded-2xl backdrop-blur-md border border-white/20">
+                        <div class="w-full md:w-auto bg-white/10 p-2 rounded-2xl backdrop-blur-md border border-white/20 flex flex-wrap gap-2 items-center">
                             <div class="flex gap-2">
-                                <input type="text" id="device-code-input" placeholder="Nhập Mã QR (VD: TS-2026-HVAC)" class="px-4 py-2.5 rounded-xl text-sm text-gray-800 w-full md:w-64 focus:outline-none focus:ring-2 focus:ring-brand-accent transition">
-                                <button onclick="searchDevice()" class="btn-interactive bg-brand-accent text-brand-dark font-extrabold px-5 py-2.5 rounded-xl text-sm shadow-lg flex items-center whitespace-nowrap">
+                                <input type="text" id="device-code-input" placeholder="Nhập Mã QR (VD: TS-2026-HVAC)" class="px-4 py-2.5 rounded-xl text-sm text-gray-800 w-full md:w-56 focus:outline-none focus:ring-2 focus:ring-brand-accent transition">
+                                <button onclick="searchDevice()" class="btn-interactive bg-brand-accent text-brand-dark font-extrabold px-4 py-2.5 rounded-xl text-sm shadow-lg flex items-center whitespace-nowrap">
                                     <i class="fas fa-search mr-1.5"></i> Tra Cứu
                                 </button>
                             </div>
+                            <!-- NÚT MỤC CON: DANH SÁCH TỔNG HỢP THIẾT BỊ -->
+                            <button onclick="openDeviceListModal()" class="btn-interactive bg-white/20 hover:bg-white/30 text-white font-bold px-4 py-2.5 rounded-xl text-sm border border-white/30 flex items-center whitespace-nowrap shadow-md">
+                                <i class="fas fa-list-ul mr-2 text-cyan-300"></i> Danh Sách Tổng Hợp
+                            </button>
                         </div>
                     </div>
 
@@ -348,7 +332,7 @@
                     <div class="mt-6 pt-4 border-t border-white/10 flex flex-wrap items-center gap-2 text-xs">
                         <span class="text-gray-300 font-medium">Danh Sách Mã QR Hiện Có:</span>
                         <div id="quick-device-buttons" class="flex flex-wrap gap-2"></div>
-                        <button onclick="openAdminModal()" class="btn-interactive bg-amber-500 hover:bg-amber-400 text-brand-dark font-bold px-3 py-1 rounded-lg transition ml-auto flex items-center shadow-md">
+                        <button onclick="openAdminModal()" class="btn-interactive bg-amber-500 hover:bg-amber-400 text-brand-dark font-bold px-3 py-1.5 rounded-lg transition ml-auto flex items-center shadow-md">
                             <i class="fas fa-edit mr-1"></i> Cập nhật thông tin/trạng thái thiết bị
                         </button>
                     </div>
@@ -466,6 +450,87 @@
         </div>
 
     </main>
+
+    <!-- ==================== MODAL: DANH SÁCH TỔNG HỢP THIẾT BỊ (MỤC CON) ==================== -->
+    <div id="device-list-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden border border-gray-200 my-8 flex flex-col max-h-[85vh]">
+            <!-- HEADER -->
+            <div class="bg-brand-navy text-white p-5 flex justify-between items-center shrink-0">
+                <div>
+                    <h3 class="font-extrabold text-base flex items-center"><i class="fas fa-list-ul text-brand-accent mr-2"></i> DANH SÁCH TỔNG HỢP THIẾT BỊ BẢO TRÌ</h3>
+                    <p id="modal-total-count" class="text-[11px] text-cyan-300 mt-0.5">Tổng số lượng: -- thiết bị</p>
+                </div>
+                <button onclick="closeDeviceListModal()" class="text-gray-300 hover:text-white text-xl p-1 rounded-lg transition"><i class="fas fa-times"></i></button>
+            </div>
+
+            <!-- CONTROLS & FILTERS -->
+            <div class="p-5 bg-slate-50 border-b border-gray-200 space-y-4 shrink-0">
+                <div class="flex flex-col sm:flex-row gap-3 justify-between items-center">
+                    <!-- Ô TÌM KIẾM -->
+                    <div class="relative w-full sm:w-80">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"><i class="fas fa-search"></i></span>
+                        <input type="text" id="modal-search-input" oninput="filterDeviceList()" placeholder="Tìm kiếm theo mã, tên thiết bị..." class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-xl text-xs focus:outline-none focus:border-brand-accent transition">
+                    </div>
+                    <!-- THÔNG BÁO CHẾ ĐỘ QUẢN TRỊ -->
+                    <div id="admin-mode-badge" class="hidden items-center text-xs font-bold text-amber-700 bg-amber-100 px-3 py-1.5 rounded-xl border border-amber-300">
+                        <i class="fas fa-user-shield mr-1.5"></i> Đang ở chế độ Quản trị (Có quyền xóa thiết bị)
+                    </div>
+                </div>
+
+                <!-- BẢNG CHỮ CÁI ĐẦU (LỌC THEO CHỮ CÁI KÈM SỐ LƯỢNG) -->
+                <div>
+                    <div class="text-[11px] font-bold text-gray-500 mb-1.5">Lọc theo chữ cái đầu:</div>
+                    <div id="alphabet-filter-container" class="flex flex-wrap gap-1.5 text-xs">
+                        <!-- Injected dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- DANH SÁCH BẢNG HIỂN THỊ -->
+            <div class="p-6 overflow-y-auto flex-grow space-y-3">
+                <div class="overflow-x-auto border border-gray-200 rounded-2xl">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 text-brand-navy border-b border-gray-200">
+                                <th class="p-3 font-bold w-12 text-center">STT</th>
+                                <th class="p-3 font-bold w-32 font-mono">Mã QR</th>
+                                <th class="p-3 font-bold">Tên Thiết Bị</th>
+                                <th class="p-3 font-bold">Khu Vực Lắp Đặt</th>
+                                <th class="p-3 font-bold">Kỹ Sư Phụ Trách</th>
+                                <th id="th-action-header" class="p-3 font-bold w-24 text-center hidden">Thao Tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modal-device-tbody" class="divide-y divide-gray-100">
+                            <!-- Injected dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- FOOTER -->
+            <div class="p-4 bg-slate-100 border-t border-gray-200 flex justify-between items-center shrink-0">
+                <span class="text-[11px] text-gray-500">Danh sách được sắp xếp và nhóm theo thứ tự bảng chữ cái.</span>
+                <button onclick="closeDeviceListModal()" class="btn-interactive px-5 py-2 bg-brand-navy text-white rounded-xl text-xs font-bold">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL XÁC NHẬN XÓA THIẾT BỊ ==================== -->
+    <div id="delete-confirm-modal" class="fixed inset-0 z-[60] bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl p-6 text-center space-y-4 border border-gray-200 animate-in fade-in zoom-in duration-200">
+            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-2xl mx-auto shadow-inner">
+                <i class="fas fa-trash-alt"></i>
+            </div>
+            <h3 class="text-lg font-bold text-brand-navy">Xác Nhận Xóa Thiết Bị</h3>
+            <p id="delete-confirm-text" class="text-xs text-gray-600 leading-relaxed">
+                Bạn có chắc chắn muốn xóa thiết bị này không?
+            </p>
+            <div class="flex gap-3 pt-2">
+                <button onclick="closeDeleteConfirmModal()" class="btn-interactive w-1/2 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2.5 rounded-xl text-xs font-bold">Hủy</button>
+                <button id="btn-confirm-delete" onclick="executeDeleteDevice()" class="btn-interactive w-1/2 bg-red-600 hover:bg-red-700 text-white py-2.5 rounded-xl text-xs font-bold shadow-lg">Đồng Ý</button>
+            </div>
+        </div>
+    </div>
 
     <!-- ==================== MODAL FORM ADMIN / CẬP NHẬT THIẾT BỊ ==================== -->
     <div id="admin-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
@@ -638,6 +703,9 @@
     <script>
         const CONFIRM_PIN = "1111";
         let toastTimeout = null;
+        let isAdminLoggedIn = false; // Trạng thái kiểm tra quyền quản trị
+        let currentSelectedLetter = 'ALL';
+        let deviceToDeleteCode = null;
 
         function showTopErrorToast(msg) {
             const toast = document.getElementById('top-error-toast');
@@ -646,14 +714,11 @@
             toast.classList.remove('hidden');
 
             if (toastTimeout) clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                hideErrorToast();
-            }, 2500);
+            toastTimeout = setTimeout(() => { hideErrorToast(); }, 2500);
         }
 
         function hideErrorToast() {
-            const toast = document.getElementById('top-error-toast');
-            toast.classList.add('hidden');
+            document.getElementById('top-error-toast').classList.add('hidden');
         }
 
         function getStoredPassword() {
@@ -840,6 +905,167 @@
             if (db[code]) renderDeviceReport(db[code]);
         }
 
+        /* ==================== XỬ LÝ MỤC CON: DANH SÁCH TỔNG HỢP THIẾT BỊ ==================== */
+        function openDeviceListModal() {
+            currentSelectedLetter = 'ALL';
+            document.getElementById('modal-search-input').value = '';
+            
+            // Hiển thị trạng thái phân quyền quản trị trong modal
+            const adminBadge = document.getElementById('admin-mode-badge');
+            const thAction = document.getElementById('th-action-header');
+            if (isAdminLoggedIn) {
+                adminBadge.classList.remove('hidden');
+                adminBadge.classList.add('flex');
+                thAction.classList.remove('hidden');
+            } else {
+                adminBadge.classList.add('hidden');
+                adminBadge.classList.remove('flex');
+                thAction.classList.add('hidden');
+            }
+
+            renderDeviceListModalContent();
+            document.getElementById('device-list-modal').classList.remove('hidden');
+        }
+
+        function closeDeviceListModal() {
+            document.getElementById('device-list-modal').classList.add('hidden');
+        }
+
+        function renderDeviceListModalContent() {
+            const db = getDeviceDatabase();
+            const devicesArray = Object.values(db);
+            
+            // 1. Hiển thị tổng số lượng
+            document.getElementById('modal-total-count').innerText = `Tổng số lượng: ${devicesArray.length} thiết bị`;
+
+            // 2. Tính toán số lượng thiết bị theo từng chữ cái đầu của Tên thiết bị hoặc Mã thiết bị
+            const letterCounts = {};
+            const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0-9";
+            
+            // Khởi tạo
+            for (let char of alphabet) { letterCounts[char] = 0; }
+
+            devicesArray.forEach(dev => {
+                const firstChar = (dev.name || dev.code || '').trim().toUpperCase().charAt(0);
+                if (letterCounts[firstChar] !== undefined) {
+                    letterCounts[firstChar]++;
+                } else {
+                    // Nếu là ký tự khác nhóm vào mục #
+                    if (!letterCounts['#']) letterCounts['#'] = 0;
+                    letterCounts['#']++;
+                }
+            });
+
+            // 3. Render các nút lọc chữ cái đầu kèm số lượng
+            const filterContainer = document.getElementById('alphabet-filter-container');
+            filterContainer.innerHTML = '';
+
+            // Nút "Tất cả"
+            const allBtn = document.createElement('button');
+            allBtn.className = `px-2.5 py-1 rounded-lg text-xs font-bold transition ${currentSelectedLetter === 'ALL' ? 'bg-brand-navy text-white shadow-md' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'}`;
+            allBtn.innerHTML = `Tất cả (${devicesArray.length})`;
+            allBtn.onclick = () => { currentSelectedLetter = 'ALL'; renderDeviceListModalContent(); };
+            filterContainer.appendChild(allBtn);
+
+            // Render A-Z
+            for (let char of "ABCDEFGHIJKLMNOPQRSTUVWXYZ") {
+                const count = letterCounts[char] || 0;
+                const btn = document.createElement('button');
+                btn.className = `px-2 py-1 rounded-lg text-xs font-bold transition ${currentSelectedLetter === char ? 'bg-brand-navy text-white shadow-md' : (count > 0 ? 'bg-white text-brand-navy border border-cyan-200 hover:bg-cyan-50' : 'bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed')}`;
+                btn.innerHTML = `${char} (${count})`;
+                if (count > 0) {
+                    btn.onclick = () => { currentSelectedLetter = char; renderDeviceListModalContent(); };
+                } else {
+                    btn.disabled = true;
+                }
+                filterContainer.appendChild(btn);
+            }
+
+            // 4. Lọc danh sách theo Chữ cái đã chọn & Ô tìm kiếm
+            const searchQuery = document.getElementById('modal-search-input').value.trim().toLowerCase();
+
+            let filtered = devicesArray.filter(dev => {
+                const nameStr = (dev.name || '').toLowerCase();
+                const codeStr = (dev.code || '').toLowerCase();
+                const locStr = (dev.location || '').toLowerCase();
+                
+                const matchesSearch = nameStr.includes(searchQuery) || codeStr.includes(searchQuery) || locStr.includes(searchQuery);
+                
+                if (currentSelectedLetter === 'ALL') {
+                    return matchesSearch;
+                } else {
+                    const firstChar = (dev.name || dev.code || '').trim().toUpperCase().charAt(0);
+                    return matchesSearch && firstChar === currentSelectedLetter;
+                }
+            });
+
+            // 5. Sắp xếp danh sách theo bảng chữ cái (A-Z) dựa theo tên thiết bị
+            filtered.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+
+            // 6. Render bảng dữ liệu
+            const tbody = document.getElementById('modal-device-tbody');
+            tbody.innerHTML = '';
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="${isAdminLoggedIn ? 6 : 5}" class="p-6 text-center text-gray-400">Không tìm thấy thiết bị nào phù hợp.</td></tr>`;
+                return;
+            }
+
+            filtered.forEach((dev, idx) => {
+                let actionTd = '';
+                if (isAdminLoggedIn) {
+                    actionTd = `
+                        <td class="p-3 text-center">
+                            <button onclick="promptDeleteDevice('${dev.code}')" class="btn-interactive bg-red-100 hover:bg-red-200 text-red-600 px-2.5 py-1.5 rounded-lg text-xs font-bold transition shadow-sm" title="Xóa thiết bị này">
+                                <i class="fas fa-trash-alt mr-1"></i> Xóa
+                            </button>
+                        </td>
+                    `;
+                }
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50 border-b border-gray-100 transition">
+                        <td class="p-3 text-center font-bold text-gray-500">${idx + 1}</td>
+                        <td class="p-3 font-mono font-bold text-brand-accent cursor-pointer hover:underline" onclick="closeDeviceListModal(); loadSampleDevice('${dev.code}'); navigateTo('maintenance-portal');">${dev.code}</td>
+                        <td class="p-3 font-bold text-brand-navy">${dev.name}</td>
+                        <td class="p-3 text-gray-600">${dev.location}</td>
+                        <td class="p-3 text-gray-600">${dev.tech}</td>
+                        ${actionTd}
+                    </tr>
+                `;
+            });
+        }
+
+        function filterDeviceList() {
+            renderDeviceListModalContent();
+        }
+
+        // XỬ LÝ XÓA THIẾT BỊ KÈM HỘP THOẠI XÁC NHẬN
+        function promptDeleteDevice(code) {
+            deviceToDeleteCode = code;
+            document.getElementById('delete-confirm-text').innerText = `Bạn có chắc chắn muốn xóa thiết bị có mã "${code}" không?`;
+            document.getElementById('delete-confirm-modal').classList.remove('hidden');
+        }
+
+        function closeDeleteConfirmModal() {
+            document.getElementById('delete-confirm-modal').classList.add('hidden');
+            deviceToDeleteCode = null;
+        }
+
+        function executeDeleteDevice() {
+            if (!deviceToDeleteCode) return;
+            const db = getDeviceDatabase();
+            if (db[deviceToDeleteCode]) {
+                delete db[deviceToDeleteCode];
+                saveDeviceDatabase(db);
+                renderQuickButtons();
+                renderDeviceListModalContent();
+                showTopErrorToast(`Đã xóa thành công thiết bị mã: ${deviceToDeleteCode}`);
+            }
+            closeDeleteConfirmModal();
+        }
+
+        /* ==================== QUẢN LÝ ADMIN & CẬP NHẬT ==================== */
         function openAdminModal() {
             hideErrorToast();
             document.getElementById('admin-modal').classList.remove('hidden');
@@ -907,6 +1133,7 @@
             const currentPass = getStoredPassword();
 
             if (pass === currentPass) {
+                isAdminLoggedIn = true; // Đánh dấu đã đăng nhập quản trị thành công
                 passInput.classList.remove('shake-error', 'border-red-500');
                 document.getElementById('admin-step-auth').classList.add('hidden');
                 document.getElementById('admin-step-form').classList.remove('hidden');
@@ -924,7 +1151,7 @@
             } else {
                 passInput.classList.add('shake-error', 'border-red-500');
                 setTimeout(() => passInput.classList.remove('shake-error'), 500);
-                showTopErrorToast('Sai mật khẩu! Vui lòng thử lại !');
+                showTopErrorToast('Sai mật khẩu! Vui lòng thử lại (Mật khẩu: hiconme)');
             }
         }
 
