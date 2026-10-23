@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HICON M&E - Cơ Điện & Báo Cáo Bảo Trì Số Hoá</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Roboto -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        hicon: {
+                            blue: '#0B3C5D',
+                            navy: '#002244',
+                            red: '#D92121',
+                            gold: '#D4AF37',
+                            lightBg: '#F4F7FA',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Roboto', sans-serif; }
+        .glass-header {
+            background: rgba(11, 60, 93, 0.95);
+            backdrop-filter: blur(8px);
+        }
+        .modal-active { overflow: hidden; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="glass-header text-white sticky top-0 z-40 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Brand Logo & Name -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+                    <div class="bg-white text-hicon-blue p-2.5 rounded-lg shadow-inner font-black text-2xl tracking-tighter flex items-center justify-center border-2 border-hicon-red">
+                        <span class="text-hicon-red">H</span><span class="text-hicon-blue">ICON</span>
+                    </div>
+                    <div>
+                        <div class="font-extrabold text-xl tracking-wider leading-none text-white">HICON M&E</div>
+                        <div class="text-[10px] text-gray-300 font-medium tracking-widest uppercase mt-0.5">Cơ Điện & Bảo Trì Số Hoá</div>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden md:flex space-x-1 lg:space-x-2 font-medium text-sm">
+                    <button onclick="switchTab('home')" id="nav-home" class="nav-btn px-3 py-2 rounded-md hover:bg-white/10 transition">Trang Chủ</button>
+                    <button onclick="switchTab('about')" id="nav-about" class="nav-btn px-3 py-2 rounded-md hover:bg-white/10 transition">Giới Thiệu</button>
+                    <button onclick="switchTab('services')" id="nav-services" class="nav-btn px-3 py-2 rounded-md hover:bg-white/10 transition">Dịch Vụ M&E</button>
+                    <button onclick="switchTab('projects')" id="nav-projects" class="nav-btn px-3 py-2 rounded-md hover:bg-white/10 transition">Dự Án</button>
+                    <button onclick="switchTab('qr-portal')" id="nav-qr-portal" class="nav-btn px-3 py-2 rounded-md hover:bg-white/10 transition text-yellow-300 font-semibold flex items-center gap-1.5">
+                        <i class="fa-solid fa-qrcode text-base"></i> Tra Cứu QR
+                    </button>
+                </nav>
+
+                <!-- Admin Action Button -->
+                <div class="hidden md:flex items-center gap-3">
+                    <button onclick="openAdminModal()" class="bg-hicon-red hover:bg-red-700 text-white px-4 py-2 rounded-md font-medium text-sm transition shadow flex items-center gap-2">
+                        <i class="fa-solid fa-lock"></i>
+                        <span>Quản Trị</span>
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center gap-2">
+                    <button onclick="openAdminModal()" class="bg-hicon-red text-white p-2 rounded-md text-xs">
+                        <i class="fa-solid fa-lock"></i>
+                    </button>
+                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="text-white hover:text-gray-200 focus:outline-none p-2">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-hicon-navy border-t border-gray-700 px-4 pt-2 pb-4 space-y-2">
+            <button onclick="switchTab('home')" class="block w-full text-left text-white py-2 px-3 rounded hover:bg-white/10">Trang Chủ</button>
+            <button onclick="switchTab('about')" class="block w-full text-left text-white py-2 px-3 rounded hover:bg-white/10">Giới Thiệu</button>
+            <button onclick="switchTab('services')" class="block w-full text-left text-white py-2 px-3 rounded hover:bg-white/10">Dịch Vụ M&E</button>
+            <button onclick="switchTab('projects')" class="block w-full text-left text-white py-2 px-3 rounded hover:bg-white/10">Dự Án</button>
+            <button onclick="switchTab('qr-portal')" class="block w-full text-left text-yellow-300 py-2 px-3 rounded hover:bg-white/10 font-bold">Tra Cứu Báo Cáo QR</button>
+        </div>
+    </header>
+
+    <!-- NOTIFICATION TOAST -->
+    <div id="toast" class="fixed top-24 right-5 z-50 transform translate-x-full transition-transform duration-300 ease-in-out bg-slate-800 text-white px-5 py-3 rounded-lg shadow-2xl flex items-center space-x-3 border-l-4 border-hicon-red">
+        <i id="toast-icon" class="fa-solid fa-circle-info text-xl text-yellow-400"></i>
+        <span id="toast-msg" class="text-sm font-medium">Thông báo hệ thống</span>
+    </div>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-grow">
+        
+        <!-- SECTION 1: TRANG CHỦ (HOME) -->
+        <section id="tab-home" class="tab-content">
+            <!-- Hero Banner -->
+            <div class="relative bg-hicon-blue text-white py-20 lg:py-28 overflow-hidden">
+                <div class="absolute inset-0 opacity-15 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                        <div>
+                            <span class="inline-block px-3 py-1 bg-hicon-red/30 border border-hicon-red text-red-200 text-xs font-semibold uppercase tracking-wider rounded-full mb-4">
+                                Giải Pháp Cơ Điện & Bảo Trì Toàn Diện
+                            </span>
+                            <h1 class="text-3xl sm:text-5xl font-black leading-tight mb-6">
+                                Nâng Tầm Vận Hành <br><span class="text-yellow-400">Số Hoá Báo Cáo M&E</span>
+                            </h1>
+                            <p class="text-gray-200 text-base sm:text-lg mb-8 leading-relaxed">
+                                HICON M&E tiên phong ứng dụng công nghệ quét mã QR Code số hoá nhật ký kỹ thuật, giúp chủ đầu tư và nhà quản lý giám sát trạng thái hệ thống điện, HVAC, PCCC theo thời gian thực.
+                            </p>
+                            <div class="flex flex-wrap gap-4">
+                                <button onclick="switchTab('qr-portal')" class="bg-yellow-400 hover:bg-yellow-500 text-hicon-navy font-bold px-6 py-3.5 rounded-lg shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5 flex items-center gap-2">
+                                    <i class="fa-solid fa-qrcode text-lg"></i> Tra Cứu QR Ngay
+                                </button>
+                                <button onclick="switchTab('services')" class="bg-white/10 hover:bg-white/20 text-white font-medium px-6 py-3.5 rounded-lg border border-white/30 backdrop-blur transition">
+                                    Khám Phá Dịch Vụ
+                                </button>
+                            </div>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/20 shadow-2xl text-center">
+                            <i class="fa-solid fa-shield-halved text-6xl text-yellow-400 mb-4"></i>
+                            <h3 class="text-xl font-bold mb-2">Chất Lượng & Tin Cậy Hàng Đầu</h3>
+                            <p class="text-sm text-gray-300 mb-6">Đảm bảo hệ thống kỹ thuật tòa nhà và nhà máy hoạt động ổn định 24/7 với quy trình bảo trì đạt chuẩn ISO.</p>
+                            <div class="grid grid-cols-3 gap-4 pt-4 border-t border-white/20">
+                                <div>
+                                    <div class="text-2xl font-black text-yellow-400">100+</div>
+                                    <div class="text-xs text-gray-300">Dự án M&E</div>
+                                </div>
+                                <div>
+                                    <div class="text-2xl font-black text-yellow-400">99.8%</div>
+                                    <div class="text-xs text-gray-300">Chính xác</div>
+                                </div>
+                                <div>
+                                    <div class="text-2xl font-black text-yellow-400">24/7</div>
+                                    <div class="text-xs text-gray-300">Hỗ trợ kỹ thuật</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Features -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 flex items-start space-x-4">
+                        <div class="bg-blue-50 p-3 rounded-lg text-hicon-blue text-2xl"><i class="fa-solid fa-bolt"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-1">Hệ Thống Điện & Cấp Tải</h4>
+                            <p class="text-sm text-gray-600">Kiểm tra tủ điện trung thế, hạ thế, đo dòng, áp và nhiệt độ điểm nối.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 flex items-start space-x-4">
+                        <div class="bg-red-50 p-3 rounded-lg text-hicon-red text-2xl"><i class="fa-solid fa-snowflake"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-1">HVAC & Điều Hòa</h4>
+                            <p class="text-sm text-gray-600">Bảo dưỡng Chiller, AHU, VRV, đo áp suất gas và kiểm tra lưu lượng gió.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 flex items-start space-x-4">
+                        <div class="bg-yellow-50 p-3 rounded-lg text-yellow-600 text-2xl"><i class="fa-solid fa-fire-extinguisher"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-1">PCCC & Cấp Tải Nước</h4>
+                            <p class="text-sm text-gray-600">Thử áp lực đường ống, máy bơm chữa cháy và kiểm tra trung tâm báo cháy.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: GIỚI THIỆU (ABOUT) -->
+        <section id="tab-about" class="tab-content hidden py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <h2 class="text-3xl font-extrabold text-hicon-blue">Về Chúng Tôi - HICON M&E</h2>
+                    <p class="text-gray-600 mt-2">Đơn vị chuyên nghiệp trong lĩnh vực tư vấn, thiết kế, thi công và bảo trì hệ thống Cơ Điện (M&E) cho các công trình công nghiệp và dân dụng.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mb-12">
+                    <div class="space-y-4">
+                        <h3 class="text-2xl font-bold text-gray-800">Tầm Nhìn & Sứ Mệnh</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            HICON M&E hướng tới trở thành đối tác tin cậy hàng đầu trong lĩnh vực kỹ thuật Cơ Điện tại Việt Nam. Chúng tôi cam kết mang lại giải pháp vận hành an toàn, tiết kiệm năng lượng và tối ưu hóa chi phí cho khách hàng.
+                        </p>
+                        <p class="text-gray-600 leading-relaxed">
+                            Bằng việc tiên phong ứng dụng **Báo Báo Bảo Trì Số Hoá qua Mã QR**, HICON M&E xóa bỏ hoàn toàn nhật ký giấy thủ công, minh bạch hóa dữ liệu kỹ thuật và giúp Chủ đầu tư dễ dàng tra cứu lịch sử sửa chữa mọi lúc, mọi nơi.
+                        </p>
+                    </div>
+                    <div class="bg-slate-100 p-8 rounded-2xl border border-slate-200">
+                        <h4 class="font-bold text-lg text-hicon-blue mb-4">Giá Trị Cốt Lõi</h4>
+                        <ul class="space-y-3">
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-hicon-red"></i><span><strong>Chất lượng:</strong> Thi công & bảo trì đúng chuẩn ISO.</span></li>
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-hicon-red"></i><span><strong>Minh bạch:</strong> Dữ liệu thực tế kèm ảnh chụp công trường.</span></li>
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-hicon-red"></i><span><strong>Tốc độ:</strong> Ứng cứu sự cố M&E 24/7.</span></li>
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-hicon-red"></i><span><strong>Số hoá:</strong> Quản lý dữ liệu tập trung qua điện thoại & QR Code.</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: DỊCH VỤ M&E (SERVICES) -->
+        <section id="tab-services" class="tab-content hidden py-12 bg-gray-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <h2 class="text-3xl font-extrabold text-hicon-blue">Dịch Vụ Kỹ Thuật M&E</h2>
+                    <p class="text-gray-600 mt-2">Cung cấp trọn gói giải pháp Thiết kế - Thi công - Bảo trì định kỳ cho công trình.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white rounded-xl shadow p-6 border-t-4 border-hicon-blue hover:shadow-lg transition">
+                        <div class="text-hicon-blue text-3xl mb-4"><i class="fa-solid fa-plug"></i></div>
+                        <h3 class="font-bold text-lg mb-2">Bảo Trì Hệ Thống Điện</h3>
+                        <p class="text-sm text-gray-600 mb-4">Kiểm tra trạm biến áp, tủ MSB, đo nhiệt độ mối nối bằng camera nhiệt, cân bằng pha.</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow p-6 border-t-4 border-hicon-red hover:shadow-lg transition">
+                        <div class="text-hicon-red text-3xl mb-4"><i class="fa-solid fa-fan"></i></div>
+                        <h3 class="font-bold text-lg mb-2">Bảo Trì Hệ Thống HVAC</h3>
+                        <p class="text-sm text-gray-600 mb-4">Vệ sinh dàn lạnh, dàn nóng, bổ sung gas, kiểm tra van chặn và thông số máy nén.</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow p-6 border-t-4 border-yellow-500 hover:shadow-lg transition">
+                        <div class="text-yellow-500 text-3xl mb-4"><i class="fa-solid fa-fire-extinguisher"></i></div>
+                        <h3 class="font-bold text-lg mb-2">Bảo Trì Hệ Thống PCCC</h3>
+                        <p class="text-sm text-gray-600 mb-4">Thử vận hành bơm diesel, kiểm tra tủ báo cháy trung tâm, chuông và đầu báo khói.</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow p-6 border-t-4 border-emerald-600 hover:shadow-lg transition">
+                        <div class="text-emerald-600 text-3xl mb-4"><i class="fa-solid fa-qrcode"></i></div>
+                        <h3 class="font-bold text-lg mb-2">Số Hoá Nhật Ký Vận Hành</h3>
+                        <p class="text-sm text-gray-600 mb-4">Gắn mã QR tại thiết bị, cập nhật kết quả đo đạc & ảnh chụp trực tiếp vào kho lưu trữ.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: DỰ ÁN (PROJECTS) -->
+        <section id="tab-projects" class="tab-content hidden py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <h2 class="text-3xl font-extrabold text-hicon-blue">Dự Án Tiêu Biểu</h2>
+                    <p class="text-gray-600 mt-2">Các công trình HICON M&E trực tiếp thi công và bảo trì hệ thống Cơ Điện số hoá.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white rounded-xl overflow-hidden shadow-md border border-gray-200">
+                        <div class="h-48 bg-slate-700 flex items-center justify-center text-white text-4xl">
+                            <i class="fa-solid fa-industry"></i>
+                        </div>
+                        <div class="p-5">
+                            <span class="text-xs font-semibold uppercase text-hicon-red bg-red-50 px-2 py-1 rounded">Nhà Máy Công Nghiệp</span>
+                            <h3 class="font-bold text-lg mt-2 mb-1">Nhà Máy LG Innotek - Hải Phòng</h3>
+                            <p class="text-xs text-gray-500 mb-3">Bảo trì trạm điện 35kV & Hệ thống Chiller trung tâm.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl overflow-hidden shadow-md border border-gray-200">
+                        <div class="h-48 bg-slate-800 flex items-center justify-center text-white text-4xl">
+                            <i class="fa-solid fa-building"></i>
+                        </div>
+                        <div class="p-5">
+                            <span class="text-xs font-semibold uppercase text-hicon-blue bg-blue-50 px-2 py-1 rounded">Tòa Nhà Văn Phòng</span>
+                            <h3 class="font-bold text-lg mt-2 mb-1">Tháp Văn Phòng HICON Tower</h3>
+                            <p class="text-xs text-gray-500 mb-3">Vận hành toàn bộ M&E, VRV và PCCC số hoá mã QR.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl overflow-hidden shadow-md border border-gray-200">
+                        <div class="h-48 bg-slate-700 flex items-center justify-center text-white text-4xl">
+                            <i class="fa-solid fa-warehouse"></i>
+                        </div>
+                        <div class="p-5">
+                            <span class="text-xs font-semibold uppercase text-emerald-600 bg-emerald-50 px-2 py-1 rounded">Trung Tâm Logistics</span>
+                            <h3 class="font-bold text-lg mt-2 mb-1">Kho Vận Thông Minh Bắc Ninh</h3>
+                            <p class="text-xs text-gray-500 mb-3">Bảo dưỡng định kỳ hệ thống chiếu sáng & quạt thông gió.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: CỔNG TRA CỨU BÁO CÁO QR CODE -->
+        <section id="tab-qr-portal" class="tab-content hidden py-8 bg-slate-100 min-h-screen">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <!-- Search & Selector Bar -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 mb-8">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                            <h2 class="text-2xl font-bold text-hicon-blue flex items-center gap-2">
+                                <i class="fa-solid fa-qrcode text-hicon-red"></i> Cổng Tra Cứu Nhật Ký Bảo Trì
+                            </h2>
+                            <p class="text-xs text-gray-500 mt-1">Chọn mã định danh thiết bị hoặc nhập QR Code để tra cứu nhật ký thực tế.</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <label class="text-sm font-semibold text-gray-700 whitespace-nowrap">Chọn Mã QR:</label>
+                            <select id="qr-selector" onchange="loadReportByQR(this.value)" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-hicon-blue focus:border-hicon-blue block w-full p-2.5 font-bold">
+                                <!-- Options dynamically injected -->
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Report Container -->
+                <div id="report-view-container" class="space-y-6">
+                    <!-- Dynamic Report Content Loaded Here -->
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-hicon-navy text-white text-sm py-8 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-2">
+                <span class="font-bold text-hicon-red">HICON M&E</span>
+                <span>- Đơn Vị Thi Công & Bảo Trì Hệ Thống Cơ Điện Chuyên Nghiệp</span>
+            </div>
+            <div class="text-xs text-gray-400">
+                &copy; 2026 HICON M&E Platform. Bảo lưu mọi quyền.
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL 1: ADMIN & SYSTEM MANAGEMENT -->
+    <div id="admin-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col overflow-hidden">
+            
+            <!-- Modal Header -->
+            <div class="bg-hicon-blue text-white px-6 py-4 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-user-shield text-xl text-yellow-400"></i>
+                    <h3 class="font-bold text-lg">Quản Trị Hệ Thống Bảo Trì HICON M&E</h3>
+                </div>
+                <button onclick="closeAdminModal()" class="text-gray-300 hover:text-white text-xl p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- LOGIN FORM (IF NOT AUTHENTICATED) -->
+            <div id="admin-login-view" class="p-8 max-w-md mx-auto w-full text-center">
+                <div class="w-16 h-16 bg-red-100 text-hicon-red rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <h4 class="text-xl font-bold text-gray-800 mb-2">Đăng Nhập Quản Trị Viên</h4>
+                <p class="text-xs text-gray-500 mb-6">Nhập mã PIN bảo mật để chỉnh sửa dữ liệu báo cáo kỹ thuật.</p>
+
+                <form onsubmit="handleLogin(event)" class="space-y-4">
+                    <div>
+                        <input type="password" id="admin-pin-input" required maxlength="10" 
+                            placeholder="Nhập mã PIN bảo mật..." 
+                            class="w-full text-center tracking-widest text-lg px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-hicon-blue focus:border-hicon-blue outline-none">
+                    </div>
+                    <button type="submit" class="w-full bg-hicon-red hover:bg-red-700 text-white font-bold py-3 rounded-lg shadow transition">
+                        Xác Nhận Đăng Nhập
+                    </button>
+                </form>
+            </div>
+
+            <!-- DASHBOARD (IF AUTHENTICATED) -->
+            <div id="admin-dashboard-view" class="hidden flex-1 flex flex-col overflow-hidden">
+                
+                <!-- Nav Tabs for Admin -->
+                <div class="bg-gray-100 px-6 py-2 border-b flex space-x-4 text-sm font-medium">
+                    <button onclick="switchAdminSubTab('items')" id="admin-tab-items" class="px-3 py-1.5 rounded-md bg-white text-hicon-blue shadow-sm font-bold">Quản Lý Hạng Mục & Dữ Liệu</button>
+                    <button onclick="switchAdminSubTab('security')" id="admin-tab-security" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-200">Đổi Mã PIN Bảo Mật</button>
+                </div>
+
+                <!-- SUB TAB 1: MAINTENANCE DATA EDITING -->
+                <div id="admin-subtab-items" class="p-6 overflow-y-auto space-y-6 flex-1">
+                    
+                    <!-- Select Equipment -->
+                    <div class="flex items-center justify-between bg-blue-50 p-4 rounded-xl border border-blue-100">
+                        <div>
+                            <label class="block text-xs font-bold text-hicon-blue uppercase tracking-wider mb-1">Đang chỉnh sửa cho thiết bị:</label>
+                            <select id="admin-eq-selector" onchange="loadAdminEquipmentData(this.value)" class="bg-white border border-gray-300 font-bold text-sm rounded-lg p-2 focus:ring-2 focus:ring-hicon-blue">
+                                <!-- Dynamic Options -->
+                            </select>
+                        </div>
+                        <button onclick="saveAdminEquipmentData()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-lg font-bold text-sm shadow flex items-center gap-2">
+                            <i class="fa-solid fa-floppy-disk"></i> Lưu Thay Đổi
+                        </button>
+                    </div>
+
+                    <!-- General Info -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Tên Thiết Bị / Hệ Thống</label>
+                            <input type="text" id="admin-input-name" class="w-full border p-2 rounded text-sm font-medium">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Vị Trí Lắp Đặt</label>
+                            <input type="text" id="admin-input-location" class="w-full border p-2 rounded text-sm font-medium">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Kỹ Thuật Viên Phụ Trách</label>
+                            <input type="text" id="admin-input-tech" class="w-full border p-2 rounded text-sm font-medium">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Trạng Thái Tổng Thể</label>
+                            <select id="admin-input-status" class="w-full border p-2 rounded text-sm font-medium">
+                                <option value="HOẠT ĐỘNG TỐT">HOẠT ĐỘNG TỐT</option>
+                                <option value="CẦN THEO DÕI">CẦN THEO DÕI</option>
+                                <option value="CẦN BẢO TRÌ">CẦN BẢO TRÌ</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Maintenance Items (8-13+ items) -->
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <h4 class="font-bold text-gray-800 text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-list-check text-hicon-blue"></i>
+                                Hạng Mục Kiểm Tra Thực Tế (<span id="admin-items-count">0</span> mục)
+                            </h4>
+                            <button onclick="addNewMaintenanceItem()" class="bg-blue-100 text-hicon-blue hover:bg-blue-200 px-3 py-1 rounded text-xs font-bold flex items-center gap-1">
+                                <i class="fa-solid fa-plus"></i> Thêm Hạng Mục
+                            </button>
+                        </div>
+                        <div id="admin-items-list" class="space-y-2 max-h-60 overflow-y-auto pr-1">
+                            <!-- Dynamic Item Rows -->
+                        </div>
+                    </div>
+
+                    <!-- Photo Album Manager with Upload & Individual Delete (x) -->
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-bold text-gray-800 text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-images text-hicon-blue"></i>
+                                Album Ảnh Hiện Trường
+                            </h4>
+                            <label class="cursor-pointer bg-slate-800 hover:bg-slate-900 text-white px-3 py-1 rounded text-xs font-bold flex items-center gap-1">
+                                <i class="fa-solid fa-upload"></i> Tải Ảnh Từ Máy
+                                <input type="file" accept="image/*" multiple onchange="handleImageUpload(event)" class="hidden">
+                            </label>
+                        </div>
+                        <div id="admin-album-preview" class="grid grid-cols-4 sm:grid-cols-6 gap-3 bg-gray-50 p-3 rounded-lg border border-dashed border-gray-300">
+                            <!-- Image thumbnails with (x) delete button injected here -->
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- SUB TAB 2: SECURITY & PIN CHANGE -->
+                <div id="admin-subtab-security" class="p-6 overflow-y-auto hidden space-y-6 max-w-md mx-auto w-full">
+                    <h4 class="font-bold text-lg text-gray-800 border-b pb-2">Đổi Mã PIN Quản Trị</h4>
+                    <form onsubmit="handleChangePIN(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Mã PIN Hiện Tại</label>
+                            <input type="password" id="pin-current" required placeholder="Nhập PIN hiện tại..." class="w-full border p-2.5 rounded-lg text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Mã PIN Mới</label>
+                            <input type="password" id="pin-new" required placeholder="Nhập PIN mới..." class="w-full border p-2.5 rounded-lg text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Xác Nhận Mã PIN Mới</label>
+                            <input type="password" id="pin-confirm" required placeholder="Nhập lại PIN mới..." class="w-full border p-2.5 rounded-lg text-sm">
+                        </div>
+                        <button type="submit" class="w-full bg-hicon-blue hover:bg-slate-800 text-white font-bold py-2.5 rounded-lg text-sm transition">
+                            Cập Nhật Mã PIN
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Footer Action Bar -->
+                <div class="bg-gray-100 px-6 py-3 border-t flex justify-between items-center text-xs">
+                    <button onclick="handleLogout()" class="text-red-600 font-bold hover:underline">
+                        <i class="fa-solid fa-right-from-bracket"></i> Đăng Xuất
+                    </button>
+                    <button onclick="resetDefaultData()" class="text-gray-500 hover:text-gray-800 underline">
+                        Khôi Phục Dữ Liệu Gốc
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL 2: IMAGE PREVIEW -->
+    <div id="image-modal" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4" onclick="closeImageModal()">
+        <div class="relative max-w-4xl w-full">
+            <button onclick="closeImageModal()" class="absolute -top-10 right-0 text-white text-2xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <img id="image-modal-src" src="" alt="Full Preview" class="max-h-[80vh] mx-auto rounded-lg shadow-2xl object-contain">
+        </div>
+    </div>
+
+    <!-- APPLICATION JAVASCRIPT LOGIC -->
+    <script>
+        // ==========================================
+        // INITIAL DEFAULT DATA (DATABASE)
+        // ==========================================
+        const INITIAL_PIN = "123456";
+
+        const DEFAULT_EQUIPMENTS = {
+            "QR-HICON-ELE-001": {
+                qrCode: "QR-HICON-ELE-001",
+                name: "Tủ Điện Tổng MSB - Tầng Hầm B1",
+                location: "Phòng Máy Trung Tâm B1",
+                technician: "Nguyễn Văn Hùng (HICON M&E)",
+                lastDate: "2026-10-20 09:30",
+                status: "HOẠT ĐỘNG TỐT",
+                parameters: {
+                    voltageR: "385 V",
+                    voltageS: "386 V",
+                    voltageT: "384 V",
+                    currentR: "142 A",
+                    currentS: "138 A",
+                    currentT: "145 A",
+                    temperature: "42.5 °C"
+                },
+                items: [
+                    { task: "Kiểm tra điện áp & dòng điện 3 pha", status: "ĐẠT", note: "Thống số cân bằng, nằm trong dải an toàn" },
+                    { task: "Đo nhiệt độ điểm nối cáp bằng camera nhiệt", status: "ĐẠT", note: "Nhiệt độ cực đại 42.5°C, bình thường" },
+                    { task: "Kiểm tra vỏ tủ, khóa cửa & tiếp địa", status: "ĐẠT", note: "Tiếp địa chắc chắn, vỏ tủ sạch" },
+                    { task: "Kiểm tra đèn báo pha & đồng hồ đo", status: "ĐẠT", note: "Hoạt động chính xác" },
+                    { task: "Siết chặt bulong thanh cái đồng (Busbar)", status: "ĐẠT", note: "Đã siết lực định kỳ" },
+                    { task: "Kiểm tra trạng thái Aptomat tổng (MCCB)", status: "ĐẠT", note: "Không có hiện tượng xả hồ quang" },
+                    { task: "Vệ sinh bụi bẩn nội thất tủ điện", status: "ĐẠT", note: "Đã thổi bụi bằng máy chuyên dụng" },
+                    { task: "Kiểm tra quạt làm mát tủ điện", status: "ĐẠT", note: "Quạt chạy êm, không tiếng động lạ" },
+                    { task: "Kiểm tra hệ thống chống sét van (SPD)", status: "ĐẠT", note: "Cửa sổ chỉ thị xanh (Bình thường)" },
+                    { task: "Ghi nhật ký vận hành vào phần mềm", status: "ĐẠT", note: "Số hoá 100%" }
+                ],
+                photos: [
+                    "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=600&q=80",
+                    "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
+                    "https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=600&q=80"
+                ]
+            },
+            "QR-HICON-HVAC-002": {
+                qrCode: "QR-HICON-HVAC-002",
+                name: "Hệ Thống Chiller Trung Tâm - Tầng Mái",
+                location: "Khu Vực Kỹ Thuật Tầng Mái",
+                technician: "Trần Đình Trọng (HICON M&E)",
+                lastDate: "2026-10-22 14:15",
+                status: "CẦN THEO DÕI",
+                parameters: {
+                    voltageR: "380 V",
+                    voltageS: "382 V",
+                    voltageT: "381 V",
+                    currentR: "210 A",
+                    currentS: "215 A",
+                    currentT: "208 A",
+                    temperature: "6.8 °C (Nước lạnh cấp)"
+                },
+                items: [
+                    { task: "Kiểm tra áp suất gas R134a đường hút/đẩy", status: "ĐẠT", note: "Áp suất ổn định" },
+                    { task: "Đo nhiệt độ nước cấp & nước về", status: "ĐẠT", note: "Nước cấp 6.8°C, nước về 12.2°C" },
+                    { task: "Kiểm tra độ rung lắc máy nén Trane", status: "CẦN LƯU Ý", note: "Máy nén #2 rung hơi nhẹ, cần theo dõi" },
+                    { task: "Vệ sinh dàn ngưng tụ (Condenser)", status: "ĐẠT", note: "Đã xịt rửa bằng hóa chất chuyên dụng" },
+                    { task: "Kiểm tra mức dầu bôi trơn máy nén", status: "ĐẠT", note: "Mức dầu đạt 2/3 mắt thăm" },
+                    { task: "Kiểm tra van tiết lưu điện tử (EXV)", status: "ĐẠT", note: "Đóng mở nhịp nhàng" },
+                    { task: "Kiểm tra các cảm biến nhiệt độ & áp suất", status: "ĐẠT", note: "Sai lệch trong ngưỡng cho phép ±0.2°C" },
+                    { task: "Kiểm tra bơm nước lạnh tuần hoàn", status: "ĐẠT", note: "Phốt làm kín không rò rỉ" },
+                    { task: "Vệ sinh lưới lọc đường ống nước", status: "ĐẠT", note: "Đã tẩy cặn lọc Y-Strainer" },
+                    { task: "Kiểm tra tủ điều khiển PLC Chiller", status: "ĐẠT", note: "Không có lỗi Alert trên màn hình" },
+                    { task: "Đo điện trở cách điện cuộn dây mô tơ", status: "ĐẠT", note: "> 50 M Ohm" }
+                ],
+                photos: [
+                    "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=600&q=80",
+                    "https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=600&q=80"
+                ]
+            }
+        };
+
+        // LocalStorage Keys
+        const STORAGE_KEY_DATA = "HICON_ME_DATA_2026";
+        const STORAGE_KEY_PIN = "HICON_ME_PIN_2026";
+
+        // Global State Variables
+        let dbEquipments = {};
+        let currentAdminPIN = INITIAL_PIN;
+        let isAdminLoggedIn = false;
+        let selectedAdminEqCode = "";
+
+        // ==========================================
+        // INITIALIZATION LOGIC
+        // ==========================================
+        window.onload = function() {
+            // 1. Initialize PIN
+            const storedPIN = localStorage.getItem(STORAGE_KEY_PIN);
+            if (storedPIN) {
+                currentAdminPIN = storedPIN;
+            } else {
+                localStorage.setItem(STORAGE_KEY_PIN, INITIAL_PIN);
+            }
+
+            // 2. Initialize Equipments Data
+            const storedData = localStorage.getItem(STORAGE_KEY_DATA);
+            if (storedData) {
+                try {
+                    dbEquipments = JSON.parse(storedData);
+                } catch (e) {
+                    dbEquipments = DEFAULT_EQUIPMENTS;
+                    localStorage.setItem(STORAGE_KEY_DATA, JSON.stringify(dbEquipments));
+                }
+            } else {
+                dbEquipments = DEFAULT_EQUIPMENTS;
+                localStorage.setItem(STORAGE_KEY_DATA, JSON.stringify(dbEquipments));
+            }
+
+            // 3. Render UI Selectors
+            populateQRSelectors();
+
+            // 4. Default to Home Tab
+            switchTab('home');
+        };
+
+        // ==========================================
+        // NAVIGATION & TAB SWITCHING
+        // ==========================================
+        function switchTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            
+            // Show selected tab content
+            const target = document.getElementById('tab-' + tabId);
+            if (target) target.classList.remove('hidden');
+
+            // Close mobile menu if open
+            document.getElementById('mobile-menu').classList.add('hidden');
+
+            // Update Nav Button Styles
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-white/20', 'font-bold');
+            });
+            const activeNav = document.getElementById('nav-' + tabId);
+            if (activeNav) activeNav.classList.add('bg-white/20', 'font-bold');
+
+            // If QR Portal selected, ensure default equipment loaded
+            if (tabId === 'qr-portal') {
+                const selector = document.getElementById('qr-selector');
+                if (selector && selector.value) {
+                    loadReportByQR(selector.value);
+                }
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // ==========================================
+        // QR PORTAL REPORT RENDERER
+        // ==========================================
+        function populateQRSelectors() {
+            const qrSelector = document.getElementById('qr-selector');
+            const adminSelector = document.getElementById('admin-eq-selector');
+
+            if (!qrSelector || !adminSelector) return;
+
+            qrSelector.innerHTML = '';
+            adminSelector.innerHTML = '';
+
+            Object.keys(dbEquipments).forEach(code => {
+                const eq = dbEquipments[code];
+                const opt1 = document.createElement('option');
+                opt1.value = code;
+                opt1.textContent = `${code} - ${eq.name}`;
+                qrSelector.appendChild(opt1);
+
+                const opt2 = document.createElement('option');
+                opt2.value = code;
+                opt2.textContent = `${code} - ${eq.name}`;
+                adminSelector.appendChild(opt2);
+            });
+        }
+
+        function loadReportByQR(qrCode) {
+            const data = dbEquipments[qrCode];
+            const container = document.getElementById('report-view-container');
+
+            if (!data) {
+                container.innerHTML = `<div class="bg-white p-8 rounded-xl text-center text-red-600 font-bold">Không tìm thấy dữ liệu cho mã QR này!</div>`;
+                return;
+            }
+
+            // Status Badge Theme
+            let statusBadgeClass = "bg-emerald-100 text-emerald-800 border-emerald-300";
+            if (data.status === 'CẦN THEO DÕI') statusBadgeClass = "bg-yellow-100 text-yellow-800 border-yellow-300";
+            if (data.status === 'CẦN BẢO TRÌ') statusBadgeClass = "bg-red-100 text-red-800 border-red-300";
+
+            // Items Check List HTML
+            const itemsHTML = data.items.map((item, index) => {
+                let badge = "bg-emerald-100 text-emerald-700";
+                if (item.status === 'CẦN LƯU Ý') badge = "bg-yellow-100 text-yellow-700";
+                if (item.status === 'KHÔNG ĐẠT') badge = "bg-red-100 text-red-700";
+
+                return `
+                    <tr class="border-b hover:bg-slate-50 transition">
+                        <td class="p-3 text-center text-xs font-bold text-gray-500">${index + 1}</td>
+                        <td class="p-3 text-sm font-semibold text-gray-800">${escapeHTML(item.task)}</td>
+                        <td class="p-3 text-center">
+                            <span class="px-2.5 py-1 rounded-full text-xs font-bold ${badge}">${escapeHTML(item.status)}</span>
+                        </td>
+                        <td class="p-3 text-xs text-gray-600">${escapeHTML(item.note || '-')}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            // Photos Gallery HTML
+            const photosHTML = data.photos.map(url => `
+                <div class="relative group cursor-pointer overflow-hidden rounded-xl shadow-sm border" onclick="openImageModal('${url}')">
+                    <img src="${url}" onerror="this.src='https://placehold.co/600x400/e2e8f0/1e293b?text=HICON+ME+Photo'" class="w-full h-36 object-cover group-hover:scale-105 transition duration-300">
+                    <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-lg">
+                        <i class="fa-solid fa-magnifying-glass-plus"></i>
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = `
+                <!-- Top Card Info -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="bg-hicon-blue text-white p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <span class="bg-yellow-400 text-hicon-navy text-xs font-black px-2.5 py-1 rounded uppercase tracking-wider">
+                                Mã Thiết Bị: ${data.qrCode}
+                            </span>
+                            <h2 class="text-2xl font-black mt-2">${escapeHTML(data.name)}</h2>
+                            <p class="text-xs text-gray-300 mt-1 flex items-center gap-2">
+                                <i class="fa-solid fa-location-dot"></i> ${escapeHTML(data.location)}
+                            </p>
+                        </div>
+                        <div class="text-right">
+                            <span class="px-3 py-1.5 rounded-lg border text-xs font-black uppercase ${statusBadgeClass}">
+                                ${escapeHTML(data.status)}
+                            </span>
+                            <div class="text-[11px] text-gray-300 mt-2">Cập nhật lần cuối: ${data.lastDate}</div>
+                        </div>
+                    </div>
+
+                    <!-- Details Bar -->
+                    <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-4 border-b bg-slate-50 text-xs">
+                        <div>
+                            <span class="text-gray-500 block">Kỹ thuật viên thực hiện:</span>
+                            <strong class="text-gray-800 text-sm">${escapeHTML(data.technician)}</strong>
+                        </div>
+                        <div>
+                            <span class="text-gray-500 block">Đơn vị kiểm định:</span>
+                            <strong class="text-hicon-blue text-sm">HICON M&E Services</strong>
+                        </div>
+                        <div>
+                            <span class="text-gray-500 block">Tiêu chuẩn kiểm tra:</span>
+                            <strong class="text-gray-800 text-sm">TCVN & ISO 9001:2015</strong>
+                        </div>
+                    </div>
+
+                    <!-- Measured Parameters Grid -->
+                    <div class="p-6">
+                        <h3 class="text-sm font-bold text-gray-700 uppercase tracking-wider mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-gauge-high text-hicon-blue"></i> Thông Số Đo Đạc Kỹ Thuật Thực Tế
+                        </h3>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                            <div class="bg-blue-50/50 p-3 rounded-lg border border-blue-100">
+                                <span class="text-[11px] text-gray-500 block">Điện áp R-S-T</span>
+                                <span class="font-bold text-sm text-hicon-blue">${data.parameters.voltageR} / ${data.parameters.voltageS}</span>
+                            </div>
+                            <div class="bg-blue-50/50 p-3 rounded-lg border border-blue-100">
+                                <span class="text-[11px] text-gray-500 block">Dòng điện tải R-S-T</span>
+                                <span class="font-bold text-sm text-hicon-blue">${data.parameters.currentR} / ${data.parameters.currentS}</span>
+                            </div>
+                            <div class="bg-blue-50/50 p-3 rounded-lg border border-blue-100">
+                                <span class="text-[11px] text-gray-500 block">Nhiệt độ / Áp suất</span>
+                                <span class="font-bold text-sm text-hicon-blue">${data.parameters.temperature}</span>
+                            </div>
+                            <div class="bg-blue-50/50 p-3 rounded-lg border border-blue-100">
+                                <span class="text-[11px] text-gray-500 block">Trạng thái tủ/máy</span>
+                                <span class="font-bold text-sm text-emerald-600">Ổn định 100%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Checklist Table -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="p-5 border-b bg-gray-50 flex justify-between items-center">
+                        <h3 class="font-bold text-gray-800 text-sm uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-clipboard-check text-hicon-red"></i> Danh Sách Hạng Mục Bảo Trì Thực Tế
+                        </h3>
+                        <span class="text-xs text-gray-500">Tổng số: <strong>${data.items.length}</strong> hạng mục</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-100 text-gray-600 text-[11px] uppercase font-bold border-b">
+                                    <th class="p-3 text-center w-12">STT</th>
+                                    <th class="p-3">Hạng Mục Kiểm Tra</th>
+                                    <th class="p-3 text-center w-32">Kết Quả</th>
+                                    <th class="p-3">Ghi Chú Kỹ Thuật</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${itemsHTML}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Site Photos Album -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                    <h3 class="font-bold text-gray-800 text-sm uppercase tracking-wider mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-camera text-hicon-blue"></i> Album Ảnh Chụp Hiện Trường
+                    </h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        ${photosHTML.length > 0 ? photosHTML : '<div class="text-xs text-gray-400">Chưa có ảnh chụp hiện trường.</div>'}
+                    </div>
+                </div>
+            `;
+        }
+
+        // ==========================================
+        // ADMIN PANEL & AUTHENTICATION LOGIC
+        // ==========================================
+        function openAdminModal() {
+            document.getElementById('admin-modal').classList.remove('hidden');
+            document.body.classList.add('modal-active');
+
+            if (isAdminLoggedIn) {
+                showAdminDashboard();
+            } else {
+                showAdminLogin();
+            }
+        }
+
+        function closeAdminModal() {
+            document.getElementById('admin-modal').classList.add('hidden');
+            document.body.classList.remove('modal-active');
+        }
+
+        function showAdminLogin() {
+            document.getElementById('admin-login-view').classList.remove('hidden');
+            document.getElementById('admin-dashboard-view').classList.add('hidden');
+            document.getElementById('admin-pin-input').value = '';
+        }
+
+        function showAdminDashboard() {
+            document.getElementById('admin-login-view').classList.add('hidden');
+            document.getElementById('admin-dashboard-view').classList.remove('hidden');
+
+            // Select default equipment for admin
+            populateQRSelectors();
+            const selector = document.getElementById('admin-eq-selector');
+            if (selector && selector.value) {
+                loadAdminEquipmentData(selector.value);
+            }
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const pinInput = document.getElementById('admin-pin-input').value.trim();
+
+            if (pinInput === currentAdminPIN) {
+                isAdminLoggedIn = true;
+                showToast("Đăng nhập quản trị thành công!", "success");
+                showAdminDashboard();
+            } else {
+                showToast("Mã PIN không chính xác. Vui lòng thử lại!", "error");
+                document.getElementById('admin-pin-input').value = '';
+            }
+        }
+
+        function handleLogout() {
+            isAdminLoggedIn = false;
+            showAdminLogin();
+            showToast("Đã đăng xuất khỏi phiên quản trị.", "info");
+        }
+
+        function switchAdminSubTab(tab) {
+            if (tab === 'items') {
+                document.getElementById('admin-subtab-items').classList.remove('hidden');
+                document.getElementById('admin-subtab-security').classList.add('hidden');
+                document.getElementById('admin-tab-items').className = "px-3 py-1.5 rounded-md bg-white text-hicon-blue shadow-sm font-bold";
+                document.getElementById('admin-tab-security').className = "px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-200";
+            } else {
+                document.getElementById('admin-subtab-items').classList.add('hidden');
+                document.getElementById('admin-subtab-security').classList.remove('hidden');
+                document.getElementById('admin-tab-items').className = "px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-200";
+                document.getElementById('admin-tab-security').className = "px-3 py-1.5 rounded-md bg-white text-hicon-blue shadow-sm font-bold";
+            }
+        }
+
+        // ==========================================
+        // DYNAMIC MAINTENANCE ITEM & ALBUM EDITING
+        // ==========================================
+        function loadAdminEquipmentData(qrCode) {
+            selectedAdminEqCode = qrCode;
+            const eq = dbEquipments[qrCode];
+            if (!eq) return;
+
+            document.getElementById('admin-input-name').value = eq.name;
+            document.getElementById('admin-input-location').value = eq.location;
+            document.getElementById('admin-input-tech').value = eq.technician;
+            document.getElementById('admin-input-status').value = eq.status;
+
+            renderAdminItemsList(eq.items);
+            renderAdminAlbumPreview(eq.photos);
+        }
+
+        function renderAdminItemsList(items) {
+            const container = document.getElementById('admin-items-list');
+            document.getElementById('admin-items-count').textContent = items.length;
+            container.innerHTML = '';
+
+            items.forEach((item, index) => {
+                const row = document.createElement('div');
+                row.className = "flex items-center gap-2 bg-gray-50 p-2 rounded-lg border border-gray-200 text-xs";
+                row.innerHTML = `
+                    <span class="font-bold text-gray-400 w-5 text-center">${index + 1}</span>
+                    <input type="text" value="${escapeHTML(item.task)}" class="item-task flex-1 border p-1.5 rounded text-xs" placeholder="Tên hạng mục kiểm tra...">
+                    <select class="item-status border p-1.5 rounded font-bold text-xs">
+                        <option value="ĐẠT" ${item.status === 'ĐẠT' ? 'selected' : ''}>ĐẠT</option>
+                        <option value="CẦN LƯU Ý" ${item.status === 'CẦN LƯU Ý' ? 'selected' : ''}>CẦN LƯU Ý</option>
+                        <option value="KHÔNG ĐẠT" ${item.status === 'KHÔNG ĐẠT' ? 'selected' : ''}>KHÔNG ĐẠT</option>
+                    </select>
+                    <input type="text" value="${escapeHTML(item.note || '')}" class="item-note flex-1 border p-1.5 rounded text-xs" placeholder="Ghi chú...">
+                    <button onclick="removeMaintenanceItem(${index})" class="text-red-500 hover:text-red-700 p-1 font-bold text-sm" title="Xóa hạng mục">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function addNewMaintenanceItem() {
+            const eq = dbEquipments[selectedAdminEqCode];
+            if (!eq) return;
+            eq.items.push({
+                task: "Kiểm tra hạng mục mới bổ sung",
+                status: "ĐẠT",
+                note: "Đã kiểm tra hoạt động tốt"
+            });
+            renderAdminItemsList(eq.items);
+            showToast("Đã thêm 1 hạng mục mới", "info");
+        }
+
+        function removeMaintenanceItem(index) {
+            const eq = dbEquipments[selectedAdminEqCode];
+            if (!eq) return;
+            eq.items.splice(index, 1);
+            renderAdminItemsList(eq.items);
+            showToast("Đã xóa hạng mục khỏi danh sách", "info");
+        }
+
+        function renderAdminAlbumPreview(photos) {
+            const container = document.getElementById('admin-album-preview');
+            container.innerHTML = '';
+
+            photos.forEach((url, index) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = "relative group rounded-lg overflow-hidden border bg-white h-20";
+                wrapper.innerHTML = `
+                    <img src="${url}" class="w-full h-full object-cover">
+                    <!-- Individual Delete Button (x) -->
+                    <button onclick="removeAlbumPhoto(${index})" class="absolute top-1 right-1 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold shadow hover:bg-red-700 transition" title="Xóa ảnh này">
+                        &times;
+                    </button>
+                `;
+                container.appendChild(wrapper);
+            });
+        }
+
+        function handleImageUpload(e) {
+            const files = e.target.files;
+            if (!files || files.length === 0) return;
+
+            const eq = dbEquipments[selectedAdminEqCode];
+            if (!eq) return;
+
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    eq.photos.push(event.target.result);
+                    renderAdminAlbumPreview(eq.photos);
+                };
+                reader.readAsDataURL(file);
+            });
+
+            showToast(`Đã tải lên ${files.length} ảnh mới`, "success");
+        }
+
+        function removeAlbumPhoto(index) {
+            const eq = dbEquipments[selectedAdminEqCode];
+            if (!eq) return;
+            eq.photos.splice(index, 1);
+            renderAdminAlbumPreview(eq.photos);
+            showToast("Đã xóa 1 ảnh khỏi album", "info");
+        }
+
+        function saveAdminEquipmentData() {
+            const eq = dbEquipments[selectedAdminEqCode];
+            if (!eq) return;
+
+            // Collect header info
+            eq.name = document.getElementById('admin-input-name').value.trim();
+            eq.location = document.getElementById('admin-input-location').value.trim();
+            eq.technician = document.getElementById('admin-input-tech').value.trim();
+            eq.status = document.getElementById('admin-input-status').value;
+            
+            // Format dynamic date
+            const now = new Date();
+            eq.lastDate = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+
+            // Collect items list from DOM
+            const itemRows = document.querySelectorAll('#admin-items-list > div');
+            const newItems = [];
+            itemRows.forEach(row => {
+                const task = row.querySelector('.item-task').value.trim();
+                const status = row.querySelector('.item-status').value;
+                const note = row.querySelector('.item-note').value.trim();
+                if (task) {
+                    newItems.push({ task, status, note });
+                }
+            });
+            eq.items = newItems;
+
+            // Save to LocalStorage
+            localStorage.setItem(STORAGE_KEY_DATA, JSON.stringify(dbEquipments));
+
+            // Refresh Portal UI if needed
+            populateQRSelectors();
+            document.getElementById('qr-selector').value = selectedAdminEqCode;
+            loadReportByQR(selectedAdminEqCode);
+
+            showToast("Đã lưu dữ liệu báo cáo bảo trì thành công!", "success");
+        }
+
+        // ==========================================
+        // PIN SECURITY CHANGE LOGIC
+        // ==========================================
+        function handleChangePIN(e) {
+            e.preventDefault();
+            const curr = document.getElementById('pin-current').value;
+            const newPin = document.getElementById('pin-new').value;
+            const confPin = document.getElementById('pin-confirm').value;
+
+            if (curr !== currentAdminPIN) {
+                showToast("Mã PIN hiện tại không chính xác!", "error");
+                return;
+            }
+
+            if (newPin.length < 4) {
+                showToast("Mã PIN mới phải từ 4 ký tự trở lên!", "error");
+                return;
+            }
+
+            if (newPin !== confPin) {
+                showToast("Xác nhận mã PIN mới không trùng khớp!", "error");
+                return;
+            }
+
+            currentAdminPIN = newPin;
+            localStorage.setItem(STORAGE_KEY_PIN, newPin);
+
+            document.getElementById('pin-current').value = '';
+            document.getElementById('pin-new').value = '';
+            document.getElementById('pin-confirm').value = '';
+
+            showToast("Đổi mã PIN bảo mật thành công!", "success");
+            switchAdminSubTab('items');
+        }
+
+        function resetDefaultData() {
+            if (confirm("Bạn có chắc chắn muốn khôi phục dữ liệu gốc HICON M&E? Dữ liệu đã sửa sẽ bị ghi đè.")) {
+                dbEquipments = JSON.parse(JSON.stringify(DEFAULT_EQUIPMENTS));
+                localStorage.setItem(STORAGE_KEY_DATA, JSON.stringify(dbEquipments));
+                populateQRSelectors();
+                loadAdminEquipmentData(Object.keys(dbEquipments)[0]);
+                showToast("Đã khôi phục dữ liệu gốc!", "info");
+            }
+        }
+
+        // ==========================================
+        // UTILITIES (TOAST & IMAGE PREVIEW MODAL)
+        // ==========================================
+        function showToast(message, type = "info") {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toast-msg');
+            const iconEl = document.getElementById('toast-icon');
+
+            msgEl.textContent = message;
+
+            if (type === "success") {
+                iconEl.className = "fa-solid fa-circle-check text-emerald-400 text-xl";
+            } else if (type === "error") {
+                iconEl.className = "fa-solid fa-triangle-exclamation text-red-400 text-xl";
+            } else {
+                iconEl.className = "fa-solid fa-circle-info text-yellow-400 text-xl";
+            }
+
+            toast.classList.remove('translate-x-full');
+            setTimeout(() => {
+                toast.classList.add('translate-x-full');
+            }, 3000);
+        }
+
+        function openImageModal(src) {
+            document.getElementById('image-modal-src').src = src;
+            document.getElementById('image-modal').classList.remove('hidden');
+        }
+
+        function closeImageModal() {
+            document.getElementById('image-modal').classList.add('hidden');
+        }
+
+        function escapeHTML(str) {
+            if (!str) return '';
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+    </script>
+</body>
+</html>
