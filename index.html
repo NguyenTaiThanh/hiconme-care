@@ -77,10 +77,12 @@
         }
         @keyframes shimmer { 0% { transform: translate(-100%, -100%) rotate(30deg); } 100% { transform: translate(100%, 100%) rotate(30deg); } }
 
-        .nav-link { position: relative; }
+        /* Navigation Link States */
+        .nav-link { position: relative; color: #d1d5db; transition: color 0.25s ease; }
+        .nav-link:hover { color: #00a8cc; }
         .nav-link::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -2px; left: 0; background-color: #00a8cc; transition: width 0.25s ease; }
         .nav-link:hover::after, .nav-link.active::after { width: 100%; }
-        .nav-link.active { color: #00a8cc; }
+        .nav-link.active { color: #00a8cc; font-weight: 700; }
 
         /* Toast Animation */
         @keyframes slideDownToast {
@@ -91,7 +93,6 @@
             animation: slideDownToast 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        /* Shake animation for invalid inputs */
         @keyframes errorShake {
             0%, 100% { transform: translateX(0); }
             20%, 60% { transform: translateX(-8px); }
@@ -104,7 +105,7 @@
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans flex flex-col min-h-screen relative">
 
-    <!-- TOP-LEVEL FLOATING ERROR TOAST (LỚP TẠO NỔI TRÊN CÙNG CAO NHẤT Z-100) -->
+    <!-- TOP-LEVEL FLOATING ERROR TOAST -->
     <div id="top-error-toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-[100] hidden max-w-md w-11/12">
         <div class="bg-red-600 text-white px-5 py-3.5 rounded-2xl shadow-2xl border-2 border-red-400 flex items-center justify-between gap-3 toast-animate-in">
             <div class="flex items-center space-x-3">
@@ -129,9 +130,6 @@
             </div>
             <div class="flex items-center space-x-4">
                 <span class="bg-emerald-600 text-white px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide animate-pulse">CỔNG BÁO CÁO SỐ HÓA QR</span>
-                <button onclick="openAdminModal()" class="btn-interactive bg-amber-500 hover:bg-amber-600 text-brand-dark px-3 py-1 rounded-md font-bold text-[11px] transition flex items-center shadow-md">
-                    <i class="fas fa-edit mr-1.5"></i> Cập nhật thông tin/trạng thái thiết bị
-                </button>
             </div>
         </div>
     </div>
@@ -151,26 +149,20 @@
                     </div>
                 </div>
 
-                <!-- DESKTOP NAV -->
+                <!-- DESKTOP NAV (ĐÃ SỬA: ĐƯA VỀ MẶC ĐỊNH TRẮNG, CHỈ SÁNG KHI ĐƯỢC CHỌN) -->
                 <nav class="hidden md:flex space-x-8 font-medium text-sm tracking-wide">
-                    <button onclick="navigateTo('home')" id="nav-home" class="nav-link active py-2 hover:text-brand-accent transition">TRANG CHỦ</button>
-                    <button onclick="navigateTo('about')" id="nav-about" class="nav-link py-2 hover:text-brand-accent transition">GIỚI THIỆU</button>
-                    <button onclick="navigateTo('services')" id="nav-services" class="nav-link py-2 hover:text-brand-accent transition">DỊCH VỤ M&E</button>
-                    <button onclick="navigateTo('projects')" id="nav-projects" class="nav-link py-2 hover:text-brand-accent transition">DỰ ÁN</button>
-                    <button onclick="navigateTo('maintenance-portal')" id="nav-maintenance-portal" class="nav-link py-2 text-brand-accent font-bold hover:text-white transition flex items-center">
+                    <button onclick="navigateTo('home')" id="nav-home" class="nav-link py-2">TRANG CHỦ</button>
+                    <button onclick="navigateTo('about')" id="nav-about" class="nav-link py-2">GIỚI THIỆU</button>
+                    <button onclick="navigateTo('services')" id="nav-services" class="nav-link py-2">DỊCH VỤ M&E</button>
+                    <button onclick="navigateTo('projects')" id="nav-projects" class="nav-link py-2">DỰ ÁN</button>
+                    <button onclick="navigateTo('maintenance-portal')" id="nav-maintenance-portal" class="nav-link py-2 flex items-center">
                         <i class="fas fa-qrcode mr-1.5 text-lg"></i> BÁO CÁO BẢO TRÌ
                     </button>
-                    <button onclick="openAdminModal()" class="text-amber-400 font-bold hover:text-white transition flex items-center py-2 hover:scale-105">
-                        <i class="fas fa-edit mr-1 text-base"></i> Cập nhật thông tin/trạng thái thiết bị
-                    </button>
-                    <button onclick="navigateTo('contact')" id="nav-contact" class="nav-link py-2 hover:text-brand-accent transition">LIÊN HỆ</button>
+                    <button onclick="navigateTo('contact')" id="nav-contact" class="nav-link py-2">LIÊN HỆ</button>
                 </nav>
 
                 <!-- MOBILE MENU BUTTON -->
                 <div class="md:hidden flex items-center space-x-2">
-                    <button onclick="openAdminModal()" class="btn-interactive bg-amber-500 text-brand-dark px-2.5 py-1.5 rounded-lg font-bold text-xs flex items-center">
-                        <i class="fas fa-edit mr-1"></i> Cập nhật
-                    </button>
                     <button onclick="navigateTo('maintenance-portal')" class="btn-interactive bg-brand-accent text-brand-dark p-2 rounded-lg font-bold text-xs flex items-center">
                         <i class="fas fa-qrcode text-base"></i>
                     </button>
@@ -187,8 +179,7 @@
             <button onclick="navigateTo('about'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-gray-300">GIỚI THIỆU</button>
             <button onclick="navigateTo('services'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-gray-300">DỊCH VỤ M&E</button>
             <button onclick="navigateTo('projects'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-gray-300">DỰ ÁN</button>
-            <button onclick="navigateTo('maintenance-portal'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-brand-accent font-bold"><i class="fas fa-qrcode mr-2"></i> TRA CỨU BÁO CÁO QR</button>
-            <button onclick="openAdminModal(); toggleMobileMenu()" class="block w-full text-left py-2.5 text-amber-400 font-bold"><i class="fas fa-edit mr-2"></i> Cập nhật thông tin/trạng thái thiết bị</button>
+            <button onclick="navigateTo('maintenance-portal'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-gray-300"><i class="fas fa-qrcode mr-2"></i> TRA CỨU BÁO CÁO QR</button>
             <button onclick="navigateTo('contact'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-gray-300">LIÊN HỆ</button>
         </div>
     </header>
@@ -480,7 +471,7 @@
     <div id="admin-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden border border-gray-200 my-8 transition-all duration-300 transform scale-100">
             
-            <!-- STEP 1: AUTHENTICATION (ĐĂNG NHẬP BẰNG MẬT KHẨU - SẠCH SẼ BẢO MẬT) -->
+            <!-- STEP 1: AUTHENTICATION -->
             <div id="admin-step-auth" class="p-8 text-center">
                 <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 shadow-inner">
                     <i class="fas fa-user-lock"></i>
@@ -504,7 +495,7 @@
                 </div>
             </div>
 
-            <!-- STEP 1.5: CHANGE PASSWORD VIEW (MÃ PIN BẢO MẬT 1111 DÙNG ĐỂ ĐỔI PASS) -->
+            <!-- STEP 1.5: CHANGE PASSWORD VIEW -->
             <div id="admin-step-changepass" class="p-8 text-center hidden">
                 <div class="w-16 h-16 bg-blue-100 text-brand-blue rounded-full flex items-center justify-center text-3xl mx-auto mb-4 shadow-inner">
                     <i class="fas fa-shield-alt"></i>
@@ -585,7 +576,7 @@
                         </div>
                     </div>
 
-                    <!-- QUẢN LÝ HẠNG MỤC BẢO TRÌ (THÊM / XÓA ĐỘNG) -->
+                    <!-- QUẢN LÝ HẠNG MỤC BẢO TRÌ -->
                     <div class="bg-slate-50 p-4 rounded-xl border border-gray-200 space-y-3">
                         <div class="flex justify-between items-center">
                             <div>
@@ -605,7 +596,7 @@
                         <textarea id="form-note" rows="2" placeholder="VD: Đã hoàn tất quy trình bảo dưỡng định kỳ, thiết bị vận hành ổn định..." class="w-full p-2.5 border border-gray-300 rounded-lg transition"></textarea>
                     </div>
 
-                    <!-- PHOTO UPLOAD FROM ALBUM WITH DELETE FUNCTION -->
+                    <!-- PHOTO UPLOAD FROM ALBUM -->
                     <div class="bg-slate-50 p-4 rounded-xl border-2 border-dashed border-gray-300 text-center">
                         <label class="block font-bold text-brand-navy mb-1"><i class="fas fa-images text-brand-accent mr-1"></i> TẢI ẢNH CHỤP HIỆN TRƯỜNG TỪ ALBUM</label>
                         <p class="text-[10px] text-gray-500 mb-3">Có thể chọn nhiều ảnh. Bấm dấu (x) nếu muốn xóa ảnh chọn nhầm.</p>
@@ -645,7 +636,7 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        const CONFIRM_PIN = "1111"; // Mã PIN xác nhận riêng tư bảo mật
+        const CONFIRM_PIN = "1111";
         let toastTimeout = null;
 
         function showTopErrorToast(msg) {
@@ -666,7 +657,7 @@
         }
 
         function getStoredPassword() {
-            return localStorage.getItem('hicon_admin_pass') || 'hiconme'; // Mật khẩu mặc định là hiconme
+            return localStorage.getItem('hicon_admin_pass') || 'hiconme';
         }
 
         function setStoredPassword(newPass) {
@@ -931,7 +922,6 @@
                     { title: 'Vệ sinh lưới lọc / Phin lọc', detail: 'Xả cặn, làm sạch thiết bị lọc cặn.' }
                 ]);
             } else {
-                // Hiệu ứng rung đòn và hiển thị Toast lỗi ở lớp nổi trên cùng
                 passInput.classList.add('shake-error', 'border-red-500');
                 setTimeout(() => passInput.classList.remove('shake-error'), 500);
                 showTopErrorToast('Sai mật khẩu! Vui lòng thử lại (Mật khẩu: hiconme)');
