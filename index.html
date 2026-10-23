@@ -21,7 +21,8 @@
                             accent: '#00a8cc',
                             gold: '#f39c12',
                             light: '#f4f7f9',
-                            dark: '#0a192f'
+                            dark: '#0a192f',
+                            orange: '#f58220'
                         }
                     },
                     fontFamily: {
@@ -34,10 +35,25 @@
     <style>
         html { scroll-behavior: smooth; }
         .glass-header { background: rgba(15, 43, 72, 0.95); backdrop-filter: blur(12px); }
-        .hero-gradient {
-            background: linear-gradient(135deg, rgba(15, 43, 72, 0.92) 0%, rgba(19, 84, 138, 0.85) 100%), 
+        
+        /* HERO BACKGROUND DỰA TRÊN LOGO HICON M&E VÀ HIỆU ỨNG M&E */
+        .hero-hicon-bg {
+            background: linear-gradient(135deg, rgba(15, 43, 72, 0.95) 0%, rgba(19, 84, 138, 0.90) 100%), 
                         url('https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=1600&auto=format&fit=crop');
             background-size: cover; background-position: center;
+            position: relative; overflow: hidden;
+        }
+
+        /* Hiệu ứng mạch điện ngầm chạy trên background */
+        @keyframes circuitPulse {
+            0% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.03); }
+            100% { opacity: 0.2; transform: scale(1); }
+        }
+        .circuit-glow {
+            position: absolute; inset: 0; pointer-events: none;
+            background: radial-gradient(circle at 50% 40%, rgba(245, 130, 32, 0.25) 0%, transparent 65%);
+            animation: circuitPulse 4s ease-in-out infinite;
         }
 
         .page-section {
@@ -49,7 +65,7 @@
         .page-section.active-section { opacity: 1; transform: translateY(0) scale(1); }
 
         .btn-interactive { transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
-        .btn-interactive:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 10px 20px -5px rgba(0, 168, 204, 0.35); }
+        .btn-interactive:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 10px 20px -5px rgba(245, 130, 32, 0.4); }
         .btn-interactive:active { transform: translateY(1px) scale(0.96); }
 
         .card-pro-hover {
@@ -66,16 +82,16 @@
         .scan-glow { position: relative; overflow: hidden; }
         .scan-glow::after {
             content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: linear-gradient(60deg, transparent 30%, rgba(255, 255, 255, 0.25) 50%, transparent 70%);
+            background: linear-gradient(60deg, transparent 30%, rgba(245, 130, 32, 0.3) 50%, transparent 70%);
             transform: rotate(30deg); animation: shimmer 3.5s infinite;
         }
         @keyframes shimmer { 0% { transform: translate(-100%, -100%) rotate(30deg); } 100% { transform: translate(100%, 100%) rotate(30deg); } }
 
         .nav-link { position: relative; color: #d1d5db; transition: color 0.25s ease; }
-        .nav-link:hover { color: #00a8cc; }
-        .nav-link::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -2px; left: 0; background-color: #00a8cc; transition: width 0.25s ease; }
+        .nav-link:hover { color: #f58220; }
+        .nav-link::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -2px; left: 0; background-color: #f58220; transition: width 0.25s ease; }
         .nav-link:hover::after, .nav-link.active::after { width: 100%; }
-        .nav-link.active { color: #00a8cc; font-weight: 700; }
+        .nav-link.active { color: #f58220; font-weight: 700; }
 
         @keyframes slideDownToast {
             from { transform: translate(-50%, -100%); opacity: 0; }
@@ -96,8 +112,8 @@
         }
         .laser-line {
             position: absolute; left: 6%; right: 6%; height: 2.5px;
-            background: #00f2fe;
-            box-shadow: 0 0 10px 2px #00f2fe;
+            background: #f58220;
+            box-shadow: 0 0 10px 2px #f58220;
             animation: qrLaserScan 2.2s ease-in-out infinite;
         }
 
@@ -161,13 +177,13 @@
         </div>
     </div>
 
-    <!-- TOP BAR -->
+    <!-- TOP BAR (THÔNG TIN LIÊN HỆ MỚI) -->
     <div class="bg-brand-dark text-gray-300 text-xs py-2 px-4 border-b border-gray-800 hidden md:block">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-6">
-                <span><i class="fas fa-phone-alt text-brand-accent mr-2"></i>Hotline: 0988.123.456</span>
-                <span><i class="fas fa-envelope text-brand-accent mr-2"></i>contact@hiconme.vn</span>
-                <span><i class="fas fa-map-marker-alt text-brand-accent mr-2"></i>KCN DEEP C, Hải Phòng - Hà Nội</span>
+            <div class="flex items-center space-x-5">
+                <span><i class="fas fa-phone-alt text-brand-orange mr-1.5"></i>Hotline: <a href="tel:0868117116" class="hover:text-amber-400 transition">0868.117.116</a> - <a href="tel:0968095072" class="hover:text-amber-400 transition">0968.095.072</a></span>
+                <span><i class="fas fa-envelope text-brand-orange mr-1.5"></i>Email: contact@hiconmne.vn</span>
+                <span><i class="fas fa-map-marker-alt text-brand-orange mr-1.5"></i>Số nhà C.TT8-5 Khu C đường C5, KĐT Himlam Vạn Phúc, Hà Đông, Hà Nội</span>
             </div>
             <div class="flex items-center space-x-4">
                 <span class="bg-emerald-600 text-white px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide animate-pulse">CỔNG BÁO CÁO SỐ HÓA QR</span>
@@ -175,18 +191,20 @@
         </div>
     </div>
 
-    <!-- MAIN HEADER -->
+    <!-- MAIN HEADER (ĐÃ CẬP NHẬT LOGO CHUẨN HICON M&E) -->
     <header class="glass-header sticky top-0 z-50 text-white shadow-xl">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
-                <!-- LOGO -->
+                <!-- LOGO CHUẨN HICON M&E -->
                 <div class="flex items-center space-x-3 cursor-pointer group" onclick="navigateTo('home')">
-                    <div class="w-12 h-12 bg-gradient-to-tr from-brand-blue to-brand-accent rounded-xl flex items-center justify-center font-bold text-2xl text-white shadow-lg border border-cyan-400/40 group-hover:scale-105 transition-transform duration-300">
-                        H
-                    </div>
-                    <div>
-                        <div class="text-xl font-black tracking-wider text-white">HICON <span class="text-brand-accent">M&E</span></div>
-                        <div class="text-[10px] uppercase text-gray-300 tracking-widest font-light">Cơ Điện & Bảo Trì Công Nghiệp</div>
+                    <div class="flex items-center space-x-2 bg-white/10 px-3 py-1.5 rounded-xl border border-white/20 group-hover:scale-105 transition-transform duration-300">
+                        <div class="w-9 h-9 bg-gradient-to-tr from-amber-600 via-brand-orange to-yellow-400 rounded-lg flex items-center justify-center font-black text-xl text-white shadow-md">
+                            H<span class="text-xs text-brand-dark">E</span>
+                        </div>
+                        <div>
+                            <div class="text-base font-black tracking-wider text-white">HICON <span class="text-brand-orange">M&E</span></div>
+                            <div class="text-[8px] uppercase text-gray-300 tracking-widest font-light">Cơ Điện & Bảo Trì Công Nghiệp</div>
+                        </div>
                     </div>
                 </div>
 
@@ -197,14 +215,14 @@
                     <button onclick="navigateTo('services')" id="nav-services" class="nav-link py-2">DỊCH VỤ M&E</button>
                     <button onclick="navigateTo('projects')" id="nav-projects" class="nav-link py-2">DỰ ÁN</button>
                     <button onclick="navigateTo('maintenance-portal')" id="nav-maintenance-portal" class="nav-link py-2 flex items-center">
-                        <i class="fas fa-qrcode mr-1.5 text-lg"></i> BÁO CÁO BẢO TRÌ
+                        <i class="fas fa-qrcode mr-1.5 text-lg text-brand-orange"></i> BÁO CÁO BẢO TRÌ
                     </button>
                     <button onclick="navigateTo('contact')" id="nav-contact" class="nav-link py-2">LIÊN HỆ</button>
                 </nav>
 
                 <!-- MOBILE MENU BUTTON -->
                 <div class="md:hidden flex items-center space-x-2">
-                    <button onclick="navigateTo('maintenance-portal')" class="btn-interactive bg-brand-accent text-brand-dark p-2 rounded-lg font-bold text-xs flex items-center">
+                    <button onclick="navigateTo('maintenance-portal')" class="btn-interactive bg-brand-orange text-white p-2 rounded-lg font-bold text-xs flex items-center">
                         <i class="fas fa-qrcode text-base"></i>
                     </button>
                     <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="text-gray-300 hover:text-white p-2">
@@ -228,27 +246,55 @@
     <!-- MAIN CONTENT -->
     <main class="flex-grow">
         
-        <!-- SECTION 1: TRANG CHỦ -->
+        <!-- SECTION 1: TRANG CHỦ (CÓ HIỆU ỨNG BACKGROUND ĐỘNG & LOGO HICON M&E) -->
         <div id="section-home" class="page-section hidden">
-            <div class="hero-gradient text-white py-24 px-4 text-center relative">
-                <div class="max-w-4xl mx-auto">
-                    <span class="inline-block bg-brand-accent/20 text-brand-accent border border-brand-accent/40 rounded-full px-4 py-1.5 text-xs font-semibold mb-6 uppercase">
-                        <i class="fas fa-check-circle mr-1.5"></i> Chuẩn Hóa Báo Cáo Số Hóa Cho Chủ Đầu Tư
-                    </span>
+            <div class="hero-hicon-bg text-white py-24 px-4 text-center relative">
+                <!-- Hiệu ứng mạch điện M&E chạy ngầm -->
+                <div class="circuit-glow"></div>
+
+                <div class="max-w-4xl mx-auto relative z-10">
+                    <!-- Logo Badge nổi bật trên Hero -->
+                    <div class="inline-flex items-center space-x-3 bg-white/10 backdrop-blur-md border border-brand-orange/50 rounded-full px-5 py-2 mb-6 shadow-2xl">
+                        <div class="w-8 h-8 bg-gradient-to-tr from-amber-600 to-brand-orange rounded-md flex items-center justify-center font-black text-white text-sm">H</div>
+                        <span class="text-xs sm:text-sm font-extrabold tracking-widest text-brand-orange uppercase">HICON M&E INDUSTRIAL SOLUTIONS</span>
+                    </div>
+
                     <h1 class="text-3xl sm:text-5xl font-black leading-tight mb-6">
-                        NHÀ THẦU CƠ ĐIỆN M&E <br>
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-200">BẢO TRÌ CÔNG NGHIỆP CHUYÊN NGHIỆP</span>
+                        GIẢI PHÁP CƠ ĐIỆN & BẢO TRÌ SỐ HÓA <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-brand-orange to-yellow-300">CHẤT LƯỢNG HÀNG ĐẦU VIỆT NAM</span>
                     </h1>
+                    
                     <p class="text-base sm:text-lg text-gray-200 mb-8 max-w-2xl mx-auto font-light">
                         Chuyên thi công, vận hành và bảo trì toàn diện hệ thống HVAC, PCCC, Điện công nghiệp, Chiller. Quản lý minh bạch 100% qua QR Code.
                     </p>
+
                     <div class="flex flex-col sm:flex-row justify-center gap-4">
-                        <button onclick="navigateTo('maintenance-portal')" class="scan-glow btn-interactive bg-brand-accent hover:bg-cyan-400 text-brand-dark font-extrabold px-8 py-4 rounded-xl shadow-2xl flex items-center justify-center text-base">
+                        <button onclick="navigateTo('maintenance-portal')" class="scan-glow btn-interactive bg-brand-orange hover:bg-orange-600 text-white font-extrabold px-8 py-4 rounded-xl shadow-2xl flex items-center justify-center text-base">
                             <i class="fas fa-qrcode mr-2.5 text-xl"></i> Quét / Tra Cứu Mã QR Bảo Trì
                         </button>
-                        <button onclick="openAdminModal()" class="btn-interactive bg-amber-500 hover:bg-amber-600 text-brand-dark font-bold px-8 py-4 rounded-xl text-base shadow-xl flex items-center justify-center">
-                            <i class="fas fa-edit mr-2 text-xl"></i> Cập nhật thông tin/trạng thái thiết bị
+                        <button onclick="openAdminModal()" class="btn-interactive bg-white/15 hover:bg-white/25 text-white font-bold px-8 py-4 rounded-xl text-base shadow-xl border border-white/30 flex items-center justify-center backdrop-blur-sm">
+                            <i class="fas fa-edit mr-2 text-amber-400 text-xl"></i> Cập nhật thông tin thiết bị
                         </button>
+                    </div>
+
+                    <!-- Các biểu tượng dịch vụ M&E chạy chuyển động phía dưới hero -->
+                    <div class="mt-14 pt-8 border-t border-white/15 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-semibold text-gray-300">
+                        <div class="flex items-center justify-center space-x-2 bg-white/5 py-2.5 px-3 rounded-xl border border-white/10 backdrop-blur-sm">
+                            <i class="fas fa-fan text-cyan-400 text-base animate-vane-spin"></i>
+                            <span>Hệ Thống HVAC & Chiller</span>
+                        </div>
+                        <div class="flex items-center justify-center space-x-2 bg-white/5 py-2.5 px-3 rounded-xl border border-white/10 backdrop-blur-sm">
+                            <i class="fas fa-fire-extinguisher text-red-400 text-base"></i>
+                            <span>Hệ Thống PCCC An Toàn</span>
+                        </div>
+                        <div class="flex items-center justify-center space-x-2 bg-white/5 py-2.5 px-3 rounded-xl border border-white/10 backdrop-blur-sm">
+                            <i class="fas fa-bolt text-amber-400 text-base"></i>
+                            <span>Điện Công Nghiệp & MSB</span>
+                        </div>
+                        <div class="flex items-center justify-center space-x-2 bg-white/5 py-2.5 px-3 rounded-xl border border-white/10 backdrop-blur-sm">
+                            <i class="fas fa-qrcode text-brand-orange text-base animate-pulse"></i>
+                            <span>Số Hóa QR Code 24/7</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -259,7 +305,7 @@
                     <div class="text-center mb-12">
                         <h2 class="text-2xl sm:text-3xl font-bold text-brand-navy">TẠI SAO CHỦ ĐẦU TƯ TIN TƯỞNG HICON M&E?</h2>
                         <p class="text-gray-500 text-xs sm:text-sm mt-2 max-w-2xl mx-auto">Năng lực vận hành chuẩn hóa toàn diện từ con người, quy trình cho đến hạ tầng công nghệ số.</p>
-                        <div class="w-20 h-1 bg-brand-accent mx-auto mt-3 rounded-full"></div>
+                        <div class="w-20 h-1 bg-brand-orange mx-auto mt-3 rounded-full"></div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -282,17 +328,17 @@
                                             <div class="h-1.5 bg-slate-600 rounded w-3/5"></div>
                                         </div>
                                     </div>
-                                    <div class="absolute right-2 bottom-2 bg-white p-1.5 rounded-lg shadow-lg border-2 border-cyan-400">
+                                    <div class="absolute right-2 bottom-2 bg-white p-1.5 rounded-lg shadow-lg border-2 border-brand-orange">
                                         <i class="fas fa-qrcode text-brand-navy text-2xl block"></i>
                                         <span class="text-[6px] font-mono font-bold text-brand-navy block text-center">AHU-01</span>
                                     </div>
                                     <div class="text-[8px] text-gray-300 font-mono">22.5°C | 65%RH</div>
                                 </div>
 
-                                <div class="w-24 h-36 bg-gray-900 rounded-2xl border-2 border-cyan-400 shadow-2xl p-1.5 flex flex-col justify-between relative -ml-10 z-10 transform -rotate-3 card-img-zoom transition-transform duration-500">
+                                <div class="w-24 h-36 bg-gray-900 rounded-2xl border-2 border-brand-orange shadow-2xl p-1.5 flex flex-col justify-between relative -ml-10 z-10 transform -rotate-3 card-img-zoom transition-transform duration-500">
                                     <div class="w-8 h-1 bg-gray-700 rounded-full mx-auto"></div>
-                                    <div class="bg-slate-800 flex-1 my-1 rounded-xl border border-cyan-500/40 relative overflow-hidden flex flex-col items-center justify-center p-1">
-                                        <div class="w-12 h-12 border-2 border-dashed border-cyan-300 rounded flex items-center justify-center relative">
+                                    <div class="bg-slate-800 flex-1 my-1 rounded-xl border border-brand-orange/40 relative overflow-hidden flex flex-col items-center justify-center p-1">
+                                        <div class="w-12 h-12 border-2 border-dashed border-brand-orange rounded flex items-center justify-center relative">
                                             <i class="fas fa-qrcode text-white text-xl"></i>
                                             <div class="laser-line"></div>
                                         </div>
@@ -302,12 +348,12 @@
                                 </div>
 
                                 <div class="absolute bottom-2 left-3">
-                                    <span class="text-[10px] font-bold text-cyan-300 uppercase tracking-widest bg-black/50 px-2.5 py-0.5 rounded-md backdrop-blur-sm">QUÉT QR TRÊN AHU</span>
+                                    <span class="text-[10px] font-bold text-amber-300 uppercase tracking-widest bg-black/50 px-2.5 py-0.5 rounded-md backdrop-blur-sm">QUÉT QR TRÊN AHU</span>
                                 </div>
                             </div>
                             <div class="p-6 flex-grow flex flex-col justify-between">
                                 <div>
-                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-qrcode text-brand-accent mr-2"></i> Số Hóa Báo Cáo Minh Bạch</h3>
+                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-qrcode text-brand-orange mr-2"></i> Số Hóa Báo Cáo Minh Bạch</h3>
                                     <p class="text-gray-600 text-xs leading-relaxed">Điện thoại quét mã QR dán trực tiếp trên thiết bị (AHU, Chiller, Bơm PCCC). Chủ đầu tư xem ngay nhật ký kiểm tra và thông số real-time.</p>
                                 </div>
                             </div>
@@ -316,13 +362,13 @@
                         <!-- THẺ 2: SẴN SÀNG - 04 GIỜ CÓ MẶT -->
                         <div class="card-pro-hover bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-md flex flex-col">
                             <div class="h-48 bg-gradient-to-br from-brand-navy via-brand-blue to-slate-900 relative overflow-hidden flex items-center justify-around p-4">
-                                <div class="relative w-28 h-28 rounded-full bg-slate-900/90 border-4 border-amber-400 shadow-2xl flex flex-col items-center justify-center shrink-0">
+                                <div class="relative w-28 h-28 rounded-full bg-slate-900/90 border-4 border-brand-orange shadow-2xl flex flex-col items-center justify-center shrink-0">
                                     <svg class="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
-                                        <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(245, 158, 11, 0.25)" stroke-width="10"></circle>
-                                        <circle cx="50" cy="50" r="42" fill="none" stroke="#f59e0b" stroke-width="10" stroke-dasharray="264" stroke-dashoffset="176" stroke-linecap="round"></circle>
+                                        <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(245, 130, 32, 0.25)" stroke-width="10"></circle>
+                                        <circle cx="50" cy="50" r="42" fill="none" stroke="#f58220" stroke-width="10" stroke-dasharray="264" stroke-dashoffset="176" stroke-linecap="round"></circle>
                                     </svg>
-                                    <i class="fas fa-stopwatch text-amber-400 text-sm mb-0.5 animate-bounce"></i>
-                                    <span class="text-2xl font-black text-white leading-none">04<span class="text-xs text-amber-400 ml-0.5">GIỜ</span></span>
+                                    <i class="fas fa-stopwatch text-brand-orange text-sm mb-0.5 animate-bounce"></i>
+                                    <span class="text-2xl font-black text-white leading-none">04<span class="text-xs text-brand-orange ml-0.5">GIỜ</span></span>
                                     <span class="text-[8px] font-bold text-cyan-300 uppercase mt-0.5">ON-SITE MAX</span>
                                 </div>
 
@@ -330,11 +376,11 @@
                                     <div class="flex items-center space-x-1 relative">
                                         <div class="flex flex-col space-y-1.5 mr-1">
                                             <div class="w-5 h-0.5 bg-cyan-300 rounded speed-line-1"></div>
-                                            <div class="w-7 h-0.5 bg-amber-400 rounded speed-line-2"></div>
+                                            <div class="w-7 h-0.5 bg-brand-orange rounded speed-line-2"></div>
                                             <div class="w-4 h-0.5 bg-cyan-300 rounded speed-line-1"></div>
                                         </div>
                                         <div class="animate-runner flex items-end -space-x-2">
-                                            <div class="w-11 h-11 rounded-xl bg-amber-500 text-brand-dark flex items-center justify-center shadow-lg border-2 border-white z-20" title="Kỹ sư trưởng">
+                                            <div class="w-11 h-11 rounded-xl bg-brand-orange text-white flex items-center justify-center shadow-lg border-2 border-white z-20" title="Kỹ sư trưởng">
                                                 <i class="fas fa-running text-2xl"></i>
                                             </div>
                                             <div class="w-10 h-10 rounded-xl bg-cyan-500 text-brand-dark flex items-center justify-center shadow-lg border-2 border-white z-10" title="Kỹ thuật viên M&E">
@@ -346,7 +392,7 @@
                                         </div>
                                         <i class="fas fa-industry text-gray-300 text-2xl ml-2"></i>
                                     </div>
-                                    <span class="mt-2 bg-amber-500/20 border border-amber-400/50 text-amber-300 text-[9px] font-bold px-2.5 py-0.5 rounded-full">
+                                    <span class="mt-2 bg-brand-orange/20 border border-brand-orange/50 text-brand-orange text-[9px] font-bold px-2.5 py-0.5 rounded-full">
                                         ⚡ CƠ ĐỘNG KHẨN CẤP
                                     </span>
                                 </div>
@@ -357,7 +403,7 @@
                             </div>
                             <div class="p-6 flex-grow flex flex-col justify-between">
                                 <div>
-                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-running text-brand-accent mr-2"></i> Sẵn Sàng - 04 Giờ Có Mặt</h3>
+                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-running text-brand-orange mr-2"></i> Sẵn Sàng - 04 Giờ Có Mặt</h3>
                                     <p class="text-gray-600 text-xs leading-relaxed">Đội ngũ kỹ sư và công nhân viên cơ động phản ứng tức thì, cam kết có mặt tại hiện trường trong vòng <strong>04 giờ (04 hours on-site)</strong>.</p>
                                 </div>
                             </div>
@@ -374,12 +420,12 @@
                                 <div id="hr-fallback-box" class="hidden absolute inset-0 bg-gradient-to-br from-brand-navy to-brand-blue flex flex-col items-center justify-center p-4 text-center">
                                     <i class="fas fa-users-cog text-cyan-300 text-3xl mb-2"></i>
                                     <p class="text-white text-xs font-bold mb-2">Ảnh Đội Ngũ Kỹ Sư HICON M&E</p>
-                                    <button type="button" onclick="triggerHrLinkChange()" class="btn-interactive bg-amber-500 hover:bg-amber-400 text-brand-dark font-extrabold px-3.5 py-2 rounded-xl text-xs shadow-lg flex items-center">
+                                    <button type="button" onclick="triggerHrLinkChange()" class="btn-interactive bg-brand-orange text-white font-extrabold px-3.5 py-2 rounded-xl text-xs shadow-lg flex items-center">
                                         <i class="fas fa-link mr-1.5"></i> Nhập Link Ảnh Đội Ngũ
                                     </button>
                                 </div>
 
-                                <button type="button" onclick="triggerHrLinkChange()" class="absolute top-2.5 right-2.5 bg-black/75 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition flex items-center shadow-lg z-20 cursor-pointer" title="Đổi ảnh Nhân lực bằng Link">
+                                <button type="button" onclick="triggerHrLinkChange()" class="absolute top-2.5 right-2.5 bg-black/75 hover:bg-brand-orange text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition flex items-center shadow-lg z-20 cursor-pointer" title="Đổi ảnh Nhân lực bằng Link">
                                     <i class="fas fa-link mr-1.5"></i> Đổi ảnh
                                 </button>
 
@@ -389,7 +435,7 @@
                             </div>
                             <div class="p-6 flex-grow flex flex-col justify-between">
                                 <div>
-                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-user-check text-brand-accent mr-2"></i> Nhân Lực Chuẩn Hóa</h3>
+                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-user-check text-brand-orange mr-2"></i> Nhân Lực Chuẩn Hóa</h3>
                                     <p class="text-gray-600 text-xs leading-relaxed">Đội ngũ kỹ sư được <strong>đào tạo chính quy và bài bản</strong> (Formally and methodically trained), nắm vững bản vẽ và quy trình kỹ thuật.</p>
                                 </div>
                             </div>
@@ -409,13 +455,13 @@
                                     <span class="text-[9px] font-bold text-gray-300 mt-1">Máy Đo Tốc Độ Gió</span>
                                 </div>
 
-                                <div class="bg-slate-800/90 border border-amber-500/40 rounded-2xl p-2.5 flex flex-col items-center w-36 shadow-xl relative">
-                                    <div class="w-11 h-11 rounded-full bg-slate-900 border-2 border-amber-400 flex items-center justify-center mb-1.5 relative">
-                                        <i class="fas fa-cog text-amber-400 text-xl animate-vane-spin"></i>
+                                <div class="bg-slate-800/90 border border-brand-orange/40 rounded-2xl p-2.5 flex flex-col items-center w-36 shadow-xl relative">
+                                    <div class="w-11 h-11 rounded-full bg-slate-900 border-2 border-brand-orange flex items-center justify-center mb-1.5 relative">
+                                        <i class="fas fa-cog text-brand-orange text-xl animate-vane-spin"></i>
                                         <span class="absolute -bottom-1 w-1.5 h-3 bg-red-500 rounded-full animate-laser-beam shadow-[0_0_8px_#ef4444]"></span>
                                     </div>
-                                    <div class="w-full bg-slate-950 border border-amber-500/60 rounded-lg py-1 px-2 text-center font-mono">
-                                        <div class="text-[8px] text-amber-400 uppercase">LASER TACHOMETER</div>
+                                    <div class="w-full bg-slate-950 border border-brand-orange/60 rounded-lg py-1 px-2 text-center font-mono">
+                                        <div class="text-[8px] text-brand-orange uppercase">LASER TACHOMETER</div>
                                         <div class="text-sm font-black text-amber-300">1480 <span class="text-[9px]">RPM</span></div>
                                     </div>
                                     <span class="text-[9px] font-bold text-gray-300 mt-1">Máy Đo Vòng Quay</span>
@@ -427,7 +473,7 @@
                             </div>
                             <div class="p-6 flex-grow flex flex-col justify-between">
                                 <div>
-                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-tools text-brand-accent mr-2"></i> Thiết Bị Chuyên Dụng</h3>
+                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-tools text-brand-orange mr-2"></i> Thiết Bị Chuyên Dụng</h3>
                                     <p class="text-gray-600 text-xs leading-relaxed">Trang bị đầy đủ các dụng cụ đo kiểm chuyên nghiệp: <strong>Máy đo tốc độ gió (Anemometer), máy đo tốc độ vòng quay (Tachometer)</strong>, camera nhiệt, Megaohmmeter.</p>
                                 </div>
                             </div>
@@ -449,13 +495,13 @@
                                             <div class="w-3 bg-cyan-400 h-6 rounded-t bar-anim-1"></div>
                                             <div class="w-3 bg-cyan-300 h-9 rounded-t bar-anim-2"></div>
                                             <div class="w-3 bg-emerald-400 h-7 rounded-t bar-anim-3"></div>
-                                            <div class="w-3 bg-amber-400 h-10 rounded-t bar-anim-1"></div>
+                                            <div class="w-3 bg-brand-orange h-10 rounded-t bar-anim-1"></div>
                                         </div>
                                     </div>
                                     <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 text-center">
                                         <i class="fas fa-shield-alt text-emerald-400 text-2xl mb-1"></i>
                                         <div class="text-[8px] font-bold text-gray-300">BẢO MẬT</div>
-                                        <div class="text-[8px] text-amber-400 font-bold mt-0.5"><i class="fas fa-bell mr-0.5"></i>CẢNH BÁO</div>
+                                        <div class="text-[8px] text-brand-orange font-bold mt-0.5"><i class="fas fa-bell mr-0.5"></i>CẢNH BÁO</div>
                                     </div>
                                 </div>
                                 <div class="absolute bottom-2 left-3">
@@ -464,7 +510,7 @@
                             </div>
                             <div class="p-6 flex-grow flex flex-col justify-between">
                                 <div>
-                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-cloud-upload-alt text-brand-accent mr-2"></i> Máy Chủ Đám Mây An Toàn</h3>
+                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-cloud-upload-alt text-brand-orange mr-2"></i> Máy Chủ Đám Mây An Toàn</h3>
                                     <p class="text-gray-600 text-xs leading-relaxed">Hệ thống lưu trữ đám mây <strong>bảo mật 24/7</strong>, tự động thống kê số liệu vận hành và đưa ra cảnh báo sớm (Collecting & Analyzing data).</p>
                                 </div>
                             </div>
@@ -473,8 +519,8 @@
                         <!-- THẺ 6: QUY TRÌNH CHUẨN ISO -->
                         <div class="card-pro-hover bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-md flex flex-col">
                             <div class="h-48 bg-gradient-to-br from-slate-900 via-brand-navy to-slate-800 relative overflow-hidden flex items-center justify-center p-4">
-                                <div class="flex items-center space-x-4 bg-slate-800/90 border border-amber-400/40 rounded-2xl p-3.5 shadow-2xl">
-                                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-300 flex flex-col items-center justify-center text-brand-dark shadow-lg shrink-0">
+                                <div class="flex items-center space-x-4 bg-slate-800/90 border border-brand-orange/40 rounded-2xl p-3.5 shadow-2xl">
+                                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-brand-orange flex flex-col items-center justify-center text-white shadow-lg shrink-0">
                                         <i class="fas fa-certificate text-xl"></i>
                                         <span class="text-xs font-black tracking-tighter mt-0.5">ISO</span>
                                     </div>
@@ -490,7 +536,7 @@
                             </div>
                             <div class="p-6 flex-grow flex flex-col justify-between">
                                 <div>
-                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-award text-brand-accent mr-2"></i> Quy Trình Chuẩn ISO</h3>
+                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-award text-brand-orange mr-2"></i> Quy Trình Chuẩn ISO</h3>
                                     <p class="text-gray-600 text-xs leading-relaxed">Mọi hạng mục bảo trì đều tuân thủ nghiêm ngặt quy trình quản lý chất lượng theo <strong>tiêu chuẩn ISO (ISO standards)</strong>.</p>
                                 </div>
                             </div>
@@ -507,23 +553,23 @@
                 
                 <div class="text-center mb-12">
                     <span class="inline-flex items-center bg-brand-navy text-cyan-300 text-xs font-bold px-3.5 py-1 rounded-full uppercase tracking-widest shadow-sm mb-3">
-                        <i class="fas fa-calendar-check mr-2 text-amber-400"></i> Thành lập từ ngày 22/12/2015
+                        <i class="fas fa-calendar-check mr-2 text-brand-orange"></i> Thành lập từ ngày 22/12/2015
                     </span>
                     <h2 class="text-2xl sm:text-4xl font-black text-brand-navy tracking-tight uppercase">
                         CÔNG TY CỔ PHẦN CƠ ĐIỆN VÀ BẢO TRÌ HICON
                     </h2>
-                    <div class="w-24 h-1 bg-brand-accent mx-auto mt-3 rounded-full"></div>
+                    <div class="w-24 h-1 bg-brand-orange mx-auto mt-3 rounded-full"></div>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
                     
                     <div class="lg:col-span-7 bg-white rounded-3xl shadow-xl border border-gray-200 p-6 sm:p-9 flex flex-col justify-between relative overflow-hidden">
-                        <div class="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-brand-navy via-brand-accent to-amber-500"></div>
+                        <div class="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-brand-navy via-brand-orange to-amber-500"></div>
                         
                         <div class="space-y-5">
                             <div class="flex items-start justify-between border-b border-gray-100 pb-4">
                                 <div>
-                                    <p class="text-xs font-bold uppercase tracking-widest text-brand-accent mb-1">THƯ NGỎ & GIỚI THIỆU</p>
+                                    <p class="text-xs font-bold uppercase tracking-widest text-brand-orange mb-1">THƯ NGỎ & GIỚI THIỆU</p>
                                     <h3 class="text-xl sm:text-2xl font-extrabold text-brand-navy">Kính gửi: Quý khách hàng;</h3>
                                 </div>
                                 <div class="w-12 h-12 rounded-2xl bg-brand-light border border-cyan-200 flex items-center justify-center text-brand-blue text-xl shrink-0">
@@ -531,7 +577,7 @@
                                 </div>
                             </div>
 
-                            <p class="text-gray-700 text-sm sm:text-base font-medium leading-relaxed bg-cyan-50/60 border-l-4 border-brand-accent p-4 rounded-r-xl">
+                            <p class="text-gray-700 text-sm sm:text-base font-medium leading-relaxed bg-cyan-50/60 border-l-4 border-brand-orange p-4 rounded-r-xl">
                                 <strong>Công ty Cổ phần Cơ điện và Bảo trì Hicon</strong> xin gửi lời chào trân trọng tới Quý Khách hàng.
                             </p>
 
@@ -545,19 +591,19 @@
 
                             <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-1">
                                 <div class="bg-slate-50 border border-gray-200 rounded-xl p-2.5 flex items-center space-x-2 text-xs font-bold text-brand-navy">
-                                    <i class="fas fa-industry text-brand-accent text-sm"></i>
+                                    <i class="fas fa-industry text-brand-orange text-sm"></i>
                                     <span>Nhà máy & Nhà xưởng</span>
                                 </div>
                                 <div class="bg-slate-50 border border-gray-200 rounded-xl p-2.5 flex items-center space-x-2 text-xs font-bold text-brand-navy">
-                                    <i class="fas fa-warehouse text-brand-accent text-sm"></i>
+                                    <i class="fas fa-warehouse text-brand-orange text-sm"></i>
                                     <span>Kho hàng Logistic</span>
                                 </div>
                                 <div class="bg-slate-50 border border-gray-200 rounded-xl p-2.5 flex items-center space-x-2 text-xs font-bold text-brand-navy">
-                                    <i class="fas fa-building text-brand-accent text-sm"></i>
+                                    <i class="fas fa-building text-brand-orange text-sm"></i>
                                     <span>Văn phòng & Tòa nhà</span>
                                 </div>
                                 <div class="bg-slate-50 border border-gray-200 rounded-xl p-2.5 flex items-center space-x-2 text-xs font-bold text-brand-navy sm:col-span-3">
-                                    <i class="fas fa-city text-brand-accent text-sm"></i>
+                                    <i class="fas fa-city text-brand-orange text-sm"></i>
                                     <span>Các công trình dân dụng và công trình công nghiệp trọng điểm</span>
                                 </div>
                             </div>
@@ -570,7 +616,7 @@
                         <div class="mt-6 pt-5 border-t border-gray-100">
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-5">
                                 <div class="bg-brand-navy text-white p-2.5 rounded-xl text-center shadow-sm">
-                                    <i class="fas fa-shield-alt text-amber-400 text-base mb-1 block"></i>
+                                    <i class="fas fa-shield-alt text-brand-orange text-base mb-1 block"></i>
                                     <span class="text-[11px] font-bold uppercase tracking-wider">An Toàn</span>
                                 </div>
                                 <div class="bg-brand-navy text-white p-2.5 rounded-xl text-center shadow-sm">
@@ -578,7 +624,7 @@
                                     <span class="text-[11px] font-bold uppercase tracking-wider">Chất Lượng</span>
                                 </div>
                                 <div class="bg-brand-navy text-white p-2.5 rounded-xl text-center shadow-sm">
-                                    <i class="fas fa-bolt text-amber-400 text-base mb-1 block"></i>
+                                    <i class="fas fa-bolt text-brand-orange text-base mb-1 block"></i>
                                     <span class="text-[11px] font-bold uppercase tracking-wider">Tiến Độ</span>
                                 </div>
                                 <div class="bg-brand-navy text-white p-2.5 rounded-xl text-center shadow-sm">
@@ -589,7 +635,7 @@
 
                             <div class="flex flex-col sm:flex-row items-center justify-between bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 gap-3">
                                 <div class="flex items-center space-x-2.5">
-                                    <i class="fas fa-star text-amber-500 text-lg"></i>
+                                    <i class="fas fa-star text-brand-orange text-lg"></i>
                                     <span class="text-xs sm:text-sm font-extrabold text-brand-navy italic">
                                         Rất hân hạnh được phục vụ Quý khách hàng!
                                     </span>
@@ -609,12 +655,12 @@
                                         <span class="text-[10px] font-bold text-cyan-300 uppercase tracking-widest block">DANH MỤC NĂNG LỰC</span>
                                         <h3 class="text-lg sm:text-xl font-black text-white mt-0.5">CÁC DỊCH VỤ HICON CUNG CẤP GỒM:</h3>
                                     </div>
-                                    <span class="bg-amber-500 text-brand-dark font-black text-xs px-2.5 py-1 rounded-lg">07 LĨNH VỰC</span>
+                                    <span class="bg-brand-orange text-white font-black text-xs px-2.5 py-1 rounded-lg">07 LĨNH VỰC</span>
                                 </div>
 
                                 <div class="space-y-3">
                                     <div class="bg-white/10 hover:bg-white/15 border border-white/10 rounded-2xl p-3.5 flex items-center space-x-3.5 transition group">
-                                        <div class="w-10 h-10 rounded-xl bg-amber-500 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
+                                        <div class="w-10 h-10 rounded-xl bg-brand-orange text-white flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
                                             <i class="fas fa-bolt"></i>
                                         </div>
                                         <div class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug">
@@ -679,8 +725,8 @@
                             </div>
 
                             <div class="mt-6 pt-4 border-t border-white/15 flex items-center justify-between text-xs text-cyan-200">
-                                <span><i class="fas fa-check-double mr-1.5 text-amber-400"></i> Đáp ứng tiêu chuẩn TCVN & ISO</span>
-                                <button onclick="navigateTo('maintenance-portal')" class="text-amber-400 hover:underline font-bold flex items-center">
+                                <span><i class="fas fa-check-double mr-1.5 text-brand-orange"></i> Đáp ứng tiêu chuẩn TCVN & ISO</span>
+                                <button onclick="navigateTo('maintenance-portal')" class="text-brand-orange hover:underline font-bold flex items-center">
                                     Xem Cổng QR <i class="fas fa-external-link-alt ml-1 text-[10px]"></i>
                                 </button>
                             </div>
@@ -697,21 +743,21 @@
                 <div class="text-center mb-12">
                     <span class="text-brand-blue font-bold text-sm uppercase">Năng Lực HICON M&E</span>
                     <h2 class="text-3xl font-extrabold text-brand-navy mt-1">DỊCH VỤ CƠ ĐIỆN & BẢO TRÌ CHUYÊN SÂU</h2>
-                    <div class="w-16 h-1 bg-brand-accent mx-auto mt-2 rounded-full"></div>
+                    <div class="w-16 h-1 bg-brand-orange mx-auto mt-2 rounded-full"></div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100 card-pro-hover">
-                        <span class="text-xs font-bold text-brand-accent bg-cyan-50 px-2.5 py-1 rounded-md">HVAC & CHILLER</span>
+                        <span class="text-xs font-bold text-brand-orange bg-orange-50 px-2.5 py-1 rounded-md">HVAC & CHILLER</span>
                         <h3 class="text-xl font-bold text-brand-navy mt-2 mb-2">Bảo Trì Điều Hòa Thông Gió</h3>
                         <p class="text-gray-600 text-sm">Bảo dưỡng định kỳ Chiller, AHU, FCU, quạt thông gió nhà xưởng, cân bằng lưu lượng gió.</p>
                     </div>
                     <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100 card-pro-hover">
-                        <span class="text-xs font-bold text-brand-accent bg-cyan-50 px-2.5 py-1 rounded-md">PCCC & BÁO CHÁY</span>
+                        <span class="text-xs font-bold text-brand-orange bg-orange-50 px-2.5 py-1 rounded-md">PCCC & BÁO CHÁY</span>
                         <h3 class="text-xl font-bold text-brand-navy mt-2 mb-2">Bảo Trì Phòng Cháy Chữa Cháy</h3>
                         <p class="text-gray-600 text-sm">Kiểm tra máy bơm chữa cháy Electric/Diesel, tủ trung tâm Telefire, mạng lưới Sprinkler.</p>
                     </div>
                     <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100 card-pro-hover">
-                        <span class="text-xs font-bold text-brand-accent bg-cyan-50 px-2.5 py-1 rounded-md">ĐIỆN & NĂNG LƯỢNG</span>
+                        <span class="text-xs font-bold text-brand-orange bg-orange-50 px-2.5 py-1 rounded-md">ĐIỆN & NĂNG LƯỢNG</span>
                         <h3 class="text-xl font-bold text-brand-navy mt-2 mb-2">Trạm Biến Áp & Tủ Điện</h3>
                         <p class="text-gray-600 text-sm">Bảo dưỡng trạm biến áp, tủ MSB, đo điện trở cách điện motor, đo nhiệt độ hồng ngoại.</p>
                     </div>
@@ -724,16 +770,16 @@
             <div class="max-w-7xl mx-auto px-4">
                 
                 <div class="text-center mb-10">
-                    <span class="inline-flex items-center bg-amber-500/15 text-amber-600 border border-amber-400/40 text-xs font-extrabold px-4 py-1 rounded-full uppercase tracking-widest mb-2">
+                    <span class="inline-flex items-center bg-brand-orange/15 text-brand-orange border border-brand-orange/40 text-xs font-extrabold px-4 py-1 rounded-full uppercase tracking-widest mb-2">
                         <i class="fas fa-award mr-1.5"></i> Hồ Sơ Năng Lực Thực Tế
                     </span>
                     <h2 class="text-3xl sm:text-4xl font-black text-brand-navy tracking-tight">
-                        DỰ ÁN TIÊU BIỂU <span class="text-amber-500 font-light">| PROJECTS</span>
+                        DỰ ÁN TIÊU BIỂU <span class="text-brand-orange font-light">| PROJECTS</span>
                     </h2>
                     <p class="text-gray-500 text-xs sm:text-sm mt-2 max-w-2xl mx-auto">
                         Các công trình nhà máy công nghiệp FDI, tổ hợp khách sạn, tòa nhà thương mại và bệnh viện trọng điểm do <strong>HICON M&E</strong> trực tiếp triển khai thi công & bảo trì.
                     </p>
-                    <div class="w-24 h-1 bg-amber-500 mx-auto mt-3 rounded-full"></div>
+                    <div class="w-24 h-1 bg-brand-orange mx-auto mt-3 rounded-full"></div>
                 </div>
 
                 <div class="bg-white p-4 rounded-2xl shadow-md border border-gray-200 mb-10 flex flex-col md:flex-row justify-between items-center gap-4">
@@ -742,10 +788,10 @@
                             Tất Cả Dự Án (07)
                         </button>
                         <button onclick="setProjectCategory('INDUSTRIAL')" id="proj-filter-INDUSTRIAL" class="btn-interactive px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 text-gray-700 hover:bg-slate-200">
-                            <i class="fas fa-industry mr-1 text-brand-accent"></i> Nhà Máy & KCN (03)
+                            <i class="fas fa-industry mr-1 text-brand-orange"></i> Nhà Máy & KCN (03)
                         </button>
                         <button onclick="setProjectCategory('COMMERCIAL')" id="proj-filter-COMMERCIAL" class="btn-interactive px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 text-gray-700 hover:bg-slate-200">
-                            <i class="fas fa-hotel mr-1 text-amber-500"></i> Khách Sạn & Cao Tầng (03)
+                            <i class="fas fa-hotel mr-1 text-brand-orange"></i> Khách Sạn & Cao Tầng (03)
                         </button>
                         <button onclick="setProjectCategory('MEDICAL')" id="proj-filter-MEDICAL" class="btn-interactive px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 text-gray-700 hover:bg-slate-200">
                             <i class="fas fa-hospital mr-1 text-emerald-600"></i> Y Tế & Công Cộng (01)
@@ -753,7 +799,7 @@
                     </div>
 
                     <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-gray-200 shrink-0">
-                        <button onclick="setProjectViewMode('GRID')" id="proj-view-GRID" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-brand-dark shadow-sm transition flex items-center">
+                        <button onclick="setProjectViewMode('GRID')" id="proj-view-GRID" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-brand-orange text-white shadow-sm transition flex items-center">
                             <i class="fas fa-th-large mr-1.5"></i> Xem Thẻ Lưới
                         </button>
                         <button onclick="setProjectViewMode('TIMELINE')" id="proj-view-TIMELINE" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-gray-600 hover:text-brand-navy transition flex items-center">
@@ -782,20 +828,20 @@
                         <i class="fas fa-times"></i>
                     </button>
                     <div class="absolute bottom-4 left-6 right-6 text-white">
-                        <span id="proj-modal-badge" class="bg-amber-500 text-brand-dark text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">DỰ ÁN TIÊU BIỂU</span>
+                        <span id="proj-modal-badge" class="bg-brand-orange text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">DỰ ÁN TIÊU BIỂU</span>
                         <h3 id="proj-modal-title" class="text-2xl font-black mt-2">--</h3>
-                        <p id="proj-modal-address" class="text-xs text-cyan-200 mt-1 flex items-center"><i class="fas fa-map-marker-alt mr-1.5 text-amber-400"></i> --</p>
+                        <p id="proj-modal-address" class="text-xs text-cyan-200 mt-1 flex items-center"><i class="fas fa-map-marker-alt mr-1.5 text-brand-orange"></i> --</p>
                     </div>
                 </div>
                 <div class="p-6 space-y-4 text-xs sm:text-sm">
                     <div class="bg-slate-50 p-4 rounded-2xl border border-gray-200">
-                        <h4 class="font-extrabold text-brand-navy uppercase text-xs mb-2"><i class="fas fa-cogs text-brand-accent mr-1.5"></i> Hạng Mục Cơ Điện & Bảo Trì Triển Khai:</h4>
+                        <h4 class="font-extrabold text-brand-navy uppercase text-xs mb-2"><i class="fas fa-cogs text-brand-orange mr-1.5"></i> Hạng Mục Cơ Điện & Bảo Trì Triển Khai:</h4>
                         <p id="proj-modal-desc" class="text-gray-700 leading-relaxed">--</p>
                     </div>
                     <div class="flex flex-wrap gap-2" id="proj-modal-tags"></div>
                     <div class="pt-3 border-t border-gray-100 flex justify-between items-center">
-                        <button onclick="triggerProjectLinkChange(currentModalProjectId)" class="btn-interactive bg-slate-100 hover:bg-amber-100 text-brand-navy font-bold px-4 py-2 rounded-xl text-xs flex items-center border border-gray-300">
-                            <i class="fas fa-link mr-1.5 text-amber-500"></i> Đổi ảnh dự án bằng Link
+                        <button onclick="triggerProjectLinkChange(currentModalProjectId)" class="btn-interactive bg-slate-100 hover:bg-orange-100 text-brand-navy font-bold px-4 py-2 rounded-xl text-xs flex items-center border border-gray-300">
+                            <i class="fas fa-link mr-1.5 text-brand-orange"></i> Đổi ảnh dự án bằng Link
                         </button>
                         <button onclick="closeProjectDetailModal()" class="btn-interactive bg-brand-navy text-white font-bold px-6 py-2.5 rounded-xl text-xs">
                             Đóng
@@ -810,10 +856,10 @@
             <div class="max-w-7xl mx-auto px-4">
                 
                 <!-- PORTAL BANNER -->
-                <div class="bg-gradient-to-r from-brand-navy via-brand-blue to-slate-800 text-white p-6 sm:p-8 rounded-3xl shadow-2xl mb-8 border border-cyan-500/30">
+                <div class="bg-gradient-to-r from-brand-navy via-brand-blue to-slate-800 text-white p-6 sm:p-8 rounded-3xl shadow-2xl mb-8 border border-brand-orange/30">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                         <div>
-                            <span class="bg-brand-accent/20 text-brand-accent border border-brand-accent/40 text-xs px-3 py-1 rounded-full font-semibold uppercase">
+                            <span class="bg-brand-orange/20 text-brand-orange border border-brand-orange/40 text-xs px-3 py-1 rounded-full font-semibold uppercase">
                                 <i class="fas fa-qrcode mr-1"></i> Cổng Số Hóa Cho Chủ Đầu Tư & BQL
                             </span>
                             <h2 class="text-2xl sm:text-3xl font-extrabold mt-2">TRA CỨU BÁO CÁO BẢO TRÌ THIẾT BỊ</h2>
@@ -824,22 +870,20 @@
 
                         <div class="w-full md:w-auto bg-white/10 p-2 rounded-2xl backdrop-blur-md border border-white/20 flex flex-wrap gap-2 items-center">
                             <div class="flex gap-2">
-                                <input type="text" id="device-code-input" placeholder="Nhập Mã QR (VD: TS-2026-HVAC)" class="px-4 py-2.5 rounded-xl text-sm text-gray-800 w-full md:w-56 focus:outline-none focus:ring-2 focus:ring-brand-accent transition">
-                                <button onclick="searchDevice()" class="btn-interactive bg-brand-accent text-brand-dark font-extrabold px-4 py-2.5 rounded-xl text-sm shadow-lg flex items-center whitespace-nowrap">
+                                <input type="text" id="device-code-input" placeholder="Nhập Mã QR (VD: TS-2026-HVAC)" class="px-4 py-2.5 rounded-xl text-sm text-gray-800 w-full md:w-56 focus:outline-none focus:ring-2 focus:ring-brand-orange transition">
+                                <button onclick="searchDevice()" class="btn-interactive bg-brand-orange text-white font-extrabold px-4 py-2.5 rounded-xl text-sm shadow-lg flex items-center whitespace-nowrap">
                                     <i class="fas fa-search mr-1.5"></i> Tra Cứu
                                 </button>
                             </div>
-                            <!-- NÚT MỤC CON: DANH SÁCH TỔNG HỢP THIẾT BỊ -->
                             <button onclick="openDeviceListModal()" class="btn-interactive bg-white/20 hover:bg-white/30 text-white font-bold px-4 py-2.5 rounded-xl text-sm border border-white/30 flex items-center whitespace-nowrap shadow-md">
-                                <i class="fas fa-list-ul mr-2 text-cyan-300"></i> Danh Sách Tổng Hợp
+                                <i class="fas fa-list-ul mr-2 text-amber-300"></i> Danh Sách Tổng Hợp
                             </button>
                         </div>
                     </div>
 
-                    <!-- LIST DEVICES DYNAMICALLY -->
                     <div class="mt-6 pt-4 border-t border-white/10 flex flex-wrap items-center gap-3 text-xs">
                         <span id="total-devices-text" class="text-gray-200 font-semibold">Số lượng mã thiết bị hiện có: 0</span>
-                        <button onclick="openAdminModal()" class="btn-interactive bg-amber-500 hover:bg-amber-400 text-brand-dark font-bold px-3 py-1.5 rounded-lg transition ml-auto flex items-center shadow-md">
+                        <button onclick="openAdminModal()" class="btn-interactive bg-brand-orange hover:bg-orange-600 text-white font-bold px-3 py-1.5 rounded-lg transition ml-auto flex items-center shadow-md">
                             <i class="fas fa-edit mr-1"></i> Cập nhật thông tin/trạng thái thiết bị
                         </button>
                     </div>
@@ -882,10 +926,9 @@
                     <div class="lg:col-span-2">
                         <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-6 space-y-6">
                             
-                            <!-- HẠNG MỤC BẢO TRÌ THỰC TẾ -->
                             <div>
                                 <h4 class="text-sm font-bold text-brand-navy uppercase mb-3 flex items-center justify-between">
-                                    <span><i class="fas fa-tasks text-brand-accent mr-2"></i> Hạng Mục Bảo Trì & Nội Dung Thực Hiện</span>
+                                    <span><i class="fas fa-tasks text-brand-orange mr-2"></i> Hạng Mục Bảo Trì & Nội Dung Thực Hiện</span>
                                     <span id="task-count-badge" class="text-xs bg-gray-100 text-gray-500 px-2.5 py-0.5 rounded-full font-bold">0 Hạng Mục</span>
                                 </h4>
                                 <div class="overflow-x-auto border border-gray-200 rounded-xl">
@@ -905,9 +948,8 @@
                                 </div>
                             </div>
 
-                            <!-- THÔNG SỐ KỸ THUẬT -->
                             <div>
-                                <h4 class="text-sm font-bold text-brand-navy uppercase mb-3"><i class="fas fa-list-check text-brand-accent mr-2"></i> Thông Số Đo Đạc Thực Tế</h4>
+                                <h4 class="text-sm font-bold text-brand-navy uppercase mb-3"><i class="fas fa-list-check text-brand-orange mr-2"></i> Thông Số Đo Đạc Thực Tế</h4>
                                 <div class="overflow-x-auto">
                                     <table class="w-full text-left text-xs border-collapse">
                                         <thead>
@@ -926,12 +968,12 @@
                             </div>
 
                             <div class="bg-slate-50 p-4 rounded-xl border border-gray-200">
-                                <h5 class="text-xs font-bold text-brand-navy mb-1"><i class="fas fa-comment-dots text-brand-accent mr-1"></i> Ghi Chú Kỹ Thuật:</h5>
+                                <h5 class="text-xs font-bold text-brand-navy mb-1"><i class="fas fa-comment-dots text-brand-orange mr-1"></i> Ghi Chú Kỹ Thuật:</h5>
                                 <p id="engineer-note" class="text-xs text-gray-500 italic">Chưa có ghi chú.</p>
                             </div>
 
                             <div>
-                                <h5 class="text-xs font-bold text-brand-navy mb-3"><i class="fas fa-camera text-brand-accent mr-1"></i> Hình Ảnh Hiện Trường Chụp Thực Tế:</h5>
+                                <h5 class="text-xs font-bold text-brand-navy mb-3"><i class="fas fa-camera text-brand-orange mr-1"></i> Hình Ảnh Hiện Trường Chụp Thực Tế:</h5>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center text-gray-400 text-xs py-6 bg-slate-50 rounded-xl border border-dashed border-gray-300" id="photo-gallery">
                                     Chưa có hình ảnh hiện trường.
                                 </div>
@@ -949,13 +991,13 @@
                 <div class="text-center mb-12">
                     <span class="text-brand-blue font-bold text-sm uppercase">Kết Nối Với HICON M&E</span>
                     <h2 class="text-3xl font-extrabold text-brand-navy mt-1">LIÊN HỆ TƯ VẤN & BÁO GIÁ DỊCH VỤ</h2>
-                    <div class="w-16 h-1 bg-brand-accent mx-auto mt-2 rounded-full"></div>
+                    <div class="w-16 h-1 bg-brand-orange mx-auto mt-2 rounded-full"></div>
                 </div>
                 <div class="max-w-xl mx-auto bg-gray-50 p-8 rounded-2xl border border-gray-200">
                     <form onsubmit="alert('Đã gửi liên hệ thành công!'); return false;" class="space-y-4">
-                        <input type="text" required placeholder="Tên Công ty / Nhà máy (*)" class="w-full text-xs p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-brand-blue transition">
-                        <input type="tel" required placeholder="Số điện thoại liên hệ (*)" class="w-full text-xs p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-brand-blue transition">
-                        <textarea rows="4" placeholder="Nội dung cần bảo trì..." class="w-full text-xs p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-brand-blue transition"></textarea>
+                        <input type="text" required placeholder="Tên Công ty / Nhà máy (*)" class="w-full text-xs p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-brand-orange transition">
+                        <input type="tel" required placeholder="Số điện thoại liên hệ (*)" class="w-full text-xs p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-brand-orange transition">
+                        <textarea rows="4" placeholder="Nội dung cần bảo trì..." class="w-full text-xs p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-brand-orange transition"></textarea>
                         <button type="submit" class="btn-interactive w-full bg-brand-navy text-white font-bold py-3.5 rounded-xl text-xs">GỬI YÊU CẦU</button>
                     </form>
                 </div>
@@ -967,25 +1009,21 @@
     <!-- ==================== MODAL: DANH SÁCH TỔNG HỢP THIẾT BỊ ==================== -->
     <div id="device-list-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden border border-gray-200 my-8 flex flex-col max-h-[85vh]">
-            <!-- HEADER -->
             <div class="bg-brand-navy text-white p-5 flex justify-between items-center shrink-0">
                 <div>
-                    <h3 class="font-extrabold text-base flex items-center"><i class="fas fa-list-ul text-brand-accent mr-2"></i> DANH SÁCH TỔNG HỢP THIẾT BỊ BẢO TRÌ</h3>
+                    <h3 class="font-extrabold text-base flex items-center"><i class="fas fa-list-ul text-brand-orange mr-2"></i> DANH SÁCH TỔNG HỢP THIẾT BỊ BẢO TRÌ</h3>
                     <p id="modal-total-count" class="text-[11px] text-cyan-300 mt-0.5">Tổng số lượng: 0 thiết bị</p>
                 </div>
                 <button onclick="closeDeviceListModal()" class="text-gray-300 hover:text-white text-xl p-1 rounded-lg transition"><i class="fas fa-times"></i></button>
             </div>
 
-            <!-- CONTROLS & FILTERS -->
             <div class="p-5 bg-slate-50 border-b border-gray-200 space-y-4 shrink-0">
                 <div class="flex flex-col sm:flex-row gap-3 justify-between items-center">
-                    <!-- Ô TÌM KIẾM -->
                     <div class="relative w-full sm:w-80">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"><i class="fas fa-search"></i></span>
-                        <input type="text" id="modal-search-input" oninput="filterDeviceList()" placeholder="Tìm kiếm theo mã, tên thiết bị..." class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-xl text-xs focus:outline-none focus:border-brand-accent transition">
+                        <input type="text" id="modal-search-input" oninput="filterDeviceList()" placeholder="Tìm kiếm theo mã, tên thiết bị..." class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-xl text-xs focus:outline-none focus:border-brand-orange transition">
                     </div>
 
-                    <!-- NÚT ICON XOAY CHUYỂN CHẾ ĐỘ NGƯỜI XEM / QUẢN TRỊ -->
                     <div class="flex items-center gap-2">
                         <div id="list-mode-indicator" class="text-xs font-bold text-gray-600 bg-gray-200 px-3 py-1.5 rounded-xl flex items-center border border-gray-300">
                             <i class="fas fa-eye mr-1.5 text-gray-500"></i> Chế độ Người xem
@@ -996,14 +1034,12 @@
                     </div>
                 </div>
 
-                <!-- BẢNG CHỮ CÁI ĐẦU -->
                 <div>
                     <div class="text-[11px] font-bold text-gray-500 mb-1.5">Lọc theo chữ cái đầu:</div>
                     <div id="alphabet-filter-container" class="flex flex-wrap gap-1.5 text-xs"></div>
                 </div>
             </div>
 
-            <!-- DANH SÁCH BẢNG HIỂN THỊ -->
             <div class="p-6 overflow-y-auto flex-grow space-y-3">
                 <div class="overflow-x-auto border border-gray-200 rounded-2xl">
                     <table class="w-full text-left text-xs border-collapse">
@@ -1022,7 +1058,6 @@
                 </div>
             </div>
 
-            <!-- FOOTER -->
             <div class="p-4 bg-slate-100 border-t border-gray-200 flex justify-between items-center shrink-0">
                 <span class="text-[11px] text-gray-500">Danh sách được sắp xếp và nhóm theo thứ tự bảng chữ cái.</span>
                 <button onclick="closeDeviceListModal()" class="btn-interactive px-5 py-2 bg-brand-navy text-white rounded-xl text-xs font-bold">Đóng</button>
@@ -1067,7 +1102,6 @@
     <div id="admin-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden border border-gray-200 my-8 transition-all duration-300 transform scale-100">
             
-            <!-- STEP 1: AUTHENTICATION -->
             <div id="admin-step-auth" class="p-8 text-center">
                 <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 shadow-inner">
                     <i class="fas fa-user-lock"></i>
@@ -1091,7 +1125,6 @@
                 </div>
             </div>
 
-            <!-- STEP 1.5: CHANGE PASSWORD VIEW -->
             <div id="admin-step-changepass" class="p-8 text-center hidden">
                 <div class="w-16 h-16 bg-blue-100 text-brand-blue rounded-full flex items-center justify-center text-3xl mx-auto mb-4 shadow-inner">
                     <i class="fas fa-shield-alt"></i>
@@ -1120,7 +1153,6 @@
                 </div>
             </div>
 
-            <!-- STEP 2: UPDATE FORM -->
             <div id="admin-step-form" class="hidden">
                 <div class="bg-brand-navy text-white p-5 flex justify-between items-center">
                     <div>
@@ -1134,11 +1166,11 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block font-bold text-gray-700 mb-1">Mã QR Thiết Bị (* Dùng để quét)</label>
-                            <input type="text" id="form-code" required placeholder="VD: TS-2026-CHILLER02" class="w-full p-2.5 border border-gray-300 rounded-lg font-mono focus:ring-2 focus:ring-brand-blue uppercase transition">
+                            <input type="text" id="form-code" required placeholder="VD: TS-2026-CHILLER02" class="w-full p-2.5 border border-gray-300 rounded-lg font-mono focus:ring-2 focus:ring-brand-orange uppercase transition">
                         </div>
                         <div>
                             <label class="block font-bold text-gray-700 mb-1">Tên Thiết Bị (*)</label>
-                            <input type="text" id="form-name" required placeholder="VD: Cụm Bơm Nước Chilled Water #02" class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-blue transition">
+                            <input type="text" id="form-name" required placeholder="VD: Cụm Bơm Nước Chilled Water #02" class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-orange transition">
                         </div>
                     </div>
 
@@ -1172,14 +1204,13 @@
                         </div>
                     </div>
 
-                    <!-- QUẢN LÝ HẠNG MỤC BẢO TRÌ -->
                     <div class="bg-slate-50 p-4 rounded-xl border border-gray-200 space-y-3">
                         <div class="flex justify-between items-center">
                             <div>
-                                <h4 class="font-bold text-brand-navy"><i class="fas fa-tasks text-brand-accent mr-1"></i> DANH SÁCH HẠNG MỤC BẢO TRÌ THỰC TẾ</h4>
+                                <h4 class="font-bold text-brand-navy"><i class="fas fa-tasks text-brand-orange mr-1"></i> DANH SÁCH HẠNG MỤC BẢO TRÌ THỰC TẾ</h4>
                                 <p class="text-[10px] text-gray-500">Thêm các hạng mục (vệ sinh vỏ, đo điện, tra mỡ...) và nội dung thực hiện tương ứng.</p>
                             </div>
-                            <button type="button" onclick="addMaintenanceTaskRow()" class="btn-interactive bg-brand-accent hover:bg-cyan-600 text-brand-dark px-3 py-1.5 rounded-lg font-bold text-xs flex items-center shadow-sm">
+                            <button type="button" onclick="addMaintenanceTaskRow()" class="btn-interactive bg-brand-orange text-white px-3 py-1.5 rounded-lg font-bold text-xs flex items-center shadow-sm">
                                 <i class="fas fa-plus mr-1"></i> Thêm Hạng Mục
                             </button>
                         </div>
@@ -1192,9 +1223,8 @@
                         <textarea id="form-note" rows="2" placeholder="VD: Đã hoàn tất quy trình bảo dưỡng định kỳ, thiết bị vận hành ổn định..." class="w-full p-2.5 border border-gray-300 rounded-lg transition"></textarea>
                     </div>
 
-                    <!-- PHOTO UPLOAD FROM ALBUM -->
                     <div class="bg-slate-50 p-4 rounded-xl border-2 border-dashed border-gray-300 text-center">
-                        <label class="block font-bold text-brand-navy mb-1"><i class="fas fa-images text-brand-accent mr-1"></i> TẢI ẢNH CHỤP HIỆN TRƯỜNG TỪ ALBUM</label>
+                        <label class="block font-bold text-brand-navy mb-1"><i class="fas fa-images text-brand-orange mr-1"></i> TẢI ẢNH CHỤP HIỆN TRƯỜNG TỪ ALBUM</label>
                         <p class="text-[10px] text-gray-500 mb-3">Có thể chọn nhiều ảnh. Bấm dấu (x) nếu muốn xóa ảnh chọn nhầm.</p>
                         
                         <input type="file" id="form-file-input" multiple accept="image/*" onchange="previewImages(event)" class="hidden">
@@ -1216,17 +1246,38 @@
         </div>
     </div>
 
-    <!-- FOOTER -->
-    <footer class="bg-brand-dark text-gray-400 text-xs py-8 border-t border-gray-800">
-        <div class="max-w-7xl mx-auto px-4 text-center sm:text-left flex flex-col sm:flex-row justify-between items-center gap-4">
+    <!-- FOOTER (CẬP NHẬT THÔNG TIN LIÊN HỆ MỚI) -->
+    <footer class="bg-brand-dark text-gray-400 text-xs py-10 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             <div>
-                <p class="font-bold text-white text-sm">CÔNG TY CỔ PHẦN CƠ ĐIỆN VÀ BẢO TRÌ HICON (HICON M&E)</p>
-                <p class="text-gray-500 mt-0.5">© 2015 - 2026 HICON M&E. An toàn – Chất lượng – Tiến độ – Đồng hành lâu dài.</p>
+                <div class="flex items-center space-x-2 mb-3">
+                    <div class="w-8 h-8 bg-brand-orange rounded-lg flex items-center justify-center font-bold text-white">H</div>
+                    <span class="text-white font-extrabold text-sm tracking-wider">HICON M&E</span>
+                </div>
+                <p class="text-gray-400 text-xs leading-relaxed">
+                    Công ty Cổ phần Cơ điện và Bảo trì Hicon chuyên cung cấp giải pháp trọn gói cơ điện công nghiệp và hệ thống báo cáo số hóa 4.0.
+                </p>
             </div>
-            <div class="flex space-x-6">
-                <a href="#" class="hover:text-brand-accent transition"><i class="fab fa-facebook text-base"></i></a>
-                <a href="#" class="hover:text-brand-accent transition"><i class="fab fa-youtube text-base"></i></a>
+            <div>
+                <h4 class="text-white font-bold text-sm mb-3 uppercase tracking-wider border-b border-gray-800 pb-1.5">Thông Tin Liên Hệ</h4>
+                <ul class="space-y-2 text-xs text-gray-300">
+                    <li><i class="fas fa-map-marker-alt text-brand-orange mr-2"></i> Số nhà C.TT8-5 Khu C đường C5, KĐT Himlam Vạn Phúc, Hà Đông, Hà Nội</li>
+                    <li><i class="fas fa-phone-alt text-brand-orange mr-2"></i> Hotline: 0868.117.116 - 0968.095.072</li>
+                    <li><i class="fas fa-envelope text-brand-orange mr-2"></i> Email: contact@hiconmne.vn</li>
+                </ul>
             </div>
+            <div>
+                <h4 class="text-white font-bold text-sm mb-3 uppercase tracking-wider border-b border-gray-800 pb-1.5">Giờ Làm Việc & Hỗ Trợ</h4>
+                <p class="text-gray-300 text-xs mb-2"><i class="fas fa-clock text-brand-orange mr-2"></i> Thứ Hai - Chủ Nhật: 24/7 (Sẵn sàng 04 giờ có mặt)</p>
+                <div class="flex space-x-4 mt-4">
+                    <a href="#" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-brand-orange text-white flex items-center justify-center transition"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-brand-orange text-white flex items-center justify-center transition"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/15 text-white flex items-center justify-center transition"><i class="fas fa-globe"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 pt-6 border-t border-gray-800 text-center text-gray-500">
+            <p>© 2015 - 2026 CÔNG TY CỔ PHẦN CƠ ĐIỆN VÀ BẢO TRÌ HICON. An toàn – Chất lượng – Tiến độ – Đồng hành lâu dài.</p>
         </div>
     </footer>
 
@@ -1357,12 +1408,12 @@
             const timelineContainer = document.getElementById('projects-timeline-container');
 
             if (mode === 'GRID') {
-                btnGrid.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-brand-dark shadow-sm transition flex items-center";
+                btnGrid.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold bg-brand-orange text-white shadow-sm transition flex items-center";
                 btnTimeline.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold text-gray-600 hover:text-brand-navy transition flex items-center";
                 gridContainer.classList.remove('hidden');
                 timelineContainer.classList.add('hidden');
             } else {
-                btnTimeline.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-brand-dark shadow-sm transition flex items-center";
+                btnTimeline.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold bg-brand-orange text-white shadow-sm transition flex items-center";
                 btnGrid.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold text-gray-600 hover:text-brand-navy transition flex items-center";
                 gridContainer.classList.add('hidden');
                 timelineContainer.classList.remove('hidden');
@@ -1383,7 +1434,7 @@
                     const isTesa = proj.id === 'proj-tesa';
                     const card = document.createElement('div');
                     card.style.animationDelay = `${idx * 70}ms`;
-                    card.className = `project-card-anim card-pro-hover bg-white rounded-3xl overflow-hidden border ${isTesa ? 'border-2 border-brand-accent shadow-xl' : 'border-gray-200 shadow-md'} flex flex-col justify-between group`;
+                    card.className = `project-card-anim card-pro-hover bg-white rounded-3xl overflow-hidden border ${isTesa ? 'border-2 border-brand-orange shadow-xl' : 'border-gray-200 shadow-md'} flex flex-col justify-between group`;
 
                     const tagsHtml = proj.tags.map(t => `<span class="bg-slate-100 text-brand-navy text-[10px] font-bold px-2.5 py-1 rounded-lg border border-gray-200">${t}</span>`).join('');
 
@@ -1394,7 +1445,7 @@
                                 <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/25 to-transparent"></div>
                                 
                                 <div class="absolute top-3 left-3 flex items-center gap-2">
-                                    <span class="w-8 h-8 rounded-xl bg-amber-500 text-brand-dark font-black text-xs flex items-center justify-center shadow-lg">
+                                    <span class="w-8 h-8 rounded-xl bg-brand-orange text-white font-black text-xs flex items-center justify-center shadow-lg">
                                         0${idx + 1}
                                     </span>
                                     <span class="bg-black/60 backdrop-blur-md text-cyan-300 text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-wider border border-white/15">
@@ -1402,7 +1453,7 @@
                                     </span>
                                 </div>
 
-                                <button type="button" onclick="triggerProjectLinkChange('${proj.id}')" class="absolute top-3 right-3 bg-black/75 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition flex items-center shadow-lg z-20 cursor-pointer" title="Nhập link ảnh mới cho dự án">
+                                <button type="button" onclick="triggerProjectLinkChange('${proj.id}')" class="absolute top-3 right-3 bg-black/75 hover:bg-brand-orange text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition flex items-center shadow-lg z-20 cursor-pointer" title="Nhập link ảnh mới cho dự án">
                                     <i class="fas fa-link mr-1.5"></i> Đổi ảnh
                                 </button>
 
@@ -1416,7 +1467,7 @@
 
                             <div class="p-5">
                                 <div class="flex items-start text-xs text-gray-600 font-medium mb-3 bg-amber-50/70 p-2.5 rounded-xl border border-amber-200/70">
-                                    <i class="fas fa-map-marker-alt text-amber-500 mt-0.5 mr-2 shrink-0 text-sm"></i>
+                                    <i class="fas fa-map-marker-alt text-brand-orange mt-0.5 mr-2 shrink-0 text-sm"></i>
                                     <span class="text-brand-navy font-semibold leading-snug">${proj.address}</span>
                                 </div>
                                 <p class="text-xs text-gray-600 leading-relaxed line-clamp-3 mb-4">
@@ -1429,11 +1480,11 @@
                         </div>
 
                         <div class="px-5 py-3.5 bg-slate-50 border-t border-gray-100 flex justify-between items-center">
-                            <button onclick="openProjectDetailModal('${proj.id}')" class="text-xs font-extrabold text-brand-blue hover:text-brand-accent flex items-center transition">
+                            <button onclick="openProjectDetailModal('${proj.id}')" class="text-xs font-extrabold text-brand-blue hover:text-brand-orange flex items-center transition">
                                 <i class="fas fa-info-circle mr-1.5"></i> Xem Chi Tiết Hạng Mục
                             </button>
                             ${isTesa ? `
-                                <button onclick="navigateTo('maintenance-portal')" class="btn-interactive bg-brand-accent text-brand-dark font-extrabold px-3 py-1 rounded-lg text-[11px] flex items-center shadow-sm">
+                                <button onclick="navigateTo('maintenance-portal')" class="btn-interactive bg-brand-orange text-white font-extrabold px-3 py-1 rounded-lg text-[11px] flex items-center shadow-sm">
                                     <i class="fas fa-qrcode mr-1"></i> Tra Cứu QR
                                 </button>
                             ` : `
@@ -1459,7 +1510,7 @@
                         <div class="w-full md:w-5/12 group">
                             <div class="relative h-56 sm:h-64 overflow-hidden shadow-xl border-4 border-white ${isEven ? 'brochure-leaf-left' : 'brochure-leaf-right'} bg-slate-900 card-pro-hover">
                                 <img src="${imgSrc}" alt="${proj.title}" class="w-full h-full object-cover card-img-zoom transition-transform duration-700">
-                                <button type="button" onclick="triggerProjectLinkChange('${proj.id}')" class="absolute top-3 right-3 bg-black/75 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition flex items-center shadow-lg z-20 cursor-pointer" title="Nhập link ảnh mới cho dự án">
+                                <button type="button" onclick="triggerProjectLinkChange('${proj.id}')" class="absolute top-3 right-3 bg-black/75 hover:bg-brand-orange text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition flex items-center shadow-lg z-20 cursor-pointer" title="Nhập link ảnh mới cho dự án">
                                     <i class="fas fa-link mr-1.5"></i> Đổi ảnh
                                 </button>
                             </div>
@@ -1468,13 +1519,13 @@
 
                     const infoBox = `
                         <div class="w-full md:w-5/12 ${isEven ? 'md:text-left' : 'md:text-right'} flex flex-col ${isEven ? 'md:items-start' : 'md:items-end'}">
-                            <div onclick="openProjectDetailModal('${proj.id}')" class="cursor-pointer bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-600 hover:to-amber-500 text-white font-black text-base sm:text-lg px-6 py-3 rounded-full shadow-lg transition transform hover:-translate-y-1 inline-flex items-center gap-2">
+                            <div onclick="openProjectDetailModal('${proj.id}')" class="cursor-pointer bg-gradient-to-r from-amber-500 to-brand-orange hover:from-amber-600 hover:to-orange-600 text-white font-black text-base sm:text-lg px-6 py-3 rounded-full shadow-lg transition transform hover:-translate-y-1 inline-flex items-center gap-2">
                                 ${!isEven ? `<i class="fas fa-caret-left text-white"></i>` : ''}
                                 <span>${proj.title}</span>
                                 ${isEven ? `<i class="fas fa-caret-right text-white"></i>` : ''}
                             </div>
                             <p class="text-brand-navy font-bold text-xs sm:text-sm mt-2.5 px-2">
-                                <i class="fas fa-map-marker-alt text-amber-500 mr-1"></i> ${proj.address}
+                                <i class="fas fa-map-marker-alt text-brand-orange mr-1"></i> ${proj.address}
                             </p>
                             <p class="text-gray-500 text-xs mt-1.5 px-2 max-w-md leading-relaxed">
                                 ${proj.desc}
@@ -1483,7 +1534,7 @@
                     `;
 
                     const centerNode = `
-                        <div class="hidden md:flex w-12 h-12 rounded-full bg-white border-4 border-amber-500 shadow-xl items-center justify-center z-10 shrink-0 font-black text-brand-navy text-xs">
+                        <div class="hidden md:flex w-12 h-12 rounded-full bg-white border-4 border-brand-orange shadow-xl items-center justify-center z-10 shrink-0 font-black text-brand-navy text-xs">
                             0${idx + 1}
                         </div>
                     `;
@@ -1507,11 +1558,11 @@
             document.getElementById('proj-modal-img').src = getProjectImage(proj);
             document.getElementById('proj-modal-badge').innerText = proj.categoryName;
             document.getElementById('proj-modal-title').innerText = proj.title;
-            document.getElementById('proj-modal-address').innerHTML = `<i class="fas fa-map-marker-alt mr-1.5 text-amber-400"></i> ${proj.address}`;
+            document.getElementById('proj-modal-address').innerHTML = `<i class="fas fa-map-marker-alt mr-1.5 text-brand-orange"></i> ${proj.address}`;
             document.getElementById('proj-modal-desc').innerText = proj.desc;
 
             const tagsEl = document.getElementById('proj-modal-tags');
-            tagsEl.innerHTML = proj.tags.map(t => `<span class="bg-cyan-50 text-brand-blue font-bold text-xs px-3 py-1 rounded-xl border border-cyan-200"><i class="fas fa-check text-brand-accent mr-1"></i>${t}</span>`).join('');
+            tagsEl.innerHTML = proj.tags.map(t => `<span class="bg-cyan-50 text-brand-blue font-bold text-xs px-3 py-1 rounded-xl border border-cyan-200"><i class="fas fa-check text-brand-orange mr-1"></i>${t}</span>`).join('');
 
             document.getElementById('project-detail-modal').classList.remove('hidden');
         }
@@ -2049,8 +2100,8 @@
             div.id = rowId;
             div.className = "flex gap-2 items-center bg-white p-2 rounded-lg border border-gray-200 shadow-sm transition";
             div.innerHTML = `
-                <input type="text" placeholder="Tên hạng mục (VD: Vệ sinh vỏ máy)" value="${title}" class="task-title-input w-1/3 p-2 border border-gray-300 rounded text-xs font-bold focus:outline-none focus:border-brand-blue">
-                <input type="text" placeholder="Nội dung thực hiện chi tiết..." value="${detail}" class="task-detail-input w-full p-2 border border-gray-300 rounded text-xs focus:outline-none focus:border-brand-blue">
+                <input type="text" placeholder="Tên hạng mục (VD: Vệ sinh vỏ máy)" value="${title}" class="task-title-input w-1/3 p-2 border border-gray-300 rounded text-xs font-bold focus:outline-none focus:border-brand-orange">
+                <input type="text" placeholder="Nội dung thực hiện chi tiết..." value="${detail}" class="task-detail-input w-full p-2 border border-gray-300 rounded text-xs focus:outline-none focus:border-brand-orange">
                 <button type="button" onclick="document.getElementById('${rowId}').remove()" class="btn-interactive bg-red-100 hover:bg-red-200 text-red-600 px-2.5 py-2 rounded text-xs font-bold transition" title="Xóa hạng mục này">
                     <i class="fas fa-trash-alt"></i>
                 </button>
