@@ -931,7 +931,10 @@
                             </div>
 
                             <div>
-                                <h5 class="text-xs font-bold text-brand-navy mb-3"><i class="fas fa-camera text-brand-accent mr-1"></i> Hình Ảnh Hiện Trường Chụp Thực Tế:</h5>
+                                <div class="flex items-center justify-between mb-3">
+                                    <h5 class="text-xs font-bold text-brand-navy"><i class="fas fa-camera text-brand-accent mr-1"></i> Hình Ảnh Hiện Trường Chụp Thực Tế:</h5>
+                                    <span class="text-[11px] text-brand-blue font-medium"><i class="fas fa-search-plus mr-1"></i>Ấn vào ảnh để phóng to</span>
+                                </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center text-gray-400 text-xs py-6 bg-slate-50 rounded-xl border border-dashed border-gray-300" id="photo-gallery">
                                     Chưa có hình ảnh hiện trường.
                                 </div>
@@ -963,6 +966,37 @@
         </div>
 
     </main>
+
+    <!-- ==================== MODAL: LIGHTBOX PHÓNG TO ẢNH BÁO CÁO BẢO TRÌ ==================== -->
+    <div id="lightbox-modal" class="fixed inset-0 z-[110] bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4 select-none" onclick="closeLightbox(event)">
+        <!-- Nút Đóng -->
+        <button type="button" onclick="closeLightbox(event, true)" class="absolute top-5 right-5 z-20 w-11 h-11 rounded-full bg-white/15 hover:bg-red-600 text-white flex items-center justify-center text-xl transition shadow-lg" title="Đóng (ESC)">
+            <i class="fas fa-times"></i>
+        </button>
+
+        <!-- Bộ đếm số thứ tự ảnh -->
+        <div id="lightbox-counter" class="absolute top-6 left-6 z-20 bg-black/60 text-cyan-300 border border-white/15 px-4 py-1.5 rounded-full text-xs font-mono font-bold tracking-wider">
+            Ảnh 1 / 1
+        </div>
+
+        <!-- Nút Lùi (Prev) -->
+        <button type="button" id="lightbox-prev-btn" onclick="changeLightboxImage(-1, event)" class="absolute left-3 sm:left-6 z-20 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/15 hover:bg-brand-accent hover:text-brand-dark text-white flex items-center justify-center text-xl transition shadow-2xl border border-white/20" title="Ảnh trước">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+
+        <!-- Khung chứa bức ảnh phóng to -->
+        <div class="relative max-w-5xl max-h-[85vh] flex flex-col items-center justify-center" onclick="event.stopPropagation()">
+            <img id="lightbox-img" src="" alt="Ảnh bảo trì phóng to" class="max-w-full max-h-[80vh] object-contain rounded-xl shadow-2xl border border-white/20 transition-transform duration-200">
+            <p id="lightbox-caption" class="text-gray-200 text-xs sm:text-sm font-medium mt-3 bg-black/60 px-4 py-1.5 rounded-full border border-white/10">
+                Ảnh kiểm tra thực tế tại hiện trường
+            </p>
+        </div>
+
+        <!-- Nút Tiến (Next) -->
+        <button type="button" id="lightbox-next-btn" onclick="changeLightboxImage(1, event)" class="absolute right-3 sm:right-6 z-20 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/15 hover:bg-brand-accent hover:text-brand-dark text-white flex items-center justify-center text-xl transition shadow-2xl border border-white/20" title="Ảnh tiếp theo">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
 
     <!-- ==================== MODAL: DANH SÁCH TỔNG HỢP THIẾT BỊ ==================== -->
     <div id="device-list-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
@@ -1237,6 +1271,10 @@
         let isListAdminMode = false;
         let currentSelectedLetter = 'ALL';
         let deviceToDeleteCode = null;
+
+        // Biến phục vụ Lightbox phóng to ảnh bảo trì
+        let currentLightboxPhotos = [];
+        let currentLightboxIndex = 0;
 
         const hiconProjectsData = [
             {
@@ -1594,7 +1632,7 @@
                     { title: 'Đo điện trở cách điện motor', detail: 'Đo bằng đồng hồ Megaohmmeter kết quả > 50 MΩ.', status: 'Đạt' },
                     { title: 'Kiểm tra dòng điện vận hành', detail: 'Đo dòng 3 pha cân bằng ở mức 38.2A.', status: 'Đạt' },
                     { title: 'Kiểm tra bu lông chân đế', detail: 'Siết chặt lại toàn bộ bu lông chống rung chân đế bơm.', status: 'Đạt' },
-                    { title: 'Kiểm tra van và đồng hồ áp suất', detail: 'Đ đồng hồ áp lực đầu hút/đẩy hoạt động chính xác.', status: 'Đạt' },
+                    { title: 'Kiểm tra van và đồng hồ áp suất', detail: 'Đồng hồ áp lực đầu hút/đẩy hoạt động chính xác.', status: 'Đạt' },
                     { title: 'Vệ sinh lưới lọc Y', detail: 'Xả cặn bẩn tích tụ tại bầu lọc chữ Y đường ống hút.', status: 'Đạt' }
                 ],
                 specs: [
@@ -1602,7 +1640,10 @@
                     { item: 'Áp suất đầu đẩy', std: '6.0 - 7.5 bar', val: '6.8 bar', status: 'Đạt', isOk: true },
                     { item: 'Dòng điện vận hành', std: '35.0 - 42.0 A', val: '38.2 A', status: 'Đạt', isOk: true }
                 ],
-                photos: ['https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=600&auto=format&fit=crop']
+                photos: [
+                    'https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=1000&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=1000&auto=format&fit=crop'
+                ]
             },
             'TS-2026-FIRE': {
                 name: 'Máy Bơm PCCC Động Cơ Diesel',
@@ -1624,7 +1665,9 @@
                     { item: 'Áp lực tuyến ống PCCC', std: '9.0 - 11.0 bar', val: '10.2 bar', status: 'Đạt', isOk: true },
                     { item: 'Điện áp ắc quy đề nổ', std: '24.0 - 27.0 V', val: '22.8 V', status: 'Thấp', isOk: false }
                 ],
-                photos: ['https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?q=80&w=600&auto=format&fit=crop']
+                photos: [
+                    'https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?q=80&w=1000&auto=format&fit=crop'
+                ]
             }
         };
 
@@ -1670,6 +1713,59 @@
                 el.innerText = `Số lượng mã thiết bị hiện có: ${count}`;
             }
         }
+
+        /* ==================== HÀM XỬ LÝ LIGHTBOX PHÓNG TO & CHUYỂN ẢNH ==================== */
+        function openLightbox(index) {
+            if (!currentLightboxPhotos || currentLightboxPhotos.length === 0) return;
+            currentLightboxIndex = index;
+            updateLightboxView();
+            document.getElementById('lightbox-modal').classList.remove('hidden');
+        }
+
+        function updateLightboxView() {
+            const total = currentLightboxPhotos.length;
+            const imgEl = document.getElementById('lightbox-img');
+            const counterEl = document.getElementById('lightbox-counter');
+            const captionEl = document.getElementById('lightbox-caption');
+            const prevBtn = document.getElementById('lightbox-prev-btn');
+            const nextBtn = document.getElementById('lightbox-next-btn');
+
+            imgEl.src = currentLightboxPhotos[currentLightboxIndex];
+            counterEl.innerText = `Ảnh ${currentLightboxIndex + 1} / ${total}`;
+            captionEl.innerText = `Hình ảnh kiểm tra thực tế #${currentLightboxIndex + 1}`;
+
+            // Ẩn/hiện nút mũi tên nếu chỉ có 1 ảnh hoặc nhiều ảnh
+            if (total <= 1) {
+                prevBtn.classList.add('hidden');
+                nextBtn.classList.add('hidden');
+            } else {
+                prevBtn.classList.remove('hidden');
+                nextBtn.classList.remove('hidden');
+            }
+        }
+
+        function changeLightboxImage(step, event) {
+            if (event) event.stopPropagation();
+            const total = currentLightboxPhotos.length;
+            if (total <= 1) return;
+            currentLightboxIndex = (currentLightboxIndex + step + total) % total;
+            updateLightboxView();
+        }
+
+        function closeLightbox(event, force = false) {
+            if (force || event.target.id === 'lightbox-modal') {
+                document.getElementById('lightbox-modal').classList.add('hidden');
+            }
+        }
+
+        // Hỗ trợ bấm phím mũi tên Trái / Phải và phím ESC trên bàn phím khi đang phóng to ảnh
+        document.addEventListener('keydown', function(e) {
+            const modal = document.getElementById('lightbox-modal');
+            if (!modal || modal.classList.contains('hidden')) return;
+            if (e.key === 'ArrowRight') changeLightboxImage(1);
+            if (e.key === 'ArrowLeft') changeLightboxImage(-1);
+            if (e.key === 'Escape') closeLightbox(null, true);
+        });
 
         function renderDeviceReport(data) {
             document.getElementById('device-name').innerText = data.name;
@@ -1718,22 +1814,37 @@
                 `;
             });
 
+            // Lưu danh sách ảnh vào mảng Lightbox và hiển thị
+            currentLightboxPhotos = data.photos || [];
             const gallery = document.getElementById('photo-gallery');
             gallery.innerHTML = '';
-            gallery.className = "grid grid-cols-1 sm:grid-cols-2 gap-4";
-            (data.photos || []).forEach((src, idx) => {
-                gallery.innerHTML += `
-                    <div class="relative rounded-xl overflow-hidden border border-gray-200 card-pro-hover">
-                        <img src="${src}" class="w-full h-44 object-cover">
-                        <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 p-2 text-white text-[10px]">
-                            Ảnh kiểm tra #${idx + 1}
+
+            if (currentLightboxPhotos.length === 0) {
+                gallery.className = "grid grid-cols-1 sm:grid-cols-2 gap-4 text-center text-gray-400 text-xs py-6 bg-slate-50 rounded-xl border border-dashed border-gray-300";
+                gallery.innerHTML = 'Chưa có hình ảnh hiện trường.';
+            } else {
+                gallery.className = "grid grid-cols-1 sm:grid-cols-2 gap-4";
+                currentLightboxPhotos.forEach((src, idx) => {
+                    gallery.innerHTML += `
+                        <div onclick="openLightbox(${idx})" class="relative rounded-xl overflow-hidden border border-gray-200 card-pro-hover cursor-pointer group">
+                            <img src="${src}" class="w-full h-44 object-cover card-img-zoom transition-transform duration-500">
+                            <div class="absolute inset-0 bg-black/35 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <span class="bg-white/95 text-brand-navy font-extrabold text-xs px-3.5 py-1.5 rounded-full shadow-lg flex items-center">
+                                    <i class="fas fa-expand-alt mr-1.5 text-brand-accent"></i> Xem phóng to
+                                </span>
+                            </div>
+                            <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 p-2 text-white text-[10px] flex justify-between items-center">
+                                <span>Ảnh kiểm tra #${idx + 1}</span>
+                                <i class="fas fa-search-plus text-cyan-300"></i>
+                            </div>
                         </div>
-                    </div>
-                `;
-            });
+                    `;
+                });
+            }
         }
 
         function clearDeviceReportDefault() {
+            currentLightboxPhotos = [];
             document.getElementById('device-name').innerText = '--';
             document.getElementById('device-code').innerText = 'MÃ QR: --';
             document.getElementById('device-location').innerText = '--';
@@ -1931,7 +2042,6 @@
         function promptDeleteDevice(code) {
             deviceToDeleteCode = code;
             document.getElementById('delete-confirm-text').innerText = `Bạn có chắc chắn muốn xóa thiết bị có mã "${code}" không?`;
-            document.getElementById('delete-confirm-modal').classList.add('hidden'); // Fix modal reference
             document.getElementById('delete-confirm-modal').classList.remove('hidden');
         }
 
