@@ -2,14 +2,26 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HICON M&E - Giải Pháp Cơ Điện & Hệ Thống Báo Cáo Bảo Trì Số Hóa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HICON M&E App - Hệ Thống Quản Lý & Bảo Trì Cơ Điện</title>
+    
+    <!-- CẤU HÌNH APP DI ĐỘNG ĐỘC LẬP (PWA) CHO IOS & ANDROID -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#0f2b48">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="HICON M&E">
+    <link rel="apple-touch-icon" href="https://quickchart.io/chart?c=%7Btype:%27doughnut%27,data:%7Bdatasets:%5B%7Bdata:%5B100%5D,backgroundColor:%5B%27%2300a8cc%27%5D%7D%5D%7D,options:%7Bplugins:%7Bdoughnutlabel:%7Blabels:%5B%7Btext:%27H%27,font:%7Bsize:240,weight:%27bold%27%7D,color:%27%23ffffff%27%7D%5D%7D%7D%7D%7D&w=192&h=192&bkg=%230f2b48">
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Thư viện Camera Quét Mã QR trực tiếp trong App -->
+    <script src="https://unpkg.com/html5-qrcode"></script>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
     <script>
         tailwind.config = {
             theme: {
@@ -32,8 +44,8 @@
         }
     </script>
     <style>
-        html { scroll-behavior: smooth; }
-        .glass-header { background: rgba(15, 43, 72, 0.95); backdrop-filter: blur(12px); }
+        html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+        .glass-header { background: rgba(15, 43, 72, 0.96); backdrop-filter: blur(12px); }
         .hero-gradient {
             background: linear-gradient(135deg, rgba(15, 43, 72, 0.92) 0%, rgba(19, 84, 138, 0.85) 100%), 
                         url('https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=1600&auto=format&fit=crop');
@@ -42,8 +54,8 @@
 
         .page-section {
             opacity: 0;
-            transform: translateY(16px) scale(0.995);
-            transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(12px) scale(0.995);
+            transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             will-change: opacity, transform;
         }
         .page-section.active-section { opacity: 1; transform: translateY(0) scale(1); }
@@ -52,16 +64,12 @@
         .btn-interactive:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 10px 20px -5px rgba(0, 168, 204, 0.35); }
         .btn-interactive:active { transform: translateY(1px) scale(0.96); }
 
-        .card-pro-hover {
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
+        .card-pro-hover { transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
         .card-pro-hover:hover {
-            transform: translateY(-8px) scale(1.015);
+            transform: translateY(-6px) scale(1.01);
             box-shadow: 0 20px 30px -10px rgba(15, 43, 72, 0.2);
         }
-        .card-pro-hover:hover .card-img-zoom {
-            transform: scale(1.08);
-        }
+        .card-pro-hover:hover .card-img-zoom { transform: scale(1.08); }
 
         .scan-glow { position: relative; overflow: hidden; }
         .scan-glow::after {
@@ -142,18 +150,52 @@
         .project-card-anim { animation: fadeUpProject 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .brochure-leaf-left { border-radius: 36px 8px 36px 8px; }
         .brochure-leaf-right { border-radius: 8px 36px 8px 36px; }
+
+        /* ==================== HIỆU ỨNG CHẾ ĐỘ LIVE VISUAL CMS EDITOR ==================== */
+        body.cms-edit-active [data-cms-id],
+        body.cms-edit-active [data-proj-edit] {
+            outline: 1.5px dashed rgba(0, 168, 204, 0.65);
+            outline-offset: 3px;
+            border-radius: 4px;
+            cursor: text !important;
+            transition: all 0.15s ease;
+        }
+        body.cms-edit-active [data-cms-id]:hover,
+        body.cms-edit-active [data-proj-edit]:hover {
+            outline: 2px dashed #f59e0b;
+            background-color: rgba(245, 158, 11, 0.12);
+        }
+        body.cms-edit-active [data-cms-id]:focus,
+        body.cms-edit-active [data-proj-edit]:focus {
+            outline: 2.5px solid #10b981 !important;
+            background-color: rgba(16, 185, 129, 0.12) !important;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.25);
+        }
+        body.cms-edit-active img[data-cms-img],
+        body.cms-edit-active img[data-proj-img] {
+            outline: 3px dashed #f59e0b !important;
+            outline-offset: -3px;
+            cursor: pointer !important;
+            filter: brightness(0.92);
+            transition: all 0.2s ease;
+        }
+        body.cms-edit-active img[data-cms-img]:hover,
+        body.cms-edit-active img[data-proj-img]:hover {
+            filter: brightness(1.05);
+            outline: 4px solid #00f2fe !important;
+        }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans flex flex-col min-h-screen relative">
+<body class="bg-gray-50 text-gray-800 font-sans flex flex-col min-h-screen relative pb-16 md:pb-0">
 
     <!-- TOP-LEVEL FLOATING TOAST -->
-    <div id="top-error-toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-[120] hidden max-w-md w-11/12">
-        <div id="toast-box-bg" class="bg-emerald-600 text-white px-5 py-3.5 rounded-2xl shadow-2xl border-2 border-emerald-400 flex items-center justify-between gap-3 toast-animate-in">
+    <div id="top-error-toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-[140] hidden max-w-md w-11/12">
+        <div id="toast-box-bg" class="bg-red-600 text-white px-5 py-3.5 rounded-2xl shadow-2xl border-2 border-red-400 flex items-center justify-between gap-3 toast-animate-in">
             <div class="flex items-center space-x-3">
                 <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center shrink-0">
-                    <i id="toast-icon" class="fas fa-check-circle text-white text-sm"></i>
+                    <i id="toast-icon" class="fas fa-exclamation-triangle text-amber-300 text-sm"></i>
                 </div>
-                <span id="top-error-message" class="text-xs sm:text-sm font-bold tracking-wide">Đã đồng bộ dữ liệu Real-time</span>
+                <span id="top-error-message" class="text-xs sm:text-sm font-bold tracking-wide">Thông báo hệ thống</span>
             </div>
             <button onclick="hideErrorToast()" class="text-white/80 hover:text-white p-1 transition rounded-lg hover:bg-white/10">
                 <i class="fas fa-times text-base"></i>
@@ -161,19 +203,49 @@
         </div>
     </div>
 
+    <!-- THANH CÔNG CỤ NỔI KHI BẬT CHẾ ĐỘ CHỈNH SỬA TRỰC TIẾP (LIVE CMS FLOATING DOCK) -->
+    <div id="cms-floating-toolbar" class="fixed bottom-20 md:bottom-6 left-1/2 -translate-x-1/2 z-[125] hidden w-11/12 max-w-2xl">
+        <div class="bg-slate-900/95 backdrop-blur-xl text-white p-3 sm:px-5 sm:py-3.5 rounded-3xl shadow-[0_15px_35px_rgba(0,0,0,0.6)] border-2 border-amber-400 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-2xl bg-amber-500 text-brand-dark flex items-center justify-center font-black text-base animate-pulse shrink-0">
+                    <i class="fas fa-pen-nib"></i>
+                </div>
+                <div>
+                    <div class="text-xs sm:text-sm font-black text-amber-400 uppercase tracking-wide flex items-center gap-1.5">
+                        <span>CHẾ ĐỘ CHỈNH SỬA TRỰC TIẾP</span>
+                    </div>
+                    <div class="text-[10px] text-gray-300">Ấn trực tiếp vào bất kỳ chữ nào để gõ sửa, hoặc ấn vào ảnh để thay ảnh mới</div>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 ml-auto">
+                <button onclick="saveAndExitCmsEditMode()" class="btn-interactive bg-emerald-500 hover:bg-emerald-400 text-brand-dark font-extrabold px-4 py-2 rounded-xl text-xs flex items-center shadow-lg">
+                    <i class="fas fa-cloud-upload-alt mr-1.5"></i> Lưu & Đồng Bộ Tất Cả
+                </button>
+                <button onclick="cancelCmsEditMode()" class="bg-white/15 hover:bg-red-600 text-white font-bold px-3 py-2 rounded-xl text-xs transition" title="Thoát chế độ sửa">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- TOP BAR -->
     <div class="bg-brand-dark text-gray-300 text-xs py-2 px-4 border-b border-gray-800 hidden md:block">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-5">
-                <span><i class="fas fa-phone-alt text-brand-accent mr-1.5"></i>Hotline: <a href="tel:0868117116" class="hover:text-cyan-300 transition">0868.117.116</a> - <a href="tel:0968095072" class="hover:text-cyan-300 transition">0968.095.072</a></span>
-                <span><i class="fas fa-envelope text-brand-accent mr-1.5"></i>Email: contact@hiconmne.vn</span>
-                <span><i class="fas fa-map-marker-alt text-brand-accent mr-1.5"></i>Số nhà C.TT8-5 Khu C đường C5, KĐT Himlam Vạn Phúc, Hà Đông, Hà Nội</span>
+                <span><i class="fas fa-phone-alt text-brand-accent mr-1.5"></i>Hotline: <span data-cms-id="top-hotline-1">0868.117.116</span> - <span data-cms-id="top-hotline-2">0968.095.072</span></span>
+                <span><i class="fas fa-envelope text-brand-accent mr-1.5"></i>Email: <span data-cms-id="top-email">contact@hiconmne.vn</span></span>
+                <span><i class="fas fa-map-marker-alt text-brand-accent mr-1.5"></i><span data-cms-id="top-address">Số nhà C.TT8-5 Khu C đường C5, KĐT Himlam Vạn Phúc, Hà Đông, Hà Nội</span></span>
             </div>
-            <div class="flex items-center space-x-3">
-                <span id="cloud-status-badge" class="bg-emerald-900/60 text-emerald-300 border border-emerald-500/50 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide flex items-center">
-                    <i class="fas fa-cloud mr-1 text-emerald-400"></i> Cloud: Đã đồng bộ Real-time
+            <div class="flex items-center space-x-2.5">
+                <span id="network-status-badge" class="bg-emerald-900/70 text-emerald-300 border border-emerald-500/40 px-2.5 py-0.5 rounded-full text-[10px] font-bold flex items-center">
+                    <i class="fas fa-wifi mr-1 text-emerald-400"></i> Online & Đồng bộ Cloud
                 </span>
-                <span class="bg-emerald-600 text-white px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide animate-pulse">CỔNG BÁO CÁO SỐ HÓA QR</span>
+                <button onclick="handleCmsEditButtonClick()" id="top-cms-btn" class="bg-cyan-500/20 hover:bg-amber-500 hover:text-brand-dark text-cyan-300 border border-cyan-400/40 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold tracking-wide transition flex items-center shadow">
+                    <i class="fas fa-magic mr-1"></i> SỬA GIAO DIỆN (PIN)
+                </button>
+                <button onclick="openInstallAppGuideModal()" class="bg-amber-500 hover:bg-amber-400 text-brand-dark px-2.5 py-0.5 rounded-full text-[10px] font-extrabold tracking-wide transition flex items-center shadow">
+                    <i class="fas fa-mobile-alt mr-1"></i> CÀI ĐẶT APP
+                </button>
             </div>
         </div>
     </div>
@@ -181,20 +253,23 @@
     <!-- MAIN HEADER -->
     <header class="glass-header sticky top-0 z-50 text-white shadow-xl">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
+            <div class="flex justify-between items-center h-16 sm:h-20">
                 <!-- LOGO -->
-                <div class="flex items-center space-x-3 cursor-pointer group" onclick="navigateTo('home')">
-                    <div class="w-12 h-12 bg-gradient-to-tr from-brand-blue to-brand-accent rounded-xl flex items-center justify-center font-bold text-2xl text-white shadow-lg border border-cyan-400/40 group-hover:scale-105 transition-transform duration-300">
-                        H
+                <div class="flex items-center space-x-3 cursor-pointer group" onclick="if(!isCmsEditMode) navigateTo('home')">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-tr from-brand-blue to-brand-accent rounded-xl flex items-center justify-center font-bold text-xl sm:text-2xl text-white shadow-lg border border-cyan-400/40 group-hover:scale-105 transition-transform duration-300">
+                        <span data-cms-id="logo-letter">H</span>
                     </div>
                     <div>
-                        <div class="text-xl font-black tracking-wider text-white">HICON <span class="text-brand-accent">M&E</span></div>
-                        <div class="text-[10px] uppercase text-gray-300 tracking-widest font-light">Cơ Điện & Bảo Trì Công Nghiệp</div>
+                        <div class="text-lg sm:text-xl font-black tracking-wider text-white flex items-center gap-2">
+                            <span data-cms-id="brand-main-title">HICON M&E</span>
+                            <span id="mobile-net-dot" class="w-2 h-2 rounded-full bg-emerald-400 md:hidden" title="Trạng thái mạng"></span>
+                        </div>
+                        <div data-cms-id="brand-sub-title" class="text-[9px] sm:text-[10px] uppercase text-gray-300 tracking-widest font-light">App Cơ Điện & Bảo Trì Số Hóa</div>
                     </div>
                 </div>
 
                 <!-- DESKTOP NAV -->
-                <nav class="hidden md:flex space-x-8 font-medium text-sm tracking-wide">
+                <nav class="hidden md:flex space-x-6 font-medium text-sm tracking-wide items-center">
                     <button onclick="navigateTo('home')" id="nav-home" class="nav-link py-2">TRANG CHỦ</button>
                     <button onclick="navigateTo('about')" id="nav-about" class="nav-link py-2">GIỚI THIỆU</button>
                     <button onclick="navigateTo('services')" id="nav-services" class="nav-link py-2">DỊCH VỤ M&E</button>
@@ -203,32 +278,54 @@
                         <i class="fas fa-qrcode mr-1.5 text-lg"></i> BÁO CÁO BẢO TRÌ
                     </button>
                     <button onclick="navigateTo('contact')" id="nav-contact" class="nav-link py-2">LIÊN HỆ</button>
+                    <button onclick="openCameraQrScanner()" class="btn-interactive bg-brand-accent text-brand-dark font-extrabold px-3.5 py-2 rounded-xl text-xs flex items-center shadow-lg">
+                        <i class="fas fa-camera mr-1.5"></i> Quét QR
+                    </button>
                 </nav>
 
-                <!-- MOBILE MENU BUTTON -->
-                <div class="md:hidden flex items-center space-x-2">
-                    <button onclick="navigateTo('maintenance-portal')" class="btn-interactive bg-brand-accent text-brand-dark p-2 rounded-lg font-bold text-xs flex items-center">
-                        <i class="fas fa-qrcode text-base"></i>
+                <!-- MOBILE TOP ACTIONS -->
+                <div class="md:hidden flex items-center space-x-1.5">
+                    <button onclick="handleCmsEditButtonClick()" id="mobile-cms-btn" class="btn-interactive bg-slate-800 text-amber-400 border border-amber-400/40 px-2.5 py-1.5 rounded-lg font-extrabold text-[10px] flex items-center shadow" title="Chỉnh sửa trực tiếp giao diện">
+                        <i class="fas fa-pen mr-1"></i> Sửa
                     </button>
-                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="text-gray-300 hover:text-white p-2">
-                        <i class="fas fa-bars text-2xl"></i>
+                    <button onclick="openInstallAppGuideModal()" class="btn-interactive bg-amber-500 text-brand-dark px-2.5 py-1.5 rounded-lg font-extrabold text-[10px] flex items-center shadow">
+                        <i class="fas fa-download mr-1"></i> Cài App
+                    </button>
+                    <button onclick="openCameraQrScanner()" class="btn-interactive bg-brand-accent text-brand-dark p-2 rounded-lg font-bold text-xs flex items-center shadow">
+                        <i class="fas fa-qrcode text-sm"></i>
                     </button>
                 </div>
             </div>
         </div>
-
-        <!-- MOBILE NAV -->
-        <div id="mobile-menu" class="hidden md:hidden bg-brand-dark/95 border-t border-gray-800 px-4 pt-2 pb-4 space-y-2 text-sm font-medium">
-            <button onclick="navigateTo('home'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-gray-300">TRANG CHỦ</button>
-            <button onclick="navigateTo('about'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-gray-300">GIỚI THIỆU</button>
-            <button onclick="navigateTo('services'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-gray-300">DỊCH VỤ M&E</button>
-            <button onclick="navigateTo('projects'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-gray-300">DỰ ÁN</button>
-            <button onclick="navigateTo('maintenance-portal'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-gray-300"><i class="fas fa-qrcode mr-2"></i> TRA CỨU BÁO CÁO QR</button>
-            <button onclick="navigateTo('contact'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-gray-300">LIÊN HỆ</button>
-        </div>
     </header>
 
-    <!-- THẺ INPUT ẨN ĐỔI ẢNH -->
+    <!-- THANH ĐIỀU HƯỚNG DƯỚI ĐÁY MÀN HÌNH ĐIỆN THOẠI (BOTTOM APP NAVIGATION BAR) -->
+    <div class="md:hidden fixed bottom-0 inset-x-0 z-50 bg-brand-navy/95 backdrop-blur-md border-t border-white/15 text-gray-300 grid grid-cols-5 py-1.5 px-1 text-[10px] shadow-2xl">
+        <button onclick="navigateTo('home')" id="bnav-home" class="flex flex-col items-center justify-center py-1 text-cyan-400 font-bold">
+            <i class="fas fa-home text-base mb-0.5"></i>
+            <span>Trang chủ</span>
+        </button>
+        <button onclick="navigateTo('about')" id="bnav-about" class="flex flex-col items-center justify-center py-1">
+            <i class="fas fa-building text-base mb-0.5"></i>
+            <span>Giới thiệu</span>
+        </button>
+        <button onclick="openCameraQrScanner()" class="flex flex-col items-center justify-center -mt-5">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-brand-accent to-cyan-300 text-brand-dark flex items-center justify-center shadow-xl border-4 border-brand-navy">
+                <i class="fas fa-qrcode text-xl"></i>
+            </div>
+            <span class="text-[9px] font-extrabold text-cyan-300 mt-0.5">Quét QR</span>
+        </button>
+        <button onclick="navigateTo('projects')" id="bnav-projects" class="flex flex-col items-center justify-center py-1">
+            <i class="fas fa-award text-base mb-0.5"></i>
+            <span>Dự án</span>
+        </button>
+        <button onclick="navigateTo('maintenance-portal')" id="bnav-maintenance-portal" class="flex flex-col items-center justify-center py-1">
+            <i class="fas fa-clipboard-check text-base mb-0.5"></i>
+            <span>Bảo trì</span>
+        </button>
+    </div>
+
+    <!-- THẺ INPUT ẨN DÙNG CHUNG CHO UPLOAD ẢNH TỪ ALBUM LÊN ĐÁM MÂY -->
     <input type="file" id="universal-image-file-input" accept="image/*" class="hidden" onchange="handleUniversalFileSelect(event)">
 
     <!-- MAIN CONTENT -->
@@ -236,24 +333,27 @@
         
         <!-- SECTION 1: TRANG CHỦ -->
         <div id="section-home" class="page-section hidden">
-            <div class="hero-gradient text-white py-24 px-4 text-center relative">
+            <div class="hero-gradient text-white py-20 sm:py-24 px-4 text-center relative">
                 <div class="max-w-4xl mx-auto">
                     <span class="inline-block bg-brand-accent/20 text-brand-accent border border-brand-accent/40 rounded-full px-4 py-1.5 text-xs font-semibold mb-6 uppercase">
-                        <i class="fas fa-check-circle mr-1.5"></i> Chuẩn Hóa Báo Cáo Số Hóa Cho Chủ Đầu Tư
+                        <i class="fas fa-check-circle mr-1.5"></i> <span data-cms-id="hero-badge-txt">Ứng Dụng Tra Cứu Offline & Đồng Bộ Cloud Real-time</span>
                     </span>
                     <h1 class="text-3xl sm:text-5xl font-black leading-tight mb-6">
-                        NHÀ THẦU CƠ ĐIỆN M&E <br>
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-200">BẢO TRÌ CÔNG NGHIỆP CHUYÊN NGHIỆP</span>
+                        <span data-cms-id="hero-title-line1">NHÀ THẦU CƠ ĐIỆN M&E</span> <br>
+                        <span data-cms-id="hero-title-line2" class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-200">BẢO TRÌ CÔNG NGHIỆP CHUYÊN NGHIỆP</span>
                     </h1>
-                    <p class="text-base sm:text-lg text-gray-200 mb-8 max-w-2xl mx-auto font-light">
-                        Chuyên thi công, vận hành và bảo trì toàn diện hệ thống HVAC, PCCC, Điện công nghiệp, Chiller. Quản lý minh bạch 100% qua QR Code.
+                    <p data-cms-id="hero-desc-txt" class="text-base sm:text-lg text-gray-200 mb-8 max-w-2xl mx-auto font-light">
+                        Chuyên thi công, vận hành và bảo trì toàn diện hệ thống HVAC, PCCC, Điện công nghiệp, Chiller. Quản lý minh bạch 100% qua App & QR Code (Hỗ trợ cả khi mất mạng).
                     </p>
-                    <div class="flex flex-col sm:flex-row justify-center gap-4">
-                        <button onclick="navigateTo('maintenance-portal')" class="scan-glow btn-interactive bg-brand-accent hover:bg-cyan-400 text-brand-dark font-extrabold px-8 py-4 rounded-xl shadow-2xl flex items-center justify-center text-base">
-                            <i class="fas fa-qrcode mr-2.5 text-xl"></i> Quét / Tra Cứu Mã QR Bảo Trì
+                    <div class="flex flex-col sm:flex-row justify-center gap-3.5">
+                        <button onclick="if(!isCmsEditMode) openCameraQrScanner()" class="scan-glow btn-interactive bg-brand-accent hover:bg-cyan-400 text-brand-dark font-extrabold px-7 py-4 rounded-xl shadow-2xl flex items-center justify-center text-base">
+                            <i class="fas fa-camera mr-2.5 text-xl"></i> <span data-cms-id="hero-btn-1">Mở Camera Quét Tem QR</span>
                         </button>
-                        <button onclick="openAdminModal()" class="btn-interactive bg-amber-500 hover:bg-amber-600 text-brand-dark font-bold px-8 py-4 rounded-xl text-base shadow-xl flex items-center justify-center">
-                            <i class="fas fa-edit mr-2 text-xl"></i> Cập nhật thông tin/trạng thái thiết bị
+                        <button onclick="if(!isCmsEditMode) navigateTo('maintenance-portal')" class="btn-interactive bg-white/15 hover:bg-white/25 text-white border border-white/30 font-bold px-7 py-4 rounded-xl text-base shadow-xl flex items-center justify-center">
+                            <i class="fas fa-search mr-2 text-lg text-cyan-300"></i> <span data-cms-id="hero-btn-2">Tra Cứu & Danh Sách Thiết Bị</span>
+                        </button>
+                        <button onclick="if(!isCmsEditMode) openAdminModal()" class="btn-interactive bg-amber-500 hover:bg-amber-600 text-brand-dark font-bold px-7 py-4 rounded-xl text-base shadow-xl flex items-center justify-center">
+                            <i class="fas fa-edit mr-2 text-lg"></i> <span data-cms-id="hero-btn-3">Kỹ Sư Cập Nhật Bảo Trì</span>
                         </button>
                     </div>
                 </div>
@@ -263,8 +363,8 @@
             <div class="py-16 bg-white">
                 <div class="max-w-7xl mx-auto px-4">
                     <div class="text-center mb-12">
-                        <h2 class="text-2xl sm:text-3xl font-bold text-brand-navy">TẠI SAO CHỦ ĐẦU TƯ TIN TƯỞNG HICON M&E?</h2>
-                        <p class="text-gray-500 text-xs sm:text-sm mt-2 max-w-2xl mx-auto">Năng lực vận hành chuẩn hóa toàn diện từ con người, quy trình cho đến hạ tầng công nghệ số.</p>
+                        <h2 data-cms-id="why-heading" class="text-2xl sm:text-3xl font-bold text-brand-navy">TẠI SAO CHỦ ĐẦU TƯ TIN TƯỞNG HICON M&E?</h2>
+                        <p data-cms-id="why-subheading" class="text-gray-500 text-xs sm:text-sm mt-2 max-w-2xl mx-auto">Năng lực vận hành chuẩn hóa toàn diện từ con người, quy trình cho đến hạ tầng App công nghệ số Offline/Cloud.</p>
                         <div class="w-20 h-1 bg-brand-accent mx-auto mt-3 rounded-full"></div>
                     </div>
 
@@ -308,13 +408,13 @@
                                 </div>
 
                                 <div class="absolute bottom-2 left-3">
-                                    <span class="text-[10px] font-bold text-cyan-300 uppercase tracking-widest bg-black/50 px-2.5 py-0.5 rounded-md backdrop-blur-sm">QUÉT QR TRÊN AHU</span>
+                                    <span data-cms-id="card1-badge" class="text-[10px] font-bold text-cyan-300 uppercase tracking-widest bg-black/50 px-2.5 py-0.5 rounded-md backdrop-blur-sm">QUÉT QR MỞ APP</span>
                                 </div>
                             </div>
                             <div class="p-6 flex-grow flex flex-col justify-between">
                                 <div>
-                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-qrcode text-brand-accent mr-2"></i> Số Hóa Báo Cáo Minh Bạch</h3>
-                                    <p class="text-gray-600 text-xs leading-relaxed">Điện thoại quét mã QR dán trực tiếp trên thiết bị (AHU, Chiller, Bơm PCCC). Chủ đầu tư xem ngay nhật ký kiểm tra và thông số real-time.</p>
+                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-qrcode text-brand-accent mr-2"></i> <span data-cms-id="card1-title">Số Hóa Báo Cáo Minh Bạch</span></h3>
+                                    <p data-cms-id="card1-desc" class="text-gray-600 text-xs leading-relaxed">Điện thoại quét mã QR dán trực tiếp trên thiết bị (AHU, Chiller, Bơm PCCC) tự động mở App và hiển thị ngay nhật ký kiểm tra cả khi Offline.</p>
                                 </div>
                             </div>
                         </div>
@@ -358,13 +458,13 @@
                                 </div>
 
                                 <div class="absolute bottom-2 left-3">
-                                    <span class="text-[10px] font-bold text-amber-300 uppercase tracking-widest bg-black/50 px-2.5 py-0.5 rounded-md backdrop-blur-sm">AVAILABILITY (04 HOURS)</span>
+                                    <span data-cms-id="card2-badge" class="text-[10px] font-bold text-amber-300 uppercase tracking-widest bg-black/50 px-2.5 py-0.5 rounded-md backdrop-blur-sm">AVAILABILITY (04 HOURS)</span>
                                 </div>
                             </div>
                             <div class="p-6 flex-grow flex flex-col justify-between">
                                 <div>
-                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-running text-brand-accent mr-2"></i> Sẵn Sàng - 04 Giờ Có Mặt</h3>
-                                    <p class="text-gray-600 text-xs leading-relaxed">Đội ngũ kỹ sư và công nhân viên cơ động phản ứng tức thì, cam kết có mặt tại hiện trường trong vòng <strong>04 giờ (04 hours on-site)</strong>.</p>
+                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-running text-brand-accent mr-2"></i> <span data-cms-id="card2-title">Sẵn Sàng - 04 Giờ Có Mặt</span></h3>
+                                    <p data-cms-id="card2-desc" class="text-gray-600 text-xs leading-relaxed">Đội ngũ kỹ sư và công nhân viên cơ động phản ứng tức thì, cam kết có mặt tại hiện trường trong vòng 04 giờ (04 hours on-site).</p>
                                 </div>
                             </div>
                         </div>
@@ -372,21 +472,22 @@
                         <!-- THẺ 3: NHÂN LỰC CHUẨN HÓA -->
                         <div class="card-pro-hover bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-md flex flex-col">
                             <div class="h-48 bg-slate-800 relative overflow-hidden group">
-                                <img id="hr-custom-img" src="1790567297025_5013471029311337545_g3142873166389515335_3d001139ff92c968025cc62584f99fae.jpg" 
+                                <img id="hr-custom-img" data-cms-img="HR" onclick="if(isCmsEditMode) openPhotoChangeModal('HR')" src="1790567297025_5013471029311337545_g3142873166389515335_3d001139ff92c968025cc62584f99fae.jpg" 
+                                     onerror="this.src='https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=900&auto=format&fit=crop'"
                                      class="w-full h-full object-cover card-img-zoom transition-transform duration-500">
-                                
-                                <button type="button" onclick="openPhotoChangeModal('HR')" class="absolute top-2.5 right-2.5 bg-black/75 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition flex items-center shadow-lg z-25 cursor-pointer" title="Đổi ảnh Nhân lực">
+
+                                <button type="button" onclick="openPhotoChangeModal('HR')" class="absolute top-2.5 right-2.5 bg-black/75 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition flex items-center shadow-lg z-20 cursor-pointer" title="Đổi ảnh Nhân lực (Đồng bộ Cloud)">
                                     <i class="fas fa-camera mr-1.5"></i> Đổi ảnh
                                 </button>
 
                                 <div class="absolute bottom-2 left-3 pointer-events-none">
-                                    <span class="text-[10px] font-bold text-cyan-300 uppercase tracking-widest bg-black/60 px-2.5 py-0.5 rounded-md backdrop-blur-sm">RESOURCES (HICON M&E)</span>
+                                    <span data-cms-id="card3-badge" class="text-[10px] font-bold text-cyan-300 uppercase tracking-widest bg-black/60 px-2.5 py-0.5 rounded-md backdrop-blur-sm">RESOURCES (HICON M&E)</span>
                                 </div>
                             </div>
                             <div class="p-6 flex-grow flex flex-col justify-between">
                                 <div>
-                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-user-check text-brand-accent mr-2"></i> Nhân Lực Chuẩn Hóa</h3>
-                                    <p class="text-gray-600 text-xs leading-relaxed">Đội ngũ kỹ sư được <strong>đào tạo chính quy và bài bản</strong> (Formally and methodically trained), nắm vững bản vẽ và quy trình kỹ thuật.</p>
+                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-user-check text-brand-accent mr-2"></i> <span data-cms-id="card3-title">Nhân Lực Chuẩn Hóa</span></h3>
+                                    <p data-cms-id="card3-desc" class="text-gray-600 text-xs leading-relaxed">Đội ngũ kỹ sư được đào tạo chính quy và bài bản (Formally and methodically trained), nắm vững bản vẽ và quy trình kỹ thuật.</p>
                                 </div>
                             </div>
                         </div>
@@ -418,18 +519,18 @@
                                 </div>
 
                                 <div class="absolute bottom-2 left-3">
-                                    <span class="text-[10px] font-bold text-cyan-300 uppercase tracking-widest bg-black/50 px-2.5 py-0.5 rounded-md backdrop-blur-sm">EQUIPMENTS (SPECIALIZED)</span>
+                                    <span data-cms-id="card4-badge" class="text-[10px] font-bold text-cyan-300 uppercase tracking-widest bg-black/50 px-2.5 py-0.5 rounded-md backdrop-blur-sm">EQUIPMENTS (SPECIALIZED)</span>
                                 </div>
                             </div>
                             <div class="p-6 flex-grow flex flex-col justify-between">
                                 <div>
-                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-tools text-brand-accent mr-2"></i> Thiết Bị Chuyên Dụng</h3>
-                                    <p class="text-gray-600 text-xs leading-relaxed">Trang bị đầy đủ các dụng cụ đo kiểm chuyên nghiệp: <strong>Máy đo tốc độ gió (Anemometer), máy đo tốc độ vòng quay (Tachometer)</strong>, camera nhiệt, Megaohmmeter.</p>
+                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-tools text-brand-accent mr-2"></i> <span data-cms-id="card4-title">Thiết Bị Chuyên Dụng</span></h3>
+                                    <p data-cms-id="card4-desc" class="text-gray-600 text-xs leading-relaxed">Trang bị đầy đủ các dụng cụ đo kiểm chuyên nghiệp: Máy đo tốc độ gió (Anemometer), máy đo tốc độ vòng quay (Tachometer), camera nhiệt, Megaohmmeter.</p>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- THẺ 5: MÁY CHỦ ĐÁM MÂY AN TOÀN -->
+                        <!-- THẺ 5: MÁY CHỦ ĐÁM MÂY & OFFLINE -->
                         <div class="card-pro-hover bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-md flex flex-col">
                             <div class="h-48 bg-gradient-to-br from-brand-navy via-slate-900 to-brand-blue relative overflow-hidden flex items-center justify-center p-4">
                                 <div class="w-full max-w-[260px] bg-slate-800/90 border border-cyan-500/40 rounded-2xl p-3.5 shadow-2xl flex items-center justify-between">
@@ -437,8 +538,8 @@
                                         <div class="flex items-center space-x-2">
                                             <i class="fas fa-cloud text-cyan-400 text-2xl"></i>
                                             <div>
-                                                <div class="text-[10px] font-black text-white">CLOUD SERVER</div>
-                                                <div class="text-[8px] text-emerald-400 font-mono">● ONLINE 24/7</div>
+                                                <div class="text-[10px] font-black text-white">OFFLINE & CLOUD</div>
+                                                <div class="text-[8px] text-emerald-400 font-mono">● AUTO-SYNC 24/7</div>
                                             </div>
                                         </div>
                                         <div class="flex items-end space-x-1.5 h-10 pt-2 px-1">
@@ -450,18 +551,18 @@
                                     </div>
                                     <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 text-center">
                                         <i class="fas fa-shield-alt text-emerald-400 text-2xl mb-1"></i>
-                                        <div class="text-[8px] font-bold text-gray-300">BẢO MẬT</div>
-                                        <div class="text-[8px] text-amber-400 font-bold mt-0.5"><i class="fas fa-bell mr-0.5"></i>CẢNH BÁO</div>
+                                        <div class="text-[8px] font-bold text-gray-300">TRA CỨU</div>
+                                        <div class="text-[8px] text-amber-400 font-bold mt-0.5">OFFLINE</div>
                                     </div>
                                 </div>
                                 <div class="absolute bottom-2 left-3">
-                                    <span class="text-[10px] font-bold text-cyan-300 uppercase tracking-widest bg-black/50 px-2.5 py-0.5 rounded-md backdrop-blur-sm">CLOUD SERVER 24/7</span>
+                                    <span data-cms-id="card5-badge" class="text-[10px] font-bold text-cyan-300 uppercase tracking-widest bg-black/50 px-2.5 py-0.5 rounded-md backdrop-blur-sm">CLOUD & OFFLINE APP</span>
                                 </div>
                             </div>
                             <div class="p-6 flex-grow flex flex-col justify-between">
                                 <div>
-                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-cloud-upload-alt text-brand-accent mr-2"></i> Máy Chủ Đám Mây An Toàn</h3>
-                                    <p class="text-gray-600 text-xs leading-relaxed">Hệ thống lưu trữ đám mây <strong>bảo mật 24/7</strong>, tự động thống kê số liệu vận hành và đưa ra cảnh báo sớm (Collecting & Analyzing data).</p>
+                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-cloud-upload-alt text-brand-accent mr-2"></i> <span data-cms-id="card5-title">Đám Mây & Tra Cứu Offline</span></h3>
+                                    <p data-cms-id="card5-desc" class="text-gray-600 text-xs leading-relaxed">Lưu trữ đám mây bảo mật 24/7 kết hợp bộ nhớ đệm Offline thông minh giúp tra cứu và cập nhật ngay cả dưới tầng hầm mất sóng.</p>
                                 </div>
                             </div>
                         </div>
@@ -481,13 +582,13 @@
                                     </div>
                                 </div>
                                 <div class="absolute bottom-2 left-3">
-                                    <span class="text-[10px] font-bold text-amber-300 uppercase tracking-widest bg-black/50 px-2.5 py-0.5 rounded-md backdrop-blur-sm">CERTIFICATION (ISO)</span>
+                                    <span data-cms-id="card6-badge" class="text-[10px] font-bold text-amber-300 uppercase tracking-widest bg-black/50 px-2.5 py-0.5 rounded-md backdrop-blur-sm">CERTIFICATION (ISO)</span>
                                 </div>
                             </div>
                             <div class="p-6 flex-grow flex flex-col justify-between">
                                 <div>
-                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-award text-brand-accent mr-2"></i> Quy Trình Chuẩn ISO</h3>
-                                    <p class="text-gray-600 text-xs leading-relaxed">Mọi hạng mục bảo trì đều tuân thủ nghiêm ngặt quy trình quản lý chất lượng theo <strong>tiêu chuẩn ISO (ISO standards)</strong>.</p>
+                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-award text-brand-accent mr-2"></i> <span data-cms-id="card6-title">Quy Trình Chuẩn ISO</span></h3>
+                                    <p data-cms-id="card6-desc" class="text-gray-600 text-xs leading-relaxed">Mọi hạng mục bảo trì đều tuân thủ nghiêm ngặt quy trình quản lý chất lượng theo tiêu chuẩn ISO (ISO standards).</p>
                                 </div>
                             </div>
                         </div>
@@ -503,9 +604,9 @@
                 
                 <div class="text-center mb-12">
                     <span class="inline-flex items-center bg-brand-navy text-cyan-300 text-xs font-bold px-3.5 py-1 rounded-full uppercase tracking-widest shadow-sm mb-3">
-                        <i class="fas fa-calendar-check mr-2 text-amber-400"></i> Thành lập từ ngày 22/12/2015
+                        <i class="fas fa-calendar-check mr-2 text-amber-400"></i> <span data-cms-id="about-founded-badge">Thành lập từ ngày 22/12/2015</span>
                     </span>
-                    <h2 class="text-2xl sm:text-4xl font-black text-brand-navy tracking-tight uppercase">
+                    <h2 data-cms-id="about-company-heading" class="text-2xl sm:text-4xl font-black text-brand-navy tracking-tight uppercase">
                         CÔNG TY CỔ PHẦN CƠ ĐIỆN VÀ BẢO TRÌ HICON
                     </h2>
                     <div class="w-24 h-1 bg-brand-accent mx-auto mt-3 rounded-full"></div>
@@ -519,47 +620,47 @@
                         <div class="space-y-5">
                             <div class="flex items-start justify-between border-b border-gray-100 pb-4">
                                 <div>
-                                    <p class="text-xs font-bold uppercase tracking-widest text-brand-accent mb-1">THƯ NGỎ & GIỚI THIỆU</p>
-                                    <h3 class="text-xl sm:text-2xl font-extrabold text-brand-navy">Kính gửi: Quý khách hàng;</h3>
+                                    <p data-cms-id="about-letter-sub" class="text-xs font-bold uppercase tracking-widest text-brand-accent mb-1">THƯ NGỎ & GIỚI THIỆU</p>
+                                    <h3 data-cms-id="about-letter-dear" class="text-xl sm:text-2xl font-extrabold text-brand-navy">Kính gửi: Quý khách hàng;</h3>
                                 </div>
                                 <div class="w-12 h-12 rounded-2xl bg-brand-light border border-cyan-200 flex items-center justify-center text-brand-blue text-xl shrink-0">
                                     <i class="fas fa-handshake"></i>
                                 </div>
                             </div>
 
-                            <p class="text-gray-700 text-sm sm:text-base font-medium leading-relaxed bg-cyan-50/60 border-l-4 border-brand-accent p-4 rounded-r-xl">
-                                <strong>Công ty Cổ phần Cơ điện và Bảo trì Hicon</strong> xin gửi lời chào trân trọng tới Quý Khách hàng.
+                            <p data-cms-id="about-p1" class="text-gray-700 text-sm sm:text-base font-medium leading-relaxed bg-cyan-50/60 border-l-4 border-brand-accent p-4 rounded-r-xl">
+                                Công ty Cổ phần Cơ điện và Bảo trì Hicon xin gửi lời chào trân trọng tới Quý Khách hàng.
                             </p>
 
-                            <p class="text-gray-600 text-sm leading-relaxed text-justify">
-                                Được thành lập từ ngày <strong class="text-brand-navy">22/12/2015</strong> với mong muốn đáp ứng nhu cầu ngày càng cao của Khách hàng trong lĩnh vực triển khai vận hành dịch vụ, bảo trì các dịch vụ kỹ thuật cơ điện công trình. Trải qua nhiều năm hoạt động, <strong>Hicon</strong> chúng tôi nhận được sự tin tưởng cũng như đánh giá cao từ phía khách hàng.
+                            <p data-cms-id="about-p2" class="text-gray-600 text-sm leading-relaxed text-justify">
+                                Được thành lập từ ngày 22/12/2015 với mong muốn đáp ứng nhu cầu ngày càng cao của Khách hàng trong lĩnh vực triển khai vận hành dịch vụ, bảo trì các dịch vụ kỹ thuật cơ điện công trình. Trải qua nhiều năm hoạt động, Hicon chúng tôi nhận được sự tin tưởng cũng như đánh giá cao từ phía khách hàng.
                             </p>
 
-                            <p class="text-gray-600 text-sm leading-relaxed text-justify">
-                                <strong class="text-brand-navy">HICON</strong> là đơn vị chuyên <strong>thi công, lắp đặt, kiểm tra, bảo trì và sửa chữa</strong> các dịch vụ hệ thống cho:
+                            <p data-cms-id="about-p3" class="text-gray-600 text-sm leading-relaxed text-justify">
+                                HICON là đơn vị chuyên thi công, lắp đặt, kiểm tra, bảo trì và sửa chữa các dịch vụ hệ thống cho:
                             </p>
 
                             <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-1">
                                 <div class="bg-slate-50 border border-gray-200 rounded-xl p-2.5 flex items-center space-x-2 text-xs font-bold text-brand-navy">
                                     <i class="fas fa-industry text-brand-accent text-sm"></i>
-                                    <span>Nhà máy & Nhà xưởng</span>
+                                    <span data-cms-id="about-scope-1">Nhà máy & Nhà xưởng</span>
                                 </div>
                                 <div class="bg-slate-50 border border-gray-200 rounded-xl p-2.5 flex items-center space-x-2 text-xs font-bold text-brand-navy">
                                     <i class="fas fa-warehouse text-brand-accent text-sm"></i>
-                                    <span>Kho hàng Logistic</span>
+                                    <span data-cms-id="about-scope-2">Kho hàng Logistic</span>
                                 </div>
                                 <div class="bg-slate-50 border border-gray-200 rounded-xl p-2.5 flex items-center space-x-2 text-xs font-bold text-brand-navy">
                                     <i class="fas fa-building text-brand-accent text-sm"></i>
-                                    <span>Văn phòng & Tòa nhà</span>
+                                    <span data-cms-id="about-scope-3">Văn phòng & Tòa nhà</span>
                                 </div>
                                 <div class="bg-slate-50 border border-gray-200 rounded-xl p-2.5 flex items-center space-x-2 text-xs font-bold text-brand-navy sm:col-span-3">
                                     <i class="fas fa-city text-brand-accent text-sm"></i>
-                                    <span>Các công trình dân dụng và công trình công nghiệp trọng điểm</span>
+                                    <span data-cms-id="about-scope-4">Các công trình dân dụng và công trình công nghiệp trọng điểm</span>
                                 </div>
                             </div>
 
-                            <p class="text-gray-600 text-sm leading-relaxed text-justify pt-2">
-                                Bên cạnh lĩnh vực triển khai về các dự án Cơ điện, <strong>Hicon</strong> đặc biệt chú trọng các dịch vụ vận hành và bảo trì đến khách hàng. Với đội ngũ kỹ thuật có kinh nghiệm thực tế và phương châm <strong class="text-brand-blue">“An toàn – Chất lượng – Tiến độ – Đồng hành lâu dài”</strong>, HICON luôn nỗ lực cung cấp giải pháp phù hợp với nhu cầu và điều kiện vận hành thực tế của từng công trình.
+                            <p data-cms-id="about-p4" class="text-gray-600 text-sm leading-relaxed text-justify pt-2">
+                                Bên cạnh lĩnh vực triển khai về các dự án Cơ điện, Hicon đặc biệt chú trọng các dịch vụ vận hành và bảo trì đến khách hàng. Với đội ngũ kỹ thuật có kinh nghiệm thực tế và phương châm “An toàn – Chất lượng – Tiến độ – Đồng hành lâu dài”, HICON luôn nỗ lực cung cấp giải pháp phù hợp với nhu cầu và điều kiện vận hành thực tế của từng công trình.
                             </p>
                         </div>
 
@@ -567,30 +668,30 @@
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-5">
                                 <div class="bg-brand-navy text-white p-2.5 rounded-xl text-center shadow-sm">
                                     <i class="fas fa-shield-alt text-amber-400 text-base mb-1 block"></i>
-                                    <span class="text-[11px] font-bold uppercase tracking-wider">An Toàn</span>
+                                    <span data-cms-id="about-val-1" class="text-[11px] font-bold uppercase tracking-wider">An Toàn</span>
                                 </div>
                                 <div class="bg-brand-navy text-white p-2.5 rounded-xl text-center shadow-sm">
                                     <i class="fas fa-medal text-cyan-300 text-base mb-1 block"></i>
-                                    <span class="text-[11px] font-bold uppercase tracking-wider">Chất Lượng</span>
+                                    <span data-cms-id="about-val-2" class="text-[11px] font-bold uppercase tracking-wider">Chất Lượng</span>
                                 </div>
                                 <div class="bg-brand-navy text-white p-2.5 rounded-xl text-center shadow-sm">
                                     <i class="fas fa-bolt text-amber-400 text-base mb-1 block"></i>
-                                    <span class="text-[11px] font-bold uppercase tracking-wider">Tiến Độ</span>
+                                    <span data-cms-id="about-val-3" class="text-[11px] font-bold uppercase tracking-wider">Tiến Độ</span>
                                 </div>
                                 <div class="bg-brand-navy text-white p-2.5 rounded-xl text-center shadow-sm">
                                     <i class="fas fa-hands-helping text-cyan-300 text-base mb-1 block"></i>
-                                    <span class="text-[11px] font-bold uppercase tracking-wider">Đồng Hành Lâu Dài</span>
+                                    <span data-cms-id="about-val-4" class="text-[11px] font-bold uppercase tracking-wider">Đồng Hành Lâu Dài</span>
                                 </div>
                             </div>
 
                             <div class="flex flex-col sm:flex-row items-center justify-between bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 gap-3">
                                 <div class="flex items-center space-x-2.5">
                                     <i class="fas fa-star text-amber-500 text-lg"></i>
-                                    <span class="text-xs sm:text-sm font-extrabold text-brand-navy italic">
+                                    <span data-cms-id="about-thanks" class="text-xs sm:text-sm font-extrabold text-brand-navy italic">
                                         Rất hân hạnh được phục vụ Quý khách hàng!
                                     </span>
                                 </div>
-                                <button onclick="navigateTo('contact')" class="btn-interactive bg-brand-navy hover:bg-brand-blue text-white text-xs font-bold px-4 py-2 rounded-xl shrink-0 shadow">
+                                <button onclick="if(!isCmsEditMode) navigateTo('contact')" class="btn-interactive bg-brand-navy hover:bg-brand-blue text-white text-xs font-bold px-4 py-2 rounded-xl shrink-0 shadow">
                                     Liên Hệ Hợp Tác <i class="fas fa-arrow-right ml-1"></i>
                                 </button>
                             </div>
@@ -603,7 +704,7 @@
                                 <div class="flex items-center justify-between mb-6 pb-3 border-b border-white/15">
                                     <div>
                                         <span class="text-[10px] font-bold text-cyan-300 uppercase tracking-widest block">DANH MỤC NĂNG LỰC</span>
-                                        <h3 class="text-lg sm:text-xl font-black text-white mt-0.5">CÁC DỊCH VỤ HICON CUNG CẤP GỒM:</h3>
+                                        <h3 data-cms-id="about-srv-heading" class="text-lg sm:text-xl font-black text-white mt-0.5">CÁC DỊCH VỤ HICON CUNG CẤP GỒM:</h3>
                                     </div>
                                     <span class="bg-amber-500 text-brand-dark font-black text-xs px-2.5 py-1 rounded-lg">07 LĨNH VỰC</span>
                                 </div>
@@ -613,7 +714,7 @@
                                         <div class="w-10 h-10 rounded-xl bg-amber-500 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
                                             <i class="fas fa-bolt"></i>
                                         </div>
-                                        <div class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug">
+                                        <div data-cms-id="about-srv-1" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug">
                                             Thi công lắp đặt hệ thống điện công trình dân dụng, công nghiệp
                                         </div>
                                     </div>
@@ -622,7 +723,7 @@
                                         <div class="w-10 h-10 rounded-xl bg-red-500 text-white flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
                                             <i class="fas fa-fire-extinguisher"></i>
                                         </div>
-                                        <div class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug">
+                                        <div data-cms-id="about-srv-2" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug">
                                             Dịch vụ bảo trì hệ thống PCCC
                                         </div>
                                     </div>
@@ -631,7 +732,7 @@
                                         <div class="w-10 h-10 rounded-xl bg-cyan-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
                                             <i class="fas fa-fan"></i>
                                         </div>
-                                        <div class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug">
+                                        <div data-cms-id="about-srv-3" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug">
                                             Dịch vụ bảo trì hệ thống điều hoà & thông gió (HVAC)
                                         </div>
                                     </div>
@@ -640,7 +741,7 @@
                                         <div class="w-10 h-10 rounded-xl bg-blue-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
                                             <i class="fas fa-network-wired"></i>
                                         </div>
-                                        <div class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug">
+                                        <div data-cms-id="about-srv-4" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug">
                                             Dịch vụ bảo trì hệ thống Điện & Điện nhẹ (ELV)
                                         </div>
                                     </div>
@@ -649,7 +750,7 @@
                                         <div class="w-10 h-10 rounded-xl bg-emerald-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
                                             <i class="fas fa-tachometer-alt"></i>
                                         </div>
-                                        <div class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug">
+                                        <div data-cms-id="about-srv-5" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug">
                                             Dịch vụ bảo trì hệ thống khí nén & gas
                                         </div>
                                     </div>
@@ -658,7 +759,7 @@
                                         <div class="w-10 h-10 rounded-xl bg-sky-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
                                             <i class="fas fa-tint"></i>
                                         </div>
-                                        <div class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug">
+                                        <div data-cms-id="about-srv-6" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug">
                                             Dịch vụ bảo trì hệ thống cấp thoát nước & Xử lý nước thải
                                         </div>
                                     </div>
@@ -667,7 +768,7 @@
                                         <div class="w-10 h-10 rounded-xl bg-purple-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
                                             <i class="fas fa-video"></i>
                                         </div>
-                                        <div class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug">
+                                        <div data-cms-id="about-srv-7" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug">
                                             Dịch vụ bảo trì hệ thống camera giám sát (CCTV)
                                         </div>
                                     </div>
@@ -676,7 +777,7 @@
 
                             <div class="mt-6 pt-4 border-t border-white/15 flex items-center justify-between text-xs text-cyan-200">
                                 <span><i class="fas fa-check-double mr-1.5 text-amber-400"></i> Đáp ứng tiêu chuẩn TCVN & ISO</span>
-                                <button onclick="navigateTo('maintenance-portal')" class="text-amber-400 hover:underline font-bold flex items-center">
+                                <button onclick="if(!isCmsEditMode) navigateTo('maintenance-portal')" class="text-amber-400 hover:underline font-bold flex items-center">
                                     Xem Cổng QR <i class="fas fa-external-link-alt ml-1 text-[10px]"></i>
                                 </button>
                             </div>
@@ -691,25 +792,25 @@
         <div id="section-services" class="page-section hidden py-12 bg-gray-50">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="text-center mb-12">
-                    <span class="text-brand-blue font-bold text-sm uppercase">Năng Lực HICON M&E</span>
-                    <h2 class="text-3xl font-extrabold text-brand-navy mt-1">DỊCH VỤ CƠ ĐIỆN & BẢO TRÌ CHUYÊN SÂU</h2>
+                    <span data-cms-id="srv-sec-sub" class="text-brand-blue font-bold text-sm uppercase">Năng Lực HICON M&E</span>
+                    <h2 data-cms-id="srv-sec-title" class="text-3xl font-extrabold text-brand-navy mt-1">DỊCH VỤ CƠ ĐIỆN & BẢO TRÌ CHUYÊN SÂU</h2>
                     <div class="w-16 h-1 bg-brand-accent mx-auto mt-2 rounded-full"></div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100 card-pro-hover">
-                        <span class="text-xs font-bold text-brand-accent bg-cyan-50 px-2.5 py-1 rounded-md">HVAC & CHILLER</span>
-                        <h3 class="text-xl font-bold text-brand-navy mt-2 mb-2">Bảo Trì Điều Hòa Thông Gió</h3>
-                        <p class="text-gray-600 text-sm">Bảo dưỡng định kỳ Chiller, AHU, FCU, quạt thông gió nhà xưởng, cân bằng lưu lượng gió.</p>
+                        <span data-cms-id="srv-box1-tag" class="text-xs font-bold text-brand-accent bg-cyan-50 px-2.5 py-1 rounded-md">HVAC & CHILLER</span>
+                        <h3 data-cms-id="srv-box1-title" class="text-xl font-bold text-brand-navy mt-2 mb-2">Bảo Trì Điều Hòa Thông Gió</h3>
+                        <p data-cms-id="srv-box1-desc" class="text-gray-600 text-sm">Bảo dưỡng định kỳ Chiller, AHU, FCU, quạt thông gió nhà xưởng, cân bằng lưu lượng gió.</p>
                     </div>
                     <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100 card-pro-hover">
-                        <span class="text-xs font-bold text-brand-accent bg-cyan-50 px-2.5 py-1 rounded-md">PCCC & BÁO CHÁY</span>
-                        <h3 class="text-xl font-bold text-brand-navy mt-2 mb-2">Bảo Trì Phòng Cháy Chữa Cháy</h3>
-                        <p class="text-gray-600 text-sm">Kiểm tra máy bơm chữa cháy Electric/Diesel, tủ trung tâm Telefire, mạng lưới Sprinkler.</p>
+                        <span data-cms-id="srv-box2-tag" class="text-xs font-bold text-brand-accent bg-cyan-50 px-2.5 py-1 rounded-md">PCCC & BÁO CHÁY</span>
+                        <h3 data-cms-id="srv-box2-title" class="text-xl font-bold text-brand-navy mt-2 mb-2">Bảo Trì Phòng Cháy Chữa Cháy</h3>
+                        <p data-cms-id="srv-box2-desc" class="text-gray-600 text-sm">Kiểm tra máy bơm chữa cháy Electric/Diesel, tủ trung tâm Telefire, mạng lưới Sprinkler.</p>
                     </div>
                     <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100 card-pro-hover">
-                        <span class="text-xs font-bold text-brand-accent bg-cyan-50 px-2.5 py-1 rounded-md">ĐIỆN & NĂNG LƯỢNG</span>
-                        <h3 class="text-xl font-bold text-brand-navy mt-2 mb-2">Trạm Biến Áp & Tủ Điện</h3>
-                        <p class="text-gray-600 text-sm">Bảo dưỡng trạm biến áp, tủ MSB, đo điện trở cách điện motor, đo nhiệt độ hồng ngoại.</p>
+                        <span data-cms-id="srv-box3-tag" class="text-xs font-bold text-brand-accent bg-cyan-50 px-2.5 py-1 rounded-md">ĐIỆN & NĂNG LƯỢNG</span>
+                        <h3 data-cms-id="srv-box3-title" class="text-xl font-bold text-brand-navy mt-2 mb-2">Trạm Biến Áp & Tủ Điện</h3>
+                        <p data-cms-id="srv-box3-desc" class="text-gray-600 text-sm">Bảo dưỡng trạm biến áp, tủ MSB, đo điện trở cách điện motor, đo nhiệt độ hồng ngoại.</p>
                     </div>
                 </div>
             </div>
@@ -721,13 +822,13 @@
                 
                 <div class="text-center mb-10">
                     <span class="inline-flex items-center bg-amber-500/15 text-amber-600 border border-amber-400/40 text-xs font-extrabold px-4 py-1 rounded-full uppercase tracking-widest mb-2">
-                        <i class="fas fa-award mr-1.5"></i> Hồ Sơ Năng Lực Thực Tế
+                        <i class="fas fa-award mr-1.5"></i> <span data-cms-id="proj-sec-badge">Hồ Sơ Năng Lực Thực Tế</span>
                     </span>
                     <h2 class="text-3xl sm:text-4xl font-black text-brand-navy tracking-tight">
-                        DỰ ÁN TIÊU BIỂU <span class="text-amber-500 font-light">| PROJECTS</span>
+                        <span data-cms-id="proj-sec-title">DỰ ÁN TIÊU BIỂU</span> <span class="text-amber-500 font-light">| PROJECTS</span>
                     </h2>
-                    <p class="text-gray-500 text-xs sm:text-sm mt-2 max-w-2xl mx-auto">
-                        Các công trình nhà máy công nghiệp FDI, tổ hợp khách sạn, tòa nhà thương mại và bệnh viện trọng điểm do <strong>HICON M&E</strong> trực tiếp triển khai thi công & bảo trì.
+                    <p data-cms-id="proj-sec-desc" class="text-gray-500 text-xs sm:text-sm mt-2 max-w-2xl mx-auto">
+                        Các công trình nhà máy công nghiệp FDI, tổ hợp khách sạn, tòa nhà thương mại và bệnh viện trọng điểm do HICON M&E trực tiếp triển khai thi công & bảo trì.
                     </p>
                     <div class="w-24 h-1 bg-amber-500 mx-auto mt-3 rounded-full"></div>
                 </div>
@@ -790,8 +891,8 @@
                     </div>
                     <div class="flex flex-wrap gap-2" id="proj-modal-tags"></div>
                     <div class="pt-3 border-t border-gray-100 flex justify-between items-center">
-                        <button onclick="triggerProjectLinkChange(currentModalProjectId)" class="btn-interactive bg-slate-100 hover:bg-amber-100 text-brand-navy font-bold px-4 py-2 rounded-xl text-xs flex items-center border border-gray-300">
-                            <i class="fas fa-link mr-1.5 text-amber-500"></i> Đổi ảnh dự án bằng Link
+                        <button onclick="openPhotoChangeModal(currentModalProjectId)" class="btn-interactive bg-slate-100 hover:bg-amber-100 text-brand-navy font-bold px-4 py-2 rounded-xl text-xs flex items-center border border-gray-300">
+                            <i class="fas fa-camera mr-1.5 text-amber-500"></i> Đổi ảnh dự án này
                         </button>
                         <button onclick="closeProjectDetailModal()" class="btn-interactive bg-brand-navy text-white font-bold px-6 py-2.5 rounded-xl text-xs">
                             Đóng
@@ -810,22 +911,25 @@
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                         <div>
                             <span class="bg-brand-accent/20 text-brand-accent border border-brand-accent/40 text-xs px-3 py-1 rounded-full font-semibold uppercase">
-                                <i class="fas fa-qrcode mr-1"></i> Cổng Số Hóa Cho Chủ Đầu Tư & BQL
+                                <i class="fas fa-qrcode mr-1"></i> <span data-cms-id="portal-badge">Cổng Số Hóa Offline & Cloud Real-time</span>
                             </span>
-                            <h2 class="text-2xl sm:text-3xl font-extrabold mt-2">TRA CỨU BÁO CÁO BẢO TRÌ THIẾT BỊ</h2>
-                            <p class="text-gray-300 text-xs sm:text-sm mt-1 max-w-2xl">
-                                Nhập Mã QR Thiết Bị được dán tại nhà máy để xem ngay nhật ký kiểm tra real-time, thông số đo đạc & hình ảnh hiện trường.
+                            <h2 data-cms-id="portal-heading" class="text-2xl sm:text-3xl font-extrabold mt-2">TRA CỨU BÁO CÁO BẢO TRÌ THIẾT BỊ</h2>
+                            <p data-cms-id="portal-desc" class="text-gray-300 text-xs sm:text-sm mt-1 max-w-2xl">
+                                Quét Tem QR bằng Camera hoặc nhập Mã Thiết Bị để xem ngay nhật ký kiểm tra, thông số đo đạc & hình ảnh hiện trường (Hỗ trợ cả khi mất sóng).
                             </p>
                         </div>
 
                         <div class="w-full md:w-auto bg-white/10 p-2 rounded-2xl backdrop-blur-md border border-white/20 flex flex-wrap gap-2 items-center">
-                            <div class="flex gap-2">
-                                <input type="text" id="device-code-input" placeholder="Nhập Mã QR (VD: TS-2026-HVAC)" class="px-4 py-2.5 rounded-xl text-sm text-gray-800 w-full md:w-56 focus:outline-none focus:ring-2 focus:ring-brand-accent transition">
+                            <div class="flex gap-2 w-full sm:w-auto">
+                                <input type="text" id="device-code-input" placeholder="Nhập Mã QR (VD: TS-2026-HVAC)" class="px-4 py-2.5 rounded-xl text-sm text-gray-800 w-full md:w-52 focus:outline-none focus:ring-2 focus:ring-brand-accent transition">
                                 <button onclick="searchDevice()" class="btn-interactive bg-brand-accent text-brand-dark font-extrabold px-4 py-2.5 rounded-xl text-sm shadow-lg flex items-center whitespace-nowrap">
                                     <i class="fas fa-search mr-1.5"></i> Tra Cứu
                                 </button>
+                                <button onclick="openCameraQrScanner()" class="btn-interactive bg-emerald-500 hover:bg-emerald-400 text-brand-dark font-extrabold px-3.5 py-2.5 rounded-xl text-sm shadow-lg flex items-center whitespace-nowrap" title="Mở Camera Quét QR">
+                                    <i class="fas fa-camera"></i>
+                                </button>
                             </div>
-                            <button onclick="openDeviceListModal()" class="btn-interactive bg-white/20 hover:bg-white/30 text-white font-bold px-4 py-2.5 rounded-xl text-sm border border-white/30 flex items-center whitespace-nowrap shadow-md">
+                            <button onclick="openDeviceListModal()" class="btn-interactive bg-white/20 hover:bg-white/30 text-white font-bold px-4 py-2.5 rounded-xl text-sm border border-white/30 flex items-center whitespace-nowrap shadow-md w-full sm:w-auto justify-center">
                                 <i class="fas fa-list-ul mr-2 text-cyan-300"></i> Danh Sách Tổng Hợp
                             </button>
                         </div>
@@ -833,12 +937,12 @@
 
                     <div class="mt-6 pt-4 border-t border-white/10 flex flex-wrap items-center gap-3 text-xs">
                         <span id="total-devices-text" class="text-gray-200 font-semibold">Số lượng mã thiết bị hiện có: 0</span>
-                        <div class="ml-auto flex items-center gap-2">
-                            <button onclick="openCloudExportCodeModal()" class="btn-interactive bg-amber-500 hover:bg-amber-400 text-brand-dark font-bold px-3 py-1.5 rounded-lg transition flex items-center shadow-md" title="Đồng bộ tất cả thiết bị mới nhất lên web">
-                                <i class="fas fa-sync-alt mr-1"></i> Đồng bộ thiết bị lên web
-                            </button>
-                            <button onclick="openAdminModal()" class="btn-interactive bg-white/20 hover:bg-white/30 text-white font-bold px-3 py-1.5 rounded-lg transition flex items-center shadow-md">
-                                <i class="fas fa-edit mr-1"></i> Cập nhật thiết bị
+                        <span id="offline-pending-badge" class="hidden bg-amber-500/20 border border-amber-400 text-amber-300 px-2.5 py-0.5 rounded-full text-[11px] font-bold">
+                            <i class="fas fa-clock mr-1"></i> Có bản lưu Offline chờ đồng bộ
+                        </span>
+                        <div class="ml-auto flex flex-wrap gap-2">
+                            <button onclick="openAdminModal()" class="btn-interactive bg-amber-500 hover:bg-amber-400 text-brand-dark font-bold px-3.5 py-1.5 rounded-lg transition flex items-center shadow-md">
+                                <i class="fas fa-edit mr-1.5"></i> Cập nhật thông tin/trạng thái thiết bị
                             </button>
                         </div>
                     </div>
@@ -856,25 +960,28 @@
                                     <h3 id="device-name" class="text-xl font-extrabold text-brand-navy mt-2">--</h3>
                                     <p id="device-code" class="text-xs text-gray-500 font-mono">MÃ QR: --</p>
                                 </div>
-                                <div class="bg-slate-100 p-2 rounded-xl border border-gray-200 text-center">
-                                    <i class="fas fa-qrcode text-3xl text-gray-400"></i>
-                                    <div class="text-[9px] text-gray-400 font-mono mt-0.5">PENDING</div>
+                                <div onclick="openQrLabelModalForCurrent()" class="cursor-pointer bg-slate-100 hover:bg-cyan-50 p-2 rounded-xl border border-gray-200 text-center transition" title="Bấm để xem & in Tem QR của thiết bị này">
+                                    <img id="device-qr-thumb" src="" class="w-12 h-12 object-contain hidden mx-auto">
+                                    <i id="device-qr-placeholder" class="fas fa-qrcode text-3xl text-gray-400"></i>
+                                    <div class="text-[9px] text-brand-blue font-bold mt-0.5">TEM QR</div>
                                 </div>
                             </div>
                             <hr class="my-4 border-gray-100">
                             <div class="space-y-3 text-xs">
-                                <div class="flex justify-between"><span class="text-gray-500">Khu vực:</span><span id="device-location" class="font-semibold text-gray-800">--</span></div>
-                                <div class="flex justify-between"><span class="text-gray-500">Chủ Đầu Tư:</span><span id="device-client" class="font-semibold text-brand-navy">--</span></div>
+                                <div class="flex justify-between"><span class="text-gray-500">Khu vực:</span><span id="device-location" class="font-semibold text-gray-800 text-right">--</span></div>
+                                <div class="flex justify-between"><span class="text-gray-500">Chủ Đầu Tư:</span><span id="device-client" class="font-semibold text-brand-navy text-right">--</span></div>
                                 <div class="flex justify-between"><span class="text-gray-500">Ngày bảo trì:</span><span id="device-date" class="font-bold text-gray-800">--</span></div>
-                                <div class="flex justify-between"><span class="text-gray-500">Kỹ sư phụ trách:</span><span id="device-tech" class="font-semibold text-gray-800">--</span></div>
+                                <div class="flex justify-between"><span class="text-gray-500">Kỹ sư phụ trách:</span><span id="device-tech" class="font-semibold text-gray-800 text-right">--</span></div>
                             </div>
-                        </div>
 
-                        <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-200 text-center">
-                            <h4 class="text-sm font-bold text-brand-navy mb-2">BIÊN BẢN BẢO TRÌ</h4>
-                            <button onclick="alert('Vui lòng chọn hoặc tra cứu thiết bị trước khi xuất biên bản!')" class="btn-interactive w-full bg-gray-300 text-gray-600 font-bold py-3 rounded-xl text-xs flex items-center justify-center cursor-not-allowed">
-                                <i class="fas fa-file-pdf text-gray-500 text-base mr-2"></i> Xuất Biên Bản (PDF)
-                            </button>
+                            <div class="mt-5 pt-4 border-t border-gray-100 grid grid-cols-2 gap-2">
+                                <button onclick="openQrLabelModalForCurrent()" class="btn-interactive bg-brand-light hover:bg-cyan-100 text-brand-navy font-bold py-2.5 rounded-xl text-xs flex items-center justify-center border border-cyan-300">
+                                    <i class="fas fa-qrcode text-brand-accent mr-1.5"></i> In Tem QR Máy
+                                </button>
+                                <button onclick="window.print()" class="btn-interactive bg-brand-navy hover:bg-brand-blue text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center">
+                                    <i class="fas fa-print mr-1.5"></i> In Biên Bản
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -898,7 +1005,7 @@
                                             </tr>
                                         </thead>
                                         <tbody id="report-tasks-body" class="divide-y divide-gray-100">
-                                            <tr><td colspan="4" class="p-6 text-center text-gray-400">Vui lòng nhập mã QR hoặc chọn thiết bị từ danh sách để xem báo cáo.</td></tr>
+                                            <tr><td colspan="4" class="p-6 text-center text-gray-400">Vui lòng quét QR, nhập mã hoặc chọn thiết bị từ danh sách để xem báo cáo.</td></tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -949,8 +1056,8 @@
         <div id="section-contact" class="page-section hidden py-12 bg-white">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="text-center mb-12">
-                    <span class="text-brand-blue font-bold text-sm uppercase">Kết Nối Với HICON M&E</span>
-                    <h2 class="text-3xl font-extrabold text-brand-navy mt-1">LIÊN HỆ TƯ VẤN & BÁO GIÁ DỊCH VỤ</h2>
+                    <span data-cms-id="contact-sec-sub" class="text-brand-blue font-bold text-sm uppercase">Kết Nối Với HICON M&E</span>
+                    <h2 data-cms-id="contact-sec-title" class="text-3xl font-extrabold text-brand-navy mt-1">LIÊN HỆ TƯ VẤN & BÁO GIÁ DỊCH VỤ</h2>
                     <div class="w-16 h-1 bg-brand-accent mx-auto mt-2 rounded-full"></div>
                 </div>
                 <div class="max-w-xl mx-auto bg-gray-50 p-8 rounded-2xl border border-gray-200">
@@ -966,46 +1073,163 @@
 
     </main>
 
-    <!-- MODAL XUẤT MÃ ĐỒNG BỘ THIẾT BỊ GIỮA CÁC THIẾT BỊ -->
-    <div id="cloud-export-code-modal" class="fixed inset-0 z-[80] bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl p-6 space-y-4 border border-gray-200">
-            <div class="flex justify-between items-center border-b border-gray-100 pb-3">
-                <h3 class="font-extrabold text-brand-navy text-base flex items-center">
-                    <i class="fas fa-sync-alt text-brand-accent mr-2"></i> ĐỒNG BỘ DỮ LIỆU THIẾT BỊ LÊN WEB VĨNH VIỄN
-                </h3>
-                <button onclick="closeCloudExportCodeModal()" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-lg"></i></button>
+    <!-- ==================== MODAL NHẬP MÃ PIN BẬT CHẾ ĐỘ CHỈNH SỬA TRỰC TIẾP (LIVE CMS) ==================== -->
+    <div id="cms-pin-modal" class="fixed inset-0 z-[120] bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl p-6 text-center space-y-4 border border-gray-200">
+            <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center text-3xl mx-auto shadow-inner">
+                <i class="fas fa-magic"></i>
             </div>
-            <p class="text-xs text-gray-600 leading-relaxed">
-                Để mọi kỹ thuật viên và điện thoại khác truy cập đều thấy ngay <strong>toàn bộ thiết bị mới cập nhật</strong>, hãy làm theo 2 bước:
+            <h3 class="text-lg font-black text-brand-navy">MỞ KHÓA CHỈNH SỬA GIAO DIỆN</h3>
+            <p class="text-xs text-gray-500 leading-relaxed">
+                Nhập <strong>Mã PIN quản trị</strong> để bật chế độ sửa trực tiếp mọi chữ, tiêu đề, dự án và hình ảnh ngay trên màn hình.
             </p>
-            <div class="space-y-2">
-                <textarea id="export-code-textarea" rows="4" readonly class="w-full p-2.5 border border-gray-300 rounded-xl text-[10px] font-mono bg-slate-50 focus:outline-none"></textarea>
-            </div>
-            <p class="text-[11px] text-gray-500 italic">
-                Copy đoạn mã trên dán thay thế vào biến <code class="text-amber-600 font-bold font-mono">defaultDevices</code> trong file `index.html` rồi bấm Commit & Push. Mọi máy sẽ đồng bộ 100%!
-            </p>
-            <div class="flex justify-end pt-2">
-                <button type="button" onclick="closeCloudExportCodeModal()" class="px-5 py-2.5 bg-brand-navy text-white rounded-xl text-xs font-bold">Đóng</button>
+            <input type="password" id="cms-pin-input" maxlength="8" placeholder="Nhập mã PIN (Mặc định: 1111)" class="w-full text-center text-base font-mono p-3 border-2 border-gray-300 rounded-xl focus:border-amber-500 focus:outline-none transition">
+            <div class="flex gap-2 pt-2">
+                <button onclick="closeCmsPinModal()" class="btn-interactive w-1/2 bg-gray-200 text-gray-700 py-2.5 rounded-xl text-xs font-bold">Hủy</button>
+                <button onclick="verifyCmsPinAndActivate()" class="btn-interactive w-1/2 bg-amber-500 hover:bg-amber-600 text-brand-dark py-2.5 rounded-xl text-xs font-extrabold shadow-lg">Mở Khóa Sửa</button>
             </div>
         </div>
     </div>
 
-    <!-- LIGHTBOX PHÓNG TO ẢNH -->
+    <!-- ==================== MODAL CAMERA QUÉT MÃ QR TRỰC TIẾP TRONG APP ==================== -->
+    <div id="qr-scanner-modal" class="fixed inset-0 z-[105] bg-black/85 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden border border-gray-200">
+            <div class="bg-brand-navy text-white p-4 flex justify-between items-center">
+                <h3 class="font-extrabold text-sm flex items-center">
+                    <i class="fas fa-camera text-brand-accent mr-2"></i> QUÉT TEM QR THIẾT BỊ
+                </h3>
+                <button onclick="closeCameraQrScanner()" class="text-gray-300 hover:text-white text-lg px-2"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="p-5 text-center space-y-3">
+                <div id="qr-reader" class="w-full rounded-2xl overflow-hidden border-2 border-brand-accent bg-black min-h-[240px]"></div>
+                <p class="text-xs text-gray-500">Đưa Camera hướng vào mã QR dán trên vỏ thiết bị (AHU, Chiller, Bơm PCCC) để tự động mở hồ sơ bảo trì.</p>
+                <button onclick="closeCameraQrScanner()" class="w-full py-2.5 bg-gray-200 text-gray-700 rounded-xl text-xs font-bold">Đóng Camera</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL TẠO & IN TEM QR CHO TỪNG THIẾT BỊ ==================== -->
+    <div id="qr-label-modal" class="fixed inset-0 z-[105] bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden border border-gray-200 p-6 text-center space-y-4">
+            <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+                <h3 class="font-extrabold text-brand-navy text-sm flex items-center">
+                    <i class="fas fa-qrcode text-brand-accent mr-2"></i> TEM QR ĐỊNH DANH THIẾT BỊ
+                </h3>
+                <button onclick="closeQrLabelModal()" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-lg"></i></button>
+            </div>
+
+            <div id="printable-qr-area" class="border-2 border-brand-navy rounded-2xl p-4 bg-white shadow-inner space-y-2">
+                <div class="text-xs font-black text-brand-navy tracking-wider uppercase">HICON M&E - BẢO TRÌ SỐ HÓA</div>
+                <img id="qr-label-img" src="" alt="QR Code" class="w-48 h-48 mx-auto border border-gray-200 p-2 rounded-xl">
+                <div id="qr-label-code" class="text-sm font-mono font-black text-brand-blue">MÃ: --</div>
+                <div id="qr-label-name" class="text-xs font-bold text-gray-700">--</div>
+                <div class="text-[10px] text-gray-400">Quét mã QR để mở App & xem nhật ký bảo trì</div>
+            </div>
+
+            <div class="flex gap-2 pt-2">
+                <a id="qr-download-link" href="#" target="_blank" download="Tem_QR_HiconME.png" class="btn-interactive w-1/2 bg-brand-accent text-brand-dark font-extrabold py-2.5 rounded-xl text-xs flex items-center justify-center shadow">
+                    <i class="fas fa-download mr-1.5"></i> Tải Ảnh QR
+                </a>
+                <button onclick="closeQrLabelModal();" class="btn-interactive w-1/2 bg-brand-navy text-white font-bold py-2.5 rounded-xl text-xs">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL HƯỚNG DẪN CÀI ĐẶT APP RA MÀN HÌNH CHÍNH & OFFLINE ==================== -->
+    <div id="install-app-modal" class="fixed inset-0 z-[105] bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden border border-gray-200 p-6 space-y-4">
+            <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+                <h3 class="font-extrabold text-brand-navy text-base flex items-center">
+                    <i class="fas fa-mobile-alt text-amber-500 mr-2 text-lg"></i> CÀI ĐẶT APP HICON M&E (CHẠY OFFLINE)
+                </h3>
+                <button onclick="closeInstallAppGuideModal()" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-lg"></i></button>
+            </div>
+
+            <div id="native-install-btn-box" class="hidden">
+                <button onclick="triggerNativePwaInstall()" class="btn-interactive w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3.5 rounded-2xl text-sm shadow-xl flex items-center justify-center">
+                    <i class="fas fa-download mr-2"></i> BẤM VÀO ĐÂY ĐỂ CÀI APP NGAY
+                </button>
+            </div>
+
+            <div class="space-y-3 text-xs text-gray-700 leading-relaxed">
+                <div class="bg-slate-50 p-3.5 rounded-2xl border border-gray-200">
+                    <p class="font-extrabold text-brand-navy mb-1"><i class="fab fa-apple mr-1.5 text-base"></i> Trên iPhone / iPad (Safari):</p>
+                    <p>1. Bấm vào nút <strong>Chia sẻ (Share)</strong> <i class="fas fa-share-square text-brand-blue"></i> ở thanh dưới cùng trình duyệt.</p>
+                    <p>2. Kéo xuống chọn <strong>"Thêm vào MH chính" (Add to Home Screen)</strong> <i class="far fa-plus-square text-brand-blue"></i> $\rightarrow$ Bấm <strong>Thêm (Add)</strong>.</p>
+                </div>
+
+                <div class="bg-slate-50 p-3.5 rounded-2xl border border-gray-200">
+                    <p class="font-extrabold text-brand-navy mb-1"><i class="fab fa-android mr-1.5 text-emerald-600 text-base"></i> Trên Điện thoại Android (Chrome):</p>
+                    <p>1. Bấm vào biểu tượng <strong>3 chấm dọc (⋮)</strong> ở góc trên bên phải trình duyệt.</p>
+                    <p>2. Chọn <strong>"Cài đặt ứng dụng" (Install App)</strong> hoặc <strong>"Thêm vào màn hình chính"</strong>.</p>
+                </div>
+
+                <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-xl text-[11px] text-emerald-900 font-medium">
+                    <i class="fas fa-check-circle text-emerald-600 mr-1"></i> Sau khi cài, App <strong>HICON M&E</strong> sẽ nằm ngoài màn hình chính, mở Full màn hình và <strong>tra cứu/lưu báo cáo Offline 100%</strong> ngay cả khi mất mạng!
+                </div>
+            </div>
+
+            <button onclick="closeInstallAppGuideModal()" class="w-full py-2.5 bg-brand-navy text-white rounded-xl text-xs font-bold">Đã Hiểu</button>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL ĐỔI ẢNH ĐA NĂNG ==================== -->
+    <div id="photo-change-modal" class="fixed inset-0 z-[130] bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden border border-gray-200 p-6 space-y-4">
+            <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+                <h3 class="font-extrabold text-brand-navy text-base flex items-center">
+                    <i class="fas fa-camera text-amber-500 mr-2"></i> CẬP NHẬT HÌNH ẢNH ĐỒNG BỘ CLOUD
+                </h3>
+                <button onclick="closePhotoChangeModal()" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-lg"></i></button>
+            </div>
+            <p id="photo-change-target-label" class="text-xs font-bold text-brand-blue bg-cyan-50 px-3 py-2 rounded-xl border border-cyan-200">--</p>
+
+            <div class="space-y-3">
+                <div class="bg-slate-50 p-4 rounded-2xl border-2 border-dashed border-brand-accent/50 text-center">
+                    <p class="text-xs font-bold text-brand-navy mb-2">Cách 1: Chọn ảnh từ Album máy tính / điện thoại</p>
+                    <button type="button" onclick="document.getElementById('universal-image-file-input').click()" class="btn-interactive bg-brand-accent hover:bg-cyan-400 text-brand-dark font-extrabold px-5 py-2.5 rounded-xl text-xs shadow-md inline-flex items-center">
+                        <i class="fas fa-folder-open mr-2 text-sm"></i> Mở Thư Viện Ảnh
+                    </button>
+                    <p class="text-[10px] text-gray-400 mt-1.5">Ảnh tự động nén nhẹ, lưu Offline & đồng bộ lên Cloud</p>
+                </div>
+
+                <div class="text-center text-[11px] font-bold text-gray-400 uppercase">--- HOẶC ---</div>
+
+                <div class="bg-slate-50 p-4 rounded-2xl border border-gray-200 space-y-2">
+                    <label class="block text-xs font-bold text-brand-navy">Cách 2: Dán đường dẫn (Link URL) ảnh</label>
+                    <input type="text" id="photo-change-url-input" placeholder="https://..." class="w-full p-2.5 border border-gray-300 rounded-xl text-xs focus:outline-none focus:border-brand-blue">
+                    <button type="button" onclick="savePhotoFromUrlInput()" class="btn-interactive w-full bg-brand-navy hover:bg-brand-blue text-white font-bold py-2.5 rounded-xl text-xs shadow">
+                        Lưu & Đồng Bộ Đường Dẫn Ảnh
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL: LIGHTBOX PHÓNG TO ẢNH ==================== -->
     <div id="lightbox-modal" class="fixed inset-0 z-[110] bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4 select-none" onclick="closeLightbox(event)">
         <button type="button" onclick="closeLightbox(event, true)" class="absolute top-5 right-5 z-20 w-11 h-11 rounded-full bg-white/15 hover:bg-red-600 text-white flex items-center justify-center text-xl transition shadow-lg" title="Đóng (ESC)">
             <i class="fas fa-times"></i>
         </button>
+
         <div id="lightbox-counter" class="absolute top-6 left-6 z-20 bg-black/60 text-cyan-300 border border-white/15 px-4 py-1.5 rounded-full text-xs font-mono font-bold tracking-wider">
             Ảnh 1 / 1
         </div>
-        <button type="button" id="lightbox-prev-btn" onclick="changeLightboxImage(-1, event)" class="absolute left-3 sm:left-6 z-20 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/15 hover:bg-brand-accent hover:text-brand-dark text-white flex items-center justify-center text-xl transition shadow-2xl border border-white/20">
+
+        <button type="button" id="lightbox-prev-btn" onclick="changeLightboxImage(-1, event)" class="absolute left-3 sm:left-6 z-20 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/15 hover:bg-brand-accent hover:text-brand-dark text-white flex items-center justify-center text-xl transition shadow-2xl border border-white/20" title="Ảnh trước">
             <i class="fas fa-chevron-left"></i>
         </button>
+
         <div class="relative max-w-5xl max-h-[85vh] flex flex-col items-center justify-center" onclick="event.stopPropagation()">
-            <img id="lightbox-img" src="" alt="Ảnh phóng to" class="max-w-full max-h-[80vh] object-contain rounded-xl shadow-2xl border border-white/20">
-            <p id="lightbox-caption" class="text-gray-200 text-xs sm:text-sm font-medium mt-3 bg-black/60 px-4 py-1.5 rounded-full border border-white/10">Ảnh kiểm tra thực tế</p>
+            <img id="lightbox-img" src="" alt="Ảnh bảo trì phóng to" class="max-w-full max-h-[80vh] object-contain rounded-xl shadow-2xl border border-white/20 transition-transform duration-200">
+            <p id="lightbox-caption" class="text-gray-200 text-xs sm:text-sm font-medium mt-3 bg-black/60 px-4 py-1.5 rounded-full border border-white/10">
+                Ảnh kiểm tra thực tế tại hiện trường
+            </p>
         </div>
-        <button type="button" id="lightbox-next-btn" onclick="changeLightboxImage(1, event)" class="absolute right-3 sm:right-6 z-20 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/15 hover:bg-brand-accent hover:text-brand-dark text-white flex items-center justify-center text-xl transition shadow-2xl border border-white/20">
+
+        <button type="button" id="lightbox-next-btn" onclick="changeLightboxImage(1, event)" class="absolute right-3 sm:right-6 z-20 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/15 hover:bg-brand-accent hover:text-brand-dark text-white flex items-center justify-center text-xl transition shadow-2xl border border-white/20" title="Ảnh tiếp theo">
             <i class="fas fa-chevron-right"></i>
         </button>
     </div>
@@ -1020,12 +1244,14 @@
                 </div>
                 <button onclick="closeDeviceListModal()" class="text-gray-300 hover:text-white text-xl p-1 rounded-lg transition"><i class="fas fa-times"></i></button>
             </div>
+
             <div class="p-5 bg-slate-50 border-b border-gray-200 space-y-4 shrink-0">
                 <div class="flex flex-col sm:flex-row gap-3 justify-between items-center">
                     <div class="relative w-full sm:w-80">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"><i class="fas fa-search"></i></span>
                         <input type="text" id="modal-search-input" oninput="filterDeviceList()" placeholder="Tìm kiếm theo mã, tên thiết bị..." class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-xl text-xs focus:outline-none focus:border-brand-accent transition">
                     </div>
+
                     <div class="flex items-center gap-2">
                         <div id="list-mode-indicator" class="text-xs font-bold text-gray-600 bg-gray-200 px-3 py-1.5 rounded-xl flex items-center border border-gray-300">
                             <i class="fas fa-eye mr-1.5 text-gray-500"></i> Chế độ Người xem
@@ -1035,11 +1261,13 @@
                         </button>
                     </div>
                 </div>
+
                 <div>
                     <div class="text-[11px] font-bold text-gray-500 mb-1.5">Lọc theo chữ cái đầu:</div>
                     <div id="alphabet-filter-container" class="flex flex-wrap gap-1.5 text-xs"></div>
                 </div>
             </div>
+
             <div class="p-6 overflow-y-auto flex-grow space-y-3">
                 <div class="overflow-x-auto border border-gray-200 rounded-2xl">
                     <table class="w-full text-left text-xs border-collapse">
@@ -1050,6 +1278,7 @@
                                 <th class="p-3 font-bold">Tên Thiết Bị</th>
                                 <th class="p-3 font-bold">Khu Vực Lắp Đặt</th>
                                 <th class="p-3 font-bold">Kỹ Sư Phụ Trách</th>
+                                <th class="p-3 font-bold w-20 text-center">Tem QR</th>
                                 <th id="th-action-header" class="p-3 font-bold w-24 text-center hidden">Thao Tác</th>
                             </tr>
                         </thead>
@@ -1057,19 +1286,24 @@
                     </table>
                 </div>
             </div>
+
             <div class="p-4 bg-slate-100 border-t border-gray-200 flex justify-between items-center shrink-0">
-                <span class="text-[11px] text-gray-500">Danh sách được sắp xếp và nhóm theo thứ tự bảng chữ cái.</span>
+                <span class="text-[11px] text-gray-500">Bấm vào Mã QR để xem chi tiết báo cáo (Hỗ trợ cả Offline).</span>
                 <button onclick="closeDeviceListModal()" class="btn-interactive px-5 py-2 bg-brand-navy text-white rounded-xl text-xs font-bold">Đóng</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL XÁC NHẬN XÓA -->
+    <!-- ==================== MODAL XÁC NHẬN XÓA THIẾT BỊ ==================== -->
     <div id="delete-confirm-modal" class="fixed inset-0 z-[60] bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl p-6 text-center space-y-4 border border-gray-200">
-            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-2xl mx-auto shadow-inner"><i class="fas fa-trash-alt"></i></div>
+        <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl p-6 text-center space-y-4 border border-gray-200 animate-in fade-in zoom-in duration-200">
+            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-2xl mx-auto shadow-inner">
+                <i class="fas fa-trash-alt"></i>
+            </div>
             <h3 class="text-lg font-bold text-brand-navy">Xác Nhận Xóa Thiết Bị</h3>
-            <p id="delete-confirm-text" class="text-xs text-gray-600 leading-relaxed">Bạn có chắc chắn muốn xóa thiết bị này không?</p>
+            <p id="delete-confirm-text" class="text-xs text-gray-600 leading-relaxed">
+                Bạn có chắc chắn muốn xóa thiết bị này không?
+            </p>
             <div class="flex gap-3 pt-2">
                 <button onclick="closeDeleteConfirmModal()" class="btn-interactive w-1/2 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2.5 rounded-xl text-xs font-bold">Hủy</button>
                 <button onclick="executeDeleteDevice()" class="btn-interactive w-1/2 bg-red-600 hover:bg-red-700 text-white py-2.5 rounded-xl text-xs font-bold shadow-lg">Đồng Ý</button>
@@ -1077,10 +1311,12 @@
         </div>
     </div>
 
-    <!-- MODAL XÁC THỰC QUẢN TRỊ -->
+    <!-- ==================== MODAL ĐĂNG NHẬP NHẬP MẬT KHẨU QUẢN TRỊ ==================== -->
     <div id="list-auth-modal" class="fixed inset-0 z-[70] bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl p-6 text-center space-y-4 border border-gray-200">
-            <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-2xl mx-auto shadow-inner"><i class="fas fa-user-lock"></i></div>
+            <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-2xl mx-auto shadow-inner">
+                <i class="fas fa-user-lock"></i>
+            </div>
             <h3 class="text-base font-bold text-brand-navy">XÁC THỰC QUYỀN QUẢN TRỊ</h3>
             <p class="text-xs text-gray-500">Nhập mật khẩu quản trị để chuyển sang chế độ xóa thiết bị.</p>
             <input type="password" id="list-auth-password" placeholder="Nhập mật khẩu..." class="w-full text-center text-sm p-3 border-2 border-gray-300 rounded-xl focus:border-amber-500 focus:outline-none transition">
@@ -1091,18 +1327,57 @@
         </div>
     </div>
 
-    <!-- MODAL ADMIN / CẬP NHẬT THIẾT BỊ -->
+    <!-- ==================== MODAL FORM ADMIN / CẬP NHẬT THIẾT BỊ ==================== -->
     <div id="admin-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden border border-gray-200 my-8">
+        <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden border border-gray-200 my-8 transition-all duration-300 transform scale-100">
+            
             <div id="admin-step-auth" class="p-8 text-center">
-                <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 shadow-inner"><i class="fas fa-user-lock"></i></div>
-                <h3 class="text-xl font-bold text-brand-navy mb-2">ĐĂNG NHẬP QUẢN TRỊ</h3>
-                <p class="text-xs text-gray-500 mb-6">Nhập mật khẩu nội bộ để cập nhật thông tin/trạng thái thiết bị.</p>
+                <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 shadow-inner">
+                    <i class="fas fa-user-lock"></i>
+                </div>
+                <h3 class="text-xl font-bold text-brand-navy mb-2">ĐĂNG NHẬP KỸ SƯ / QUẢN TRỊ</h3>
+                <p class="text-xs text-gray-500 mb-6">Nhập mật khẩu nội bộ để cập nhật thông tin/trạng thái thiết bị sau bảo trì.</p>
+                
                 <div class="max-w-xs mx-auto space-y-4">
                     <input type="password" id="admin-password-input" placeholder="Nhập mật khẩu..." class="w-full text-center text-sm p-3 border-2 border-gray-300 rounded-xl focus:border-amber-500 focus:outline-none transition-all">
+                    
                     <div class="flex gap-2">
                         <button onclick="closeAdminModal()" class="btn-interactive w-1/2 bg-gray-200 text-gray-700 py-2.5 rounded-xl text-xs font-bold">Hủy</button>
                         <button onclick="verifyPassword()" class="btn-interactive w-1/2 bg-amber-500 hover:bg-amber-600 text-brand-dark py-2.5 rounded-xl text-xs font-bold shadow-md">Đăng Nhập</button>
+                    </div>
+
+                    <div class="pt-2 border-t border-gray-100">
+                        <button onclick="showChangePassView()" class="text-xs text-brand-blue font-bold hover:underline flex items-center justify-center mx-auto transition">
+                            <i class="fas fa-key mr-1"></i> Đổi mật khẩu
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="admin-step-changepass" class="p-8 text-center hidden">
+                <div class="w-16 h-16 bg-blue-100 text-brand-blue rounded-full flex items-center justify-center text-3xl mx-auto mb-4 shadow-inner">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 class="text-xl font-bold text-brand-navy mb-2">ĐỔI MẬT KHẨU QUẢN TRỊ</h3>
+                <p class="text-xs text-gray-500 mb-6">Vui lòng nhập Mã PIN xác nhận bảo mật và Mật khẩu mới.</p>
+                
+                <div class="max-w-xs mx-auto space-y-3 text-left">
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-700 mb-1">Mã PIN xác nhận (*)</label>
+                        <input type="password" id="changepass-pin" maxlength="4" placeholder="Nhập mã PIN..." class="w-full text-center text-sm p-2.5 border border-gray-300 rounded-xl font-mono focus:border-brand-blue focus:outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-700 mb-1">Mật khẩu mới (*)</label>
+                        <input type="password" id="changepass-new" placeholder="Nhập mật khẩu mới..." class="w-full p-2.5 border border-gray-300 rounded-xl text-sm focus:border-brand-blue focus:outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-700 mb-1">Xác nhận Mật khẩu mới (*)</label>
+                        <input type="password" id="changepass-confirm" placeholder="Nhập lại mật khẩu mới..." class="w-full p-2.5 border border-gray-300 rounded-xl text-sm focus:border-brand-blue focus:outline-none transition">
+                    </div>
+
+                    <div class="flex gap-2 pt-3">
+                        <button onclick="backToAuthView()" class="btn-interactive w-1/2 bg-gray-200 text-gray-700 py-2.5 rounded-xl text-xs font-bold">Quay Lại</button>
+                        <button onclick="handleChangePassword()" class="btn-interactive w-1/2 bg-brand-blue hover:bg-brand-navy text-white py-2.5 rounded-xl text-xs font-bold shadow-md">Lưu Mật Khẩu</button>
                     </div>
                 </div>
             </div>
@@ -1111,7 +1386,7 @@
                 <div class="bg-brand-navy text-white p-5 flex justify-between items-center">
                     <div>
                         <h3 class="font-extrabold text-base flex items-center"><i class="fas fa-edit text-amber-400 mr-2"></i> CẬP NHẬT THÔNG TIN / TRẠNG THÁI THIẾT BỊ</h3>
-                        <p class="text-[10px] text-gray-300">Điền hạng mục bảo trì, thông số kỹ thuật & hình ảnh hiện trường</p>
+                        <p class="text-[10px] text-gray-300">Lưu trực tiếp lên Cloud (Nếu mất mạng sẽ lưu Offline và tự đồng bộ khi có sóng)</p>
                     </div>
                     <button onclick="closeAdminModal()" class="text-gray-300 hover:text-white text-xl p-1 rounded-lg transition"><i class="fas fa-times"></i></button>
                 </div>
@@ -1120,37 +1395,37 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block font-bold text-gray-700 mb-1">Mã QR Thiết Bị (* Dùng để quét)</label>
-                            <input type="text" id="form-code" required placeholder="VD: TS-2026-CHILLER02" class="w-full p-2.5 border border-gray-300 rounded-lg font-mono uppercase">
+                            <input type="text" id="form-code" required placeholder="VD: TS-2026-CHILLER02" class="w-full p-2.5 border border-gray-300 rounded-lg font-mono focus:ring-2 focus:ring-brand-blue uppercase transition">
                         </div>
                         <div>
                             <label class="block font-bold text-gray-700 mb-1">Tên Thiết Bị (*)</label>
-                            <input type="text" id="form-name" required placeholder="VD: Cụm Bơm Nước Chilled Water #02" class="w-full p-2.5 border border-gray-300 rounded-lg">
+                            <input type="text" id="form-name" required placeholder="VD: Cụm Bơm Nước Chilled Water #02" class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-blue transition">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block font-bold text-gray-700 mb-1">Khu Vực Lắp Đặt (*)</label>
-                            <input type="text" id="form-location" required placeholder="VD: Phòng Máy Chiller Tầng Chốt" class="w-full p-2.5 border border-gray-300 rounded-lg">
+                            <input type="text" id="form-location" required placeholder="VD: Phòng Máy Chiller Tầng Chốt" class="w-full p-2.5 border border-gray-300 rounded-lg transition">
                         </div>
                         <div>
                             <label class="block font-bold text-gray-700 mb-1">Chủ Đầu Tư / Tên Nhà Máy</label>
-                            <input type="text" id="form-client" required value="Nhà máy Tesa Tape DEEP C Hải Phòng" class="w-full p-2.5 border border-gray-300 rounded-lg">
+                            <input type="text" id="form-client" required value="Nhà máy Tesa Tape DEEP C Hải Phòng" class="w-full p-2.5 border border-gray-300 rounded-lg transition">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
                             <label class="block font-bold text-gray-700 mb-1">Kỹ Sư Phụ Trách</label>
-                            <input type="text" id="form-tech" required placeholder="VD: Nguyễn Văn Kỹ Thuật" class="w-full p-2.5 border border-gray-300 rounded-lg">
+                            <input type="text" id="form-tech" required placeholder="VD: Nguyễn Văn Kỹ Thuật" class="w-full p-2.5 border border-gray-300 rounded-lg transition">
                         </div>
                         <div>
                             <label class="block font-bold text-gray-700 mb-1">Ngày Kiểm Tra</label>
-                            <input type="date" id="form-date" required class="w-full p-2.5 border border-gray-300 rounded-lg">
+                            <input type="date" id="form-date" required class="w-full p-2.5 border border-gray-300 rounded-lg transition">
                         </div>
                         <div>
                             <label class="block font-bold text-gray-700 mb-1">Trạng Thái Đánh Giá</label>
-                            <select id="form-status" class="w-full p-2.5 border border-gray-300 rounded-lg font-bold">
+                            <select id="form-status" class="w-full p-2.5 border border-gray-300 rounded-lg font-bold transition">
                                 <option value="OK">✅ HOẠT ĐỘNG TỐT</option>
                                 <option value="WARN">⚠️ CẦN LƯU Ý KỸ THUẬT</option>
                                 <option value="BAD">❌ CẦN SỬA CHỮA NGAY</option>
@@ -1160,32 +1435,40 @@
 
                     <div class="bg-slate-50 p-4 rounded-xl border border-gray-200 space-y-3">
                         <div class="flex justify-between items-center">
-                            <h4 class="font-bold text-brand-navy"><i class="fas fa-tasks text-brand-accent mr-1"></i> DANH SÁCH HẠNG MỤC BẢO TRÌ</h4>
-                            <button type="button" onclick="addMaintenanceTaskRow()" class="btn-interactive bg-brand-accent text-brand-dark px-3 py-1.5 rounded-lg font-bold text-xs"><i class="fas fa-plus mr-1"></i> Thêm Hạng Mục</button>
+                            <div>
+                                <h4 class="font-bold text-brand-navy"><i class="fas fa-tasks text-brand-accent mr-1"></i> DANH SÁCH HẠNG MỤC BẢO TRÌ THỰC TẾ</h4>
+                                <p class="text-[10px] text-gray-500">Thêm các hạng mục (vệ sinh vỏ, đo điện, tra mỡ...) và nội dung thực hiện tương ứng.</p>
+                            </div>
+                            <button type="button" onclick="addMaintenanceTaskRow()" class="btn-interactive bg-brand-accent hover:bg-cyan-600 text-brand-dark px-3 py-1.5 rounded-lg font-bold text-xs flex items-center shadow-sm">
+                                <i class="fas fa-plus mr-1"></i> Thêm Hạng Mục
+                            </button>
                         </div>
+                        
                         <div id="form-tasks-container" class="space-y-2"></div>
                     </div>
 
                     <div>
                         <label class="block font-bold text-gray-700 mb-1">Ghi Chú Kỹ Thuật Tổng Quát</label>
-                        <textarea id="form-note" rows="2" placeholder="VD: Đã hoàn tất quy trình bảo dưỡng..." class="w-full p-2.5 border border-gray-300 rounded-lg"></textarea>
+                        <textarea id="form-note" rows="2" placeholder="VD: Đã hoàn tất quy trình bảo dưỡng định kỳ, thiết bị vận hành ổn định..." class="w-full p-2.5 border border-gray-300 rounded-lg transition"></textarea>
                     </div>
 
                     <div class="bg-slate-50 p-4 rounded-xl border-2 border-dashed border-gray-300 text-center">
-                        <label class="block font-bold text-brand-navy mb-1"><i class="fas fa-images text-brand-accent mr-1"></i> TẢI ẢNH HIỆN TRƯỜNG TỪ ALBUM</label>
+                        <label class="block font-bold text-brand-navy mb-1"><i class="fas fa-images text-brand-accent mr-1"></i> TẢI ẢNH CHỤP HIỆN TRƯỜNG TỪ ALBUM / CAMERA</label>
+                        <p class="text-[10px] text-gray-500 mb-3">Có thể chọn nhiều ảnh. Tự động nén dung lượng tối ưu cho App Offline & Cloud.</p>
+                        
                         <input type="file" id="form-file-input" multiple accept="image/*" onchange="previewImages(event)" class="hidden">
-                        <button type="button" onclick="document.getElementById('form-file-input').click()" class="btn-interactive bg-brand-blue text-white px-4 py-2 rounded-lg font-bold text-xs shadow-md">
-                            <i class="fas fa-folder-open mr-1"></i> Chọn Ảnh Từ Thư Viện
+                        <button type="button" onclick="document.getElementById('form-file-input').click()" class="btn-interactive bg-brand-blue hover:bg-brand-navy text-white px-4 py-2 rounded-lg font-bold text-xs shadow-md">
+                            <i class="fas fa-camera mr-1.5"></i> Chụp Ảnh / Chọn Từ Thư Viện
                         </button>
+
                         <div id="photo-preview-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4"></div>
                     </div>
 
                     <div class="pt-2 flex justify-end gap-3">
-                        <button type="button" onclick="openCloudExportCodeModal()" class="btn-interactive px-4 py-2.5 bg-amber-500 text-brand-dark rounded-xl font-bold flex items-center mr-auto">
-                            <i class="fas fa-sync-alt mr-1.5"></i> Lấy Mã Đồng Bộ Tất Cả Thiết Bị
+                        <button type="button" onclick="closeAdminModal()" class="btn-interactive px-5 py-2.5 bg-gray-200 text-gray-700 rounded-xl font-bold">Hủy Bỏ</button>
+                        <button type="submit" class="btn-interactive px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold shadow-lg flex items-center">
+                            <i class="fas fa-save mr-1.5"></i> LƯU BÁO CÁO & ĐỒNG BỘ
                         </button>
-                        <button type="button" onclick="closeAdminModal()" class="px-5 py-2.5 bg-gray-200 text-gray-700 rounded-xl font-bold">Hủy</button>
-                        <button type="submit" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold shadow-lg">LƯU THIẾT BỊ</button>
                     </div>
                 </form>
             </div>
@@ -1196,8 +1479,8 @@
     <footer class="bg-brand-dark text-gray-400 text-xs py-8 border-t border-gray-800">
         <div class="max-w-7xl mx-auto px-4 text-center sm:text-left flex flex-col sm:flex-row justify-between items-center gap-4">
             <div>
-                <p class="font-bold text-white text-sm">CÔNG TY CỔ PHẦN CƠ ĐIỆN VÀ BẢO TRÌ HICON (HICON M&E)</p>
-                <p class="text-gray-500 mt-0.5">© 2015 - 2026 HICON M&E. An toàn – Chất lượng – Tiến độ – Đồng hành lâu dài.</p>
+                <p data-cms-id="footer-company" class="font-bold text-white text-sm">CÔNG TY CỔ PHẦN CƠ ĐIỆN VÀ BẢO TRÌ HICON (HICON M&E)</p>
+                <p data-cms-id="footer-copy" class="text-gray-500 mt-0.5">© 2015 - 2026 HICON M&E. Ứng dụng Quản lý & Báo cáo Bảo trì Số hóa (Offline/Cloud).</p>
             </div>
             <div class="flex space-x-6">
                 <a href="#" class="hover:text-brand-accent transition"><i class="fab fa-facebook text-base"></i></a>
@@ -1208,16 +1491,24 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
+        // ĐƯỜNG DẪN ĐÁM MÂY FIREBASE CHÍNH THỨC CỦA DỰ ÁN HICON M&E
+        const FIREBASE_DB_URL = "https://hiconme---care-default-rtdb.asia-southeast1.firebasedatabase.app";
         const CONFIRM_PIN = "1111";
+
         let toastTimeout = null;
         let isListAdminMode = false;
+        let isCmsEditMode = false;
         let currentSelectedLetter = 'ALL';
         let deviceToDeleteCode = null;
+        let currentViewingDeviceCode = null;
 
         let currentLightboxPhotos = [];
         let currentLightboxIndex = 0;
+        let currentPhotoChangeTarget = null;
+        let html5QrScanner = null;
+        let deferredPwaPrompt = null;
 
-        const hiconProjectsData = [
+        const defaultHiconProjectsData = [
             {
                 id: 'proj-luxshare',
                 title: 'LUXSHARE - ICT FACTORY',
@@ -1304,9 +1595,39 @@
             }
         ];
 
-        let currentProjectCategory = 'ALL';
-        let currentProjectViewMode = 'GRID';
-        let currentModalProjectId = null;
+        let hiconProjectsData = JSON.parse(JSON.stringify(defaultHiconProjectsData));
+
+        function loadCustomProjectsText() {
+            const saved = localStorage.getItem('hicon_projects_custom_text');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    hiconProjectsData.forEach(p => {
+                        if (parsed[p.id]) {
+                            p.title = parsed[p.id].title || p.title;
+                            p.address = parsed[p.id].address || p.address;
+                            p.desc = parsed[p.id].desc || p.desc;
+                            p.categoryName = parsed[p.id].categoryName || p.categoryName;
+                            p.status = parsed[p.id].status || p.status;
+                        }
+                    });
+                } catch(e) {}
+            }
+        }
+
+        function getCustomProjectsTextMap() {
+            const map = {};
+            hiconProjectsData.forEach(p => {
+                map[p.id] = {
+                    title: p.title,
+                    address: p.address,
+                    desc: p.desc,
+                    categoryName: p.categoryName,
+                    status: p.status
+                };
+            });
+            return map;
+        }
 
         const defaultDevices = {
             'TS-2026-HVAC': {
@@ -1364,6 +1685,703 @@
             }
         };
 
+        /* ==================== ENGINE LIVE VISUAL CMS (SỬA TRỰC TIẾP MỌI CHỮ & ẢNH BẰNG MÃ PIN) ==================== */
+        function getSavedCmsTexts() {
+            const raw = localStorage.getItem('hicon_cms_texts');
+            if (raw) {
+                try { return JSON.parse(raw); } catch(e) {}
+            }
+            return {};
+        }
+
+        function applySavedCmsTextsToDom() {
+            const cmsMap = getSavedCmsTexts();
+            Object.keys(cmsMap).forEach(key => {
+                const el = document.querySelector(`[data-cms-id="${key}"]`);
+                if (el) {
+                    el.innerText = cmsMap[key];
+                }
+            });
+        }
+
+        function handleCmsEditButtonClick() {
+            if (isCmsEditMode) {
+                saveAndExitCmsEditMode();
+            } else {
+                document.getElementById('cms-pin-input').value = '';
+                document.getElementById('cms-pin-modal').classList.remove('hidden');
+                setTimeout(() => document.getElementById('cms-pin-input').focus(), 100);
+            }
+        }
+
+        function closeCmsPinModal() {
+            document.getElementById('cms-pin-modal').classList.add('hidden');
+        }
+
+        function verifyCmsPinAndActivate() {
+            const inputPin = document.getElementById('cms-pin-input').value.trim();
+            if (inputPin === CONFIRM_PIN || inputPin === getStoredPassword()) {
+                closeCmsPinModal();
+                enableCmsEditMode();
+            } else {
+                showTopErrorToast('Mã PIN không chính xác! Vui lòng thử lại.');
+            }
+        }
+
+        function enableCmsEditMode() {
+            isCmsEditMode = true;
+            document.body.classList.add('cms-edit-active');
+            document.getElementById('cms-floating-toolbar').classList.remove('hidden');
+
+            const topBtn = document.getElementById('top-cms-btn');
+            if (topBtn) {
+                topBtn.className = "bg-emerald-500 text-brand-dark px-3 py-0.5 rounded-full text-[10px] font-black tracking-wide transition flex items-center shadow animate-pulse";
+                topBtn.innerHTML = `<i class="fas fa-save mr-1"></i> LƯU GIAO DIỆN`;
+            }
+            const mobBtn = document.getElementById('mobile-cms-btn');
+            if (mobBtn) {
+                mobBtn.className = "btn-interactive bg-emerald-500 text-brand-dark px-2.5 py-1.5 rounded-lg font-black text-[10px] flex items-center shadow animate-pulse";
+                mobBtn.innerHTML = `<i class="fas fa-save mr-1"></i> Lưu`;
+            }
+
+            refreshEditableAttributes();
+            showTopToast('Đã bật Chế độ Chỉnh sửa Trực tiếp! Hãy chạm vào bất kỳ chữ hoặc ảnh nào để sửa.', false);
+        }
+
+        function refreshEditableAttributes() {
+            document.querySelectorAll('[data-cms-id], [data-proj-edit]').forEach(el => {
+                if (isCmsEditMode) {
+                    el.setAttribute('contenteditable', 'true');
+                    el.setAttribute('spellcheck', 'false');
+                } else {
+                    el.removeAttribute('contenteditable');
+                }
+            });
+        }
+
+        // Lắng nghe gõ phím trực tiếp trên mọi phần tử chữ để lưu tức thì vào RAM & LocalStorage
+        document.addEventListener('input', function(e) {
+            if (!isCmsEditMode) return;
+            const target = e.target;
+            if (target.hasAttribute('data-cms-id')) {
+                const cmsId = target.getAttribute('data-cms-id');
+                const cmsMap = getSavedCmsTexts();
+                cmsMap[cmsId] = target.innerText.trim();
+                localStorage.setItem('hicon_cms_texts', JSON.stringify(cmsMap));
+            } else if (target.hasAttribute('data-proj-edit')) {
+                const projId = target.getAttribute('data-proj-id');
+                const field = target.getAttribute('data-proj-edit');
+                const proj = hiconProjectsData.find(p => p.id === projId);
+                if (proj && field) {
+                    proj[field] = target.innerText.trim();
+                    localStorage.setItem('hicon_projects_custom_text', JSON.stringify(getCustomProjectsTextMap()));
+                }
+            }
+        });
+
+        async function saveAndExitCmsEditMode() {
+            isCmsEditMode = false;
+            document.body.classList.remove('cms-edit-active');
+            document.getElementById('cms-floating-toolbar').classList.add('hidden');
+            refreshEditableAttributes();
+
+            const topBtn = document.getElementById('top-cms-btn');
+            if (topBtn) {
+                topBtn.className = "bg-cyan-500/20 hover:bg-amber-500 hover:text-brand-dark text-cyan-300 border border-cyan-400/40 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold tracking-wide transition flex items-center shadow";
+                topBtn.innerHTML = `<i class="fas fa-magic mr-1"></i> SỬA GIAO DIỆN (PIN)`;
+            }
+            const mobBtn = document.getElementById('mobile-cms-btn');
+            if (mobBtn) {
+                mobBtn.className = "btn-interactive bg-slate-800 text-amber-400 border border-amber-400/40 px-2.5 py-1.5 rounded-lg font-extrabold text-[10px] flex items-center shadow";
+                mobBtn.innerHTML = `<i class="fas fa-pen mr-1"></i> Sửa`;
+            }
+
+            renderProjectsSection();
+            showTopToast('Đang lưu và đồng bộ toàn bộ giao diện lên Đám mây...', false);
+            const synced = await pushFullSystemToCloud();
+            if (synced) {
+                showTopToast('Đã lưu & đồng bộ toàn bộ nội dung giao diện lên Cloud thành công!', false);
+            } else {
+                showTopToast('Đã lưu giao diện Offline! App sẽ tự đồng bộ lên Cloud khi có mạng.', false);
+            }
+        }
+
+        function cancelCmsEditMode() {
+            saveAndExitCmsEditMode();
+        }
+
+        /* ==================== HỆ THỐNG ĐỒNG BỘ CLOUD + HÀNG ĐỢI OFFLINE THÔNG MINH ==================== */
+        function updateNetworkUI() {
+            const isOnline = navigator.onLine;
+            const badge = document.getElementById('network-status-badge');
+            const dot = document.getElementById('mobile-net-dot');
+            const pendingBadge = document.getElementById('offline-pending-badge');
+            const hasPending = localStorage.getItem('hicon_offline_pending_sync') === 'true';
+
+            if (pendingBadge) {
+                if (hasPending) pendingBadge.classList.remove('hidden');
+                else pendingBadge.classList.add('hidden');
+            }
+
+            if (isOnline) {
+                if (badge) {
+                    badge.className = "bg-emerald-900/70 text-emerald-300 border border-emerald-500/40 px-2.5 py-0.5 rounded-full text-[10px] font-bold flex items-center";
+                    badge.innerHTML = `<i class="fas fa-wifi mr-1 text-emerald-400"></i> Online & Đồng bộ Cloud`;
+                }
+                if (dot) dot.className = "w-2 h-2 rounded-full bg-emerald-400 md:hidden";
+            } else {
+                if (badge) {
+                    badge.className = "bg-amber-900/80 text-amber-300 border border-amber-500/40 px-2.5 py-0.5 rounded-full text-[10px] font-bold flex items-center";
+                    badge.innerHTML = `<i class="fas fa-plane mr-1 text-amber-400"></i> Chế độ Offline (Tra cứu & Lưu cục bộ)`;
+                }
+                if (dot) dot.className = "w-2 h-2 rounded-full bg-amber-400 md:hidden";
+            }
+        }
+
+        window.addEventListener('online', async () => {
+            updateNetworkUI();
+            if (localStorage.getItem('hicon_offline_pending_sync') === 'true') {
+                showTopToast('Đã có mạng trở lại! Đang tự động đồng bộ dữ liệu Offline lên Cloud...', false);
+                await pushFullSystemToCloud();
+            } else {
+                await pullFromCloudInBackground();
+            }
+        });
+
+        window.addEventListener('offline', () => {
+            updateNetworkUI();
+            showTopToast('Đang ở chế độ Offline: Bạn vẫn có thể tra cứu QR và lưu báo cáo bình thường!', false);
+        });
+
+        async function pullFromCloudInBackground() {
+            if (!navigator.onLine) return;
+            try {
+                if (localStorage.getItem('hicon_offline_pending_sync') === 'true') {
+                    await pushFullSystemToCloud();
+                    return;
+                }
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
+                const res = await fetch(`${FIREBASE_DB_URL}/hicon_system.json`, { signal: controller.signal });
+                clearTimeout(timeoutId);
+
+                if (!res.ok) return;
+                const data = await res.json();
+                if (data) {
+                    if (data.project_images) {
+                        Object.keys(data.project_images).forEach(pid => {
+                            localStorage.setItem('hicon_proj_img_' + pid, data.project_images[pid]);
+                        });
+                    }
+                    if (data.hr_photo) {
+                        localStorage.setItem('hicon_hr_photo_custom', data.hr_photo);
+                    }
+                    if (data.devices) {
+                        localStorage.setItem('hicon_device_db', JSON.stringify(data.devices));
+                    }
+                    if (data.admin_pass) {
+                        localStorage.setItem('hicon_admin_pass', data.admin_pass);
+                    }
+                    if (data.cms_texts) {
+                        localStorage.setItem('hicon_cms_texts', JSON.stringify(data.cms_texts));
+                        applySavedCmsTextsToDom();
+                    }
+                    if (data.projects_custom_text) {
+                        localStorage.setItem('hicon_projects_custom_text', JSON.stringify(data.projects_custom_text));
+                        loadCustomProjectsText();
+                    }
+                    loadSavedHrPhoto();
+                    renderProjectsSection();
+                    updateTotalCountDisplay();
+                    if (currentViewingDeviceCode) {
+                        const db = getDeviceDatabase();
+                        if (db[currentViewingDeviceCode]) renderDeviceReport(db[currentViewingDeviceCode]);
+                    }
+                } else {
+                    await pushFullSystemToCloud();
+                }
+            } catch (e) {}
+        }
+
+        async function pushFullSystemToCloud() {
+            if (!navigator.onLine) {
+                localStorage.setItem('hicon_offline_pending_sync', 'true');
+                updateNetworkUI();
+                return false;
+            }
+            const projImgs = {};
+            hiconProjectsData.forEach(p => {
+                const saved = localStorage.getItem('hicon_proj_img_' + p.id);
+                if (saved) projImgs[p.id] = saved;
+            });
+            const payload = {
+                project_images: projImgs,
+                hr_photo: localStorage.getItem('hicon_hr_photo_custom') || '',
+                devices: getDeviceDatabase(),
+                admin_pass: getStoredPassword(),
+                cms_texts: getSavedCmsTexts(),
+                projects_custom_text: getCustomProjectsTextMap(),
+                updated_at: new Date().toISOString()
+            };
+            try {
+                const res = await fetch(`${FIREBASE_DB_URL}/hicon_system.json`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    localStorage.removeItem('hicon_offline_pending_sync');
+                    updateNetworkUI();
+                    return true;
+                }
+            } catch (e) {}
+            localStorage.setItem('hicon_offline_pending_sync', 'true');
+            updateNetworkUI();
+            return false;
+        }
+
+        /* ==================== CAMERA QUÉT MÃ QR & TẠO TEM QR MỞ THẲNG APP ==================== */
+        function getDeviceDeepLinkUrl(code) {
+            const baseUrl = window.location.origin + window.location.pathname;
+            return `${baseUrl}?code=${encodeURIComponent(code)}`;
+        }
+
+        function getQrImageApiUrl(code, size = 350) {
+            const deepLink = getDeviceDeepLinkUrl(code);
+            return `https://quickchart.io/qr?text=${encodeURIComponent(deepLink)}&size=${size}&margin=2&dark=0f2b48`;
+        }
+
+        function openQrLabelModal(code) {
+            const db = getDeviceDatabase();
+            const dev = db[code];
+            if (!dev) return;
+
+            const qrImgUrl = getQrImageApiUrl(code, 400);
+            document.getElementById('qr-label-img').src = qrImgUrl;
+            document.getElementById('qr-label-code').innerText = `MÃ: ${dev.code}`;
+            document.getElementById('qr-label-name').innerText = dev.name;
+            document.getElementById('qr-download-link').href = qrImgUrl;
+            document.getElementById('qr-label-modal').classList.remove('hidden');
+        }
+
+        function openQrLabelModalForCurrent() {
+            if (!currentViewingDeviceCode) {
+                showTopToast('Vui lòng chọn hoặc tra cứu 1 thiết bị trước khi xuất Tem QR!', true);
+                return;
+            }
+            openQrLabelModal(currentViewingDeviceCode);
+        }
+
+        function closeQrLabelModal() {
+            document.getElementById('qr-label-modal').classList.add('hidden');
+        }
+
+        function openCameraQrScanner() {
+            document.getElementById('qr-scanner-modal').classList.remove('hidden');
+            if (html5QrScanner) {
+                try { html5QrScanner.clear(); } catch(e) {}
+            }
+            html5QrScanner = new Html5Qrcode("qr-reader");
+            html5QrScanner.start(
+                { facingMode: "environment" },
+                { fps: 10, qrbox: { width: 220, height: 220 } },
+                (decodedText) => {
+                    closeCameraQrScanner();
+                    handleScannedQrContent(decodedText);
+                },
+                () => {}
+            ).catch(() => {
+                showTopToast('Vui lòng cấp quyền Camera cho ứng dụng để quét mã QR!', true);
+                closeCameraQrScanner();
+            });
+        }
+
+        function closeCameraQrScanner() {
+            document.getElementById('qr-scanner-modal').classList.add('hidden');
+            if (html5QrScanner) {
+                html5QrScanner.stop().then(() => {
+                    html5QrScanner.clear();
+                }).catch(() => {});
+            }
+        }
+
+        function handleScannedQrContent(rawText) {
+            let extractedCode = rawText.trim();
+            try {
+                if (rawText.includes('?code=')) {
+                    const urlObj = new URL(rawText);
+                    const paramCode = urlObj.searchParams.get('code');
+                    if (paramCode) extractedCode = paramCode;
+                }
+            } catch (e) {}
+
+            extractedCode = extractedCode.toUpperCase();
+            navigateTo('maintenance-portal');
+            document.getElementById('device-code-input').value = extractedCode;
+            const db = getDeviceDatabase();
+            if (db[extractedCode]) {
+                renderDeviceReport(db[extractedCode]);
+                showTopToast(`Đã nhận diện mã QR: ${extractedCode}`, false);
+            } else {
+                showTopToast(`Đã quét mã: ${extractedCode}`, false);
+            }
+        }
+
+        /* ==================== HƯỚNG DẪN CÀI ĐẶT APP PWA ==================== */
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPwaPrompt = e;
+            const box = document.getElementById('native-install-btn-box');
+            if (box) box.classList.remove('hidden');
+        });
+
+        function openInstallAppGuideModal() {
+            document.getElementById('install-app-modal').classList.remove('hidden');
+        }
+
+        function closeInstallAppGuideModal() {
+            document.getElementById('install-app-modal').classList.add('hidden');
+        }
+
+        async function triggerNativePwaInstall() {
+            if (!deferredPwaPrompt) return;
+            deferredPwaPrompt.prompt();
+            await deferredPwaPrompt.userChoice;
+            deferredPwaPrompt = null;
+            closeInstallAppGuideModal();
+        }
+
+        /* ==================== NÉN ẢNH & ĐỔI ẢNH DỰ ÁN / NHÂN LỰC ==================== */
+        function compressImageFile(file, maxWidth = 850, quality = 0.75) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        let w = img.width;
+                        let h = img.height;
+                        if (w > maxWidth) {
+                            h = Math.round((h * maxWidth) / w);
+                            w = maxWidth;
+                        }
+                        canvas.width = w;
+                        canvas.height = h;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, w, h);
+                        resolve(canvas.toDataURL('image/jpeg', quality));
+                    };
+                    img.onerror = reject;
+                    img.src = e.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function openPhotoChangeModal(targetId) {
+            currentPhotoChangeTarget = targetId;
+            const labelEl = document.getElementById('photo-change-target-label');
+            const urlInput = document.getElementById('photo-change-url-input');
+
+            if (targetId === 'HR') {
+                labelEl.innerText = "Mục tiêu: Ảnh Nhân Lực Chuẩn Hóa";
+                urlInput.value = localStorage.getItem('hicon_hr_photo_custom') || '';
+            } else {
+                const proj = hiconProjectsData.find(p => p.id === targetId);
+                labelEl.innerText = `Dự án: ${proj ? proj.title : targetId}`;
+                const saved = getProjectImage(proj);
+                urlInput.value = saved.startsWith('data:') ? '' : saved;
+            }
+            document.getElementById('photo-change-modal').classList.remove('hidden');
+        }
+
+        function closePhotoChangeModal() {
+            document.getElementById('photo-change-modal').classList.add('hidden');
+        }
+
+        async function handleUniversalFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file || !currentPhotoChangeTarget) return;
+            try {
+                const base64Data = await compressImageFile(file, 850, 0.75);
+                await applyNewPhotoToTarget(currentPhotoChangeTarget, base64Data);
+                closePhotoChangeModal();
+            } catch (err) {
+                showTopToast('Không thể đọc file ảnh này!', true);
+            }
+            event.target.value = '';
+        }
+
+        async function savePhotoFromUrlInput() {
+            const url = document.getElementById('photo-change-url-input').value.trim();
+            if (!url) {
+                showTopToast('Vui lòng nhập Link URL ảnh!', true);
+                return;
+            }
+            await applyNewPhotoToTarget(currentPhotoChangeTarget, url);
+            closePhotoChangeModal();
+        }
+
+        async function applyNewPhotoToTarget(targetId, imgData) {
+            if (targetId === 'HR') {
+                localStorage.setItem('hicon_hr_photo_custom', imgData);
+                loadSavedHrPhoto();
+            } else {
+                localStorage.setItem('hicon_proj_img_' + targetId, imgData);
+                renderProjectsSection();
+                if (currentModalProjectId === targetId) {
+                    document.getElementById('proj-modal-img').src = imgData;
+                }
+            }
+            const synced = await pushFullSystemToCloud();
+            showTopToast(synced ? 'Đã cập nhật ảnh & đồng bộ lên Cloud cho mọi thiết bị!' : 'Đã lưu ảnh Offline trên máy (Sẽ tự đồng bộ khi có mạng)!', false);
+        }
+
+        let currentProjectCategory = 'ALL';
+        let currentProjectViewMode = 'GRID';
+        let currentModalProjectId = null;
+
+        function getProjectImage(proj) {
+            if (!proj) return '';
+            return localStorage.getItem('hicon_proj_img_' + proj.id) || proj.defaultImg;
+        }
+
+        function setProjectCategory(cat) {
+            currentProjectCategory = cat;
+            ['ALL', 'INDUSTRIAL', 'COMMERCIAL', 'MEDICAL'].forEach(c => {
+                const btn = document.getElementById('proj-filter-' + c);
+                if (btn) {
+                    if (c === cat) {
+                        btn.className = "btn-interactive px-4 py-2 rounded-xl text-xs font-extrabold bg-brand-navy text-white shadow";
+                    } else {
+                        btn.className = "btn-interactive px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 text-gray-700 hover:bg-slate-200";
+                    }
+                }
+            });
+            renderProjectsSection();
+        }
+
+        function setProjectViewMode(mode) {
+            currentProjectViewMode = mode;
+            const btnGrid = document.getElementById('proj-view-GRID');
+            const btnTimeline = document.getElementById('proj-view-TIMELINE');
+            const gridContainer = document.getElementById('projects-grid-container');
+            const timelineContainer = document.getElementById('projects-timeline-container');
+
+            if (mode === 'GRID') {
+                btnGrid.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-brand-dark shadow-sm transition flex items-center";
+                btnTimeline.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold text-gray-600 hover:text-brand-navy transition flex items-center";
+                gridContainer.classList.remove('hidden');
+                timelineContainer.classList.add('hidden');
+            } else {
+                btnTimeline.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-brand-dark shadow-sm transition flex items-center";
+                btnGrid.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold text-gray-600 hover:text-brand-navy transition flex items-center";
+                gridContainer.classList.add('hidden');
+                timelineContainer.classList.remove('hidden');
+            }
+            renderProjectsSection();
+        }
+
+        function renderProjectsSection() {
+            const filtered = currentProjectCategory === 'ALL' 
+                ? hiconProjectsData 
+                : hiconProjectsData.filter(p => p.category === currentProjectCategory);
+
+            const gridEl = document.getElementById('projects-grid-container');
+            if (gridEl) {
+                gridEl.innerHTML = '';
+                filtered.forEach((proj, idx) => {
+                    const imgSrc = getProjectImage(proj);
+                    const isTesa = proj.id === 'proj-tesa';
+                    const card = document.createElement('div');
+                    card.style.animationDelay = `${idx * 70}ms`;
+                    card.className = `project-card-anim card-pro-hover bg-white rounded-3xl overflow-hidden border ${isTesa ? 'border-2 border-brand-accent shadow-xl' : 'border-gray-200 shadow-md'} flex flex-col justify-between group`;
+
+                    const tagsHtml = proj.tags.map(t => `<span class="bg-slate-100 text-brand-navy text-[10px] font-bold px-2.5 py-1 rounded-lg border border-gray-200">${t}</span>`).join('');
+
+                    card.innerHTML = `
+                        <div>
+                            <div class="h-56 overflow-hidden relative bg-slate-900">
+                                <img src="${imgSrc}" data-proj-img="${proj.id}" onclick="if(isCmsEditMode) openPhotoChangeModal('${proj.id}')" alt="${proj.fallbackAlt}" class="w-full h-full object-cover card-img-zoom transition-transform duration-700">
+                                <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/25 to-transparent pointer-events-none"></div>
+                                
+                                <div class="absolute top-3 left-3 flex items-center gap-2">
+                                    <span class="w-8 h-8 rounded-xl bg-amber-500 text-brand-dark font-black text-xs flex items-center justify-center shadow-lg">
+                                        0${idx + 1}
+                                    </span>
+                                    <span data-proj-id="${proj.id}" data-proj-edit="categoryName" class="bg-black/60 backdrop-blur-md text-cyan-300 text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-wider border border-white/15">
+                                        ${proj.categoryName}
+                                    </span>
+                                </div>
+
+                                <button type="button" onclick="openPhotoChangeModal('${proj.id}')" class="absolute top-3 right-3 bg-black/75 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition flex items-center shadow-lg z-20 cursor-pointer" title="Đổi ảnh dự án">
+                                    <i class="fas fa-camera mr-1.5"></i> Đổi ảnh
+                                </button>
+
+                                <div class="absolute bottom-3 left-4 right-4 text-white">
+                                    <span data-proj-id="${proj.id}" data-proj-edit="status" class="inline-block text-[9px] font-extrabold px-2 py-0.5 rounded bg-emerald-500/90 text-white mb-1">
+                                        ${proj.status}
+                                    </span>
+                                    <h3 data-proj-id="${proj.id}" data-proj-edit="title" class="text-lg font-black tracking-wide leading-snug group-hover:text-amber-400 transition">${proj.title}</h3>
+                                </div>
+                            </div>
+
+                            <div class="p-5">
+                                <div class="flex items-start text-xs text-gray-600 font-medium mb-3 bg-amber-50/70 p-2.5 rounded-xl border border-amber-200/70">
+                                    <i class="fas fa-map-marker-alt text-amber-500 mt-0.5 mr-2 shrink-0 text-sm"></i>
+                                    <span data-proj-id="${proj.id}" data-proj-edit="address" class="text-brand-navy font-semibold leading-snug">${proj.address}</span>
+                                </div>
+                                <p data-proj-id="${proj.id}" data-proj-edit="desc" class="text-xs text-gray-600 leading-relaxed mb-4">
+                                    ${proj.desc}
+                                </p>
+                                <div class="flex flex-wrap gap-1.5">
+                                    ${tagsHtml}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="px-5 py-3.5 bg-slate-50 border-t border-gray-100 flex justify-between items-center">
+                            <button onclick="if(!isCmsEditMode) openProjectDetailModal('${proj.id}')" class="text-xs font-extrabold text-brand-blue hover:text-brand-accent flex items-center transition">
+                                <i class="fas fa-info-circle mr-1.5"></i> Xem Chi Tiết Hạng Mục
+                            </button>
+                            ${isTesa ? `
+                                <button onclick="if(!isCmsEditMode) navigateTo('maintenance-portal')" class="btn-interactive bg-brand-accent text-brand-dark font-extrabold px-3 py-1 rounded-lg text-[11px] flex items-center shadow-sm">
+                                    <i class="fas fa-qrcode mr-1"></i> Tra Cứu QR
+                                </button>
+                            ` : `
+                                <span class="text-[11px] font-bold text-emerald-600"><i class="fas fa-shield-alt mr-1"></i> Chuẩn ISO</span>
+                            `}
+                        </div>
+                    `;
+                    gridEl.appendChild(card);
+                });
+            }
+
+            const timelineEl = document.getElementById('projects-timeline-items');
+            if (timelineEl) {
+                timelineEl.innerHTML = '';
+                filtered.forEach((proj, idx) => {
+                    const imgSrc = getProjectImage(proj);
+                    const isEven = idx % 2 === 0;
+                    const row = document.createElement('div');
+                    row.style.animationDelay = `${idx * 80}ms`;
+                    row.className = "project-card-anim flex flex-col md:flex-row items-center justify-between gap-6 relative";
+
+                    const imageBox = `
+                        <div class="w-full md:w-5/12 group">
+                            <div class="relative h-56 sm:h-64 overflow-hidden shadow-xl border-4 border-white ${isEven ? 'brochure-leaf-left' : 'brochure-leaf-right'} bg-slate-900 card-pro-hover">
+                                <img src="${imgSrc}" data-proj-img="${proj.id}" onclick="if(isCmsEditMode) openPhotoChangeModal('${proj.id}')" alt="${proj.title}" class="w-full h-full object-cover card-img-zoom transition-transform duration-700">
+                                <button type="button" onclick="openPhotoChangeModal('${proj.id}')" class="absolute top-3 right-3 bg-black/75 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition flex items-center shadow-lg z-20 cursor-pointer" title="Đổi ảnh dự án">
+                                    <i class="fas fa-camera mr-1.5"></i> Đổi ảnh
+                                </button>
+                            </div>
+                        </div>
+                    `;
+
+                    const infoBox = `
+                        <div class="w-full md:w-5/12 ${isEven ? 'md:text-left' : 'md:text-right'} flex flex-col ${isEven ? 'md:items-start' : 'md:items-end'}">
+                            <div onclick="if(!isCmsEditMode) openProjectDetailModal('${proj.id}')" class="cursor-pointer bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-600 hover:to-amber-500 text-white font-black text-base sm:text-lg px-6 py-3 rounded-full shadow-lg transition transform hover:-translate-y-1 inline-flex items-center gap-2">
+                                ${!isEven ? `<i class="fas fa-caret-left text-white"></i>` : ''}
+                                <span data-proj-id="${proj.id}" data-proj-edit="title">${proj.title}</span>
+                                ${isEven ? `<i class="fas fa-caret-right text-white"></i>` : ''}
+                            </div>
+                            <p class="text-brand-navy font-bold text-xs sm:text-sm mt-2.5 px-2">
+                                <i class="fas fa-map-marker-alt text-amber-500 mr-1"></i> <span data-proj-id="${proj.id}" data-proj-edit="address">${proj.address}</span>
+                            </p>
+                            <p data-proj-id="${proj.id}" data-proj-edit="desc" class="text-gray-500 text-xs mt-1.5 px-2 max-w-md leading-relaxed">
+                                ${proj.desc}
+                            </p>
+                        </div>
+                    `;
+
+                    const centerNode = `
+                        <div class="hidden md:flex w-12 h-12 rounded-full bg-white border-4 border-amber-500 shadow-xl items-center justify-center z-10 shrink-0 font-black text-brand-navy text-xs">
+                            0${idx + 1}
+                        </div>
+                    `;
+
+                    if (isEven) {
+                        row.innerHTML = `${imageBox} ${centerNode} ${infoBox}`;
+                    } else {
+                        row.innerHTML = `${infoBox} ${centerNode} ${imageBox}`;
+                    }
+
+                    timelineEl.appendChild(row);
+                });
+            }
+
+            if (isCmsEditMode) {
+                refreshEditableAttributes();
+            }
+        }
+
+        function openProjectDetailModal(projId) {
+            const proj = hiconProjectsData.find(p => p.id === projId);
+            if (!proj) return;
+            currentModalProjectId = projId;
+
+            document.getElementById('proj-modal-img').src = getProjectImage(proj);
+            document.getElementById('proj-modal-badge').innerText = proj.categoryName;
+            document.getElementById('proj-modal-title').innerText = proj.title;
+            document.getElementById('proj-modal-address').innerHTML = `<i class="fas fa-map-marker-alt mr-1.5 text-amber-400"></i> ${proj.address}`;
+            document.getElementById('proj-modal-desc').innerText = proj.desc;
+
+            const tagsEl = document.getElementById('proj-modal-tags');
+            tagsEl.innerHTML = proj.tags.map(t => `<span class="bg-cyan-50 text-brand-blue font-bold text-xs px-3 py-1 rounded-xl border border-cyan-200"><i class="fas fa-check text-brand-accent mr-1"></i>${t}</span>`).join('');
+
+            document.getElementById('project-detail-modal').classList.remove('hidden');
+        }
+
+        function closeProjectDetailModal() {
+            document.getElementById('project-detail-modal').classList.add('hidden');
+        }
+
+        function loadSavedHrPhoto() {
+            const savedPhoto = localStorage.getItem('hicon_hr_photo_custom');
+            const imgEl = document.getElementById('hr-custom-img');
+            if (savedPhoto && imgEl) {
+                imgEl.src = savedPhoto;
+            }
+        }
+
+        function showTopToast(msg, isError = true) {
+            const toast = document.getElementById('top-error-toast');
+            const boxBg = document.getElementById('toast-box-bg');
+            const icon = document.getElementById('toast-icon');
+            const msgEl = document.getElementById('top-error-message');
+
+            msgEl.innerText = msg;
+            if (isError) {
+                boxBg.className = "bg-red-600 text-white px-5 py-3.5 rounded-2xl shadow-2xl border-2 border-red-400 flex items-center justify-between gap-3 toast-animate-in";
+                icon.className = "fas fa-exclamation-triangle text-amber-300 text-sm";
+            } else {
+                boxBg.className = "bg-emerald-600 text-white px-5 py-3.5 rounded-2xl shadow-2xl border-2 border-emerald-400 flex items-center justify-between gap-3 toast-animate-in";
+                icon.className = "fas fa-check-circle text-white text-sm";
+            }
+            toast.classList.remove('hidden');
+
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => { hideErrorToast(); }, 3400);
+        }
+
+        function showTopErrorToast(msg) {
+            showTopToast(msg, true);
+        }
+
+        function hideErrorToast() {
+            document.getElementById('top-error-toast').classList.add('hidden');
+        }
+
+        function getStoredPassword() {
+            return localStorage.getItem('hicon_admin_pass') || 'hiconme';
+        }
+
+        async function setStoredPassword(newPass) {
+            localStorage.setItem('hicon_admin_pass', newPass);
+            await pushFullSystemToCloud();
+        }
+
         function getDeviceDatabase() {
             const saved = localStorage.getItem('hicon_device_db');
             if (saved) {
@@ -1372,19 +2390,9 @@
             return defaultDevices;
         }
 
-        function saveDeviceDatabase(db) {
+        async function saveDeviceDatabase(db) {
             localStorage.setItem('hicon_device_db', JSON.stringify(db));
-        }
-
-        function openCloudExportCodeModal() {
-            const db = getDeviceDatabase();
-            const jsonStr = JSON.stringify(db, null, 4);
-            document.getElementById('export-code-textarea').value = `const defaultDevices = ${jsonStr};`;
-            document.getElementById('cloud-export-code-modal').classList.remove('hidden');
-        }
-
-        function closeCloudExportCodeModal() {
-            document.getElementById('cloud-export-code-modal').classList.add('hidden');
+            return await pushFullSystemToCloud();
         }
 
         let uploadedPhotosBase64 = [];
@@ -1402,11 +2410,20 @@
             const activeNav = document.getElementById('nav-' + sectionId);
             if (activeNav) activeNav.classList.add('active');
 
+            ['home', 'about', 'projects', 'maintenance-portal'].forEach(id => {
+                const bBtn = document.getElementById('bnav-' + id);
+                if (bBtn) {
+                    if (id === sectionId) bBtn.className = "flex flex-col items-center justify-center py-1 text-cyan-400 font-bold";
+                    else bBtn.className = "flex flex-col items-center justify-center py-1 text-gray-300";
+                }
+            });
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function toggleMobileMenu() {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
+            const m = document.getElementById('mobile-menu');
+            if (m) m.classList.toggle('hidden');
         }
 
         function updateTotalCountDisplay() {
@@ -1418,7 +2435,7 @@
             }
         }
 
-        /* LIGHTBOX PHÓNG TO ẢNH */
+        /* ==================== LIGHTBOX PHÓNG TO ẢNH ==================== */
         function openLightbox(index) {
             if (!currentLightboxPhotos || currentLightboxPhotos.length === 0) return;
             currentLightboxIndex = index;
@@ -1470,6 +2487,7 @@
         });
 
         function renderDeviceReport(data) {
+            currentViewingDeviceCode = data.code;
             document.getElementById('device-name').innerText = data.name;
             document.getElementById('device-code').innerText = 'MÃ QR: ' + data.code;
             document.getElementById('device-location').innerText = data.location;
@@ -1478,6 +2496,14 @@
             document.getElementById('device-date').innerText = data.date;
             document.getElementById('device-status-badge').innerHTML = data.statusBadge;
             document.getElementById('engineer-note').innerText = data.note;
+
+            const qrThumb = document.getElementById('device-qr-thumb');
+            const qrPlace = document.getElementById('device-qr-placeholder');
+            if (qrThumb && qrPlace) {
+                qrThumb.src = getQrImageApiUrl(data.code, 150);
+                qrThumb.classList.remove('hidden');
+                qrPlace.classList.add('hidden');
+            }
 
             const tasksBody = document.getElementById('report-tasks-body');
             tasksBody.innerHTML = '';
@@ -1545,6 +2571,7 @@
         }
 
         function clearDeviceReportDefault() {
+            currentViewingDeviceCode = null;
             currentLightboxPhotos = [];
             document.getElementById('device-name').innerText = '--';
             document.getElementById('device-code').innerText = 'MÃ QR: --';
@@ -1556,7 +2583,14 @@
             document.getElementById('engineer-note').innerText = 'Chưa có ghi chú.';
             document.getElementById('task-count-badge').innerText = '0 Hạng Mục';
 
-            document.getElementById('report-tasks-body').innerHTML = `<tr><td colspan="4" class="p-6 text-center text-gray-400">Vui lòng nhập mã QR hoặc chọn thiết bị từ danh sách để xem báo cáo.</td></tr>`;
+            const qrThumb = document.getElementById('device-qr-thumb');
+            const qrPlace = document.getElementById('device-qr-placeholder');
+            if (qrThumb && qrPlace) {
+                qrThumb.classList.add('hidden');
+                qrPlace.classList.remove('hidden');
+            }
+
+            document.getElementById('report-tasks-body').innerHTML = `<tr><td colspan="4" class="p-6 text-center text-gray-400">Vui lòng quét QR, nhập mã hoặc chọn thiết bị từ danh sách để xem báo cáo.</td></tr>`;
             document.getElementById('specs-table-body').innerHTML = `<tr><td colspan="4" class="p-6 text-center text-gray-400">Chưa có thông số đo đạc.</td></tr>`;
             
             const gallery = document.getElementById('photo-gallery');
@@ -1622,7 +2656,7 @@
                 closeListAuthModal();
                 updateListModeUI();
                 renderDeviceListModalContent();
-                showTopErrorToast('Đã chuyển sang chế độ Quản trị thành công!');
+                showTopToast('Đã chuyển sang chế độ Quản trị thành công!', false);
             } else {
                 showTopErrorToast('Mật khẩu quản trị không chính xác!');
             }
@@ -1706,7 +2740,7 @@
             tbody.innerHTML = '';
 
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="${isListAdminMode ? 6 : 5}" class="p-6 text-center text-gray-400">Không tìm thấy thiết bị nào phù hợp.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="${isListAdminMode ? 7 : 6}" class="p-6 text-center text-gray-400">Không tìm thấy thiết bị nào phù hợp.</td></tr>`;
                 return;
             }
 
@@ -1726,9 +2760,14 @@
                     <tr class="hover:bg-slate-50 border-b border-gray-100 transition">
                         <td class="p-3 text-center font-bold text-gray-500">${idx + 1}</td>
                         <td class="p-3 font-mono font-bold text-brand-accent cursor-pointer hover:underline" onclick="closeDeviceListModal(); loadSampleDevice('${dev.code}'); navigateTo('maintenance-portal');">${dev.code}</td>
-                        <td class="p-3 font-bold text-brand-navy">${dev.name}</td>
+                        <td class="p-3 font-bold text-brand-navy cursor-pointer hover:text-brand-blue" onclick="closeDeviceListModal(); loadSampleDevice('${dev.code}'); navigateTo('maintenance-portal');">${dev.name}</td>
                         <td class="p-3 text-gray-600">${dev.location}</td>
                         <td class="p-3 text-gray-600">${dev.tech}</td>
+                        <td class="p-3 text-center">
+                            <button onclick="openQrLabelModal('${dev.code}')" class="bg-cyan-50 hover:bg-cyan-100 text-brand-blue px-2.5 py-1 rounded-lg font-bold text-[11px] border border-cyan-200">
+                                <i class="fas fa-qrcode mr-1"></i> Tem QR
+                            </button>
+                        </td>
                         ${actionTd}
                     </tr>
                 `;
@@ -1750,15 +2789,16 @@
             deviceToDeleteCode = null;
         }
 
-        function executeDeleteDevice() {
+        async function executeDeleteDevice() {
             if (!deviceToDeleteCode) return;
             const db = getDeviceDatabase();
             if (db[deviceToDeleteCode]) {
-                delete db[deviceToDeleteCode];
-                saveDeviceDatabase(db);
+                const deletedCode = deviceToDeleteCode;
+                delete db[deletedCode];
+                const synced = await saveDeviceDatabase(db);
                 updateTotalCountDisplay();
                 renderDeviceListModalContent();
-                showTopErrorToast(`Đã xóa thành công thiết bị mã: ${deviceToDeleteCode}`);
+                showTopToast(synced ? `Đã xóa thiết bị ${deletedCode} & đồng bộ Cloud!` : `Đã xóa ${deletedCode} (Sẽ tự đồng bộ khi có mạng)!`, false);
             }
             closeDeleteConfirmModal();
         }
@@ -1767,6 +2807,7 @@
             hideErrorToast();
             document.getElementById('admin-modal').classList.remove('hidden');
             document.getElementById('admin-step-auth').classList.remove('hidden');
+            document.getElementById('admin-step-changepass').classList.add('hidden');
             document.getElementById('admin-step-form').classList.add('hidden');
             
             const passInput = document.getElementById('admin-password-input');
@@ -1779,6 +2820,47 @@
         function closeAdminModal() {
             hideErrorToast();
             document.getElementById('admin-modal').classList.add('hidden');
+        }
+
+        function showChangePassView() {
+            hideErrorToast();
+            document.getElementById('admin-step-auth').classList.add('hidden');
+            document.getElementById('admin-step-changepass').classList.remove('hidden');
+            document.getElementById('changepass-pin').value = '';
+            document.getElementById('changepass-new').value = '';
+            document.getElementById('changepass-confirm').value = '';
+        }
+
+        function backToAuthView() {
+            hideErrorToast();
+            document.getElementById('admin-step-changepass').classList.add('hidden');
+            document.getElementById('admin-step-auth').classList.remove('hidden');
+        }
+
+        async function handleChangePassword() {
+            hideErrorToast();
+            const pin = document.getElementById('changepass-pin').value.trim();
+            const newPass = document.getElementById('changepass-new').value;
+            const confirmPass = document.getElementById('changepass-confirm').value;
+
+            if (pin !== CONFIRM_PIN) {
+                showTopErrorToast('Mã PIN xác nhận bảo mật không đúng!');
+                return;
+            }
+
+            if (!newPass) {
+                showTopErrorToast('Vui lòng nhập mật khẩu mới!');
+                return;
+            }
+
+            if (newPass !== confirmPass) {
+                showTopErrorToast('Mật khẩu mới và xác nhận mật khẩu không khớp!');
+                return;
+            }
+
+            await setStoredPassword(newPass);
+            showTopToast('Đổi mật khẩu thành công & đã đồng bộ!', false);
+            backToAuthView();
         }
 
         function verifyPassword() {
@@ -1832,17 +2914,15 @@
             tasks.forEach(t => addMaintenanceTaskRow(t.title, t.detail));
         }
 
-        function previewImages(event) {
+        async function previewImages(event) {
             const files = event.target.files;
-            Array.from(files).forEach(file => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const base64Str = e.target.result;
-                    uploadedPhotosBase64.push(base64Str);
+            for (const file of Array.from(files)) {
+                try {
+                    const compressed = await compressImageFile(file, 850, 0.75);
+                    uploadedPhotosBase64.push(compressed);
                     renderPhotoPreviews();
-                };
-                reader.readAsDataURL(file);
-            });
+                } catch (e) {}
+            }
             event.target.value = '';
         }
 
@@ -1869,7 +2949,7 @@
             });
         }
 
-        function handleSaveDevice(e) {
+        async function handleSaveDevice(e) {
             e.preventDefault();
 
             const code = document.getElementById('form-code').value.trim().toUpperCase();
@@ -1900,7 +2980,7 @@
 
             const db = getDeviceDatabase();
 
-            let finalPhotos = uploadedPhotosBase64;
+            let finalPhotos = [...uploadedPhotosBase64];
             if (finalPhotos.length === 0 && db[code] && db[code].photos) {
                 finalPhotos = db[code].photos;
             } else if (finalPhotos.length === 0) {
@@ -1926,24 +3006,48 @@
                 photos: finalPhotos
             };
 
-            saveDeviceDatabase(db);
-            updateTotalCountDisplay();
-            closeAdminModal();
+            uploadedPhotosBase64 = [];
+            renderPhotoPreviews();
 
+            closeAdminModal();
             navigateTo('maintenance-portal');
             loadSampleDevice(code);
+            updateTotalCountDisplay();
 
-            // Tự động bật bảng lấy mã cập nhật để đồng bộ giữa các máy
-            openCloudExportCodeModal();
+            const synced = await saveDeviceDatabase(db);
+            if (synced) {
+                showTopToast(`Đã lưu thiết bị ${code} & đồng bộ Cloud cho toàn bộ kỹ thuật viên!`, false);
+            } else {
+                showTopToast(`Đã lưu Offline thiết bị ${code}! App sẽ tự đẩy lên Cloud khi có mạng.`, false);
+            }
         }
 
+        // KHỞI ĐỘNG TỨC THÌ
         window.onload = function() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
+            }
+
+            updateNetworkUI();
+            loadCustomProjectsText();
+            applySavedCmsTextsToDom();
             loadSavedHrPhoto();
             renderProjectsSection();
             updateTotalCountDisplay();
-            navigateTo('home');
             clearDeviceReportDefault();
-        }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const scannedCode = urlParams.get('code');
+            if (scannedCode) {
+                const upperCode = scannedCode.trim().toUpperCase();
+                navigateTo('maintenance-portal');
+                loadSampleDevice(upperCode);
+            } else {
+                navigateTo('home');
+            }
+
+            pullFromCloudInBackground();
+        };
     </script>
 </body>
 </html>
