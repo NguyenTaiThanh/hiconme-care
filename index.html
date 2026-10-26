@@ -146,14 +146,14 @@
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans flex flex-col min-h-screen relative">
 
-    <!-- TOP-LEVEL FLOATING ERROR TOAST -->
-    <div id="top-error-toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-[100] hidden max-w-md w-11/12">
-        <div class="bg-red-600 text-white px-5 py-3.5 rounded-2xl shadow-2xl border-2 border-red-400 flex items-center justify-between gap-3 toast-animate-in">
+    <!-- TOP-LEVEL FLOATING TOAST -->
+    <div id="top-error-toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-[120] hidden max-w-md w-11/12">
+        <div id="toast-box-bg" class="bg-red-600 text-white px-5 py-3.5 rounded-2xl shadow-2xl border-2 border-red-400 flex items-center justify-between gap-3 toast-animate-in">
             <div class="flex items-center space-x-3">
                 <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center shrink-0">
-                    <i class="fas fa-exclamation-triangle text-amber-300 text-sm"></i>
+                    <i id="toast-icon" class="fas fa-exclamation-triangle text-amber-300 text-sm"></i>
                 </div>
-                <span id="top-error-message" class="text-xs sm:text-sm font-bold tracking-wide">Mật khẩu hoặc thông tin không chính xác!</span>
+                <span id="top-error-message" class="text-xs sm:text-sm font-bold tracking-wide">Thông báo hệ thống</span>
             </div>
             <button onclick="hideErrorToast()" class="text-white/80 hover:text-white p-1 transition rounded-lg hover:bg-white/10">
                 <i class="fas fa-times text-base"></i>
@@ -161,7 +161,7 @@
         </div>
     </div>
 
-    <!-- TOP BAR (CẬP NHẬT SỐ ĐIỆN THOẠI & EMAIL MỚI) -->
+    <!-- TOP BAR -->
     <div class="bg-brand-dark text-gray-300 text-xs py-2 px-4 border-b border-gray-800 hidden md:block">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-5">
@@ -169,7 +169,10 @@
                 <span><i class="fas fa-envelope text-brand-accent mr-1.5"></i>Email: contact@hiconmne.vn</span>
                 <span><i class="fas fa-map-marker-alt text-brand-accent mr-1.5"></i>Số nhà C.TT8-5 Khu C đường C5, KĐT Himlam Vạn Phúc, Hà Đông, Hà Nội</span>
             </div>
-            <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-3">
+                <span id="cloud-status-badge" onclick="openCloudConfigModal()" class="cursor-pointer bg-slate-800 hover:bg-slate-700 text-gray-300 border border-gray-600 px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide transition flex items-center">
+                    <i class="fas fa-cloud mr-1 text-gray-400"></i> Cloud: Đang kết nối...
+                </span>
                 <span class="bg-emerald-600 text-white px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide animate-pulse">CỔNG BÁO CÁO SỐ HÓA QR</span>
             </div>
         </div>
@@ -204,6 +207,9 @@
 
                 <!-- MOBILE MENU BUTTON -->
                 <div class="md:hidden flex items-center space-x-2">
+                    <button onclick="openCloudConfigModal()" class="bg-slate-800 text-cyan-300 p-2 rounded-lg text-xs border border-cyan-500/30" title="Cấu hình Cloud">
+                        <i class="fas fa-cloud"></i>
+                    </button>
                     <button onclick="navigateTo('maintenance-portal')" class="btn-interactive bg-brand-accent text-brand-dark p-2 rounded-lg font-bold text-xs flex items-center">
                         <i class="fas fa-qrcode text-base"></i>
                     </button>
@@ -224,6 +230,9 @@
             <button onclick="navigateTo('contact'); toggleMobileMenu()" class="block w-full text-left py-2.5 text-gray-300">LIÊN HỆ</button>
         </div>
     </header>
+
+    <!-- THẺ INPUT ẨN DÙNG CHUNG CHO UPLOAD ẢNH TỪ ALBUM -->
+    <input type="file" id="universal-image-file-input" accept="image/*" class="hidden" onchange="handleUniversalFileSelect(event)">
 
     <!-- MAIN CONTENT -->
     <main class="flex-grow">
@@ -366,21 +375,11 @@
                         <!-- THẺ 3: NHÂN LỰC CHUẨN HÓA -->
                         <div class="card-pro-hover bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-md flex flex-col">
                             <div class="h-48 bg-slate-800 relative overflow-hidden group">
-                                <img id="hr-custom-img" src="1790567297025_5013471029311337545_g3142873166389515335_3d001139ff92c968025cc62584f99fae.jpg" 
-                                     onerror="this.style.display='none'; document.getElementById('hr-fallback-box').classList.remove('hidden');" 
-                                     onload="this.style.display='block'; document.getElementById('hr-fallback-box').classList.add('hidden');"
+                                <img id="hr-custom-img" src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=900&auto=format&fit=crop" 
                                      class="w-full h-full object-cover card-img-zoom transition-transform duration-500">
-                                
-                                <div id="hr-fallback-box" class="hidden absolute inset-0 bg-gradient-to-br from-brand-navy to-brand-blue flex flex-col items-center justify-center p-4 text-center">
-                                    <i class="fas fa-users-cog text-cyan-300 text-3xl mb-2"></i>
-                                    <p class="text-white text-xs font-bold mb-2">Ảnh Đội Ngũ Kỹ Sư HICON M&E</p>
-                                    <button type="button" onclick="triggerHrLinkChange()" class="btn-interactive bg-amber-500 hover:bg-amber-400 text-brand-dark font-extrabold px-3.5 py-2 rounded-xl text-xs shadow-lg flex items-center">
-                                        <i class="fas fa-link mr-1.5"></i> Nhập Link Ảnh Đội Ngũ
-                                    </button>
-                                </div>
 
-                                <button type="button" onclick="triggerHrLinkChange()" class="absolute top-2.5 right-2.5 bg-black/75 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition flex items-center shadow-lg z-20 cursor-pointer" title="Đổi ảnh Nhân lực bằng Link">
-                                    <i class="fas fa-link mr-1.5"></i> Đổi ảnh
+                                <button type="button" onclick="openPhotoChangeModal('HR')" class="absolute top-2.5 right-2.5 bg-black/75 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition flex items-center shadow-lg z-20 cursor-pointer" title="Đổi ảnh Nhân lực">
+                                    <i class="fas fa-camera mr-1.5"></i> Đổi ảnh
                                 </button>
 
                                 <div class="absolute bottom-2 left-3 pointer-events-none">
@@ -465,7 +464,7 @@
                             <div class="p-6 flex-grow flex flex-col justify-between">
                                 <div>
                                     <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-cloud-upload-alt text-brand-accent mr-2"></i> Máy Chủ Đám Mây An Toàn</h3>
-                                    <p class="text-gray-600 text-xs leading-relaxed">Hệ thống lưu trữ đám mây <strong>bảo mật 24/7</strong>, tự động thống kê số liệu vận hành và đưa ra cảnh báo sớm (Collecting & Analyzing data).</p>
+                                    <p class="text-gray-600 text-xs leading-relaxed">Hệ thống lưu trữ đám mây <strong>bảo mật 24/7</strong>, tự động đồng bộ ảnh và dữ liệu vận hành theo thời gian thực trên mọi thiết bị.</p>
                                 </div>
                             </div>
                         </div>
@@ -794,8 +793,8 @@
                     </div>
                     <div class="flex flex-wrap gap-2" id="proj-modal-tags"></div>
                     <div class="pt-3 border-t border-gray-100 flex justify-between items-center">
-                        <button onclick="triggerProjectLinkChange(currentModalProjectId)" class="btn-interactive bg-slate-100 hover:bg-amber-100 text-brand-navy font-bold px-4 py-2 rounded-xl text-xs flex items-center border border-gray-300">
-                            <i class="fas fa-link mr-1.5 text-amber-500"></i> Đổi ảnh dự án bằng Link
+                        <button onclick="openPhotoChangeModal(currentModalProjectId)" class="btn-interactive bg-slate-100 hover:bg-amber-100 text-brand-navy font-bold px-4 py-2 rounded-xl text-xs flex items-center border border-gray-300">
+                            <i class="fas fa-camera mr-1.5 text-amber-500"></i> Đổi ảnh dự án này
                         </button>
                         <button onclick="closeProjectDetailModal()" class="btn-interactive bg-brand-navy text-white font-bold px-6 py-2.5 rounded-xl text-xs">
                             Đóng
@@ -829,19 +828,22 @@
                                     <i class="fas fa-search mr-1.5"></i> Tra Cứu
                                 </button>
                             </div>
-                            <!-- NÚT MỤC CON: DANH SÁCH TỔNG HỢP THIẾT BỊ -->
                             <button onclick="openDeviceListModal()" class="btn-interactive bg-white/20 hover:bg-white/30 text-white font-bold px-4 py-2.5 rounded-xl text-sm border border-white/30 flex items-center whitespace-nowrap shadow-md">
                                 <i class="fas fa-list-ul mr-2 text-cyan-300"></i> Danh Sách Tổng Hợp
                             </button>
                         </div>
                     </div>
 
-                    <!-- LIST DEVICES DYNAMICALLY -->
                     <div class="mt-6 pt-4 border-t border-white/10 flex flex-wrap items-center gap-3 text-xs">
                         <span id="total-devices-text" class="text-gray-200 font-semibold">Số lượng mã thiết bị hiện có: 0</span>
-                        <button onclick="openAdminModal()" class="btn-interactive bg-amber-500 hover:bg-amber-400 text-brand-dark font-bold px-3 py-1.5 rounded-lg transition ml-auto flex items-center shadow-md">
-                            <i class="fas fa-edit mr-1"></i> Cập nhật thông tin/trạng thái thiết bị
-                        </button>
+                        <div class="ml-auto flex flex-wrap gap-2">
+                            <button onclick="openCloudConfigModal()" class="btn-interactive bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-200 border border-cyan-400/40 font-bold px-3 py-1.5 rounded-lg transition flex items-center">
+                                <i class="fas fa-cloud-upload-alt mr-1.5"></i> Cài Đặt Đồng Bộ Cloud
+                            </button>
+                            <button onclick="openAdminModal()" class="btn-interactive bg-amber-500 hover:bg-amber-400 text-brand-dark font-bold px-3 py-1.5 rounded-lg transition ml-auto flex items-center shadow-md">
+                                <i class="fas fa-edit mr-1"></i> Cập nhật thông tin/trạng thái thiết bị
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -967,24 +969,88 @@
 
     </main>
 
-    <!-- ==================== MODAL: LIGHTBOX PHÓNG TO ẢNH BÁO CÁO BẢO TRÌ ==================== -->
+    <!-- ==================== MODAL ĐỔI ẢNH ĐA NĂNG ==================== -->
+    <div id="photo-change-modal" class="fixed inset-0 z-[95] bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden border border-gray-200 p-6 space-y-4">
+            <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+                <h3 class="font-extrabold text-brand-navy text-base flex items-center">
+                    <i class="fas fa-camera text-amber-500 mr-2"></i> CẬP NHẬT HÌNH ẢNH
+                </h3>
+                <button onclick="closePhotoChangeModal()" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-lg"></i></button>
+            </div>
+            <p id="photo-change-target-label" class="text-xs font-bold text-brand-blue bg-cyan-50 px-3 py-2 rounded-xl border border-cyan-200">--</p>
+
+            <div class="space-y-3">
+                <div class="bg-slate-50 p-4 rounded-2xl border-2 border-dashed border-brand-accent/50 text-center">
+                    <p class="text-xs font-bold text-brand-navy mb-2">Cách 1: Chọn ảnh từ Album máy tính / điện thoại</p>
+                    <button type="button" onclick="document.getElementById('universal-image-file-input').click()" class="btn-interactive bg-brand-accent hover:bg-cyan-400 text-brand-dark font-extrabold px-5 py-2.5 rounded-xl text-xs shadow-md inline-flex items-center">
+                        <i class="fas fa-folder-open mr-2 text-sm"></i> Mở Thư Viện Ảnh
+                    </button>
+                    <p class="text-[10px] text-gray-400 mt-1.5">Ảnh sẽ tự động được nén nhẹ và đồng bộ Cloud</p>
+                </div>
+
+                <div class="text-center text-[11px] font-bold text-gray-400 uppercase">--- HOẶC ---</div>
+
+                <div class="bg-slate-50 p-4 rounded-2xl border border-gray-200 space-y-2">
+                    <label class="block text-xs font-bold text-brand-navy">Cách 2: Dán đường dẫn (Link URL) ảnh</label>
+                    <input type="text" id="photo-change-url-input" placeholder="https://..." class="w-full p-2.5 border border-gray-300 rounded-xl text-xs focus:outline-none focus:border-brand-blue">
+                    <button type="button" onclick="savePhotoFromUrlInput()" class="btn-interactive w-full bg-brand-navy hover:bg-brand-blue text-white font-bold py-2.5 rounded-xl text-xs shadow">
+                        Lưu Đường Dẫn Ảnh
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL CẤU HÌNH ĐÁM MÂY FIREBASE ==================== -->
+    <div id="cloud-config-modal" class="fixed inset-0 z-[95] bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden border border-gray-200 p-6 space-y-4">
+            <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+                <h3 class="font-extrabold text-brand-navy text-base flex items-center">
+                    <i class="fas fa-cloud-upload-alt text-brand-accent mr-2"></i> KẾT NỐI ĐÁM MÂY (GOOGLE FIREBASE)
+                </h3>
+                <button onclick="closeCloudConfigModal()" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-lg"></i></button>
+            </div>
+
+            <div class="text-xs text-gray-600 space-y-2 leading-relaxed bg-slate-50 p-3.5 rounded-2xl border border-gray-200">
+                <p class="font-bold text-brand-navy">Để mọi điện thoại và laptop tự động cập nhật giống nhau 100%:</p>
+                <p>1. Dán đường link <strong>Firebase Realtime Database URL</strong> vào ô bên dưới.</p>
+                <p>2. Mẹo vĩnh viễn: Dán luôn đường link vào biến <code class="text-amber-600 font-mono font-bold">FIREBASE_DB_URL</code> ở dòng 742 trong file <code class="font-mono">index.html</code> trên GitHub.</p>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-brand-navy mb-1">Đường dẫn Firebase Realtime Database URL:</label>
+                <input type="text" id="firebase-url-input" placeholder="https://hiconme---care-default-rtdb.asia-southeast1.firebasedatabase.app" class="w-full p-3 border-2 border-gray-300 rounded-xl text-xs font-mono focus:outline-none focus:border-brand-accent">
+            </div>
+
+            <div class="flex flex-wrap justify-between items-center gap-2 pt-2">
+                <button type="button" onclick="pushLocalDataToCloud()" class="btn-interactive bg-amber-500 hover:bg-amber-400 text-brand-dark font-extrabold px-4 py-2.5 rounded-xl text-xs flex items-center shadow">
+                    <i class="fas fa-upload mr-1.5"></i> Đẩy Dữ Liệu Máy Này Lên Cloud
+                </button>
+                <div class="flex gap-2">
+                    <button type="button" onclick="closeCloudConfigModal()" class="px-4 py-2.5 bg-gray-200 text-gray-700 rounded-xl text-xs font-bold">Đóng</button>
+                    <button type="button" onclick="saveCloudConfigUrl()" class="btn-interactive px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-lg">
+                        Lưu & Kết Nối
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL: LIGHTBOX PHÓNG TO ẢNH ==================== -->
     <div id="lightbox-modal" class="fixed inset-0 z-[110] bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4 select-none" onclick="closeLightbox(event)">
-        <!-- Nút Đóng -->
         <button type="button" onclick="closeLightbox(event, true)" class="absolute top-5 right-5 z-20 w-11 h-11 rounded-full bg-white/15 hover:bg-red-600 text-white flex items-center justify-center text-xl transition shadow-lg" title="Đóng (ESC)">
             <i class="fas fa-times"></i>
         </button>
 
-        <!-- Bộ đếm số thứ tự ảnh -->
         <div id="lightbox-counter" class="absolute top-6 left-6 z-20 bg-black/60 text-cyan-300 border border-white/15 px-4 py-1.5 rounded-full text-xs font-mono font-bold tracking-wider">
             Ảnh 1 / 1
         </div>
 
-        <!-- Nút Lùi (Prev) -->
         <button type="button" id="lightbox-prev-btn" onclick="changeLightboxImage(-1, event)" class="absolute left-3 sm:left-6 z-20 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/15 hover:bg-brand-accent hover:text-brand-dark text-white flex items-center justify-center text-xl transition shadow-2xl border border-white/20" title="Ảnh trước">
             <i class="fas fa-chevron-left"></i>
         </button>
 
-        <!-- Khung chứa bức ảnh phóng to -->
         <div class="relative max-w-5xl max-h-[85vh] flex flex-col items-center justify-center" onclick="event.stopPropagation()">
             <img id="lightbox-img" src="" alt="Ảnh bảo trì phóng to" class="max-w-full max-h-[80vh] object-contain rounded-xl shadow-2xl border border-white/20 transition-transform duration-200">
             <p id="lightbox-caption" class="text-gray-200 text-xs sm:text-sm font-medium mt-3 bg-black/60 px-4 py-1.5 rounded-full border border-white/10">
@@ -992,7 +1058,6 @@
             </p>
         </div>
 
-        <!-- Nút Tiến (Next) -->
         <button type="button" id="lightbox-next-btn" onclick="changeLightboxImage(1, event)" class="absolute right-3 sm:right-6 z-20 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/15 hover:bg-brand-accent hover:text-brand-dark text-white flex items-center justify-center text-xl transition shadow-2xl border border-white/20" title="Ảnh tiếp theo">
             <i class="fas fa-chevron-right"></i>
         </button>
@@ -1001,7 +1066,6 @@
     <!-- ==================== MODAL: DANH SÁCH TỔNG HỢP THIẾT BỊ ==================== -->
     <div id="device-list-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden border border-gray-200 my-8 flex flex-col max-h-[85vh]">
-            <!-- HEADER -->
             <div class="bg-brand-navy text-white p-5 flex justify-between items-center shrink-0">
                 <div>
                     <h3 class="font-extrabold text-base flex items-center"><i class="fas fa-list-ul text-brand-accent mr-2"></i> DANH SÁCH TỔNG HỢP THIẾT BỊ BẢO TRÌ</h3>
@@ -1010,16 +1074,13 @@
                 <button onclick="closeDeviceListModal()" class="text-gray-300 hover:text-white text-xl p-1 rounded-lg transition"><i class="fas fa-times"></i></button>
             </div>
 
-            <!-- CONTROLS & FILTERS -->
             <div class="p-5 bg-slate-50 border-b border-gray-200 space-y-4 shrink-0">
                 <div class="flex flex-col sm:flex-row gap-3 justify-between items-center">
-                    <!-- Ô TÌM KIẾM -->
                     <div class="relative w-full sm:w-80">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"><i class="fas fa-search"></i></span>
                         <input type="text" id="modal-search-input" oninput="filterDeviceList()" placeholder="Tìm kiếm theo mã, tên thiết bị..." class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-xl text-xs focus:outline-none focus:border-brand-accent transition">
                     </div>
 
-                    <!-- NÚT ICON XOAY CHUYỂN CHẾ ĐỘ NGƯỜI XEM / QUẢN TRỊ -->
                     <div class="flex items-center gap-2">
                         <div id="list-mode-indicator" class="text-xs font-bold text-gray-600 bg-gray-200 px-3 py-1.5 rounded-xl flex items-center border border-gray-300">
                             <i class="fas fa-eye mr-1.5 text-gray-500"></i> Chế độ Người xem
@@ -1030,14 +1091,12 @@
                     </div>
                 </div>
 
-                <!-- BẢNG CHỮ CÁI ĐẦU -->
                 <div>
                     <div class="text-[11px] font-bold text-gray-500 mb-1.5">Lọc theo chữ cái đầu:</div>
                     <div id="alphabet-filter-container" class="flex flex-wrap gap-1.5 text-xs"></div>
                 </div>
             </div>
 
-            <!-- DANH SÁCH BẢNG HIỂN THỊ -->
             <div class="p-6 overflow-y-auto flex-grow space-y-3">
                 <div class="overflow-x-auto border border-gray-200 rounded-2xl">
                     <table class="w-full text-left text-xs border-collapse">
@@ -1056,7 +1115,6 @@
                 </div>
             </div>
 
-            <!-- FOOTER -->
             <div class="p-4 bg-slate-100 border-t border-gray-200 flex justify-between items-center shrink-0">
                 <span class="text-[11px] text-gray-500">Danh sách được sắp xếp và nhóm theo thứ tự bảng chữ cái.</span>
                 <button onclick="closeDeviceListModal()" class="btn-interactive px-5 py-2 bg-brand-navy text-white rounded-xl text-xs font-bold">Đóng</button>
@@ -1101,7 +1159,6 @@
     <div id="admin-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden border border-gray-200 my-8 transition-all duration-300 transform scale-100">
             
-            <!-- STEP 1: AUTHENTICATION -->
             <div id="admin-step-auth" class="p-8 text-center">
                 <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 shadow-inner">
                     <i class="fas fa-user-lock"></i>
@@ -1125,7 +1182,6 @@
                 </div>
             </div>
 
-            <!-- STEP 1.5: CHANGE PASSWORD VIEW -->
             <div id="admin-step-changepass" class="p-8 text-center hidden">
                 <div class="w-16 h-16 bg-blue-100 text-brand-blue rounded-full flex items-center justify-center text-3xl mx-auto mb-4 shadow-inner">
                     <i class="fas fa-shield-alt"></i>
@@ -1154,7 +1210,6 @@
                 </div>
             </div>
 
-            <!-- STEP 2: UPDATE FORM -->
             <div id="admin-step-form" class="hidden">
                 <div class="bg-brand-navy text-white p-5 flex justify-between items-center">
                     <div>
@@ -1206,7 +1261,6 @@
                         </div>
                     </div>
 
-                    <!-- QUẢN LÝ HẠNG MỤC BẢO TRÌ -->
                     <div class="bg-slate-50 p-4 rounded-xl border border-gray-200 space-y-3">
                         <div class="flex justify-between items-center">
                             <div>
@@ -1226,10 +1280,9 @@
                         <textarea id="form-note" rows="2" placeholder="VD: Đã hoàn tất quy trình bảo dưỡng định kỳ, thiết bị vận hành ổn định..." class="w-full p-2.5 border border-gray-300 rounded-lg transition"></textarea>
                     </div>
 
-                    <!-- PHOTO UPLOAD FROM ALBUM -->
                     <div class="bg-slate-50 p-4 rounded-xl border-2 border-dashed border-gray-300 text-center">
                         <label class="block font-bold text-brand-navy mb-1"><i class="fas fa-images text-brand-accent mr-1"></i> TẢI ẢNH CHỤP HIỆN TRƯỜNG TỪ ALBUM</label>
-                        <p class="text-[10px] text-gray-500 mb-3">Có thể chọn nhiều ảnh. Bấm dấu (x) nếu muốn xóa ảnh chọn nhầm.</p>
+                        <p class="text-[10px] text-gray-500 mb-3">Có thể chọn nhiều ảnh. Ảnh được tự động nén tối ưu để đồng bộ Đám mây.</p>
                         
                         <input type="file" id="form-file-input" multiple accept="image/*" onchange="previewImages(event)" class="hidden">
                         <button type="button" onclick="document.getElementById('form-file-input').click()" class="btn-interactive bg-brand-blue hover:bg-brand-navy text-white px-4 py-2 rounded-lg font-bold text-xs shadow-md">
@@ -1242,7 +1295,7 @@
                     <div class="pt-2 flex justify-end gap-3">
                         <button type="button" onclick="closeAdminModal()" class="btn-interactive px-5 py-2.5 bg-gray-200 text-gray-700 rounded-xl font-bold">Hủy Bỏ</button>
                         <button type="submit" class="btn-interactive px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold shadow-lg flex items-center">
-                            <i class="fas fa-save mr-1.5"></i> LƯU & XUẤT MÃ QR
+                            <i class="fas fa-save mr-1.5"></i> LƯU & ĐỒNG BỘ CLOUD
                         </button>
                     </div>
                 </form>
@@ -1266,15 +1319,25 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
+        // =========================================================================
+        // ĐÃ GẮN SẴN ĐƯỜNG DẪN FIREBASE REALTIME DATABASE CỦA ANH
+        // =========================================================================
+        const FIREBASE_DB_URL = "https://hiconme---care-default-rtdb.asia-southeast1.firebasedatabase.app"; 
+
         const CONFIRM_PIN = "1111";
         let toastTimeout = null;
         let isListAdminMode = false;
         let currentSelectedLetter = 'ALL';
         let deviceToDeleteCode = null;
 
-        // Biến phục vụ Lightbox phóng to ảnh bảo trì
         let currentLightboxPhotos = [];
         let currentLightboxIndex = 0;
+        let currentPhotoChangeTarget = null;
+
+        let cloudProjectImagesCache = {};
+        let cloudHrPhotoCache = "";
+        let cloudDevicesCache = null;
+        let cloudAdminPassCache = "";
 
         const hiconProjectsData = [
             {
@@ -1363,13 +1426,285 @@
             }
         ];
 
+        const defaultDevices = {
+            'TS-2026-HVAC': {
+                name: 'Cụm Bơm Chilled Water #01',
+                code: 'TS-2026-HVAC',
+                location: 'Phòng Máy Chiller - Nhà máy Tesa Tape',
+                client: 'Tesa Tape DEEP C Hải Phòng',
+                tech: 'Kỹ sư Vũ Văn Tiến (HICON M&E)',
+                date: '2026-10-22',
+                statusBadge: '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800"><i class="fas fa-check-circle mr-1"></i> HOẠT ĐỘNG TỐT</span>',
+                note: 'Đã hoàn thành kiểm tra toàn bộ cụm bơm, tra mỡ màng đệm và đo dòng điện 3 pha ổn định.',
+                tasks: [
+                    { title: 'Vệ sinh tổng quan vỏ máy', detail: 'Lau chùi bụi bẩn bám trên thân bơm và động cơ.', status: 'Đạt' },
+                    { title: 'Kiểm tra độ rò rỉ cơ khí', detail: 'Kiểm tra trục phớt, không thấy hiện tượng rò nước.', status: 'Đạt' },
+                    { title: 'Tra mỡ ổ bi / Bạc đạn', detail: 'Bổ sung mỡ chịu nhiệt chuyên dụng cho 2 gối đỡ ổ bi.', status: 'Đạt' },
+                    { title: 'Đo điện trở cách điện motor', detail: 'Đo bằng đồng hồ Megaohmmeter kết quả > 50 MΩ.', status: 'Đạt' },
+                    { title: 'Kiểm tra dòng điện vận hành', detail: 'Đo dòng 3 pha cân bằng ở mức 38.2A.', status: 'Đạt' },
+                    { title: 'Kiểm tra bu lông chân đế', detail: 'Siết chặt lại toàn bộ bu lông chống rung chân đế bơm.', status: 'Đạt' },
+                    { title: 'Kiểm tra van và đồng hồ áp suất', detail: 'Đồng hồ áp lực đầu hút/đẩy hoạt động chính xác.', status: 'Đạt' },
+                    { title: 'Vệ sinh lưới lọc Y', detail: 'Xả cặn bẩn tích tụ tại bầu lọc chữ Y đường ống hút.', status: 'Đạt' }
+                ],
+                specs: [
+                    { item: 'Áp suất đầu hút', std: '2.5 - 3.5 bar', val: '3.1 bar', status: 'Đạt', isOk: true },
+                    { item: 'Áp suất đầu đẩy', std: '6.0 - 7.5 bar', val: '6.8 bar', status: 'Đạt', isOk: true },
+                    { item: 'Dòng điện vận hành', std: '35.0 - 42.0 A', val: '38.2 A', status: 'Đạt', isOk: true }
+                ],
+                photos: [
+                    'https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=1000&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=1000&auto=format&fit=crop'
+                ]
+            },
+            'TS-2026-FIRE': {
+                name: 'Máy Bơm PCCC Động Cơ Diesel',
+                code: 'TS-2026-FIRE',
+                location: 'Trạm Bơm PCCC Trung Tâm',
+                client: 'Tesa Tape DEEP C Hải Phòng',
+                tech: 'Kỹ sư Nguyễn Văn Nam (HICON M&E)',
+                date: '2026-10-20',
+                statusBadge: '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-800"><i class="fas fa-exclamation-triangle mr-1"></i> CẦN LƯU Ý</span>',
+                note: 'Áp lực tuyến ống ổn định. Bình ắc quy đề nổ điện áp thấp cần thay thế mới.',
+                tasks: [
+                    { title: 'Kiểm tra mức nhiên liệu Diesel', detail: 'Dầu diesel trong bồn chứa đạt 85% dung tích.', status: 'Đạt' },
+                    { title: 'Kiểm tra mức nước giải nhiệt', detail: 'Nước làm mát máy phát đầy đủ, không rò rỉ.', status: 'Đạt' },
+                    { title: 'Kiểm tra điện áp ắc quy đề nổ', detail: 'Đo điện áp bình đạt 22.8V (Thấp hơn tiêu chuẩn 24V).', status: 'Cần chú ý' },
+                    { title: 'Kiểm tra hệ thống xả khí thải', detail: 'Đường ống xả khói không bị tắc nghẽn, rỉ sét.', status: 'Đạt' },
+                    { title: 'Chạy thử tự động (Auto Test)', detail: 'Khởi động máy bơm thành công qua tủ điều khiển Tornatech.', status: 'Đạt' }
+                ],
+                specs: [
+                    { item: 'Áp lực tuyến ống PCCC', std: '9.0 - 11.0 bar', val: '10.2 bar', status: 'Đạt', isOk: true },
+                    { item: 'Điện áp ắc quy đề nổ', std: '24.0 - 27.0 V', val: '22.8 V', status: 'Thấp', isOk: false }
+                ],
+                photos: [
+                    'https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?q=80&w=1000&auto=format&fit=crop'
+                ]
+            }
+        };
+
+        function getActiveFirebaseUrl() {
+            let url = (FIREBASE_DB_URL || localStorage.getItem('hicon_firebase_url') || '').trim();
+            if (url.endsWith('/')) url = url.slice(0, -1);
+            return url;
+        }
+
+        function updateCloudStatusBadge(isConnected) {
+            const badge = document.getElementById('cloud-status-badge');
+            if (!badge) return;
+            if (isConnected) {
+                badge.className = "cursor-pointer bg-emerald-900/60 hover:bg-emerald-800 text-emerald-300 border border-emerald-500/50 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide transition flex items-center";
+                badge.innerHTML = `<i class="fas fa-cloud mr-1 text-emerald-400"></i> Cloud: Đã đồng bộ`;
+            } else {
+                badge.className = "cursor-pointer bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide transition flex items-center";
+                badge.innerHTML = `<i class="fas fa-cloud mr-1 text-amber-400"></i> Cloud: Chưa kết nối`;
+            }
+        }
+
+        async function fetchAllFromCloud() {
+            const baseUrl = getActiveFirebaseUrl();
+            if (!baseUrl) {
+                updateCloudStatusBadge(false);
+                return;
+            }
+            try {
+                const res = await fetch(`${baseUrl}/hicon_system.json`);
+                if (!res.ok) throw new Error('Cloud fetch error');
+                const data = await res.json();
+                updateCloudStatusBadge(true);
+
+                if (data) {
+                    if (data.project_images) {
+                        cloudProjectImagesCache = data.project_images;
+                        Object.keys(data.project_images).forEach(pid => {
+                            localStorage.setItem('hicon_proj_img_' + pid, data.project_images[pid]);
+                        });
+                    }
+                    if (data.hr_photo) {
+                        cloudHrPhotoCache = data.hr_photo;
+                        localStorage.setItem('hicon_hr_photo_custom', data.hr_photo);
+                    }
+                    if (data.devices) {
+                        cloudDevicesCache = data.devices;
+                        localStorage.setItem('hicon_device_db', JSON.stringify(data.devices));
+                    }
+                    if (data.admin_pass) {
+                        cloudAdminPassCache = data.admin_pass;
+                        localStorage.setItem('hicon_admin_pass', data.admin_pass);
+                    }
+                    loadSavedHrPhoto();
+                    renderProjectsSection();
+                    updateTotalCountDisplay();
+                } else {
+                    await pushLocalDataToCloud(true);
+                }
+            } catch (err) {
+                updateCloudStatusBadge(false);
+            }
+        }
+
+        async function syncPathToCloud(subPath, payload) {
+            const baseUrl = getActiveFirebaseUrl();
+            if (!baseUrl) return false;
+            try {
+                const res = await fetch(`${baseUrl}/hicon_system/${subPath}.json`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    updateCloudStatusBadge(true);
+                    return true;
+                }
+            } catch (e) {}
+            return false;
+        }
+
+        async function pushLocalDataToCloud(silent = false) {
+            const baseUrl = getActiveFirebaseUrl();
+            if (!baseUrl) return;
+            const projImgs = {};
+            hiconProjectsData.forEach(p => {
+                const saved = localStorage.getItem('hicon_proj_img_' + p.id);
+                if (saved) projImgs[p.id] = saved;
+            });
+            const payload = {
+                project_images: projImgs,
+                hr_photo: localStorage.getItem('hicon_hr_photo_custom') || '',
+                devices: getDeviceDatabase(),
+                admin_pass: getStoredPassword()
+            };
+            try {
+                const res = await fetch(`${baseUrl}/hicon_system.json`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok && !silent) {
+                    updateCloudStatusBadge(true);
+                    showTopToast('Đã đồng bộ lên Đám mây thành công!', false);
+                }
+            } catch (e) {}
+        }
+
+        function openCloudConfigModal() {
+            document.getElementById('firebase-url-input').value = getActiveFirebaseUrl();
+            document.getElementById('cloud-config-modal').classList.remove('hidden');
+        }
+
+        function closeCloudConfigModal() {
+            document.getElementById('cloud-config-modal').classList.add('hidden');
+        }
+
+        async function saveCloudConfigUrl() {
+            const val = document.getElementById('firebase-url-input').value.trim();
+            if (!val) {
+                showTopErrorToast('Vui lòng nhập đường link Firebase URL!');
+                return;
+            }
+            localStorage.setItem('hicon_firebase_url', val);
+            closeCloudConfigModal();
+            showTopToast('Đang kết nối Cloud...', false);
+            await fetchAllFromCloud();
+        }
+
+        function compressImageFile(file, maxWidth = 900, quality = 0.78) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        let w = img.width;
+                        let h = img.height;
+                        if (w > maxWidth) {
+                            h = Math.round((h * maxWidth) / w);
+                            w = maxWidth;
+                        }
+                        canvas.width = w;
+                        canvas.height = h;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, w, h);
+                        resolve(canvas.toDataURL('image/jpeg', quality));
+                    };
+                    img.onerror = reject;
+                    img.src = e.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function openPhotoChangeModal(targetId) {
+            currentPhotoChangeTarget = targetId;
+            const labelEl = document.getElementById('photo-change-target-label');
+            const urlInput = document.getElementById('photo-change-url-input');
+
+            if (targetId === 'HR') {
+                labelEl.innerText = "Mục tiêu: Ảnh Nhân Lực Chuẩn Hóa";
+                urlInput.value = localStorage.getItem('hicon_hr_photo_custom') || '';
+            } else {
+                const proj = hiconProjectsData.find(p => p.id === targetId);
+                labelEl.innerText = `Dự án: ${proj ? proj.title : targetId}`;
+                const saved = getProjectImage(proj);
+                urlInput.value = saved.startsWith('data:') ? '' : saved;
+            }
+            document.getElementById('photo-change-modal').classList.remove('hidden');
+        }
+
+        function closePhotoChangeModal() {
+            document.getElementById('photo-change-modal').classList.add('hidden');
+        }
+
+        async function handleUniversalFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file || !currentPhotoChangeTarget) return;
+            try {
+                showTopToast('Đang nén ảnh và đẩy lên Cloud...', false);
+                const base64Data = await compressImageFile(file, 900, 0.8);
+                await applyNewPhotoToTarget(currentPhotoChangeTarget, base64Data);
+                closePhotoChangeModal();
+            } catch (err) {
+                showTopErrorToast('Không thể đọc file ảnh này!');
+            }
+            event.target.value = '';
+        }
+
+        async function savePhotoFromUrlInput() {
+            const url = document.getElementById('photo-change-url-input').value.trim();
+            if (!url) {
+                showTopErrorToast('Vui lòng nhập Link URL ảnh!');
+                return;
+            }
+            await applyNewPhotoToTarget(currentPhotoChangeTarget, url);
+            closePhotoChangeModal();
+        }
+
+        async function applyNewPhotoToTarget(targetId, imgData) {
+            if (targetId === 'HR') {
+                cloudHrPhotoCache = imgData;
+                localStorage.setItem('hicon_hr_photo_custom', imgData);
+                loadSavedHrPhoto();
+                await syncPathToCloud('hr_photo', imgData);
+                showTopToast('Đã cập nhật ảnh Nhân lực thành công!', false);
+            } else {
+                cloudProjectImagesCache[targetId] = imgData;
+                localStorage.setItem('hicon_proj_img_' + targetId, imgData);
+                renderProjectsSection();
+                if (currentModalProjectId === targetId) {
+                    document.getElementById('proj-modal-img').src = imgData;
+                }
+                await syncPathToCloud(`project_images/${targetId}`, imgData);
+                showTopToast('Đã cập nhật ảnh Dự án & đồng bộ Cloud!', false);
+            }
+        }
+
         let currentProjectCategory = 'ALL';
         let currentProjectViewMode = 'GRID';
         let currentModalProjectId = null;
 
         function getProjectImage(proj) {
-            const customImg = localStorage.getItem('hicon_proj_img_' + proj.id);
-            return customImg || proj.defaultImg;
+            if (!proj) return '';
+            return cloudProjectImagesCache[proj.id] || localStorage.getItem('hicon_proj_img_' + proj.id) || proj.defaultImg;
         }
 
         function setProjectCategory(cat) {
@@ -1440,8 +1775,8 @@
                                     </span>
                                 </div>
 
-                                <button type="button" onclick="triggerProjectLinkChange('${proj.id}')" class="absolute top-3 right-3 bg-black/75 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition flex items-center shadow-lg z-20 cursor-pointer" title="Nhập link ảnh mới cho dự án">
-                                    <i class="fas fa-link mr-1.5"></i> Đổi ảnh
+                                <button type="button" onclick="openPhotoChangeModal('${proj.id}')" class="absolute top-3 right-3 bg-black/75 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition flex items-center shadow-lg z-20 cursor-pointer" title="Đổi ảnh dự án">
+                                    <i class="fas fa-camera mr-1.5"></i> Đổi ảnh
                                 </button>
 
                                 <div class="absolute bottom-3 left-4 right-4 text-white">
@@ -1497,8 +1832,8 @@
                         <div class="w-full md:w-5/12 group">
                             <div class="relative h-56 sm:h-64 overflow-hidden shadow-xl border-4 border-white ${isEven ? 'brochure-leaf-left' : 'brochure-leaf-right'} bg-slate-900 card-pro-hover">
                                 <img src="${imgSrc}" alt="${proj.title}" class="w-full h-full object-cover card-img-zoom transition-transform duration-700">
-                                <button type="button" onclick="triggerProjectLinkChange('${proj.id}')" class="absolute top-3 right-3 bg-black/75 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition flex items-center shadow-lg z-20 cursor-pointer" title="Nhập link ảnh mới cho dự án">
-                                    <i class="fas fa-link mr-1.5"></i> Đổi ảnh
+                                <button type="button" onclick="openPhotoChangeModal('${proj.id}')" class="absolute top-3 right-3 bg-black/75 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition flex items-center shadow-lg z-20 cursor-pointer" title="Đổi ảnh dự án">
+                                    <i class="fas fa-camera mr-1.5"></i> Đổi ảnh
                                 </button>
                             </div>
                         </div>
@@ -1558,49 +1893,36 @@
             document.getElementById('project-detail-modal').classList.add('hidden');
         }
 
-        function triggerProjectLinkChange(projId) {
-            const proj = hiconProjectsData.find(p => p.id === projId);
-            const currentImg = getProjectImage(proj);
-            const newLink = prompt(`Nhập đường dẫn (URL) ảnh mới cho dự án:\n[${proj.title}]`, currentImg);
-            if (newLink && newLink.trim() !== '') {
-                localStorage.setItem('hicon_proj_img_' + projId, newLink.trim());
-                renderProjectsSection();
-                if (currentModalProjectId === projId) {
-                    document.getElementById('proj-modal-img').src = newLink.trim();
-                }
-                alert('Đã cập nhật ảnh mới cho dự án thành công!');
-            }
-        }
-
-        function triggerHrLinkChange() {
-            const currentImg = localStorage.getItem('hicon_hr_photo_custom') || '';
-            const newLink = prompt("Nhập đường dẫn (URL) ảnh mới cho mục Nhân Lực Chuẩn Hóa:", currentImg);
-            if (newLink && newLink.trim() !== '') {
-                localStorage.setItem('hicon_hr_photo_custom', newLink.trim());
-                loadSavedHrPhoto();
-                alert('Đã cập nhật ảnh nhân lực thành công!');
-            }
-        }
-
         function loadSavedHrPhoto() {
-            const savedPhoto = localStorage.getItem('hicon_hr_photo_custom');
+            const savedPhoto = cloudHrPhotoCache || localStorage.getItem('hicon_hr_photo_custom');
             const imgEl = document.getElementById('hr-custom-img');
-            const fallbackBox = document.getElementById('hr-fallback-box');
             if (savedPhoto && imgEl) {
                 imgEl.src = savedPhoto;
-                imgEl.style.display = 'block';
-                if (fallbackBox) fallbackBox.classList.add('hidden');
             }
         }
 
-        function showTopErrorToast(msg) {
+        function showTopToast(msg, isError = true) {
             const toast = document.getElementById('top-error-toast');
+            const boxBg = document.getElementById('toast-box-bg');
+            const icon = document.getElementById('toast-icon');
             const msgEl = document.getElementById('top-error-message');
+
             msgEl.innerText = msg;
+            if (isError) {
+                boxBg.className = "bg-red-600 text-white px-5 py-3.5 rounded-2xl shadow-2xl border-2 border-red-400 flex items-center justify-between gap-3 toast-animate-in";
+                icon.className = "fas fa-exclamation-triangle text-amber-300 text-sm";
+            } else {
+                boxBg.className = "bg-emerald-600 text-white px-5 py-3.5 rounded-2xl shadow-2xl border-2 border-emerald-400 flex items-center justify-between gap-3 toast-animate-in";
+                icon.className = "fas fa-check-circle text-white text-sm";
+            }
             toast.classList.remove('hidden');
 
             if (toastTimeout) clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => { hideErrorToast(); }, 2500);
+            toastTimeout = setTimeout(() => { hideErrorToast(); }, 3000);
+        }
+
+        function showTopErrorToast(msg) {
+            showTopToast(msg, true);
         }
 
         function hideErrorToast() {
@@ -1608,70 +1930,17 @@
         }
 
         function getStoredPassword() {
-            return localStorage.getItem('hicon_admin_pass') || 'hiconme';
+            return cloudAdminPassCache || localStorage.getItem('hicon_admin_pass') || 'hiconme';
         }
 
-        function setStoredPassword(newPass) {
+        async function setStoredPassword(newPass) {
+            cloudAdminPassCache = newPass;
             localStorage.setItem('hicon_admin_pass', newPass);
+            await syncPathToCloud('admin_pass', newPass);
         }
-
-        const defaultDevices = {
-            'TS-2026-HVAC': {
-                name: 'Cụm Bơm Chilled Water #01',
-                code: 'TS-2026-HVAC',
-                location: 'Phòng Máy Chiller - Nhà máy Tesa Tape',
-                client: 'Tesa Tape DEEP C Hải Phòng',
-                tech: 'Kỹ sư Vũ Văn Tiến (HICON M&E)',
-                date: '2026-10-22',
-                statusBadge: '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800"><i class="fas fa-check-circle mr-1"></i> HOẠT ĐỘNG TỐT</span>',
-                note: 'Đã hoàn thành kiểm tra toàn bộ cụm bơm, tra mỡ màng đệm và đo dòng điện 3 pha ổn định.',
-                tasks: [
-                    { title: 'Vệ sinh tổng quan vỏ máy', detail: 'Lau chùi bụi bẩn bám trên thân bơm và động cơ.', status: 'Đạt' },
-                    { title: 'Kiểm tra độ rò rỉ cơ khí', detail: 'Kiểm tra trục phớt, không thấy hiện tượng rò nước.', status: 'Đạt' },
-                    { title: 'Tra mỡ ổ bi / Bạc đạn', detail: 'Bổ sung mỡ chịu nhiệt chuyên dụng cho 2 gối đỡ ổ bi.', status: 'Đạt' },
-                    { title: 'Đo điện trở cách điện motor', detail: 'Đo bằng đồng hồ Megaohmmeter kết quả > 50 MΩ.', status: 'Đạt' },
-                    { title: 'Kiểm tra dòng điện vận hành', detail: 'Đo dòng 3 pha cân bằng ở mức 38.2A.', status: 'Đạt' },
-                    { title: 'Kiểm tra bu lông chân đế', detail: 'Siết chặt lại toàn bộ bu lông chống rung chân đế bơm.', status: 'Đạt' },
-                    { title: 'Kiểm tra van và đồng hồ áp suất', detail: 'Đồng hồ áp lực đầu hút/đẩy hoạt động chính xác.', status: 'Đạt' },
-                    { title: 'Vệ sinh lưới lọc Y', detail: 'Xả cặn bẩn tích tụ tại bầu lọc chữ Y đường ống hút.', status: 'Đạt' }
-                ],
-                specs: [
-                    { item: 'Áp suất đầu hút', std: '2.5 - 3.5 bar', val: '3.1 bar', status: 'Đạt', isOk: true },
-                    { item: 'Áp suất đầu đẩy', std: '6.0 - 7.5 bar', val: '6.8 bar', status: 'Đạt', isOk: true },
-                    { item: 'Dòng điện vận hành', std: '35.0 - 42.0 A', val: '38.2 A', status: 'Đạt', isOk: true }
-                ],
-                photos: [
-                    'https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=1000&auto=format&fit=crop',
-                    'https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=1000&auto=format&fit=crop'
-                ]
-            },
-            'TS-2026-FIRE': {
-                name: 'Máy Bơm PCCC Động Cơ Diesel',
-                code: 'TS-2026-FIRE',
-                location: 'Trạm Bơm PCCC Trung Tâm',
-                client: 'Tesa Tape DEEP C Hải Phòng',
-                tech: 'Kỹ sư Nguyễn Văn Nam (HICON M&E)',
-                date: '2026-10-20',
-                statusBadge: '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-800"><i class="fas fa-exclamation-triangle mr-1"></i> CẦN LƯU Ý</span>',
-                note: 'Áp lực tuyến ống ổn định. Bình ắc quy đề nổ điện áp thấp cần thay thế mới.',
-                tasks: [
-                    { title: 'Kiểm tra mức nhiên liệu Diesel', detail: 'Dầu diesel trong bồn chứa đạt 85% dung tích.', status: 'Đạt' },
-                    { title: 'Kiểm tra mức nước giải nhiệt', detail: 'Nước làm mát máy phát đầy đủ, không rò rỉ.', status: 'Đạt' },
-                    { title: 'Kiểm tra điện áp ắc quy đề nổ', detail: 'Đo điện áp bình đạt 22.8V (Thấp hơn tiêu chuẩn 24V).', status: 'Cần chú ý' },
-                    { title: 'Kiểm tra hệ thống xả khí thải', detail: 'Đường ống xả khói không bị tắc nghẽn, rỉ sét.', status: 'Đạt' },
-                    { title: 'Chạy thử tự động (Auto Test)', detail: 'Khởi động máy bơm thành công qua tủ điều khiển Tornatech.', status: 'Đạt' }
-                ],
-                specs: [
-                    { item: 'Áp lực tuyến ống PCCC', std: '9.0 - 11.0 bar', val: '10.2 bar', status: 'Đạt', isOk: true },
-                    { item: 'Điện áp ắc quy đề nổ', std: '24.0 - 27.0 V', val: '22.8 V', status: 'Thấp', isOk: false }
-                ],
-                photos: [
-                    'https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?q=80&w=1000&auto=format&fit=crop'
-                ]
-            }
-        };
 
         function getDeviceDatabase() {
+            if (cloudDevicesCache) return cloudDevicesCache;
             const saved = localStorage.getItem('hicon_device_db');
             if (saved) {
                 try { return JSON.parse(saved); } catch(e) {}
@@ -1679,8 +1948,10 @@
             return defaultDevices;
         }
 
-        function saveDeviceDatabase(db) {
+        async function saveDeviceDatabase(db) {
+            cloudDevicesCache = db;
             localStorage.setItem('hicon_device_db', JSON.stringify(db));
+            await syncPathToCloud('devices', db);
         }
 
         let uploadedPhotosBase64 = [];
@@ -1714,7 +1985,6 @@
             }
         }
 
-        /* ==================== HÀM XỬ LÝ LIGHTBOX PHÓNG TO & CHUYỂN ẢNH ==================== */
         function openLightbox(index) {
             if (!currentLightboxPhotos || currentLightboxPhotos.length === 0) return;
             currentLightboxIndex = index;
@@ -1734,7 +2004,6 @@
             counterEl.innerText = `Ảnh ${currentLightboxIndex + 1} / ${total}`;
             captionEl.innerText = `Hình ảnh kiểm tra thực tế #${currentLightboxIndex + 1}`;
 
-            // Ẩn/hiện nút mũi tên nếu chỉ có 1 ảnh hoặc nhiều ảnh
             if (total <= 1) {
                 prevBtn.classList.add('hidden');
                 nextBtn.classList.add('hidden');
@@ -1758,7 +2027,6 @@
             }
         }
 
-        // Hỗ trợ bấm phím mũi tên Trái / Phải và phím ESC trên bàn phím khi đang phóng to ảnh
         document.addEventListener('keydown', function(e) {
             const modal = document.getElementById('lightbox-modal');
             if (!modal || modal.classList.contains('hidden')) return;
@@ -1814,7 +2082,6 @@
                 `;
             });
 
-            // Lưu danh sách ảnh vào mảng Lightbox và hiển thị
             currentLightboxPhotos = data.photos || [];
             const gallery = document.getElementById('photo-gallery');
             gallery.innerHTML = '';
@@ -1885,7 +2152,6 @@
             if (db[code]) renderDeviceReport(db[code]);
         }
 
-        /* ==================== XỬ LÝ MỤC CON: DANH SÁCH TỔNG HỢP & XOAY CHUYỂN CHẾ ĐỘ ==================== */
         function openDeviceListModal() {
             currentSelectedLetter = 'ALL';
             document.getElementById('modal-search-input').value = '';
@@ -1910,382 +2176,4 @@
             }
         }
 
-        function closeListAuthModal() {
-            document.getElementById('list-auth-modal').classList.add('hidden');
-        }
-
-        function verifyListAdminPassword() {
-            const pass = document.getElementById('list-auth-password').value;
-            const currentPass = getStoredPassword();
-            if (pass === currentPass) {
-                isListAdminMode = true;
-                closeListAuthModal();
-                updateListModeUI();
-                renderDeviceListModalContent();
-                showTopErrorToast('Đã chuyển sang chế độ Quản trị thành công!');
-            } else {
-                showTopErrorToast('Mật khẩu quản trị không chính xác!');
-            }
-        }
-
-        function updateListModeUI() {
-            const indicator = document.getElementById('list-mode-indicator');
-            const thAction = document.getElementById('th-action-header');
-            if (isListAdminMode) {
-                indicator.className = "text-xs font-bold text-amber-800 bg-amber-100 px-3 py-1.5 rounded-xl flex items-center border border-amber-300";
-                indicator.innerHTML = `<i class="fas fa-user-shield mr-1.5 text-amber-600"></i> Chế độ Quản trị (Có quyền xóa)`;
-                thAction.classList.remove('hidden');
-            } else {
-                indicator.className = "text-xs font-bold text-gray-600 bg-gray-200 px-3 py-1.5 rounded-xl flex items-center border border-gray-300";
-                indicator.innerHTML = `<i class="fas fa-eye mr-1.5 text-gray-500"></i> Chế độ Người xem`;
-                thAction.classList.add('hidden');
-            }
-        }
-
-        function renderDeviceListModalContent() {
-            const db = getDeviceDatabase();
-            const devicesArray = Object.values(db);
-            
-            document.getElementById('modal-total-count').innerText = `Tổng số lượng: ${devicesArray.length} thiết bị`;
-
-            const letterCounts = {};
-            for (let char of "ABCDEFGHIJKLMNOPQRSTUVWXYZ0-9") { letterCounts[char] = 0; }
-
-            devicesArray.forEach(dev => {
-                const firstChar = (dev.name || dev.code || '').trim().toUpperCase().charAt(0);
-                if (letterCounts[firstChar] !== undefined) {
-                    letterCounts[firstChar]++;
-                } else {
-                    if (!letterCounts['#']) letterCounts['#'] = 0;
-                    letterCounts['#']++;
-                }
-            });
-
-            const filterContainer = document.getElementById('alphabet-filter-container');
-            filterContainer.innerHTML = '';
-
-            const allBtn = document.createElement('button');
-            allBtn.className = `px-2.5 py-1 rounded-lg text-xs font-bold transition ${currentSelectedLetter === 'ALL' ? 'bg-brand-navy text-white shadow-md' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'}`;
-            allBtn.innerHTML = `Tất cả (${devicesArray.length})`;
-            allBtn.onclick = () => { currentSelectedLetter = 'ALL'; renderDeviceListModalContent(); };
-            filterContainer.appendChild(allBtn);
-
-            for (let char of "ABCDEFGHIJKLMNOPQRSTUVWXYZ") {
-                const count = letterCounts[char] || 0;
-                const btn = document.createElement('button');
-                btn.className = `px-2 py-1 rounded-lg text-xs font-bold transition ${currentSelectedLetter === char ? 'bg-brand-navy text-white shadow-md' : (count > 0 ? 'bg-white text-brand-navy border border-cyan-200 hover:bg-cyan-50' : 'bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed')}`;
-                btn.innerHTML = `${char} (${count})`;
-                if (count > 0) {
-                    btn.onclick = () => { currentSelectedLetter = char; renderDeviceListModalContent(); };
-                } else {
-                    btn.disabled = true;
-                }
-                filterContainer.appendChild(btn);
-            }
-
-            const searchQuery = document.getElementById('modal-search-input').value.trim().toLowerCase();
-
-            let filtered = devicesArray.filter(dev => {
-                const nameStr = (dev.name || '').toLowerCase();
-                const codeStr = (dev.code || '').toLowerCase();
-                const locStr = (dev.location || '').toLowerCase();
-                
-                const matchesSearch = nameStr.includes(searchQuery) || codeStr.includes(searchQuery) || locStr.includes(searchQuery);
-                
-                if (currentSelectedLetter === 'ALL') {
-                    return matchesSearch;
-                } else {
-                    const firstChar = (dev.name || dev.code || '').trim().toUpperCase().charAt(0);
-                    return matchesSearch && firstChar === currentSelectedLetter;
-                }
-            });
-
-            filtered.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-
-            const tbody = document.getElementById('modal-device-tbody');
-            tbody.innerHTML = '';
-
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="${isListAdminMode ? 6 : 5}" class="p-6 text-center text-gray-400">Không tìm thấy thiết bị nào phù hợp.</td></tr>`;
-                return;
-            }
-
-            filtered.forEach((dev, idx) => {
-                let actionTd = '';
-                if (isListAdminMode) {
-                    actionTd = `
-                        <td class="p-3 text-center">
-                            <button onclick="promptDeleteDevice('${dev.code}')" class="btn-interactive bg-red-100 hover:bg-red-200 text-red-600 px-2.5 py-1.5 rounded-lg text-xs font-bold transition shadow-sm" title="Xóa thiết bị này">
-                                <i class="fas fa-trash-alt mr-1"></i> Xóa
-                            </button>
-                        </td>
-                    `;
-                }
-
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 border-b border-gray-100 transition">
-                        <td class="p-3 text-center font-bold text-gray-500">${idx + 1}</td>
-                        <td class="p-3 font-mono font-bold text-brand-accent cursor-pointer hover:underline" onclick="closeDeviceListModal(); loadSampleDevice('${dev.code}'); navigateTo('maintenance-portal');">${dev.code}</td>
-                        <td class="p-3 font-bold text-brand-navy">${dev.name}</td>
-                        <td class="p-3 text-gray-600">${dev.location}</td>
-                        <td class="p-3 text-gray-600">${dev.tech}</td>
-                        ${actionTd}
-                    </tr>
-                `;
-            });
-        }
-
-        function filterDeviceList() {
-            renderDeviceListModalContent();
-        }
-
-        function promptDeleteDevice(code) {
-            deviceToDeleteCode = code;
-            document.getElementById('delete-confirm-text').innerText = `Bạn có chắc chắn muốn xóa thiết bị có mã "${code}" không?`;
-            document.getElementById('delete-confirm-modal').classList.remove('hidden');
-        }
-
-        function closeDeleteConfirmModal() {
-            document.getElementById('delete-confirm-modal').classList.add('hidden');
-            deviceToDeleteCode = null;
-        }
-
-        function executeDeleteDevice() {
-            if (!deviceToDeleteCode) return;
-            const db = getDeviceDatabase();
-            if (db[deviceToDeleteCode]) {
-                delete db[deviceToDeleteCode];
-                saveDeviceDatabase(db);
-                updateTotalCountDisplay();
-                renderDeviceListModalContent();
-                showTopErrorToast(`Đã xóa thành công thiết bị mã: ${deviceToDeleteCode}`);
-            }
-            closeDeleteConfirmModal();
-        }
-
-        /* ==================== QUẢN LÝ ADMIN & CẬP NHẬT ==================== */
-        function openAdminModal() {
-            hideErrorToast();
-            document.getElementById('admin-modal').classList.remove('hidden');
-            document.getElementById('admin-step-auth').classList.remove('hidden');
-            document.getElementById('admin-step-changepass').classList.add('hidden');
-            document.getElementById('admin-step-form').classList.add('hidden');
-            
-            const passInput = document.getElementById('admin-password-input');
-            passInput.value = '';
-            passInput.classList.remove('shake-error', 'border-red-500');
-            
-            document.getElementById('form-date').value = new Date().toISOString().split('T')[0];
-        }
-
-        function closeAdminModal() {
-            hideErrorToast();
-            document.getElementById('admin-modal').classList.add('hidden');
-        }
-
-        function showChangePassView() {
-            hideErrorToast();
-            document.getElementById('admin-step-auth').classList.add('hidden');
-            document.getElementById('admin-step-changepass').classList.remove('hidden');
-            document.getElementById('changepass-pin').value = '';
-            document.getElementById('changepass-new').value = '';
-            document.getElementById('changepass-confirm').value = '';
-        }
-
-        function backToAuthView() {
-            hideErrorToast();
-            document.getElementById('admin-step-changepass').classList.add('hidden');
-            document.getElementById('admin-step-auth').classList.remove('hidden');
-        }
-
-        function handleChangePassword() {
-            hideErrorToast();
-            const pin = document.getElementById('changepass-pin').value.trim();
-            const newPass = document.getElementById('changepass-new').value;
-            const confirmPass = document.getElementById('changepass-confirm').value;
-
-            if (pin !== CONFIRM_PIN) {
-                showTopErrorToast('Mã PIN xác nhận bảo mật không đúng!');
-                return;
-            }
-
-            if (!newPass) {
-                showTopErrorToast('Vui lòng nhập mật khẩu mới!');
-                return;
-            }
-
-            if (newPass !== confirmPass) {
-                showTopErrorToast('Mật khẩu mới và xác nhận mật khẩu không khớp!');
-                return;
-            }
-
-            setStoredPassword(newPass);
-            alert('Đổi mật khẩu thành công! Hãy dùng mật khẩu mới để đăng nhập.');
-            backToAuthView();
-        }
-
-        function verifyPassword() {
-            hideErrorToast();
-            const passInput = document.getElementById('admin-password-input');
-            const pass = passInput.value;
-            const currentPass = getStoredPassword();
-
-            if (pass === currentPass) {
-                passInput.classList.remove('shake-error', 'border-red-500');
-                document.getElementById('admin-step-auth').classList.add('hidden');
-                document.getElementById('admin-step-form').classList.remove('hidden');
-                
-                loadDefaultFormTasks([
-                    { title: 'Vệ sinh tổng quan vỏ máy', detail: 'Lau chùi sạch sẽ bụi bẩn, kiểm tra ngoại quan.' },
-                    { title: 'Kiểm tra cơ khí / Trục động cơ', detail: 'Kiểm tra độ rơ, độ rung bất thường.' },
-                    { title: 'Tra mỡ / Dầu bôi trơn', detail: 'Bổ sung mỡ bò chịu nhiệt chuyên dụng cho 2 gối đỡ ổ bi.' },
-                    { title: 'Đo điện trở cách điện', detail: 'Đo kiểm tra an toàn điện bằng đồng hồ chuyên dụng.' },
-                    { title: 'Kiểm tra dòng điện vận hành', detail: 'Đo dòng tải thực tế các pha đảm bảo trong định mức.' },
-                    { title: 'Kiểm tra bu lông, đai ốc', detail: 'Siết chặt lại các điểm đấu nối và chân đế.' },
-                    { title: 'Kiểm tra hệ thống van & áp suất', detail: 'Đảm bảo áp suất đường ống nằm trong dải tiêu chuẩn.' },
-                    { title: 'Vệ sinh lưới lọc / Phin lọc', detail: 'Xả cặn, làm sạch thiết bị lọc cặn.' }
-                ]);
-            } else {
-                passInput.classList.add('shake-error', 'border-red-500');
-                setTimeout(() => passInput.classList.remove('shake-error'), 500);
-                showTopErrorToast('Sai mật khẩu! Vui lòng thử lại.');
-            }
-        }
-
-        function addMaintenanceTaskRow(title = '', detail = '') {
-            const container = document.getElementById('form-tasks-container');
-            const rowId = 'task-row-' + Date.now() + Math.random().toString(36).substring(2, 5);
-            
-            const div = document.createElement('div');
-            div.id = rowId;
-            div.className = "flex gap-2 items-center bg-white p-2 rounded-lg border border-gray-200 shadow-sm transition";
-            div.innerHTML = `
-                <input type="text" placeholder="Tên hạng mục (VD: Vệ sinh vỏ máy)" value="${title}" class="task-title-input w-1/3 p-2 border border-gray-300 rounded text-xs font-bold focus:outline-none focus:border-brand-blue">
-                <input type="text" placeholder="Nội dung thực hiện chi tiết..." value="${detail}" class="task-detail-input w-full p-2 border border-gray-300 rounded text-xs focus:outline-none focus:border-brand-blue">
-                <button type="button" onclick="document.getElementById('${rowId}').remove()" class="btn-interactive bg-red-100 hover:bg-red-200 text-red-600 px-2.5 py-2 rounded text-xs font-bold transition" title="Xóa hạng mục này">
-                    <i class="fas fa-trash-alt"></i>
-                </button>
-            `;
-            container.appendChild(div);
-        }
-
-        function loadDefaultFormTasks(tasks) {
-            const container = document.getElementById('form-tasks-container');
-            container.innerHTML = '';
-            tasks.forEach(t => addMaintenanceTaskRow(t.title, t.detail));
-        }
-
-        function previewImages(event) {
-            const files = event.target.files;
-            Array.from(files).forEach(file => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const base64Str = e.target.result;
-                    uploadedPhotosBase64.push(base64Str);
-                    renderPhotoPreviews();
-                };
-                reader.readAsDataURL(file);
-            });
-            event.target.value = '';
-        }
-
-        function removeUploadedPhoto(index) {
-            uploadedPhotosBase64.splice(index, 1);
-            renderPhotoPreviews();
-        }
-
-        function renderPhotoPreviews() {
-            const previewGrid = document.getElementById('photo-preview-grid');
-            previewGrid.innerHTML = '';
-            
-            uploadedPhotosBase64.forEach((src, idx) => {
-                const div = document.createElement('div');
-                div.className = "relative rounded-xl overflow-hidden h-24 border border-gray-300 group bg-black transition";
-                div.innerHTML = `
-                    <img src="${src}" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition">
-                    <button type="button" onclick="removeUploadedPhoto(${idx})" class="btn-interactive absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs shadow-lg transition" title="Xóa ảnh này">
-                        <i class="fas fa-times"></i>
-                    </button>
-                    <div class="absolute bottom-0 inset-x-0 bg-black/60 text-white text-[9px] text-center py-0.5">Ảnh #${idx + 1}</div>
-                `;
-                previewGrid.appendChild(div);
-            });
-        }
-
-        function handleSaveDevice(e) {
-            e.preventDefault();
-
-            const code = document.getElementById('form-code').value.trim().toUpperCase();
-            const name = document.getElementById('form-name').value.trim();
-            const location = document.getElementById('form-location').value.trim();
-            const client = document.getElementById('form-client').value.trim();
-            const tech = document.getElementById('form-tech').value.trim();
-            const date = document.getElementById('form-date').value;
-            const statusVal = document.getElementById('form-status').value;
-            const note = document.getElementById('form-note').value.trim();
-
-            let statusBadge = '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800"><i class="fas fa-check-circle mr-1"></i> HOẠT ĐỘNG TỐT</span>';
-            if (statusVal === 'WARN') {
-                statusBadge = '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-800"><i class="fas fa-exclamation-triangle mr-1"></i> CẦN LƯU Ý KỸ THUẬT</span>';
-            } else if (statusVal === 'BAD') {
-                statusBadge = '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-red-100 text-red-800"><i class="fas fa-times-circle mr-1"></i> CẦN SỬA CHỮA NGAY</span>';
-            }
-
-            const taskRows = document.querySelectorAll('#form-tasks-container > div');
-            let collectedTasks = [];
-            taskRows.forEach(row => {
-                const tTitle = row.querySelector('.task-title-input').value.trim();
-                const tDetail = row.querySelector('.task-detail-input').value.trim();
-                if (tTitle) {
-                    collectedTasks.push({ title: tTitle, detail: tDetail || 'Đã kiểm tra kỹ thuật đạt yêu cầu.', status: 'Đạt' });
-                }
-            });
-
-            const db = getDeviceDatabase();
-
-            let finalPhotos = uploadedPhotosBase64;
-            if (finalPhotos.length === 0 && db[code] && db[code].photos) {
-                finalPhotos = db[code].photos;
-            } else if (finalPhotos.length === 0) {
-                finalPhotos = ['https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=600&auto=format&fit=crop'];
-            }
-
-            db[code] = {
-                name: name,
-                code: code,
-                location: location,
-                client: client,
-                tech: tech,
-                date: date,
-                statusBadge: statusBadge,
-                note: note || 'Đã kiểm tra vận hành hệ thống đạt tiêu chuẩn.',
-                tasks: collectedTasks.length > 0 ? collectedTasks : [
-                    { title: 'Vệ sinh tổng quan thiết bị', detail: 'Lau chùi sạch sẽ.', status: 'Đạt' }
-                ],
-                specs: [
-                    { item: 'Kiểm tra tổng quan thiết bị', std: 'Tiêu chuẩn TCVN', val: 'Đạt yêu cầu', status: 'Đạt', isOk: true },
-                    { item: 'Thông số điện / Áp suất vận hành', std: 'Theo hồ sơ', val: 'Ổn định', status: 'Đạt', isOk: true }
-                ],
-                photos: finalPhotos
-            };
-
-            saveDeviceDatabase(db);
-            updateTotalCountDisplay();
-            closeAdminModal();
-
-            navigateTo('maintenance-portal');
-            loadSampleDevice(code);
-
-            alert(`Đã lưu thành công thiết bị mã: ${code} với ${collectedTasks.length} hạng mục bảo trì!`);
-        }
-
-        window.onload = function() {
-            loadSavedHrPhoto();
-            renderProjectsSection();
-            updateTotalCountDisplay();
-            navigateTo('home');
-            clearDeviceReportDefault();
-        }
-    </script>
-</body>
-</html>
+        function close
