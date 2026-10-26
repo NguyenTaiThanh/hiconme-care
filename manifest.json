@@ -1,0 +1,25 @@
+{
+  "name": "HICON M&E - Quản Lý Bảo Trì Số Hóa",
+  "short_name": "HICON M&E",
+  "description": "Ứng dụng Quản lý & Tra cứu Báo cáo Bảo trì Cơ Điện HICON M&E (Hỗ trợ Offline & Đồng bộ Cloud)",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f2b48",
+  "theme_color": "#0f2b48",
+  "icons": [
+    {
+      "src": "https://quickchart.io/chart?c=%7Btype:%27doughnut%27,data:%7Bdatasets:%5B%7Bdata:%5B100%5D,backgroundColor:%5B%27%2300a8cc%27%5D%7D%5D%7D,options:%7Bplugins:%7Bdoughnutlabel:%7Blabels:%5B%7Btext:%27H%27,font:%7Bsize:240,weight:%27bold%27%7D,color:%27%23ffffff%27%7D%5D%7D%7D%7D%7D&w=192&h=192&bkg=%230f2b48",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://quickchart.io/chart?c=%7Btype:%27doughnut%27,data:%7Bdatasets:%5B%7Bdata:%5B100%5D,backgroundColor:%5B%27%27%2300a8cc%27%5D%7D%5D%7D,options:%7Bplugins:%7Bdoughnutlabel:%7Blabels:%5B%7Btext:%27H%27,font:%7Bsize:240,weight:%27bold%27%7D,color:%27%23ffffff%27%7D%5D%7D%7D%7D%7D&w=512&h=512&bkg=%230f2b48",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
