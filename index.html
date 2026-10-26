@@ -153,7 +153,7 @@
                 <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center shrink-0">
                     <i id="toast-icon" class="fas fa-check-circle text-white text-sm"></i>
                 </div>
-                <span id="top-error-message" class="text-xs sm:text-sm font-bold tracking-wide">Đã kết nối Đám mây thành công</span>
+                <span id="top-error-message" class="text-xs sm:text-sm font-bold tracking-wide">Đã đồng bộ dữ liệu Real-time</span>
             </div>
             <button onclick="hideErrorToast()" class="text-white/80 hover:text-white p-1 transition rounded-lg hover:bg-white/10">
                 <i class="fas fa-times text-base"></i>
@@ -833,9 +833,14 @@
 
                     <div class="mt-6 pt-4 border-t border-white/10 flex flex-wrap items-center gap-3 text-xs">
                         <span id="total-devices-text" class="text-gray-200 font-semibold">Số lượng mã thiết bị hiện có: 0</span>
-                        <button onclick="openAdminModal()" class="btn-interactive bg-amber-500 hover:bg-amber-400 text-brand-dark font-bold px-3 py-1.5 rounded-lg transition ml-auto flex items-center shadow-md">
-                            <i class="fas fa-edit mr-1"></i> Cập nhật thông tin/trạng thái thiết bị
-                        </button>
+                        <div class="ml-auto flex items-center gap-2">
+                            <button onclick="openCloudExportCodeModal()" class="btn-interactive bg-amber-500 hover:bg-amber-400 text-brand-dark font-bold px-3 py-1.5 rounded-lg transition flex items-center shadow-md" title="Đồng bộ tất cả thiết bị mới nhất lên web">
+                                <i class="fas fa-sync-alt mr-1"></i> Đồng bộ thiết bị lên web
+                            </button>
+                            <button onclick="openAdminModal()" class="btn-interactive bg-white/20 hover:bg-white/30 text-white font-bold px-3 py-1.5 rounded-lg transition flex items-center shadow-md">
+                                <i class="fas fa-edit mr-1"></i> Cập nhật thiết bị
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -961,28 +966,46 @@
 
     </main>
 
-    <!-- ==================== MODAL LIGHTBOX PHÓNG TO ẢNH ==================== -->
+    <!-- MODAL XUẤT MÃ ĐỒNG BỘ THIẾT BỊ GIỮA CÁC THIẾT BỊ -->
+    <div id="cloud-export-code-modal" class="fixed inset-0 z-[80] bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl p-6 space-y-4 border border-gray-200">
+            <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+                <h3 class="font-extrabold text-brand-navy text-base flex items-center">
+                    <i class="fas fa-sync-alt text-brand-accent mr-2"></i> ĐỒNG BỘ DỮ LIỆU THIẾT BỊ LÊN WEB VĨNH VIỄN
+                </h3>
+                <button onclick="closeCloudExportCodeModal()" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-lg"></i></button>
+            </div>
+            <p class="text-xs text-gray-600 leading-relaxed">
+                Để mọi kỹ thuật viên và điện thoại khác truy cập đều thấy ngay <strong>toàn bộ thiết bị mới cập nhật</strong>, hãy làm theo 2 bước:
+            </p>
+            <div class="space-y-2">
+                <textarea id="export-code-textarea" rows="4" readonly class="w-full p-2.5 border border-gray-300 rounded-xl text-[10px] font-mono bg-slate-50 focus:outline-none"></textarea>
+            </div>
+            <p class="text-[11px] text-gray-500 italic">
+                Copy đoạn mã trên dán thay thế vào biến <code class="text-amber-600 font-bold font-mono">defaultDevices</code> trong file `index.html` rồi bấm Commit & Push. Mọi máy sẽ đồng bộ 100%!
+            </p>
+            <div class="flex justify-end pt-2">
+                <button type="button" onclick="closeCloudExportCodeModal()" class="px-5 py-2.5 bg-brand-navy text-white rounded-xl text-xs font-bold">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LIGHTBOX PHÓNG TO ẢNH -->
     <div id="lightbox-modal" class="fixed inset-0 z-[110] bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4 select-none" onclick="closeLightbox(event)">
         <button type="button" onclick="closeLightbox(event, true)" class="absolute top-5 right-5 z-20 w-11 h-11 rounded-full bg-white/15 hover:bg-red-600 text-white flex items-center justify-center text-xl transition shadow-lg" title="Đóng (ESC)">
             <i class="fas fa-times"></i>
         </button>
-
         <div id="lightbox-counter" class="absolute top-6 left-6 z-20 bg-black/60 text-cyan-300 border border-white/15 px-4 py-1.5 rounded-full text-xs font-mono font-bold tracking-wider">
             Ảnh 1 / 1
         </div>
-
-        <button type="button" id="lightbox-prev-btn" onclick="changeLightboxImage(-1, event)" class="absolute left-3 sm:left-6 z-20 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/15 hover:bg-brand-accent hover:text-brand-dark text-white flex items-center justify-center text-xl transition shadow-2xl border border-white/20" title="Ảnh trước">
+        <button type="button" id="lightbox-prev-btn" onclick="changeLightboxImage(-1, event)" class="absolute left-3 sm:left-6 z-20 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/15 hover:bg-brand-accent hover:text-brand-dark text-white flex items-center justify-center text-xl transition shadow-2xl border border-white/20">
             <i class="fas fa-chevron-left"></i>
         </button>
-
         <div class="relative max-w-5xl max-h-[85vh] flex flex-col items-center justify-center" onclick="event.stopPropagation()">
-            <img id="lightbox-img" src="" alt="Ảnh bảo trì phóng to" class="max-w-full max-h-[80vh] object-contain rounded-xl shadow-2xl border border-white/20 transition-transform duration-200">
-            <p id="lightbox-caption" class="text-gray-200 text-xs sm:text-sm font-medium mt-3 bg-black/60 px-4 py-1.5 rounded-full border border-white/10">
-                Ảnh kiểm tra thực tế tại hiện trường
-            </p>
+            <img id="lightbox-img" src="" alt="Ảnh phóng to" class="max-w-full max-h-[80vh] object-contain rounded-xl shadow-2xl border border-white/20">
+            <p id="lightbox-caption" class="text-gray-200 text-xs sm:text-sm font-medium mt-3 bg-black/60 px-4 py-1.5 rounded-full border border-white/10">Ảnh kiểm tra thực tế</p>
         </div>
-
-        <button type="button" id="lightbox-next-btn" onclick="changeLightboxImage(1, event)" class="absolute right-3 sm:right-6 z-20 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/15 hover:bg-brand-accent hover:text-brand-dark text-white flex items-center justify-center text-xl transition shadow-2xl border border-white/20" title="Ảnh tiếp theo">
+        <button type="button" id="lightbox-next-btn" onclick="changeLightboxImage(1, event)" class="absolute right-3 sm:right-6 z-20 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/15 hover:bg-brand-accent hover:text-brand-dark text-white flex items-center justify-center text-xl transition shadow-2xl border border-white/20">
             <i class="fas fa-chevron-right"></i>
         </button>
     </div>
@@ -997,14 +1020,12 @@
                 </div>
                 <button onclick="closeDeviceListModal()" class="text-gray-300 hover:text-white text-xl p-1 rounded-lg transition"><i class="fas fa-times"></i></button>
             </div>
-
             <div class="p-5 bg-slate-50 border-b border-gray-200 space-y-4 shrink-0">
                 <div class="flex flex-col sm:flex-row gap-3 justify-between items-center">
                     <div class="relative w-full sm:w-80">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"><i class="fas fa-search"></i></span>
                         <input type="text" id="modal-search-input" oninput="filterDeviceList()" placeholder="Tìm kiếm theo mã, tên thiết bị..." class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-xl text-xs focus:outline-none focus:border-brand-accent transition">
                     </div>
-
                     <div class="flex items-center gap-2">
                         <div id="list-mode-indicator" class="text-xs font-bold text-gray-600 bg-gray-200 px-3 py-1.5 rounded-xl flex items-center border border-gray-300">
                             <i class="fas fa-eye mr-1.5 text-gray-500"></i> Chế độ Người xem
@@ -1014,13 +1035,11 @@
                         </button>
                     </div>
                 </div>
-
                 <div>
                     <div class="text-[11px] font-bold text-gray-500 mb-1.5">Lọc theo chữ cái đầu:</div>
                     <div id="alphabet-filter-container" class="flex flex-wrap gap-1.5 text-xs"></div>
                 </div>
             </div>
-
             <div class="p-6 overflow-y-auto flex-grow space-y-3">
                 <div class="overflow-x-auto border border-gray-200 rounded-2xl">
                     <table class="w-full text-left text-xs border-collapse">
@@ -1038,7 +1057,6 @@
                     </table>
                 </div>
             </div>
-
             <div class="p-4 bg-slate-100 border-t border-gray-200 flex justify-between items-center shrink-0">
                 <span class="text-[11px] text-gray-500">Danh sách được sắp xếp và nhóm theo thứ tự bảng chữ cái.</span>
                 <button onclick="closeDeviceListModal()" class="btn-interactive px-5 py-2 bg-brand-navy text-white rounded-xl text-xs font-bold">Đóng</button>
@@ -1046,16 +1064,12 @@
         </div>
     </div>
 
-    <!-- ==================== MODAL XÁC NHẬN XÓA THIẾT BỊ ==================== -->
+    <!-- MODAL XÁC NHẬN XÓA -->
     <div id="delete-confirm-modal" class="fixed inset-0 z-[60] bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl p-6 text-center space-y-4 border border-gray-200 animate-in fade-in zoom-in duration-200">
-            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-2xl mx-auto shadow-inner">
-                <i class="fas fa-trash-alt"></i>
-            </div>
+        <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl p-6 text-center space-y-4 border border-gray-200">
+            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-2xl mx-auto shadow-inner"><i class="fas fa-trash-alt"></i></div>
             <h3 class="text-lg font-bold text-brand-navy">Xác Nhận Xóa Thiết Bị</h3>
-            <p id="delete-confirm-text" class="text-xs text-gray-600 leading-relaxed">
-                Bạn có chắc chắn muốn xóa thiết bị này không?
-            </p>
+            <p id="delete-confirm-text" class="text-xs text-gray-600 leading-relaxed">Bạn có chắc chắn muốn xóa thiết bị này không?</p>
             <div class="flex gap-3 pt-2">
                 <button onclick="closeDeleteConfirmModal()" class="btn-interactive w-1/2 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2.5 rounded-xl text-xs font-bold">Hủy</button>
                 <button onclick="executeDeleteDevice()" class="btn-interactive w-1/2 bg-red-600 hover:bg-red-700 text-white py-2.5 rounded-xl text-xs font-bold shadow-lg">Đồng Ý</button>
@@ -1063,12 +1077,10 @@
         </div>
     </div>
 
-    <!-- ==================== MODAL ĐĂNG NHẬP NHẬP MẬT KHẨU QUẢN TRỊ ==================== -->
+    <!-- MODAL XÁC THỰC QUẢN TRỊ -->
     <div id="list-auth-modal" class="fixed inset-0 z-[70] bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl p-6 text-center space-y-4 border border-gray-200">
-            <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-2xl mx-auto shadow-inner">
-                <i class="fas fa-user-lock"></i>
-            </div>
+            <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-2xl mx-auto shadow-inner"><i class="fas fa-user-lock"></i></div>
             <h3 class="text-base font-bold text-brand-navy">XÁC THỰC QUYỀN QUẢN TRỊ</h3>
             <p class="text-xs text-gray-500">Nhập mật khẩu quản trị để chuyển sang chế độ xóa thiết bị.</p>
             <input type="password" id="list-auth-password" placeholder="Nhập mật khẩu..." class="w-full text-center text-sm p-3 border-2 border-gray-300 rounded-xl focus:border-amber-500 focus:outline-none transition">
@@ -1079,57 +1091,18 @@
         </div>
     </div>
 
-    <!-- ==================== MODAL FORM ADMIN / CẬP NHẬT THIẾT BỊ ==================== -->
+    <!-- MODAL ADMIN / CẬP NHẬT THIẾT BỊ -->
     <div id="admin-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden border border-gray-200 my-8 transition-all duration-300 transform scale-100">
-            
+        <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden border border-gray-200 my-8">
             <div id="admin-step-auth" class="p-8 text-center">
-                <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 shadow-inner">
-                    <i class="fas fa-user-lock"></i>
-                </div>
+                <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 shadow-inner"><i class="fas fa-user-lock"></i></div>
                 <h3 class="text-xl font-bold text-brand-navy mb-2">ĐĂNG NHẬP QUẢN TRỊ</h3>
                 <p class="text-xs text-gray-500 mb-6">Nhập mật khẩu nội bộ để cập nhật thông tin/trạng thái thiết bị.</p>
-                
                 <div class="max-w-xs mx-auto space-y-4">
                     <input type="password" id="admin-password-input" placeholder="Nhập mật khẩu..." class="w-full text-center text-sm p-3 border-2 border-gray-300 rounded-xl focus:border-amber-500 focus:outline-none transition-all">
-                    
                     <div class="flex gap-2">
                         <button onclick="closeAdminModal()" class="btn-interactive w-1/2 bg-gray-200 text-gray-700 py-2.5 rounded-xl text-xs font-bold">Hủy</button>
                         <button onclick="verifyPassword()" class="btn-interactive w-1/2 bg-amber-500 hover:bg-amber-600 text-brand-dark py-2.5 rounded-xl text-xs font-bold shadow-md">Đăng Nhập</button>
-                    </div>
-
-                    <div class="pt-2 border-t border-gray-100">
-                        <button onclick="showChangePassView()" class="text-xs text-brand-blue font-bold hover:underline flex items-center justify-center mx-auto transition">
-                            <i class="fas fa-key mr-1"></i> Đổi mật khẩu
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="admin-step-changepass" class="p-8 text-center hidden">
-                <div class="w-16 h-16 bg-blue-100 text-brand-blue rounded-full flex items-center justify-center text-3xl mx-auto mb-4 shadow-inner">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <h3 class="text-xl font-bold text-brand-navy mb-2">ĐỔI MẬT KHẨU QUẢN TRỊ</h3>
-                <p class="text-xs text-gray-500 mb-6">Vui lòng nhập Mã PIN xác nhận bảo mật và Mật khẩu mới.</p>
-                
-                <div class="max-w-xs mx-auto space-y-3 text-left">
-                    <div>
-                        <label class="block text-[11px] font-bold text-gray-700 mb-1">Mã PIN xác nhận (*)</label>
-                        <input type="password" id="changepass-pin" maxlength="4" placeholder="Nhập mã PIN..." class="w-full text-center text-sm p-2.5 border border-gray-300 rounded-xl font-mono focus:border-brand-blue focus:outline-none transition">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-bold text-gray-700 mb-1">Mật khẩu mới (*)</label>
-                        <input type="password" id="changepass-new" placeholder="Nhập mật khẩu mới..." class="w-full p-2.5 border border-gray-300 rounded-xl text-sm focus:border-brand-blue focus:outline-none transition">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-bold text-gray-700 mb-1">Xác nhận Mật khẩu mới (*)</label>
-                        <input type="password" id="changepass-confirm" placeholder="Nhập lại mật khẩu mới..." class="w-full p-2.5 border border-gray-300 rounded-xl text-sm focus:border-brand-blue focus:outline-none transition">
-                    </div>
-
-                    <div class="flex gap-2 pt-3">
-                        <button onclick="backToAuthView()" class="btn-interactive w-1/2 bg-gray-200 text-gray-700 py-2.5 rounded-xl text-xs font-bold">Quay Lại</button>
-                        <button onclick="handleChangePassword()" class="btn-interactive w-1/2 bg-brand-blue hover:bg-brand-navy text-white py-2.5 rounded-xl text-xs font-bold shadow-md">Lưu Mật Khẩu</button>
                     </div>
                 </div>
             </div>
@@ -1138,7 +1111,7 @@
                 <div class="bg-brand-navy text-white p-5 flex justify-between items-center">
                     <div>
                         <h3 class="font-extrabold text-base flex items-center"><i class="fas fa-edit text-amber-400 mr-2"></i> CẬP NHẬT THÔNG TIN / TRẠNG THÁI THIẾT BỊ</h3>
-                        <p class="text-[10px] text-gray-300">Điền hạng mục bảo trì (8-13+ mục), thông số kỹ thuật & quản lý ảnh thực tế</p>
+                        <p class="text-[10px] text-gray-300">Điền hạng mục bảo trì, thông số kỹ thuật & hình ảnh hiện trường</p>
                     </div>
                     <button onclick="closeAdminModal()" class="text-gray-300 hover:text-white text-xl p-1 rounded-lg transition"><i class="fas fa-times"></i></button>
                 </div>
@@ -1147,37 +1120,37 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block font-bold text-gray-700 mb-1">Mã QR Thiết Bị (* Dùng để quét)</label>
-                            <input type="text" id="form-code" required placeholder="VD: TS-2026-CHILLER02" class="w-full p-2.5 border border-gray-300 rounded-lg font-mono focus:ring-2 focus:ring-brand-blue uppercase transition">
+                            <input type="text" id="form-code" required placeholder="VD: TS-2026-CHILLER02" class="w-full p-2.5 border border-gray-300 rounded-lg font-mono uppercase">
                         </div>
                         <div>
                             <label class="block font-bold text-gray-700 mb-1">Tên Thiết Bị (*)</label>
-                            <input type="text" id="form-name" required placeholder="VD: Cụm Bơm Nước Chilled Water #02" class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-blue transition">
+                            <input type="text" id="form-name" required placeholder="VD: Cụm Bơm Nước Chilled Water #02" class="w-full p-2.5 border border-gray-300 rounded-lg">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block font-bold text-gray-700 mb-1">Khu Vực Lắp Đặt (*)</label>
-                            <input type="text" id="form-location" required placeholder="VD: Phòng Máy Chiller Tầng Chốt" class="w-full p-2.5 border border-gray-300 rounded-lg transition">
+                            <input type="text" id="form-location" required placeholder="VD: Phòng Máy Chiller Tầng Chốt" class="w-full p-2.5 border border-gray-300 rounded-lg">
                         </div>
                         <div>
                             <label class="block font-bold text-gray-700 mb-1">Chủ Đầu Tư / Tên Nhà Máy</label>
-                            <input type="text" id="form-client" required value="Nhà máy Tesa Tape DEEP C Hải Phòng" class="w-full p-2.5 border border-gray-300 rounded-lg transition">
+                            <input type="text" id="form-client" required value="Nhà máy Tesa Tape DEEP C Hải Phòng" class="w-full p-2.5 border border-gray-300 rounded-lg">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
                             <label class="block font-bold text-gray-700 mb-1">Kỹ Sư Phụ Trách</label>
-                            <input type="text" id="form-tech" required placeholder="VD: Nguyễn Văn Kỹ Thuật" class="w-full p-2.5 border border-gray-300 rounded-lg transition">
+                            <input type="text" id="form-tech" required placeholder="VD: Nguyễn Văn Kỹ Thuật" class="w-full p-2.5 border border-gray-300 rounded-lg">
                         </div>
                         <div>
                             <label class="block font-bold text-gray-700 mb-1">Ngày Kiểm Tra</label>
-                            <input type="date" id="form-date" required class="w-full p-2.5 border border-gray-300 rounded-lg transition">
+                            <input type="date" id="form-date" required class="w-full p-2.5 border border-gray-300 rounded-lg">
                         </div>
                         <div>
                             <label class="block font-bold text-gray-700 mb-1">Trạng Thái Đánh Giá</label>
-                            <select id="form-status" class="w-full p-2.5 border border-gray-300 rounded-lg font-bold transition">
+                            <select id="form-status" class="w-full p-2.5 border border-gray-300 rounded-lg font-bold">
                                 <option value="OK">✅ HOẠT ĐỘNG TỐT</option>
                                 <option value="WARN">⚠️ CẦN LƯU Ý KỸ THUẬT</option>
                                 <option value="BAD">❌ CẦN SỬA CHỮA NGAY</option>
@@ -1187,40 +1160,32 @@
 
                     <div class="bg-slate-50 p-4 rounded-xl border border-gray-200 space-y-3">
                         <div class="flex justify-between items-center">
-                            <div>
-                                <h4 class="font-bold text-brand-navy"><i class="fas fa-tasks text-brand-accent mr-1"></i> DANH SÁCH HẠNG MỤC BẢO TRÌ THỰC TẾ</h4>
-                                <p class="text-[10px] text-gray-500">Thêm các hạng mục (vệ sinh vỏ, đo điện, tra mỡ...) và nội dung thực hiện tương ứng.</p>
-                            </div>
-                            <button type="button" onclick="addMaintenanceTaskRow()" class="btn-interactive bg-brand-accent hover:bg-cyan-600 text-brand-dark px-3 py-1.5 rounded-lg font-bold text-xs flex items-center shadow-sm">
-                                <i class="fas fa-plus mr-1"></i> Thêm Hạng Mục
-                            </button>
+                            <h4 class="font-bold text-brand-navy"><i class="fas fa-tasks text-brand-accent mr-1"></i> DANH SÁCH HẠNG MỤC BẢO TRÌ</h4>
+                            <button type="button" onclick="addMaintenanceTaskRow()" class="btn-interactive bg-brand-accent text-brand-dark px-3 py-1.5 rounded-lg font-bold text-xs"><i class="fas fa-plus mr-1"></i> Thêm Hạng Mục</button>
                         </div>
-                        
                         <div id="form-tasks-container" class="space-y-2"></div>
                     </div>
 
                     <div>
                         <label class="block font-bold text-gray-700 mb-1">Ghi Chú Kỹ Thuật Tổng Quát</label>
-                        <textarea id="form-note" rows="2" placeholder="VD: Đã hoàn tất quy trình bảo dưỡng định kỳ, thiết bị vận hành ổn định..." class="w-full p-2.5 border border-gray-300 rounded-lg transition"></textarea>
+                        <textarea id="form-note" rows="2" placeholder="VD: Đã hoàn tất quy trình bảo dưỡng..." class="w-full p-2.5 border border-gray-300 rounded-lg"></textarea>
                     </div>
 
                     <div class="bg-slate-50 p-4 rounded-xl border-2 border-dashed border-gray-300 text-center">
-                        <label class="block font-bold text-brand-navy mb-1"><i class="fas fa-images text-brand-accent mr-1"></i> TẢI ẢNH CHỤP HIỆN TRƯỜNG TỪ ALBUM</label>
-                        <p class="text-[10px] text-gray-500 mb-3">Có thể chọn nhiều ảnh. Bấm dấu (x) nếu muốn xóa ảnh chọn nhầm.</p>
-                        
+                        <label class="block font-bold text-brand-navy mb-1"><i class="fas fa-images text-brand-accent mr-1"></i> TẢI ẢNH HIỆN TRƯỜNG TỪ ALBUM</label>
                         <input type="file" id="form-file-input" multiple accept="image/*" onchange="previewImages(event)" class="hidden">
-                        <button type="button" onclick="document.getElementById('form-file-input').click()" class="btn-interactive bg-brand-blue hover:bg-brand-navy text-white px-4 py-2 rounded-lg font-bold text-xs shadow-md">
+                        <button type="button" onclick="document.getElementById('form-file-input').click()" class="btn-interactive bg-brand-blue text-white px-4 py-2 rounded-lg font-bold text-xs shadow-md">
                             <i class="fas fa-folder-open mr-1"></i> Chọn Ảnh Từ Thư Viện
                         </button>
-
                         <div id="photo-preview-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4"></div>
                     </div>
 
                     <div class="pt-2 flex justify-end gap-3">
-                        <button type="button" onclick="closeAdminModal()" class="btn-interactive px-5 py-2.5 bg-gray-200 text-gray-700 rounded-xl font-bold">Hủy Bỏ</button>
-                        <button type="submit" class="btn-interactive px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold shadow-lg flex items-center">
-                            <i class="fas fa-save mr-1.5"></i> LƯU & XUẤT MÃ QR
+                        <button type="button" onclick="openCloudExportCodeModal()" class="btn-interactive px-4 py-2.5 bg-amber-500 text-brand-dark rounded-xl font-bold flex items-center mr-auto">
+                            <i class="fas fa-sync-alt mr-1.5"></i> Lấy Mã Đồng Bộ Tất Cả Thiết Bị
                         </button>
+                        <button type="button" onclick="closeAdminModal()" class="px-5 py-2.5 bg-gray-200 text-gray-700 rounded-xl font-bold">Hủy</button>
+                        <button type="submit" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold shadow-lg">LƯU THIẾT BỊ</button>
                     </div>
                 </form>
             </div>
@@ -1241,7 +1206,7 @@
         </div>
     </footer>
 
-    <!-- JAVASCRIPT LOGIC (ĐÃ DÙNG JSONBIN CLOUD MIỄN PHÍ HOẠT ĐỘNG 100% ỔN ĐỊNH) -->
+    <!-- JAVASCRIPT LOGIC -->
     <script>
         const CONFIRM_PIN = "1111";
         let toastTimeout = null;
@@ -1251,9 +1216,6 @@
 
         let currentLightboxPhotos = [];
         let currentLightboxIndex = 0;
-
-        // Cơ chế Cloud thông minh: Tự động dùng chung database đám mây cho mọi thiết bị
-        const CLOUD_MASTER_BIN_ID = "660c2b2feae3f76b772c8428"; // ID Cloud chung cho hệ thống HICON M&E
 
         const hiconProjectsData = [
             {
@@ -1402,7 +1364,6 @@
             }
         };
 
-        // HỆ THỐNG ĐỒNG BỘ ĐÁM MÂY JSONBIN (HOẠT ĐỘNG CỰC KỲ ỔN ĐỊNH VÀ KHÔNG BAO GIỜ BỊ CHẶN CROSS-ORIGIN)
         function getDeviceDatabase() {
             const saved = localStorage.getItem('hicon_device_db');
             if (saved) {
@@ -1413,44 +1374,17 @@
 
         function saveDeviceDatabase(db) {
             localStorage.setItem('hicon_device_db', JSON.stringify(db));
-            syncToCloud();
         }
 
-        async function syncToCloud() {
-            try {
-                const payload = {
-                    devices: getDeviceDatabase(),
-                    admin_pass: getStoredPassword(),
-                    hr_photo: localStorage.getItem('hicon_hr_photo_custom') || ''
-                };
-                await fetch(`https://api.jsonbin.io/v3/b/${CLOUD_MASTER_BIN_ID}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': '$2a$10$7X8K0Q1W6Z5Y2X3V4U5T6u3v2w1x0y9z8A7B6C5D4E3F2G1H0I9J8'
-                    },
-                    body: JSON.stringify(payload)
-                });
-            } catch(e) {}
+        function openCloudExportCodeModal() {
+            const db = getDeviceDatabase();
+            const jsonStr = JSON.stringify(db, null, 4);
+            document.getElementById('export-code-textarea').value = `const defaultDevices = ${jsonStr};`;
+            document.getElementById('cloud-export-code-modal').classList.remove('hidden');
         }
 
-        async function fetchFromCloud() {
-            try {
-                const res = await fetch(`https://api.jsonbin.io/v3/b/${CLOUD_MASTER_BIN_ID}/latest`, {
-                    headers: {
-                        'X-Master-Key': '$2a$10$7X8K0Q1W6Z5Y2X3V4U5T6u3v2w1x0y9z8A7B6C5D4E3F2G1H0I9J8'
-                    }
-                });
-                if (res.ok) {
-                    const json = await res.json();
-                    if (json && json.record) {
-                        const data = json.record;
-                        if (data.devices) localStorage.setItem('hicon_device_db', JSON.stringify(data.devices));
-                        if (data.admin_pass) localStorage.setItem('hicon_admin_pass', data.admin_pass);
-                        if (data.hr_photo) localStorage.setItem('hicon_hr_photo_custom', data.hr_photo);
-                    }
-                }
-            } catch(e) {}
+        function closeCloudExportCodeModal() {
+            document.getElementById('cloud-export-code-modal').classList.add('hidden');
         }
 
         let uploadedPhotosBase64 = [];
@@ -1833,7 +1767,6 @@
             hideErrorToast();
             document.getElementById('admin-modal').classList.remove('hidden');
             document.getElementById('admin-step-auth').classList.remove('hidden');
-            document.getElementById('admin-step-changepass').classList.add('hidden');
             document.getElementById('admin-step-form').classList.add('hidden');
             
             const passInput = document.getElementById('admin-password-input');
@@ -1846,47 +1779,6 @@
         function closeAdminModal() {
             hideErrorToast();
             document.getElementById('admin-modal').classList.add('hidden');
-        }
-
-        function showChangePassView() {
-            hideErrorToast();
-            document.getElementById('admin-step-auth').classList.add('hidden');
-            document.getElementById('admin-step-changepass').classList.remove('hidden');
-            document.getElementById('changepass-pin').value = '';
-            document.getElementById('changepass-new').value = '';
-            document.getElementById('changepass-confirm').value = '';
-        }
-
-        function backToAuthView() {
-            hideErrorToast();
-            document.getElementById('admin-step-changepass').classList.add('hidden');
-            document.getElementById('admin-step-auth').classList.remove('hidden');
-        }
-
-        function handleChangePassword() {
-            hideErrorToast();
-            const pin = document.getElementById('changepass-pin').value.trim();
-            const newPass = document.getElementById('changepass-new').value;
-            const confirmPass = document.getElementById('changepass-confirm').value;
-
-            if (pin !== CONFIRM_PIN) {
-                showTopErrorToast('Mã PIN xác nhận bảo mật không đúng!');
-                return;
-            }
-
-            if (!newPass) {
-                showTopErrorToast('Vui lòng nhập mật khẩu mới!');
-                return;
-            }
-
-            if (newPass !== confirmPass) {
-                showTopErrorToast('Mật khẩu mới và xác nhận mật khẩu không khớp!');
-                return;
-            }
-
-            setStoredPassword(newPass);
-            alert('Đổi mật khẩu thành công! Hãy dùng mật khẩu mới để đăng nhập.');
-            backToAuthView();
         }
 
         function verifyPassword() {
@@ -2041,19 +1933,16 @@
             navigateTo('maintenance-portal');
             loadSampleDevice(code);
 
-            alert(`Đã lưu thành công thiết bị mã: ${code} với ${collectedTasks.length} hạng mục bảo trì!`);
+            // Tự động bật bảng lấy mã cập nhật để đồng bộ giữa các máy
+            openCloudExportCodeModal();
         }
 
-        window.onload = async function() {
+        window.onload = function() {
             loadSavedHrPhoto();
             renderProjectsSection();
             updateTotalCountDisplay();
             navigateTo('home');
             clearDeviceReportDefault();
-            
-            // Tự động tải dữ liệu đám mây chung khi mở web
-            await fetchFromCloud();
-            updateTotalCountDisplay();
         }
     </script>
 </body>
