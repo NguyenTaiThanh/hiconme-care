@@ -10,13 +10,13 @@
   "theme_color": "#0f2b48",
   "icons": [
     {
-      "src": "https://quickchart.io/chart?c=%7Btype:%27doughnut%27,data:%7Bdatasets:%5B%7Bdata:%5B100%5D,backgroundColor:%5B%27%2300a8cc%27%5D%7D%5D%7D,options:%7Bplugins:%7Bdoughnutlabel:%7Blabels:%5B%7Btext:%27H%27,font:%7Bsize:240,weight:%27bold%27%7D,color:%27%23ffffff%27%7D%5D%7D%7D%7D%7D&w=192&h=192&bkg=%230f2b48",
+      "src": "https://namcaukien.com.vn/wp-content/uploads/2021/06/namcaukien-cong-ty-co-phan-co-dien-va-bao-tri-hicon-01.jpg",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "https://quickchart.io/chart?c=%7Btype:%27doughnut%27,data:%7Bdatasets:%5B%7Bdata:%5B100%5D,backgroundColor:%5B%27%27%2300a8cc%27%5D%7D%5D%7D,options:%7Bplugins:%7Bdoughnutlabel:%7Blabels:%5B%7Btext:%27H%27,font:%7Bsize:240,weight:%27bold%27%7D,color:%27%23ffffff%27%7D%5D%7D%7D%7D%7D&w=512&h=512&bkg=%230f2b48",
+      "src": "https://namcaukien.com.vn/wp-content/uploads/2021/06/namcaukien-cong-ty-co-phan-co-dien-va-bao-tri-hicon-01.jpg",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
