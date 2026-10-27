@@ -153,7 +153,6 @@
         .brochure-leaf-right { border-radius: 8px 36px 8px 36px; }
 
         /* ==================== QUY TẮC ẨN/HIỆN NGHIÊM NGẶT CHO CHẾ ĐỘ SỬA GIAO DIỆN ==================== */
-        /* Khách hàng bình thường hoàn toàn KHÔNG nhìn thấy bất kỳ nút Đổi ảnh / Thêm / Xóa nào */
         .cms-only-btn { display: none !important; }
         .cms-only-flex { display: none !important; }
         .cms-only-block { display: none !important; }
@@ -261,12 +260,12 @@
     <header class="glass-header sticky top-0 z-50 text-white shadow-xl">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16 sm:h-20">
-                <!-- LOGO -->
+                <!-- LOGO FULL KHUNG -->
                 <div class="flex items-center space-x-3 cursor-pointer group" onclick="if(!isCmsEditMode) navigateTo('home')">
                     <div id="brand-logo-box" onclick="if(isCmsEditMode) { event.stopPropagation(); openPhotoChangeModal('LOGO'); }" class="cms-editable-img-box relative w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-tr from-brand-blue to-brand-accent rounded-xl flex items-center justify-center font-bold text-xl sm:text-2xl text-white shadow-lg border border-cyan-400/40 group-hover:scale-105 transition-transform duration-300 overflow-hidden shrink-0">
                         <span id="brand-logo-fallback" data-cms-id="logo-letter">H</span>
-                        <img id="brand-logo-img" src="" alt="Logo" class="hidden w-full h-full object-contain bg-white p-0.5">
-                        <button type="button" onclick="event.stopPropagation(); openPhotoChangeModal('LOGO');" class="cms-only-flex absolute inset-0 bg-black/70 text-amber-300 text-[8px] font-black flex-col items-center justify-center text-center leading-tight">
+                        <img id="brand-logo-img" src="" alt="Logo" class="hidden absolute inset-0 w-full h-full object-cover">
+                        <button type="button" onclick="event.stopPropagation(); openPhotoChangeModal('LOGO');" class="cms-only-flex absolute inset-0 bg-black/70 text-amber-300 text-[8px] font-black flex-col items-center justify-center text-center leading-tight z-10">
                             <i class="fas fa-camera text-xs mb-0.5"></i>Đổi Logo
                         </button>
                     </div>
@@ -375,7 +374,7 @@
                 </div>
             </div>
             
-            <!-- SECTION: TẠI SAO CHỌN CHÚNG TÔI (ĐỘNG 100%: ĐỔI ẢNH TỪNG THẺ & THÊM THẺ MỚI) -->
+            <!-- SECTION: TẠI SAO CHỌN CHÚNG TÔI (ĐỘNG 100%: ẢNH FULL KHUNG, ĐỔI ẢNH TỪNG THẺ & THÊM THẺ MỚI) -->
             <div class="py-16 bg-white">
                 <div class="max-w-7xl mx-auto px-4">
                     <div class="text-center mb-12">
@@ -592,7 +591,7 @@
             </div>
         </div>
 
-        <!-- ==================== SECTION 3: DỊCH VỤ (ĐỘNG 100%: CÓ ẢNH TỪNG DỊCH VỤ & THÊM FORM MẪU) ==================== -->
+        <!-- ==================== SECTION 3: DỊCH VỤ (ĐỘNG 100%: ẢNH FULL KHUNG & THÊM FORM MẪU) ==================== -->
         <div id="section-services" class="page-section hidden py-12 bg-gray-50">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="text-center mb-12">
@@ -661,7 +660,7 @@
         <div id="project-detail-modal" class="fixed inset-0 z-[75] bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
             <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden border border-gray-200 my-8 animate-in fade-in zoom-in duration-200">
                 <div class="relative h-64 sm:h-72 bg-slate-900">
-                    <img id="proj-modal-img" src="" class="w-full h-full object-cover">
+                    <img id="proj-modal-img" src="" class="absolute inset-0 w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/40 to-transparent"></div>
                     <button onclick="closeProjectDetailModal()" class="absolute top-4 right-4 bg-black/50 hover:bg-red-600 text-white w-9 h-9 rounded-full flex items-center justify-center transition">
                         <i class="fas fa-times"></i>
@@ -679,7 +678,6 @@
                     </div>
                     <div class="flex flex-wrap gap-2" id="proj-modal-tags"></div>
                     <div class="pt-3 border-t border-gray-100 flex justify-between items-center">
-                        <!-- Nút đổi ảnh trong modal cũng chỉ hiện khi ở chế độ Sửa giao diện -->
                         <button onclick="openPhotoChangeModal('PROJ:' + currentModalProjectId)" class="cms-only-btn btn-interactive bg-slate-100 hover:bg-amber-100 text-brand-navy font-bold px-4 py-2 rounded-xl text-xs items-center border border-gray-300">
                             <i class="fas fa-camera mr-1.5 text-amber-500"></i> Đổi ảnh dự án này
                         </button>
@@ -964,12 +962,12 @@
         </div>
     </div>
 
-    <!-- ==================== MODAL ĐỔI ẢNH ĐA NĂNG (CHỈ MỞ ĐƯỢC KHI ĐÃ BẬT CHẾ ĐỘ SỬA GIAO DIỆN) ==================== -->
+    <!-- ==================== MODAL ĐỔI ẢNH ĐA NĂNG ==================== -->
     <div id="photo-change-modal" class="fixed inset-0 z-[130] bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden border border-gray-200 p-6 space-y-4">
             <div class="flex justify-between items-center border-b border-gray-100 pb-3">
                 <h3 class="font-extrabold text-brand-navy text-base flex items-center">
-                    <i class="fas fa-camera text-amber-500 mr-2"></i> CẬP NHẬT HÌNH ẢNH ĐỒNG BỘ CLOUD
+                    <i class="fas fa-camera text-amber-500 mr-2"></i> CẬP NHẬT HÌNH ẢNH FULL KHUNG & CLOUD
                 </h3>
                 <button onclick="closePhotoChangeModal()" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-lg"></i></button>
             </div>
@@ -981,7 +979,7 @@
                     <button type="button" onclick="document.getElementById('universal-image-file-input').click()" class="btn-interactive bg-brand-accent hover:bg-cyan-400 text-brand-dark font-extrabold px-5 py-2.5 rounded-xl text-xs shadow-md inline-flex items-center">
                         <i class="fas fa-folder-open mr-2 text-sm"></i> Mở Thư Viện Ảnh
                     </button>
-                    <p class="text-[10px] text-gray-400 mt-1.5">Ảnh tự động nén nhẹ, lưu Offline & đồng bộ lên Cloud</p>
+                    <p class="text-[10px] text-gray-400 mt-1.5">Ảnh tự động căn tràn đầy 100% khung hình & đồng bộ lên Cloud</p>
                 </div>
 
                 <div class="text-center text-[11px] font-bold text-gray-400 uppercase">--- HOẶC ---</div>
@@ -1529,9 +1527,8 @@
             }
         };
 
-        /* ==================== QUẢN LÝ DỮ LIỆU ĐỘNG (TRANG CHỦ, DỊCH VỤ, DỰ ÁN, CHUYÊN MỤC MỚI) ==================== */
+        /* ==================== QUẢN LÝ DỮ LIỆU ĐỘNG ==================== */
         function loadAllDynamicDataFromStorage() {
-            // 1. Why Cards (Trang chủ)
             const savedWhy = localStorage.getItem('hicon_why_cards_data');
             if (savedWhy) {
                 try { whyCardsData = JSON.parse(savedWhy); } catch(e) {}
@@ -1540,13 +1537,11 @@
                 if (legacyHr && whyCardsData[2]) whyCardsData[2].customImg = legacyHr;
             }
 
-            // 2. Services (Dịch vụ M&E)
             const savedSrv = localStorage.getItem('hicon_services_data');
             if (savedSrv) {
                 try { servicesData = JSON.parse(savedSrv); } catch(e) {}
             }
 
-            // 3. Projects (Dự án)
             const savedProjList = localStorage.getItem('hicon_projects_full_list');
             if (savedProjList) {
                 try { hiconProjectsData = JSON.parse(savedProjList); } catch(e) {}
@@ -1568,13 +1563,11 @@
                 }
             }
 
-            // 4. Custom Sections (Các danh mục mới tạo thêm)
             const savedCustomSec = localStorage.getItem('hicon_custom_sections_data');
             if (savedCustomSec) {
                 try { customSectionsData = JSON.parse(savedCustomSec); } catch(e) {}
             }
 
-            // 5. Logo & Hero BG
             loadSavedCompanyLogo();
             loadSavedHeroBg();
         }
@@ -1612,7 +1605,7 @@
             }
         }
 
-        /* ==================== RENDER THẺ TRANG CHỦ ("TẠI SAO CHỌN CHÚNG TÔI") ==================== */
+        /* ==================== RENDER THẺ TRANG CHỦ (ẢNH TRÀN FULL KHUNG 100%) ==================== */
         function getBuiltinGraphicHtml(type) {
             if (type === 'builtin-1') {
                 return `
@@ -1753,12 +1746,13 @@
                 const div = document.createElement('div');
                 div.className = "card-pro-hover bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-md flex flex-col relative";
 
+                // ẢNH TRÀN FULL KHUNG 100% BẰNG ABSOLUTE INSET-0 W-FULL H-FULL OBJECT-COVER
                 const headerVisual = hasCustomImg
-                    ? `<img src="${card.customImg}" onclick="if(isCmsEditMode) openPhotoChangeModal('WHY:${card.id}')" class="w-full h-full object-cover card-img-zoom transition-transform duration-500">`
+                    ? `<img src="${card.customImg}" onclick="if(isCmsEditMode) openPhotoChangeModal('WHY:${card.id}')" class="absolute inset-0 w-full h-full object-cover card-img-zoom transition-transform duration-500">`
                     : getBuiltinGraphicHtml(card.type);
 
                 div.innerHTML = `
-                    <div class="cms-editable-img-box h-48 bg-gradient-to-br from-slate-900 via-brand-navy to-slate-800 relative overflow-hidden flex items-center justify-around p-4">
+                    <div class="cms-editable-img-box h-48 bg-gradient-to-br from-slate-900 via-brand-navy to-slate-800 relative overflow-hidden flex items-center justify-around ${hasCustomImg ? 'p-0' : 'p-4'}">
                         ${headerVisual}
 
                         <!-- NÚT ĐỔI ẢNH & XÓA THẺ (CHỈ HIỆN KHI BẬT SỬA GIAO DIỆN) -->
@@ -1779,7 +1773,7 @@
                         </div>
 
                         <div class="absolute bottom-2 left-3 z-10">
-                            <span data-dynamic-edit="why-badge" data-item-id="${card.id}" class="text-[10px] font-bold text-cyan-300 uppercase tracking-widest bg-black/60 px-2.5 py-0.5 rounded-md backdrop-blur-sm">${card.badge}</span>
+                            <span data-dynamic-edit="why-badge" data-item-id="${card.id}" class="text-[10px] font-bold text-cyan-300 uppercase tracking-widest bg-black/65 px-2.5 py-0.5 rounded-md backdrop-blur-sm">${card.badge}</span>
                         </div>
                     </div>
                     <div class="p-6 flex-grow flex flex-col justify-between">
@@ -1846,7 +1840,7 @@
             showTopToast('Đã xóa thẻ năng lực!', false);
         }
 
-        /* ==================== RENDER DỊCH VỤ M&E (CÓ ẢNH & THÊM FORM MẪU) ==================== */
+        /* ==================== RENDER DỊCH VỤ M&E (ẢNH TRÀN FULL KHUNG 100%) ==================== */
         function renderServicesSection() {
             const container = document.getElementById('services-grid-container');
             if (!container) return;
@@ -1856,8 +1850,8 @@
                 const div = document.createElement('div');
                 div.className = "bg-white rounded-2xl shadow-md overflow-hidden border border-gray-200 card-pro-hover flex flex-col";
                 div.innerHTML = `
-                    <div class="cms-editable-img-box h-48 bg-slate-900 relative overflow-hidden">
-                        <img src="${srv.img || 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=900&auto=format&fit=crop'}" onclick="if(isCmsEditMode) openPhotoChangeModal('SRV:${srv.id}')" class="w-full h-full object-cover card-img-zoom transition-transform duration-500">
+                    <div class="cms-editable-img-box h-48 bg-slate-900 relative overflow-hidden p-0">
+                        <img src="${srv.img || 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=900&auto=format&fit=crop'}" onclick="if(isCmsEditMode) openPhotoChangeModal('SRV:${srv.id}')" class="absolute inset-0 w-full h-full object-cover card-img-zoom transition-transform duration-500">
                         <div class="cms-only-flex absolute top-2.5 right-2.5 gap-1.5 z-20">
                             <button type="button" onclick="openPhotoChangeModal('SRV:${srv.id}')" class="bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition flex items-center shadow-lg">
                                 <i class="fas fa-camera mr-1.5 text-amber-400"></i> Đổi ảnh
@@ -1914,7 +1908,7 @@
             showTopToast('Đã xóa thẻ dịch vụ!', false);
         }
 
-        /* ==================== RENDER CÁC DANH MỤC / CHUYÊN MỤC TÙY CHỈNH MỚI ==================== */
+        /* ==================== RENDER CÁC DANH MỤC TÙY CHỈNH MỚI (ẢNH TRÀN FULL KHUNG 100%) ==================== */
         function renderCustomSections() {
             const container = document.getElementById('custom-sections-container');
             if (!container) return;
@@ -1928,8 +1922,8 @@
                 (sec.cards || []).forEach(c => {
                     cardsHtml += `
                         <div class="card-pro-hover bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-md flex flex-col">
-                            <div class="cms-editable-img-box h-48 bg-slate-900 relative overflow-hidden">
-                                <img src="${c.img}" onclick="if(isCmsEditMode) openPhotoChangeModal('CSEC:${sec.id}:${c.id}')" class="w-full h-full object-cover card-img-zoom transition-transform duration-500">
+                            <div class="cms-editable-img-box h-48 bg-slate-900 relative overflow-hidden p-0">
+                                <img src="${c.img}" onclick="if(isCmsEditMode) openPhotoChangeModal('CSEC:${sec.id}:${c.id}')" class="absolute inset-0 w-full h-full object-cover card-img-zoom transition-transform duration-500">
                                 <div class="cms-only-flex absolute top-2.5 right-2.5 gap-1.5 z-20">
                                     <button type="button" onclick="openPhotoChangeModal('CSEC:${sec.id}:${c.id}')" class="bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition flex items-center shadow-lg">
                                         <i class="fas fa-camera mr-1.5 text-amber-400"></i> Đổi ảnh
@@ -1938,7 +1932,7 @@
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </div>
-                                <div class="absolute bottom-2 left-3">
+                                <div class="absolute bottom-2 left-3 z-10">
                                     <span data-dynamic-edit="csec-card-badge" data-sec-id="${sec.id}" data-item-id="${c.id}" class="text-[10px] font-bold text-cyan-300 uppercase tracking-widest bg-black/65 px-2.5 py-0.5 rounded-md">${c.badge}</span>
                                 </div>
                             </div>
@@ -2048,7 +2042,7 @@
             showTopToast('Đã xóa danh mục tùy chỉnh!', false);
         }
 
-        /* ==================== ENGINE LIVE VISUAL CMS (SỬA TRỰC TIẾP MỌI CHỮ & ẢNH BẰNG MÃ PIN) ==================== */
+        /* ==================== ENGINE LIVE VISUAL CMS ==================== */
         function getSavedCmsTexts() {
             const raw = localStorage.getItem('hicon_cms_texts');
             if (raw) {
@@ -2122,7 +2116,6 @@
             });
         }
 
-        // Lắng nghe gõ phím trực tiếp trên mọi phần tử chữ để lưu tức thì
         document.addEventListener('input', function(e) {
             if (!isCmsEditMode) return;
             const target = e.target;
@@ -2216,7 +2209,7 @@
             saveAndExitCmsEditMode();
         }
 
-        /* ==================== HỆ THỐNG ĐỒNG BỘ CLOUD + HÀNG ĐỢI OFFLINE THÔNG MINH ==================== */
+        /* ==================== HỆ THỐNG ĐỒNG BỘ CLOUD + HÀNG ĐỢI OFFLINE ==================== */
         function updateNetworkUI() {
             const isOnline = navigator.onLine;
             const badge = document.getElementById('network-status-badge');
@@ -2366,7 +2359,7 @@
             return false;
         }
 
-        /* ==================== CAMERA QUÉT MÃ QR & TẠO TEM QR MỞ THẲNG APP ==================== */
+        /* ==================== CAMERA QUÉT MÃ QR & TẠO TEM QR ==================== */
         function getDeviceDeepLinkUrl(code) {
             const baseUrl = window.location.origin + window.location.pathname;
             return `${baseUrl}?code=${encodeURIComponent(code)}`;
@@ -2477,8 +2470,8 @@
             closeInstallAppGuideModal();
         }
 
-        /* ==================== NÉN ẢNH & ĐỔI ẢNH ĐA NĂNG (CHỈ HOẠT ĐỘNG KHI ĐÃ BẬT CHẾ ĐỘ SỬA GIAO DIỆN) ==================== */
-        function compressImageFile(file, maxWidth = 850, quality = 0.78, isPng = false) {
+        /* ==================== NÉN ẢNH & ĐỔI ẢNH ĐA NĂNG ==================== */
+        function compressImageFile(file, maxWidth = 900, quality = 0.8, isPng = false) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.onload = function(e) {
@@ -2506,7 +2499,6 @@
         }
 
         function openPhotoChangeModal(targetKey) {
-            // CHỐT CHẶN BẢO MẬT: Khách hàng chưa mở khóa mã PIN Sửa giao diện thì tuyệt đối không mở được hộp thoại đổi ảnh
             if (!isCmsEditMode) {
                 return;
             }
@@ -2547,7 +2539,7 @@
             if (!file || !currentPhotoChangeTarget || !isCmsEditMode) return;
             try {
                 const isLogo = currentPhotoChangeTarget === 'LOGO';
-                const base64Data = await compressImageFile(file, isLogo ? 400 : 900, 0.78, isLogo);
+                const base64Data = await compressImageFile(file, isLogo ? 400 : 900, 0.8, isLogo);
                 await applyNewPhotoToTarget(currentPhotoChangeTarget, base64Data);
                 closePhotoChangeModal();
             } catch (err) {
@@ -2613,10 +2605,10 @@
                 }
             }
 
-            showTopToast('Đã cập nhật hình ảnh! Bấm "Lưu & Đồng Bộ Tất Cả" khi hoàn tất chỉnh sửa.', false);
+            showTopToast('Đã cập nhật ảnh tràn full khung! Bấm "Lưu & Đồng Bộ Tất Cả" khi hoàn tất.', false);
         }
 
-        /* ==================== RENDER DỰ ÁN TIÊU BIỂU & THÊM DỰ ÁN MẪU ==================== */
+        /* ==================== RENDER DỰ ÁN TIÊU BIỂU (ẢNH TRÀN FULL KHUNG 100%) ==================== */
         let currentProjectCategory = 'ALL';
         let currentProjectViewMode = 'GRID';
         let currentModalProjectId = null;
@@ -2681,11 +2673,11 @@
 
                     card.innerHTML = `
                         <div>
-                            <div class="cms-editable-img-box h-56 overflow-hidden relative bg-slate-900">
-                                <img src="${imgSrc}" onclick="if(isCmsEditMode) openPhotoChangeModal('PROJ:${proj.id}')" alt="${proj.fallbackAlt || proj.title}" class="w-full h-full object-cover card-img-zoom transition-transform duration-700">
+                            <div class="cms-editable-img-box h-56 overflow-hidden relative bg-slate-900 p-0">
+                                <img src="${imgSrc}" onclick="if(isCmsEditMode) openPhotoChangeModal('PROJ:${proj.id}')" alt="${proj.fallbackAlt || proj.title}" class="absolute inset-0 w-full h-full object-cover card-img-zoom transition-transform duration-700">
                                 <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/25 to-transparent pointer-events-none"></div>
                                 
-                                <div class="absolute top-3 left-3 flex items-center gap-2">
+                                <div class="absolute top-3 left-3 flex items-center gap-2 z-10">
                                     <span class="w-8 h-8 rounded-xl bg-amber-500 text-brand-dark font-black text-xs flex items-center justify-center shadow-lg">
                                         ${idx + 1 < 10 ? '0' + (idx + 1) : idx + 1}
                                     </span>
@@ -2694,7 +2686,6 @@
                                     </span>
                                 </div>
 
-                                <!-- NÚT ĐỔI ẢNH & XÓA DỰ ÁN (ẨN HOÀN TOÀN VỚI KHÁCH HÀNG, CHỈ HIỆN KHI BẬT SỬA GIAO DIỆN) -->
                                 <div class="cms-only-flex absolute top-3 right-3 gap-1.5 z-20">
                                     <button type="button" onclick="openPhotoChangeModal('PROJ:${proj.id}')" class="bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition flex items-center shadow-lg cursor-pointer">
                                         <i class="fas fa-camera mr-1.5 text-amber-400"></i> Đổi ảnh
@@ -2704,7 +2695,7 @@
                                     </button>
                                 </div>
 
-                                <div class="absolute bottom-3 left-4 right-4 text-white">
+                                <div class="absolute bottom-3 left-4 right-4 text-white z-10">
                                     <span data-dynamic-edit="proj-status" data-item-id="${proj.id}" class="inline-block text-[9px] font-extrabold px-2 py-0.5 rounded bg-emerald-500/90 text-white mb-1">
                                         ${proj.status}
                                     </span>
@@ -2742,7 +2733,6 @@
                     gridEl.appendChild(card);
                 });
 
-                // Nút "+ Thêm Dự Án Mới (Form Mẫu)" (Chỉ hiện khi bật Sửa giao diện)
                 const addProjBtn = document.createElement('div');
                 addProjBtn.className = "cms-only-flex border-2 border-dashed border-amber-500 bg-amber-50/50 hover:bg-amber-100/70 rounded-3xl p-8 flex-col items-center justify-center text-center cursor-pointer transition min-h-[360px]";
                 addProjBtn.onclick = addNewProjectCardTemplate;
@@ -2768,8 +2758,8 @@
 
                     const imageBox = `
                         <div class="w-full md:w-5/12 group">
-                            <div class="cms-editable-img-box relative h-56 sm:h-64 overflow-hidden shadow-xl border-4 border-white ${isEven ? 'brochure-leaf-left' : 'brochure-leaf-right'} bg-slate-900 card-pro-hover">
-                                <img src="${imgSrc}" onclick="if(isCmsEditMode) openPhotoChangeModal('PROJ:${proj.id}')" alt="${proj.title}" class="w-full h-full object-cover card-img-zoom transition-transform duration-700">
+                            <div class="cms-editable-img-box relative h-56 sm:h-64 overflow-hidden shadow-xl border-4 border-white ${isEven ? 'brochure-leaf-left' : 'brochure-leaf-right'} bg-slate-900 card-pro-hover p-0">
+                                <img src="${imgSrc}" onclick="if(isCmsEditMode) openPhotoChangeModal('PROJ:${proj.id}')" alt="${proj.title}" class="absolute inset-0 w-full h-full object-cover card-img-zoom transition-transform duration-700">
                                 <button type="button" onclick="openPhotoChangeModal('PROJ:${proj.id}')" class="cms-only-btn absolute top-3 right-3 bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition items-center shadow-lg z-20 cursor-pointer">
                                     <i class="fas fa-camera mr-1.5 text-amber-400"></i> Đổi ảnh
                                 </button>
@@ -3067,14 +3057,14 @@
                 gallery.className = "grid grid-cols-1 sm:grid-cols-2 gap-4";
                 currentLightboxPhotos.forEach((src, idx) => {
                     gallery.innerHTML += `
-                        <div onclick="openLightbox(${idx})" class="relative rounded-xl overflow-hidden border border-gray-200 card-pro-hover cursor-pointer group">
-                            <img src="${src}" class="w-full h-44 object-cover card-img-zoom transition-transform duration-500">
-                            <div class="absolute inset-0 bg-black/35 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <div onclick="openLightbox(${idx})" class="relative rounded-xl overflow-hidden border border-gray-200 card-pro-hover cursor-pointer group h-44 bg-slate-900">
+                            <img src="${src}" class="absolute inset-0 w-full h-full object-cover card-img-zoom transition-transform duration-500">
+                            <div class="absolute inset-0 bg-black/35 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-10">
                                 <span class="bg-white/95 text-brand-navy font-extrabold text-xs px-3.5 py-1.5 rounded-full shadow-lg flex items-center">
                                     <i class="fas fa-expand-alt mr-1.5 text-brand-accent"></i> Xem phóng to
                                 </span>
                             </div>
-                            <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 p-2 text-white text-[10px] flex justify-between items-center">
+                            <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 p-2 text-white text-[10px] flex justify-between items-center z-10">
                                 <span>Ảnh kiểm tra #${idx + 1}</span>
                                 <i class="fas fa-search-plus text-cyan-300"></i>
                             </div>
@@ -3453,11 +3443,11 @@
                 const div = document.createElement('div');
                 div.className = "relative rounded-xl overflow-hidden h-24 border border-gray-300 group bg-black transition";
                 div.innerHTML = `
-                    <img src="${src}" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition">
-                    <button type="button" onclick="removeUploadedPhoto(${idx})" class="btn-interactive absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs shadow-lg transition" title="Xóa ảnh này">
+                    <img src="${src}" class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition">
+                    <button type="button" onclick="removeUploadedPhoto(${idx})" class="btn-interactive absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs shadow-lg transition z-10" title="Xóa ảnh này">
                         <i class="fas fa-times"></i>
                     </button>
-                    <div class="absolute bottom-0 inset-x-0 bg-black/60 text-white text-[9px] text-center py-0.5">Ảnh #${idx + 1}</div>
+                    <div class="absolute bottom-0 inset-x-0 bg-black/60 text-white text-[9px] text-center py-0.5 z-10">Ảnh #${idx + 1}</div>
                 `;
                 previewGrid.appendChild(div);
             });
