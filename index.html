@@ -11,7 +11,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="HICON M&E">
-    <link rel="apple-touch-icon" href="https://quickchart.io/chart?c=%7Btype:%27doughnut%27,data:%7Bdatasets:%5B%7Bdata:%5B100%5D,backgroundColor:%5B%27%2300a8cc%27%5D%7D%5D%7D,options:%7Bplugins:%7Bdoughnutlabel:%7Blabels:%5B%7Btext:%27H%27,font:%7Bsize:240,weight:%27bold%27%7D,color:%27%23ffffff%27%7D%5D%7D%7D%7D%7D&w=192&h=192&bkg=%230f2b48">
+    <link id="dynamic-favicon" rel="icon" type="image/png" href="https://quickchart.io/chart?c=%7Btype:%27doughnut%27,data:%7Bdatasets:%5B%7Bdata:%5B100%5D,backgroundColor:%5B%27%2300a8cc%27%5D%7D%5D%7D,options:%7Bplugins:%7Bdoughnutlabel:%7Blabels:%5B%7Btext:%27H%27,font:%7Bsize:240,weight:%27bold%27%7D,color:%27%23ffffff%27%7D%5D%7D%7D%7D%7D&w=192&h=192&bkg=%230f2b48">
+    <link id="dynamic-apple-icon" rel="apple-touch-icon" href="https://quickchart.io/chart?c=%7Btype:%27doughnut%27,data:%7Bdatasets:%5B%7Bdata:%5B100%5D,backgroundColor:%5B%27%2300a8cc%27%5D%7D%5D%7D,options:%7Bplugins:%7Bdoughnutlabel:%7Blabels:%5B%7Btext:%27H%27,font:%7Bsize:240,weight:%27bold%27%7D,color:%27%23ffffff%27%7D%5D%7D%7D%7D%7D&w=192&h=192&bkg=%230f2b48">
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -47,8 +48,8 @@
         html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
         .glass-header { background: rgba(15, 43, 72, 0.96); backdrop-filter: blur(12px); }
         .hero-gradient {
-            background: linear-gradient(135deg, rgba(15, 43, 72, 0.92) 0%, rgba(19, 84, 138, 0.85) 100%), 
-                        url('https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=1600&auto=format&fit=crop');
+            background: linear-gradient(135deg, rgba(15, 43, 72, 0.90) 0%, rgba(19, 84, 138, 0.82) 100%), 
+                        var(--hero-bg-url, url('https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=1600&auto=format&fit=crop'));
             background-size: cover; background-position: center;
         }
 
@@ -151,38 +152,38 @@
         .brochure-leaf-left { border-radius: 36px 8px 36px 8px; }
         .brochure-leaf-right { border-radius: 8px 36px 8px 36px; }
 
-        /* ==================== HIỆU ỨNG CHẾ ĐỘ LIVE VISUAL CMS EDITOR ==================== */
+        /* ==================== QUY TẮC ẨN/HIỆN NGHIÊM NGẶT CHO CHẾ ĐỘ SỬA GIAO DIỆN ==================== */
+        /* Khách hàng bình thường hoàn toàn KHÔNG nhìn thấy bất kỳ nút Đổi ảnh / Thêm / Xóa nào */
+        .cms-only-btn { display: none !important; }
+        .cms-only-flex { display: none !important; }
+        .cms-only-block { display: none !important; }
+
+        body.cms-edit-active .cms-only-btn { display: inline-flex !important; }
+        body.cms-edit-active .cms-only-flex { display: flex !important; }
+        body.cms-edit-active .cms-only-block { display: block !important; }
+
         body.cms-edit-active [data-cms-id],
-        body.cms-edit-active [data-proj-edit] {
-            outline: 1.5px dashed rgba(0, 168, 204, 0.65);
+        body.cms-edit-active [data-dynamic-edit] {
+            outline: 1.5px dashed rgba(0, 168, 204, 0.75);
             outline-offset: 3px;
             border-radius: 4px;
             cursor: text !important;
             transition: all 0.15s ease;
         }
         body.cms-edit-active [data-cms-id]:hover,
-        body.cms-edit-active [data-proj-edit]:hover {
+        body.cms-edit-active [data-dynamic-edit]:hover {
             outline: 2px dashed #f59e0b;
-            background-color: rgba(245, 158, 11, 0.12);
+            background-color: rgba(245, 158, 11, 0.14);
         }
         body.cms-edit-active [data-cms-id]:focus,
-        body.cms-edit-active [data-proj-edit]:focus {
+        body.cms-edit-active [data-dynamic-edit]:focus {
             outline: 2.5px solid #10b981 !important;
-            background-color: rgba(16, 185, 129, 0.12) !important;
+            background-color: rgba(16, 185, 129, 0.14) !important;
             box-shadow: 0 0 15px rgba(16, 185, 129, 0.25);
         }
-        body.cms-edit-active img[data-cms-img],
-        body.cms-edit-active img[data-proj-img] {
+        body.cms-edit-active .cms-editable-img-box {
             outline: 3px dashed #f59e0b !important;
             outline-offset: -3px;
-            cursor: pointer !important;
-            filter: brightness(0.92);
-            transition: all 0.2s ease;
-        }
-        body.cms-edit-active img[data-cms-img]:hover,
-        body.cms-edit-active img[data-proj-img]:hover {
-            filter: brightness(1.05);
-            outline: 4px solid #00f2fe !important;
         }
     </style>
 </head>
@@ -204,20 +205,26 @@
     </div>
 
     <!-- THANH CÔNG CỤ NỔI KHI BẬT CHẾ ĐỘ CHỈNH SỬA TRỰC TIẾP (LIVE CMS FLOATING DOCK) -->
-    <div id="cms-floating-toolbar" class="fixed bottom-20 md:bottom-6 left-1/2 -translate-x-1/2 z-[125] hidden w-11/12 max-w-2xl">
-        <div class="bg-slate-900/95 backdrop-blur-xl text-white p-3 sm:px-5 sm:py-3.5 rounded-3xl shadow-[0_15px_35px_rgba(0,0,0,0.6)] border-2 border-amber-400 flex flex-wrap items-center justify-between gap-3">
+    <div id="cms-floating-toolbar" class="fixed bottom-20 md:bottom-6 left-1/2 -translate-x-1/2 z-[125] hidden w-11/12 max-w-4xl">
+        <div class="bg-slate-900/95 backdrop-blur-xl text-white p-3 sm:px-5 sm:py-3.5 rounded-3xl shadow-[0_15px_35px_rgba(0,0,0,0.65)] border-2 border-amber-400 flex flex-wrap items-center justify-between gap-3">
             <div class="flex items-center space-x-3">
                 <div class="w-9 h-9 rounded-2xl bg-amber-500 text-brand-dark flex items-center justify-center font-black text-base animate-pulse shrink-0">
                     <i class="fas fa-pen-nib"></i>
                 </div>
                 <div>
                     <div class="text-xs sm:text-sm font-black text-amber-400 uppercase tracking-wide flex items-center gap-1.5">
-                        <span>CHẾ ĐỘ CHỈNH SỬA TRỰC TIẾP</span>
+                        <span>CHẾ ĐỘ QUẢN TRỊ & SỬA GIAO DIỆN TRỰC TIẾP</span>
                     </div>
-                    <div class="text-[10px] text-gray-300">Ấn trực tiếp vào bất kỳ chữ nào để gõ sửa, hoặc ấn vào ảnh để thay ảnh mới</div>
+                    <div class="text-[10px] text-gray-300">Bấm trực tiếp vào chữ để gõ sửa • Bấm nút "Đổi ảnh" ở góc mỗi thẻ • Bấm "+ Thêm Form Mẫu" để tạo mục mới</div>
                 </div>
             </div>
-            <div class="flex items-center gap-2 ml-auto">
+            <div class="flex flex-wrap items-center gap-2 ml-auto">
+                <button onclick="openPhotoChangeModal('LOGO')" class="btn-interactive bg-amber-500 hover:bg-amber-400 text-brand-dark font-extrabold px-3 py-2 rounded-xl text-xs flex items-center shadow">
+                    <i class="fas fa-image mr-1.5"></i> Đổi Logo
+                </button>
+                <button onclick="addNewCustomSectionTemplate()" class="btn-interactive bg-cyan-500 hover:bg-cyan-400 text-brand-dark font-extrabold px-3 py-2 rounded-xl text-xs flex items-center shadow">
+                    <i class="fas fa-folder-plus mr-1.5"></i> + Thêm Danh Mục Mới
+                </button>
                 <button onclick="saveAndExitCmsEditMode()" class="btn-interactive bg-emerald-500 hover:bg-emerald-400 text-brand-dark font-extrabold px-4 py-2 rounded-xl text-xs flex items-center shadow-lg">
                     <i class="fas fa-cloud-upload-alt mr-1.5"></i> Lưu & Đồng Bộ Tất Cả
                 </button>
@@ -256,8 +263,12 @@
             <div class="flex justify-between items-center h-16 sm:h-20">
                 <!-- LOGO -->
                 <div class="flex items-center space-x-3 cursor-pointer group" onclick="if(!isCmsEditMode) navigateTo('home')">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-tr from-brand-blue to-brand-accent rounded-xl flex items-center justify-center font-bold text-xl sm:text-2xl text-white shadow-lg border border-cyan-400/40 group-hover:scale-105 transition-transform duration-300">
-                        <span data-cms-id="logo-letter">H</span>
+                    <div id="brand-logo-box" onclick="if(isCmsEditMode) { event.stopPropagation(); openPhotoChangeModal('LOGO'); }" class="cms-editable-img-box relative w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-tr from-brand-blue to-brand-accent rounded-xl flex items-center justify-center font-bold text-xl sm:text-2xl text-white shadow-lg border border-cyan-400/40 group-hover:scale-105 transition-transform duration-300 overflow-hidden shrink-0">
+                        <span id="brand-logo-fallback" data-cms-id="logo-letter">H</span>
+                        <img id="brand-logo-img" src="" alt="Logo" class="hidden w-full h-full object-contain bg-white p-0.5">
+                        <button type="button" onclick="event.stopPropagation(); openPhotoChangeModal('LOGO');" class="cms-only-flex absolute inset-0 bg-black/70 text-amber-300 text-[8px] font-black flex-col items-center justify-center text-center leading-tight">
+                            <i class="fas fa-camera text-xs mb-0.5"></i>Đổi Logo
+                        </button>
                     </div>
                     <div>
                         <div class="text-lg sm:text-xl font-black tracking-wider text-white flex items-center gap-2">
@@ -331,9 +342,14 @@
     <!-- MAIN CONTENT -->
     <main class="flex-grow">
         
-        <!-- SECTION 1: TRANG CHỦ -->
+        <!-- ==================== SECTION 1: TRANG CHỦ ==================== -->
         <div id="section-home" class="page-section hidden">
-            <div class="hero-gradient text-white py-20 sm:py-24 px-4 text-center relative">
+            <div id="hero-banner-box" class="hero-gradient text-white py-20 sm:py-24 px-4 text-center relative">
+                <!-- Nút đổi ảnh nền Banner chính (CHỈ HIỆN KHI BẬT SỬA GIAO DIỆN) -->
+                <button type="button" onclick="openPhotoChangeModal('HERO_BG')" class="cms-only-btn absolute top-4 right-4 bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-amber-300 border border-amber-400/50 text-xs font-extrabold px-3.5 py-2 rounded-xl backdrop-blur-md transition items-center shadow-2xl z-20 cursor-pointer">
+                    <i class="fas fa-camera mr-1.5"></i> Đổi Ảnh Nền Banner
+                </button>
+
                 <div class="max-w-4xl mx-auto">
                     <span class="inline-block bg-brand-accent/20 text-brand-accent border border-brand-accent/40 rounded-full px-4 py-1.5 text-xs font-semibold mb-6 uppercase">
                         <i class="fas fa-check-circle mr-1.5"></i> <span data-cms-id="hero-badge-txt">Ứng Dụng Tra Cứu Offline & Đồng Bộ Cloud Real-time</span>
@@ -359,7 +375,7 @@
                 </div>
             </div>
             
-            <!-- SECTION: TẠI SAO CHỌN CHÚNG TÔI -->
+            <!-- SECTION: TẠI SAO CHỌN CHÚNG TÔI (ĐỘNG 100%: ĐỔI ẢNH TỪNG THẺ & THÊM THẺ MỚI) -->
             <div class="py-16 bg-white">
                 <div class="max-w-7xl mx-auto px-4">
                     <div class="text-center mb-12">
@@ -368,232 +384,20 @@
                         <div class="w-20 h-1 bg-brand-accent mx-auto mt-3 rounded-full"></div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        
-                        <!-- THẺ 1: SỐ HÓA BÁO CÁO MINH BẠCH -->
-                        <div class="card-pro-hover bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-md flex flex-col">
-                            <div class="h-48 bg-gradient-to-br from-slate-900 via-brand-navy to-slate-800 relative overflow-hidden flex items-center justify-center p-4">
-                                <div class="w-44 h-32 bg-slate-700 rounded-xl border-2 border-slate-500 shadow-inner flex flex-col justify-between p-2.5 relative mr-6">
-                                    <div class="flex justify-between items-center border-b border-slate-600 pb-1">
-                                        <span class="text-[9px] font-black text-cyan-300 font-mono tracking-wider">SYSTEM: AHU-01</span>
-                                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                                    </div>
-                                    <div class="flex items-center gap-2 my-1">
-                                        <div class="w-10 h-10 rounded-full bg-slate-800 border border-slate-500 flex items-center justify-center">
-                                            <i class="fas fa-fan text-cyan-400 text-lg animate-vane-spin"></i>
-                                        </div>
-                                        <div class="space-y-1 flex-1">
-                                            <div class="h-1.5 bg-slate-600 rounded"></div>
-                                            <div class="h-1.5 bg-slate-600 rounded w-4/5"></div>
-                                            <div class="h-1.5 bg-slate-600 rounded w-3/5"></div>
-                                        </div>
-                                    </div>
-                                    <div class="absolute right-2 bottom-2 bg-white p-1.5 rounded-lg shadow-lg border-2 border-cyan-400">
-                                        <i class="fas fa-qrcode text-brand-navy text-2xl block"></i>
-                                        <span class="text-[6px] font-mono font-bold text-brand-navy block text-center">AHU-01</span>
-                                    </div>
-                                    <div class="text-[8px] text-gray-300 font-mono">22.5°C | 65%RH</div>
-                                </div>
+                    <div id="why-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+                </div>
+            </div>
 
-                                <div class="w-24 h-36 bg-gray-900 rounded-2xl border-2 border-cyan-400 shadow-2xl p-1.5 flex flex-col justify-between relative -ml-10 z-10 transform -rotate-3 card-img-zoom transition-transform duration-500">
-                                    <div class="w-8 h-1 bg-gray-700 rounded-full mx-auto"></div>
-                                    <div class="bg-slate-800 flex-1 my-1 rounded-xl border border-cyan-500/40 relative overflow-hidden flex flex-col items-center justify-center p-1">
-                                        <div class="w-12 h-12 border-2 border-dashed border-cyan-300 rounded flex items-center justify-center relative">
-                                            <i class="fas fa-qrcode text-white text-xl"></i>
-                                            <div class="laser-line"></div>
-                                        </div>
-                                        <span class="mt-1.5 bg-emerald-500 text-white text-[7px] font-bold px-1.5 py-0.5 rounded-full">✓ AHU-01 OK</span>
-                                    </div>
-                                    <div class="w-4 h-4 rounded-full border border-gray-600 mx-auto"></div>
-                                </div>
+            <!-- KHU VỰC CÁC DANH MỤC / CHUYÊN MỤC MỚI DO NGƯỜI DÙNG TẠO THÊM THEO FORM MẪU -->
+            <div id="custom-sections-container"></div>
 
-                                <div class="absolute bottom-2 left-3">
-                                    <span data-cms-id="card1-badge" class="text-[10px] font-bold text-cyan-300 uppercase tracking-widest bg-black/50 px-2.5 py-0.5 rounded-md backdrop-blur-sm">QUÉT QR MỞ APP</span>
-                                </div>
-                            </div>
-                            <div class="p-6 flex-grow flex flex-col justify-between">
-                                <div>
-                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-qrcode text-brand-accent mr-2"></i> <span data-cms-id="card1-title">Số Hóa Báo Cáo Minh Bạch</span></h3>
-                                    <p data-cms-id="card1-desc" class="text-gray-600 text-xs leading-relaxed">Điện thoại quét mã QR dán trực tiếp trên thiết bị (AHU, Chiller, Bơm PCCC) tự động mở App và hiển thị ngay nhật ký kiểm tra cả khi Offline.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- THẺ 2: SẴN SÀNG - 04 GIỜ CÓ MẶT -->
-                        <div class="card-pro-hover bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-md flex flex-col">
-                            <div class="h-48 bg-gradient-to-br from-brand-navy via-brand-blue to-slate-900 relative overflow-hidden flex items-center justify-around p-4">
-                                <div class="relative w-28 h-28 rounded-full bg-slate-900/90 border-4 border-amber-400 shadow-2xl flex flex-col items-center justify-center shrink-0">
-                                    <svg class="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
-                                        <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(245, 158, 11, 0.25)" stroke-width="10"></circle>
-                                        <circle cx="50" cy="50" r="42" fill="none" stroke="#f59e0b" stroke-width="10" stroke-dasharray="264" stroke-dashoffset="176" stroke-linecap="round"></circle>
-                                    </svg>
-                                    <i class="fas fa-stopwatch text-amber-400 text-sm mb-0.5 animate-bounce"></i>
-                                    <span class="text-2xl font-black text-white leading-none">04<span class="text-xs text-amber-400 ml-0.5">GIỜ</span></span>
-                                    <span class="text-[8px] font-bold text-cyan-300 uppercase mt-0.5">ON-SITE MAX</span>
-                                </div>
-
-                                <div class="flex flex-col items-center relative">
-                                    <div class="flex items-center space-x-1 relative">
-                                        <div class="flex flex-col space-y-1.5 mr-1">
-                                            <div class="w-5 h-0.5 bg-cyan-300 rounded speed-line-1"></div>
-                                            <div class="w-7 h-0.5 bg-amber-400 rounded speed-line-2"></div>
-                                            <div class="w-4 h-0.5 bg-cyan-300 rounded speed-line-1"></div>
-                                        </div>
-                                        <div class="animate-runner flex items-end -space-x-2">
-                                            <div class="w-11 h-11 rounded-xl bg-amber-500 text-brand-dark flex items-center justify-center shadow-lg border-2 border-white z-20" title="Kỹ sư trưởng">
-                                                <i class="fas fa-running text-2xl"></i>
-                                            </div>
-                                            <div class="w-10 h-10 rounded-xl bg-cyan-500 text-brand-dark flex items-center justify-center shadow-lg border-2 border-white z-10" title="Kỹ thuật viên M&E">
-                                                <i class="fas fa-running text-xl"></i>
-                                            </div>
-                                            <div class="w-9 h-9 rounded-xl bg-emerald-500 text-white flex items-center justify-center shadow-lg border-2 border-white" title="Tổ phản ứng nhanh">
-                                                <i class="fas fa-hard-hat text-sm"></i>
-                                            </div>
-                                        </div>
-                                        <i class="fas fa-industry text-gray-300 text-2xl ml-2"></i>
-                                    </div>
-                                    <span class="mt-2 bg-amber-500/20 border border-amber-400/50 text-amber-300 text-[9px] font-bold px-2.5 py-0.5 rounded-full">
-                                        ⚡ CƠ ĐỘNG KHẨN CẤP
-                                    </span>
-                                </div>
-
-                                <div class="absolute bottom-2 left-3">
-                                    <span data-cms-id="card2-badge" class="text-[10px] font-bold text-amber-300 uppercase tracking-widest bg-black/50 px-2.5 py-0.5 rounded-md backdrop-blur-sm">AVAILABILITY (04 HOURS)</span>
-                                </div>
-                            </div>
-                            <div class="p-6 flex-grow flex flex-col justify-between">
-                                <div>
-                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-running text-brand-accent mr-2"></i> <span data-cms-id="card2-title">Sẵn Sàng - 04 Giờ Có Mặt</span></h3>
-                                    <p data-cms-id="card2-desc" class="text-gray-600 text-xs leading-relaxed">Đội ngũ kỹ sư và công nhân viên cơ động phản ứng tức thì, cam kết có mặt tại hiện trường trong vòng 04 giờ (04 hours on-site).</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- THẺ 3: NHÂN LỰC CHUẨN HÓA -->
-                        <div class="card-pro-hover bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-md flex flex-col">
-                            <div class="h-48 bg-slate-800 relative overflow-hidden group">
-                                <img id="hr-custom-img" data-cms-img="HR" onclick="if(isCmsEditMode) openPhotoChangeModal('HR')" src="1790567297025_5013471029311337545_g3142873166389515335_3d001139ff92c968025cc62584f99fae.jpg" 
-                                     onerror="this.src='https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=900&auto=format&fit=crop'"
-                                     class="w-full h-full object-cover card-img-zoom transition-transform duration-500">
-
-                                <button type="button" onclick="openPhotoChangeModal('HR')" class="absolute top-2.5 right-2.5 bg-black/75 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition flex items-center shadow-lg z-20 cursor-pointer" title="Đổi ảnh Nhân lực (Đồng bộ Cloud)">
-                                    <i class="fas fa-camera mr-1.5"></i> Đổi ảnh
-                                </button>
-
-                                <div class="absolute bottom-2 left-3 pointer-events-none">
-                                    <span data-cms-id="card3-badge" class="text-[10px] font-bold text-cyan-300 uppercase tracking-widest bg-black/60 px-2.5 py-0.5 rounded-md backdrop-blur-sm">RESOURCES (HICON M&E)</span>
-                                </div>
-                            </div>
-                            <div class="p-6 flex-grow flex flex-col justify-between">
-                                <div>
-                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-user-check text-brand-accent mr-2"></i> <span data-cms-id="card3-title">Nhân Lực Chuẩn Hóa</span></h3>
-                                    <p data-cms-id="card3-desc" class="text-gray-600 text-xs leading-relaxed">Đội ngũ kỹ sư được đào tạo chính quy và bài bản (Formally and methodically trained), nắm vững bản vẽ và quy trình kỹ thuật.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- THẺ 4: THIẾT BỊ CHUYÊN DỤNG -->
-                        <div class="card-pro-hover bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-md flex flex-col">
-                            <div class="h-48 bg-gradient-to-br from-slate-900 via-brand-navy to-slate-800 relative overflow-hidden flex items-center justify-around p-3">
-                                <div class="bg-slate-800/90 border border-cyan-500/40 rounded-2xl p-2.5 flex flex-col items-center w-36 shadow-xl">
-                                    <div class="w-11 h-11 rounded-full bg-slate-900 border-2 border-cyan-400 flex items-center justify-center mb-1.5 shadow-inner">
-                                        <i class="fas fa-fan text-cyan-400 text-xl animate-vane-spin"></i>
-                                    </div>
-                                    <div class="w-full bg-emerald-950 border border-emerald-500/60 rounded-lg py-1 px-2 text-center font-mono">
-                                        <div class="text-[8px] text-emerald-400 uppercase">AIR VELOCITY</div>
-                                        <div class="text-sm font-black text-emerald-300">4.85 <span class="text-[9px]">m/s</span></div>
-                                    </div>
-                                    <span class="text-[9px] font-bold text-gray-300 mt-1">Máy Đo Tốc Độ Gió</span>
-                                </div>
-
-                                <div class="bg-slate-800/90 border border-amber-500/40 rounded-2xl p-2.5 flex flex-col items-center w-36 shadow-xl relative">
-                                    <div class="w-11 h-11 rounded-full bg-slate-900 border-2 border-amber-400 flex items-center justify-center mb-1.5 relative">
-                                        <i class="fas fa-cog text-amber-400 text-xl animate-vane-spin"></i>
-                                        <span class="absolute -bottom-1 w-1.5 h-3 bg-red-500 rounded-full animate-laser-beam shadow-[0_0_8px_#ef4444]"></span>
-                                    </div>
-                                    <div class="w-full bg-slate-950 border border-amber-500/60 rounded-lg py-1 px-2 text-center font-mono">
-                                        <div class="text-[8px] text-amber-400 uppercase">LASER TACHOMETER</div>
-                                        <div class="text-sm font-black text-amber-300">1480 <span class="text-[9px]">RPM</span></div>
-                                    </div>
-                                    <span class="text-[9px] font-bold text-gray-300 mt-1">Máy Đo Vòng Quay</span>
-                                </div>
-
-                                <div class="absolute bottom-2 left-3">
-                                    <span data-cms-id="card4-badge" class="text-[10px] font-bold text-cyan-300 uppercase tracking-widest bg-black/50 px-2.5 py-0.5 rounded-md backdrop-blur-sm">EQUIPMENTS (SPECIALIZED)</span>
-                                </div>
-                            </div>
-                            <div class="p-6 flex-grow flex flex-col justify-between">
-                                <div>
-                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-tools text-brand-accent mr-2"></i> <span data-cms-id="card4-title">Thiết Bị Chuyên Dụng</span></h3>
-                                    <p data-cms-id="card4-desc" class="text-gray-600 text-xs leading-relaxed">Trang bị đầy đủ các dụng cụ đo kiểm chuyên nghiệp: Máy đo tốc độ gió (Anemometer), máy đo tốc độ vòng quay (Tachometer), camera nhiệt, Megaohmmeter.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- THẺ 5: MÁY CHỦ ĐÁM MÂY & OFFLINE -->
-                        <div class="card-pro-hover bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-md flex flex-col">
-                            <div class="h-48 bg-gradient-to-br from-brand-navy via-slate-900 to-brand-blue relative overflow-hidden flex items-center justify-center p-4">
-                                <div class="w-full max-w-[260px] bg-slate-800/90 border border-cyan-500/40 rounded-2xl p-3.5 shadow-2xl flex items-center justify-between">
-                                    <div class="space-y-2">
-                                        <div class="flex items-center space-x-2">
-                                            <i class="fas fa-cloud text-cyan-400 text-2xl"></i>
-                                            <div>
-                                                <div class="text-[10px] font-black text-white">OFFLINE & CLOUD</div>
-                                                <div class="text-[8px] text-emerald-400 font-mono">● AUTO-SYNC 24/7</div>
-                                            </div>
-                                        </div>
-                                        <div class="flex items-end space-x-1.5 h-10 pt-2 px-1">
-                                            <div class="w-3 bg-cyan-400 h-6 rounded-t bar-anim-1"></div>
-                                            <div class="w-3 bg-cyan-300 h-9 rounded-t bar-anim-2"></div>
-                                            <div class="w-3 bg-emerald-400 h-7 rounded-t bar-anim-3"></div>
-                                            <div class="w-3 bg-amber-400 h-10 rounded-t bar-anim-1"></div>
-                                        </div>
-                                    </div>
-                                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 text-center">
-                                        <i class="fas fa-shield-alt text-emerald-400 text-2xl mb-1"></i>
-                                        <div class="text-[8px] font-bold text-gray-300">TRA CỨU</div>
-                                        <div class="text-[8px] text-amber-400 font-bold mt-0.5">OFFLINE</div>
-                                    </div>
-                                </div>
-                                <div class="absolute bottom-2 left-3">
-                                    <span data-cms-id="card5-badge" class="text-[10px] font-bold text-cyan-300 uppercase tracking-widest bg-black/50 px-2.5 py-0.5 rounded-md backdrop-blur-sm">CLOUD & OFFLINE APP</span>
-                                </div>
-                            </div>
-                            <div class="p-6 flex-grow flex flex-col justify-between">
-                                <div>
-                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-cloud-upload-alt text-brand-accent mr-2"></i> <span data-cms-id="card5-title">Đám Mây & Tra Cứu Offline</span></h3>
-                                    <p data-cms-id="card5-desc" class="text-gray-600 text-xs leading-relaxed">Lưu trữ đám mây bảo mật 24/7 kết hợp bộ nhớ đệm Offline thông minh giúp tra cứu và cập nhật ngay cả dưới tầng hầm mất sóng.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- THẺ 6: QUY TRÌNH CHUẨN ISO -->
-                        <div class="card-pro-hover bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-md flex flex-col">
-                            <div class="h-48 bg-gradient-to-br from-slate-900 via-brand-navy to-slate-800 relative overflow-hidden flex items-center justify-center p-4">
-                                <div class="flex items-center space-x-4 bg-slate-800/90 border border-amber-400/40 rounded-2xl p-3.5 shadow-2xl">
-                                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-300 flex flex-col items-center justify-center text-brand-dark shadow-lg shrink-0">
-                                        <i class="fas fa-certificate text-xl"></i>
-                                        <span class="text-xs font-black tracking-tighter mt-0.5">ISO</span>
-                                    </div>
-                                    <div class="text-left space-y-1 text-[10px] text-gray-200 font-medium">
-                                        <div class="flex items-center"><i class="fas fa-check-circle text-emerald-400 mr-1.5"></i> Chuẩn quy trình ISO 9001</div>
-                                        <div class="flex items-center"><i class="fas fa-check-circle text-emerald-400 mr-1.5"></i> Checklist TCVN & NFPA</div>
-                                        <div class="flex items-center"><i class="fas fa-check-circle text-emerald-400 mr-1.5"></i> Nghiệm thu nghiêm ngặt</div>
-                                    </div>
-                                </div>
-                                <div class="absolute bottom-2 left-3">
-                                    <span data-cms-id="card6-badge" class="text-[10px] font-bold text-amber-300 uppercase tracking-widest bg-black/50 px-2.5 py-0.5 rounded-md backdrop-blur-sm">CERTIFICATION (ISO)</span>
-                                </div>
-                            </div>
-                            <div class="p-6 flex-grow flex flex-col justify-between">
-                                <div>
-                                    <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center"><i class="fas fa-award text-brand-accent mr-2"></i> <span data-cms-id="card6-title">Quy Trình Chuẩn ISO</span></h3>
-                                    <p data-cms-id="card6-desc" class="text-gray-600 text-xs leading-relaxed">Mọi hạng mục bảo trì đều tuân thủ nghiêm ngặt quy trình quản lý chất lượng theo tiêu chuẩn ISO (ISO standards).</p>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
+            <!-- NÚT THÊM DANH MỤC LỚN MỚI (CHỈ HIỆN TRONG CHẾ ĐỘ SỬA GIAO DIỆN) -->
+            <div class="cms-only-block py-8 bg-slate-100 border-t border-dashed border-amber-400">
+                <div class="max-w-4xl mx-auto px-4 text-center">
+                    <button type="button" onclick="addNewCustomSectionTemplate()" class="btn-interactive bg-amber-500 hover:bg-amber-400 text-brand-dark font-black px-6 py-4 rounded-2xl shadow-xl inline-flex items-center text-sm border-2 border-brand-navy">
+                        <i class="fas fa-layer-group mr-2 text-lg"></i> + THÊM DANH MỤC / CHUYÊN MỤC MỚI (CÓ SẴN FORM MẪU 3 CỘT)
+                    </button>
+                    <p class="text-xs text-gray-500 mt-2">Chỉ hiển thị nút này khi bạn đang mở khóa chế độ Sửa Giao Diện.</p>
                 </div>
             </div>
         </div>
@@ -706,15 +510,15 @@
                                         <span class="text-[10px] font-bold text-cyan-300 uppercase tracking-widest block">DANH MỤC NĂNG LỰC</span>
                                         <h3 data-cms-id="about-srv-heading" class="text-lg sm:text-xl font-black text-white mt-0.5">CÁC DỊCH VỤ HICON CUNG CẤP GỒM:</h3>
                                     </div>
-                                    <span class="bg-amber-500 text-brand-dark font-black text-xs px-2.5 py-1 rounded-lg">07 LĨNH VỰC</span>
+                                    <span data-cms-id="about-srv-count-badge" class="bg-amber-500 text-brand-dark font-black text-xs px-2.5 py-1 rounded-lg">07 LĨNH VỰC</span>
                                 </div>
 
-                                <div class="space-y-3">
+                                <div id="about-capabilities-list" class="space-y-3">
                                     <div class="bg-white/10 hover:bg-white/15 border border-white/10 rounded-2xl p-3.5 flex items-center space-x-3.5 transition group">
                                         <div class="w-10 h-10 rounded-xl bg-amber-500 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
                                             <i class="fas fa-bolt"></i>
                                         </div>
-                                        <div data-cms-id="about-srv-1" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug">
+                                        <div data-cms-id="about-srv-1" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug flex-1">
                                             Thi công lắp đặt hệ thống điện công trình dân dụng, công nghiệp
                                         </div>
                                     </div>
@@ -723,7 +527,7 @@
                                         <div class="w-10 h-10 rounded-xl bg-red-500 text-white flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
                                             <i class="fas fa-fire-extinguisher"></i>
                                         </div>
-                                        <div data-cms-id="about-srv-2" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug">
+                                        <div data-cms-id="about-srv-2" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug flex-1">
                                             Dịch vụ bảo trì hệ thống PCCC
                                         </div>
                                     </div>
@@ -732,7 +536,7 @@
                                         <div class="w-10 h-10 rounded-xl bg-cyan-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
                                             <i class="fas fa-fan"></i>
                                         </div>
-                                        <div data-cms-id="about-srv-3" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug">
+                                        <div data-cms-id="about-srv-3" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug flex-1">
                                             Dịch vụ bảo trì hệ thống điều hoà & thông gió (HVAC)
                                         </div>
                                     </div>
@@ -741,7 +545,7 @@
                                         <div class="w-10 h-10 rounded-xl bg-blue-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
                                             <i class="fas fa-network-wired"></i>
                                         </div>
-                                        <div data-cms-id="about-srv-4" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug">
+                                        <div data-cms-id="about-srv-4" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug flex-1">
                                             Dịch vụ bảo trì hệ thống Điện & Điện nhẹ (ELV)
                                         </div>
                                     </div>
@@ -750,7 +554,7 @@
                                         <div class="w-10 h-10 rounded-xl bg-emerald-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
                                             <i class="fas fa-tachometer-alt"></i>
                                         </div>
-                                        <div data-cms-id="about-srv-5" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug">
+                                        <div data-cms-id="about-srv-5" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug flex-1">
                                             Dịch vụ bảo trì hệ thống khí nén & gas
                                         </div>
                                     </div>
@@ -759,7 +563,7 @@
                                         <div class="w-10 h-10 rounded-xl bg-sky-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
                                             <i class="fas fa-tint"></i>
                                         </div>
-                                        <div data-cms-id="about-srv-6" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug">
+                                        <div data-cms-id="about-srv-6" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug flex-1">
                                             Dịch vụ bảo trì hệ thống cấp thoát nước & Xử lý nước thải
                                         </div>
                                     </div>
@@ -768,7 +572,7 @@
                                         <div class="w-10 h-10 rounded-xl bg-purple-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
                                             <i class="fas fa-video"></i>
                                         </div>
-                                        <div data-cms-id="about-srv-7" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug">
+                                        <div data-cms-id="about-srv-7" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug flex-1">
                                             Dịch vụ bảo trì hệ thống camera giám sát (CCTV)
                                         </div>
                                     </div>
@@ -788,7 +592,7 @@
             </div>
         </div>
 
-        <!-- SECTION 3: DỊCH VỤ -->
+        <!-- ==================== SECTION 3: DỊCH VỤ (ĐỘNG 100%: CÓ ẢNH TỪNG DỊCH VỤ & THÊM FORM MẪU) ==================== -->
         <div id="section-services" class="page-section hidden py-12 bg-gray-50">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="text-center mb-12">
@@ -796,23 +600,7 @@
                     <h2 data-cms-id="srv-sec-title" class="text-3xl font-extrabold text-brand-navy mt-1">DỊCH VỤ CƠ ĐIỆN & BẢO TRÌ CHUYÊN SÂU</h2>
                     <div class="w-16 h-1 bg-brand-accent mx-auto mt-2 rounded-full"></div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100 card-pro-hover">
-                        <span data-cms-id="srv-box1-tag" class="text-xs font-bold text-brand-accent bg-cyan-50 px-2.5 py-1 rounded-md">HVAC & CHILLER</span>
-                        <h3 data-cms-id="srv-box1-title" class="text-xl font-bold text-brand-navy mt-2 mb-2">Bảo Trì Điều Hòa Thông Gió</h3>
-                        <p data-cms-id="srv-box1-desc" class="text-gray-600 text-sm">Bảo dưỡng định kỳ Chiller, AHU, FCU, quạt thông gió nhà xưởng, cân bằng lưu lượng gió.</p>
-                    </div>
-                    <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100 card-pro-hover">
-                        <span data-cms-id="srv-box2-tag" class="text-xs font-bold text-brand-accent bg-cyan-50 px-2.5 py-1 rounded-md">PCCC & BÁO CHÁY</span>
-                        <h3 data-cms-id="srv-box2-title" class="text-xl font-bold text-brand-navy mt-2 mb-2">Bảo Trì Phòng Cháy Chữa Cháy</h3>
-                        <p data-cms-id="srv-box2-desc" class="text-gray-600 text-sm">Kiểm tra máy bơm chữa cháy Electric/Diesel, tủ trung tâm Telefire, mạng lưới Sprinkler.</p>
-                    </div>
-                    <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100 card-pro-hover">
-                        <span data-cms-id="srv-box3-tag" class="text-xs font-bold text-brand-accent bg-cyan-50 px-2.5 py-1 rounded-md">ĐIỆN & NĂNG LƯỢNG</span>
-                        <h3 data-cms-id="srv-box3-title" class="text-xl font-bold text-brand-navy mt-2 mb-2">Trạm Biến Áp & Tủ Điện</h3>
-                        <p data-cms-id="srv-box3-desc" class="text-gray-600 text-sm">Bảo dưỡng trạm biến áp, tủ MSB, đo điện trở cách điện motor, đo nhiệt độ hồng ngoại.</p>
-                    </div>
-                </div>
+                <div id="services-grid-container" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
             </div>
         </div>
 
@@ -836,16 +624,16 @@
                 <div class="bg-white p-4 rounded-2xl shadow-md border border-gray-200 mb-10 flex flex-col md:flex-row justify-between items-center gap-4">
                     <div class="flex flex-wrap items-center justify-center gap-2">
                         <button onclick="setProjectCategory('ALL')" id="proj-filter-ALL" class="btn-interactive px-4 py-2 rounded-xl text-xs font-extrabold bg-brand-navy text-white shadow">
-                            Tất Cả Dự Án (07)
+                            Tất Cả Dự Án
                         </button>
                         <button onclick="setProjectCategory('INDUSTRIAL')" id="proj-filter-INDUSTRIAL" class="btn-interactive px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 text-gray-700 hover:bg-slate-200">
-                            <i class="fas fa-industry mr-1 text-brand-accent"></i> Nhà Máy & KCN (03)
+                            <i class="fas fa-industry mr-1 text-brand-accent"></i> Nhà Máy & KCN
                         </button>
                         <button onclick="setProjectCategory('COMMERCIAL')" id="proj-filter-COMMERCIAL" class="btn-interactive px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 text-gray-700 hover:bg-slate-200">
-                            <i class="fas fa-hotel mr-1 text-amber-500"></i> Khách Sạn & Cao Tầng (03)
+                            <i class="fas fa-hotel mr-1 text-amber-500"></i> Khách Sạn & Cao Tầng
                         </button>
                         <button onclick="setProjectCategory('MEDICAL')" id="proj-filter-MEDICAL" class="btn-interactive px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 text-gray-700 hover:bg-slate-200">
-                            <i class="fas fa-hospital mr-1 text-emerald-600"></i> Y Tế & Công Cộng (01)
+                            <i class="fas fa-hospital mr-1 text-emerald-600"></i> Y Tế & Công Cộng
                         </button>
                     </div>
 
@@ -891,10 +679,11 @@
                     </div>
                     <div class="flex flex-wrap gap-2" id="proj-modal-tags"></div>
                     <div class="pt-3 border-t border-gray-100 flex justify-between items-center">
-                        <button onclick="openPhotoChangeModal(currentModalProjectId)" class="btn-interactive bg-slate-100 hover:bg-amber-100 text-brand-navy font-bold px-4 py-2 rounded-xl text-xs flex items-center border border-gray-300">
+                        <!-- Nút đổi ảnh trong modal cũng chỉ hiện khi ở chế độ Sửa giao diện -->
+                        <button onclick="openPhotoChangeModal('PROJ:' + currentModalProjectId)" class="cms-only-btn btn-interactive bg-slate-100 hover:bg-amber-100 text-brand-navy font-bold px-4 py-2 rounded-xl text-xs items-center border border-gray-300">
                             <i class="fas fa-camera mr-1.5 text-amber-500"></i> Đổi ảnh dự án này
                         </button>
-                        <button onclick="closeProjectDetailModal()" class="btn-interactive bg-brand-navy text-white font-bold px-6 py-2.5 rounded-xl text-xs">
+                        <button onclick="closeProjectDetailModal()" class="btn-interactive bg-brand-navy text-white font-bold px-6 py-2.5 rounded-xl text-xs ml-auto">
                             Đóng
                         </button>
                     </div>
@@ -902,7 +691,7 @@
             </div>
         </div>
 
-        <!-- SECTION 5: CỔNG BÁO CÁO QR CODE -->
+        <!-- ==================== SECTION 5: CỔNG BÁO CÁO QR CODE ==================== -->
         <div id="section-maintenance-portal" class="page-section hidden py-10 bg-slate-100 min-h-[80vh]">
             <div class="max-w-7xl mx-auto px-4">
                 
@@ -1052,7 +841,7 @@
             </div>
         </div>
 
-        <!-- SECTION 6: LIÊN HỆ -->
+        <!-- ==================== SECTION 6: LIÊN HỆ ==================== -->
         <div id="section-contact" class="page-section hidden py-12 bg-white">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="text-center mb-12">
@@ -1081,9 +870,9 @@
             </div>
             <h3 class="text-lg font-black text-brand-navy">MỞ KHÓA CHỈNH SỬA GIAO DIỆN</h3>
             <p class="text-xs text-gray-500 leading-relaxed">
-                Nhập <strong>Mã PIN quản trị</strong> để bật chế độ sửa trực tiếp mọi chữ, tiêu đề, dự án và hình ảnh ngay trên màn hình.
+                Nhập <strong>Mã PIN quản trị</strong> để hiển thị các nút <strong>Đổi ảnh, Thêm mục mẫu mới</strong> và sửa trực tiếp mọi chữ trên màn hình.
             </p>
-            <input type="password" id="cms-pin-input" maxlength="8" placeholder="Nhập mã PIN " class="w-full text-center text-base font-mono p-3 border-2 border-gray-300 rounded-xl focus:border-amber-500 focus:outline-none transition">
+            <input type="password" id="cms-pin-input" maxlength="8" placeholder="Nhập mã PIN" class="w-full text-center text-base font-mono p-3 border-2 border-gray-300 rounded-xl focus:border-amber-500 focus:outline-none transition">
             <div class="flex gap-2 pt-2">
                 <button onclick="closeCmsPinModal()" class="btn-interactive w-1/2 bg-gray-200 text-gray-700 py-2.5 rounded-xl text-xs font-bold">Hủy</button>
                 <button onclick="verifyCmsPinAndActivate()" class="btn-interactive w-1/2 bg-amber-500 hover:bg-amber-600 text-brand-dark py-2.5 rounded-xl text-xs font-extrabold shadow-lg">Mở Khóa Sửa</button>
@@ -1157,7 +946,7 @@
                 <div class="bg-slate-50 p-3.5 rounded-2xl border border-gray-200">
                     <p class="font-extrabold text-brand-navy mb-1"><i class="fab fa-apple mr-1.5 text-base"></i> Trên iPhone / iPad (Safari):</p>
                     <p>1. Bấm vào nút <strong>Chia sẻ (Share)</strong> <i class="fas fa-share-square text-brand-blue"></i> ở thanh dưới cùng trình duyệt.</p>
-                    <p>2. Kéo xuống chọn <strong>"Thêm vào MH chính" (Add to Home Screen)</strong> <i class="far fa-plus-square text-brand-blue"></i> $\rightarrow$ Bấm <strong>Thêm (Add)</strong>.</p>
+                    <p>2. Kéo xuống chọn <strong>"Thêm vào MH chính" (Add to Home Screen)</strong> <i class="far fa-plus-square text-brand-blue"></i> &rarr; Bấm <strong>Thêm (Add)</strong>.</p>
                 </div>
 
                 <div class="bg-slate-50 p-3.5 rounded-2xl border border-gray-200">
@@ -1175,7 +964,7 @@
         </div>
     </div>
 
-    <!-- ==================== MODAL ĐỔI ẢNH ĐA NĂNG ==================== -->
+    <!-- ==================== MODAL ĐỔI ẢNH ĐA NĂNG (CHỈ MỞ ĐƯỢC KHI ĐÃ BẬT CHẾ ĐỘ SỬA GIAO DIỆN) ==================== -->
     <div id="photo-change-modal" class="fixed inset-0 z-[130] bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden border border-gray-200 p-6 space-y-4">
             <div class="flex justify-between items-center border-b border-gray-100 pb-3">
@@ -1508,6 +1297,90 @@
         let html5QrScanner = null;
         let deferredPwaPrompt = null;
 
+        /* ==================== 1. DỮ LIỆU THẺ TRANG CHỦ ("TẠI SAO CHỌN HICON M&E") ==================== */
+        const defaultWhyCardsData = [
+            {
+                id: 'why-1',
+                type: 'builtin-1',
+                badge: 'QUÉT QR MỞ APP',
+                icon: 'fa-qrcode',
+                title: 'Số Hóa Báo Cáo Minh Bạch',
+                desc: 'Điện thoại quét mã QR dán trực tiếp trên thiết bị (AHU, Chiller, Bơm PCCC) tự động mở App và hiển thị ngay nhật ký kiểm tra cả khi Offline.',
+                customImg: ''
+            },
+            {
+                id: 'why-2',
+                type: 'builtin-2',
+                badge: 'AVAILABILITY (04 HOURS)',
+                icon: 'fa-running',
+                title: 'Sẵn Sàng - 04 Giờ Có Mặt',
+                desc: 'Đội ngũ kỹ sư và công nhân viên cơ động phản ứng tức thì, cam kết có mặt tại hiện trường trong vòng 04 giờ (04 hours on-site).',
+                customImg: ''
+            },
+            {
+                id: 'why-3',
+                type: 'image',
+                badge: 'RESOURCES (HICON M&E)',
+                icon: 'fa-user-check',
+                title: 'Nhân Lực Chuẩn Hóa',
+                desc: 'Đội ngũ kỹ sư được đào tạo chính quy và bài bản (Formally and methodically trained), nắm vững bản vẽ và quy trình kỹ thuật.',
+                customImg: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=900&auto=format&fit=crop'
+            },
+            {
+                id: 'why-4',
+                type: 'builtin-4',
+                badge: 'EQUIPMENTS (SPECIALIZED)',
+                icon: 'fa-tools',
+                title: 'Thiết Bị Chuyên Dụng',
+                desc: 'Trang bị đầy đủ các dụng cụ đo kiểm chuyên nghiệp: Máy đo tốc độ gió (Anemometer), máy đo tốc độ vòng quay (Tachometer), camera nhiệt, Megaohmmeter.',
+                customImg: ''
+            },
+            {
+                id: 'why-5',
+                type: 'builtin-5',
+                badge: 'CLOUD & OFFLINE APP',
+                icon: 'fa-cloud-upload-alt',
+                title: 'Đám Mây & Tra Cứu Offline',
+                desc: 'Lưu trữ đám mây bảo mật 24/7 kết hợp bộ nhớ đệm Offline thông minh giúp tra cứu và cập nhật ngay cả dưới tầng hầm mất sóng.',
+                customImg: ''
+            },
+            {
+                id: 'why-6',
+                type: 'builtin-6',
+                badge: 'CERTIFICATION (ISO)',
+                icon: 'fa-award',
+                title: 'Quy Trình Chuẩn ISO',
+                desc: 'Mọi hạng mục bảo trì đều tuân thủ nghiêm ngặt quy trình quản lý chất lượng theo tiêu chuẩn ISO (ISO standards).',
+                customImg: ''
+            }
+        ];
+
+        /* ==================== 2. DỮ LIỆU DANH MỤC DỊCH VỤ M&E ==================== */
+        const defaultServicesData = [
+            {
+                id: 'srv-1',
+                tag: 'HVAC & CHILLER',
+                title: 'Bảo Trì Điều Hòa Thông Gió',
+                desc: 'Bảo dưỡng định kỳ Chiller, AHU, FCU, quạt thông gió nhà xưởng, cân bằng lưu lượng gió.',
+                img: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=900&auto=format&fit=crop'
+            },
+            {
+                id: 'srv-2',
+                tag: 'PCCC & BÁO CHÁY',
+                title: 'Bảo Trì Phòng Cháy Chữa Cháy',
+                desc: 'Kiểm tra máy bơm chữa cháy Electric/Diesel, tủ trung tâm Telefire, mạng lưới Sprinkler.',
+                img: 'https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?q=80&w=900&auto=format&fit=crop'
+            },
+            {
+                id: 'srv-3',
+                tag: 'ĐIỆN & NĂNG LƯỢNG',
+                title: 'Trạm Biến Áp & Tủ Điện',
+                desc: 'Bảo dưỡng trạm biến áp, tủ MSB, đo điện trở cách điện motor, đo nhiệt độ hồng ngoại.',
+                img: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=900&auto=format&fit=crop'
+            }
+        ];
+
+        /* ==================== 3. DỮ LIỆU DỰ ÁN TIÊU BIỂU ==================== */
         const defaultHiconProjectsData = [
             {
                 id: 'proj-luxshare',
@@ -1595,39 +1468,10 @@
             }
         ];
 
+        let whyCardsData = JSON.parse(JSON.stringify(defaultWhyCardsData));
+        let servicesData = JSON.parse(JSON.stringify(defaultServicesData));
         let hiconProjectsData = JSON.parse(JSON.stringify(defaultHiconProjectsData));
-
-        function loadCustomProjectsText() {
-            const saved = localStorage.getItem('hicon_projects_custom_text');
-            if (saved) {
-                try {
-                    const parsed = JSON.parse(saved);
-                    hiconProjectsData.forEach(p => {
-                        if (parsed[p.id]) {
-                            p.title = parsed[p.id].title || p.title;
-                            p.address = parsed[p.id].address || p.address;
-                            p.desc = parsed[p.id].desc || p.desc;
-                            p.categoryName = parsed[p.id].categoryName || p.categoryName;
-                            p.status = parsed[p.id].status || p.status;
-                        }
-                    });
-                } catch(e) {}
-            }
-        }
-
-        function getCustomProjectsTextMap() {
-            const map = {};
-            hiconProjectsData.forEach(p => {
-                map[p.id] = {
-                    title: p.title,
-                    address: p.address,
-                    desc: p.desc,
-                    categoryName: p.categoryName,
-                    status: p.status
-                };
-            });
-            return map;
-        }
+        let customSectionsData = [];
 
         const defaultDevices = {
             'TS-2026-HVAC': {
@@ -1684,6 +1528,525 @@
                 ]
             }
         };
+
+        /* ==================== QUẢN LÝ DỮ LIỆU ĐỘNG (TRANG CHỦ, DỊCH VỤ, DỰ ÁN, CHUYÊN MỤC MỚI) ==================== */
+        function loadAllDynamicDataFromStorage() {
+            // 1. Why Cards (Trang chủ)
+            const savedWhy = localStorage.getItem('hicon_why_cards_data');
+            if (savedWhy) {
+                try { whyCardsData = JSON.parse(savedWhy); } catch(e) {}
+            } else {
+                const legacyHr = localStorage.getItem('hicon_hr_photo_custom');
+                if (legacyHr && whyCardsData[2]) whyCardsData[2].customImg = legacyHr;
+            }
+
+            // 2. Services (Dịch vụ M&E)
+            const savedSrv = localStorage.getItem('hicon_services_data');
+            if (savedSrv) {
+                try { servicesData = JSON.parse(savedSrv); } catch(e) {}
+            }
+
+            // 3. Projects (Dự án)
+            const savedProjList = localStorage.getItem('hicon_projects_full_list');
+            if (savedProjList) {
+                try { hiconProjectsData = JSON.parse(savedProjList); } catch(e) {}
+            } else {
+                const savedText = localStorage.getItem('hicon_projects_custom_text');
+                if (savedText) {
+                    try {
+                        const parsed = JSON.parse(savedText);
+                        hiconProjectsData.forEach(p => {
+                            if (parsed[p.id]) {
+                                p.title = parsed[p.id].title || p.title;
+                                p.address = parsed[p.id].address || p.address;
+                                p.desc = parsed[p.id].desc || p.desc;
+                                p.categoryName = parsed[p.id].categoryName || p.categoryName;
+                                p.status = parsed[p.id].status || p.status;
+                            }
+                        });
+                    } catch(e) {}
+                }
+            }
+
+            // 4. Custom Sections (Các danh mục mới tạo thêm)
+            const savedCustomSec = localStorage.getItem('hicon_custom_sections_data');
+            if (savedCustomSec) {
+                try { customSectionsData = JSON.parse(savedCustomSec); } catch(e) {}
+            }
+
+            // 5. Logo & Hero BG
+            loadSavedCompanyLogo();
+            loadSavedHeroBg();
+        }
+
+        function saveAllDynamicDataToStorage() {
+            localStorage.setItem('hicon_why_cards_data', JSON.stringify(whyCardsData));
+            localStorage.setItem('hicon_services_data', JSON.stringify(servicesData));
+            localStorage.setItem('hicon_projects_full_list', JSON.stringify(hiconProjectsData));
+            localStorage.setItem('hicon_custom_sections_data', JSON.stringify(customSectionsData));
+        }
+
+        function loadSavedCompanyLogo() {
+            const savedLogo = localStorage.getItem('hicon_company_logo');
+            const logoImg = document.getElementById('brand-logo-img');
+            const logoFallback = document.getElementById('brand-logo-fallback');
+            const faviconEl = document.getElementById('dynamic-favicon');
+            const appleIconEl = document.getElementById('dynamic-apple-icon');
+
+            if (savedLogo && savedLogo.trim() !== '') {
+                if (logoImg) {
+                    logoImg.src = savedLogo;
+                    logoImg.classList.remove('hidden');
+                }
+                if (logoFallback) logoFallback.classList.add('hidden');
+                if (faviconEl) faviconEl.href = savedLogo;
+                if (appleIconEl) appleIconEl.href = savedLogo;
+            }
+        }
+
+        function loadSavedHeroBg() {
+            const savedHero = localStorage.getItem('hicon_hero_bg');
+            const heroBox = document.getElementById('hero-banner-box');
+            if (savedHero && heroBox) {
+                heroBox.style.setProperty('--hero-bg-url', `url('${savedHero}')`);
+            }
+        }
+
+        /* ==================== RENDER THẺ TRANG CHỦ ("TẠI SAO CHỌN CHÚNG TÔI") ==================== */
+        function getBuiltinGraphicHtml(type) {
+            if (type === 'builtin-1') {
+                return `
+                    <div class="w-44 h-32 bg-slate-700 rounded-xl border-2 border-slate-500 shadow-inner flex flex-col justify-between p-2.5 relative mr-6">
+                        <div class="flex justify-between items-center border-b border-slate-600 pb-1">
+                            <span class="text-[9px] font-black text-cyan-300 font-mono tracking-wider">SYSTEM: AHU-01</span>
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                        </div>
+                        <div class="flex items-center gap-2 my-1">
+                            <div class="w-10 h-10 rounded-full bg-slate-800 border border-slate-500 flex items-center justify-center">
+                                <i class="fas fa-fan text-cyan-400 text-lg animate-vane-spin"></i>
+                            </div>
+                            <div class="space-y-1 flex-1">
+                                <div class="h-1.5 bg-slate-600 rounded"></div>
+                                <div class="h-1.5 bg-slate-600 rounded w-4/5"></div>
+                                <div class="h-1.5 bg-slate-600 rounded w-3/5"></div>
+                            </div>
+                        </div>
+                        <div class="absolute right-2 bottom-2 bg-white p-1.5 rounded-lg shadow-lg border-2 border-cyan-400">
+                            <i class="fas fa-qrcode text-brand-navy text-2xl block"></i>
+                            <span class="text-[6px] font-mono font-bold text-brand-navy block text-center">AHU-01</span>
+                        </div>
+                        <div class="text-[8px] text-gray-300 font-mono">22.5°C | 65%RH</div>
+                    </div>
+                    <div class="w-24 h-36 bg-gray-900 rounded-2xl border-2 border-cyan-400 shadow-2xl p-1.5 flex flex-col justify-between relative -ml-10 z-10 transform -rotate-3 card-img-zoom transition-transform duration-500">
+                        <div class="w-8 h-1 bg-gray-700 rounded-full mx-auto"></div>
+                        <div class="bg-slate-800 flex-1 my-1 rounded-xl border border-cyan-500/40 relative overflow-hidden flex flex-col items-center justify-center p-1">
+                            <div class="w-12 h-12 border-2 border-dashed border-cyan-300 rounded flex items-center justify-center relative">
+                                <i class="fas fa-qrcode text-white text-xl"></i>
+                                <div class="laser-line"></div>
+                            </div>
+                            <span class="mt-1.5 bg-emerald-500 text-white text-[7px] font-bold px-1.5 py-0.5 rounded-full">✓ AHU-01 OK</span>
+                        </div>
+                        <div class="w-4 h-4 rounded-full border border-gray-600 mx-auto"></div>
+                    </div>
+                `;
+            }
+            if (type === 'builtin-2') {
+                return `
+                    <div class="relative w-28 h-28 rounded-full bg-slate-900/90 border-4 border-amber-400 shadow-2xl flex flex-col items-center justify-center shrink-0">
+                        <svg class="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(245, 158, 11, 0.25)" stroke-width="10"></circle>
+                            <circle cx="50" cy="50" r="42" fill="none" stroke="#f59e0b" stroke-width="10" stroke-dasharray="264" stroke-dashoffset="176" stroke-linecap="round"></circle>
+                        </svg>
+                        <i class="fas fa-stopwatch text-amber-400 text-sm mb-0.5 animate-bounce"></i>
+                        <span class="text-2xl font-black text-white leading-none">04<span class="text-xs text-amber-400 ml-0.5">GIỜ</span></span>
+                        <span class="text-[8px] font-bold text-cyan-300 uppercase mt-0.5">ON-SITE MAX</span>
+                    </div>
+                    <div class="flex flex-col items-center relative">
+                        <div class="flex items-center space-x-1 relative">
+                            <div class="flex flex-col space-y-1.5 mr-1">
+                                <div class="w-5 h-0.5 bg-cyan-300 rounded speed-line-1"></div>
+                                <div class="w-7 h-0.5 bg-amber-400 rounded speed-line-2"></div>
+                                <div class="w-4 h-0.5 bg-cyan-300 rounded speed-line-1"></div>
+                            </div>
+                            <div class="animate-runner flex items-end -space-x-2">
+                                <div class="w-11 h-11 rounded-xl bg-amber-500 text-brand-dark flex items-center justify-center shadow-lg border-2 border-white z-20"><i class="fas fa-running text-2xl"></i></div>
+                                <div class="w-10 h-10 rounded-xl bg-cyan-500 text-brand-dark flex items-center justify-center shadow-lg border-2 border-white z-10"><i class="fas fa-running text-xl"></i></div>
+                                <div class="w-9 h-9 rounded-xl bg-emerald-500 text-white flex items-center justify-center shadow-lg border-2 border-white"><i class="fas fa-hard-hat text-sm"></i></div>
+                            </div>
+                            <i class="fas fa-industry text-gray-300 text-2xl ml-2"></i>
+                        </div>
+                        <span class="mt-2 bg-amber-500/20 border border-amber-400/50 text-amber-300 text-[9px] font-bold px-2.5 py-0.5 rounded-full">⚡ CƠ ĐỘNG KHẨN CẤP</span>
+                    </div>
+                `;
+            }
+            if (type === 'builtin-4') {
+                return `
+                    <div class="bg-slate-800/90 border border-cyan-500/40 rounded-2xl p-2.5 flex flex-col items-center w-36 shadow-xl">
+                        <div class="w-11 h-11 rounded-full bg-slate-900 border-2 border-cyan-400 flex items-center justify-center mb-1.5 shadow-inner"><i class="fas fa-fan text-cyan-400 text-xl animate-vane-spin"></i></div>
+                        <div class="w-full bg-emerald-950 border border-emerald-500/60 rounded-lg py-1 px-2 text-center font-mono">
+                            <div class="text-[8px] text-emerald-400 uppercase">AIR VELOCITY</div>
+                            <div class="text-sm font-black text-emerald-300">4.85 <span class="text-[9px]">m/s</span></div>
+                        </div>
+                        <span class="text-[9px] font-bold text-gray-300 mt-1">Máy Đo Tốc Độ Gió</span>
+                    </div>
+                    <div class="bg-slate-800/90 border border-amber-500/40 rounded-2xl p-2.5 flex flex-col items-center w-36 shadow-xl relative">
+                        <div class="w-11 h-11 rounded-full bg-slate-900 border-2 border-amber-400 flex items-center justify-center mb-1.5 relative">
+                            <i class="fas fa-cog text-amber-400 text-xl animate-vane-spin"></i>
+                            <span class="absolute -bottom-1 w-1.5 h-3 bg-red-500 rounded-full animate-laser-beam shadow-[0_0_8px_#ef4444]"></span>
+                        </div>
+                        <div class="w-full bg-slate-950 border border-amber-500/60 rounded-lg py-1 px-2 text-center font-mono">
+                            <div class="text-[8px] text-amber-400 uppercase">LASER TACHOMETER</div>
+                            <div class="text-sm font-black text-amber-300">1480 <span class="text-[9px]">RPM</span></div>
+                        </div>
+                        <span class="text-[9px] font-bold text-gray-300 mt-1">Máy Đo Vòng Quay</span>
+                    </div>
+                `;
+            }
+            if (type === 'builtin-5') {
+                return `
+                    <div class="w-full max-w-[260px] bg-slate-800/90 border border-cyan-500/40 rounded-2xl p-3.5 shadow-2xl flex items-center justify-between">
+                        <div class="space-y-2">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-cloud text-cyan-400 text-2xl"></i>
+                                <div>
+                                    <div class="text-[10px] font-black text-white">OFFLINE & CLOUD</div>
+                                    <div class="text-[8px] text-emerald-400 font-mono">● AUTO-SYNC 24/7</div>
+                                </div>
+                            </div>
+                            <div class="flex items-end space-x-1.5 h-10 pt-2 px-1">
+                                <div class="w-3 bg-cyan-400 h-6 rounded-t bar-anim-1"></div>
+                                <div class="w-3 bg-cyan-300 h-9 rounded-t bar-anim-2"></div>
+                                <div class="w-3 bg-emerald-400 h-7 rounded-t bar-anim-3"></div>
+                                <div class="w-3 bg-amber-400 h-10 rounded-t bar-anim-1"></div>
+                            </div>
+                        </div>
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 text-center">
+                            <i class="fas fa-shield-alt text-emerald-400 text-2xl mb-1"></i>
+                            <div class="text-[8px] font-bold text-gray-300">TRA CỨU</div>
+                            <div class="text-[8px] text-amber-400 font-bold mt-0.5">OFFLINE</div>
+                        </div>
+                    </div>
+                `;
+            }
+            return `
+                <div class="flex items-center space-x-4 bg-slate-800/90 border border-amber-400/40 rounded-2xl p-3.5 shadow-2xl">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-300 flex flex-col items-center justify-center text-brand-dark shadow-lg shrink-0">
+                        <i class="fas fa-certificate text-xl"></i>
+                        <span class="text-xs font-black tracking-tighter mt-0.5">ISO</span>
+                    </div>
+                    <div class="text-left space-y-1 text-[10px] text-gray-200 font-medium">
+                        <div class="flex items-center"><i class="fas fa-check-circle text-emerald-400 mr-1.5"></i> Chuẩn quy trình ISO 9001</div>
+                        <div class="flex items-center"><i class="fas fa-check-circle text-emerald-400 mr-1.5"></i> Checklist TCVN & NFPA</div>
+                        <div class="flex items-center"><i class="fas fa-check-circle text-emerald-400 mr-1.5"></i> Nghiệm thu nghiêm ngặt</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderWhyChooseUsSection() {
+            const container = document.getElementById('why-cards-grid');
+            if (!container) return;
+            container.innerHTML = '';
+
+            whyCardsData.forEach((card, index) => {
+                const hasCustomImg = card.customImg && card.customImg.trim() !== '';
+                const div = document.createElement('div');
+                div.className = "card-pro-hover bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-md flex flex-col relative";
+
+                const headerVisual = hasCustomImg
+                    ? `<img src="${card.customImg}" onclick="if(isCmsEditMode) openPhotoChangeModal('WHY:${card.id}')" class="w-full h-full object-cover card-img-zoom transition-transform duration-500">`
+                    : getBuiltinGraphicHtml(card.type);
+
+                div.innerHTML = `
+                    <div class="cms-editable-img-box h-48 bg-gradient-to-br from-slate-900 via-brand-navy to-slate-800 relative overflow-hidden flex items-center justify-around p-4">
+                        ${headerVisual}
+
+                        <!-- NÚT ĐỔI ẢNH & XÓA THẺ (CHỈ HIỆN KHI BẬT SỬA GIAO DIỆN) -->
+                        <div class="cms-only-flex absolute top-2.5 right-2.5 gap-1.5 z-30">
+                            <button type="button" onclick="openPhotoChangeModal('WHY:${card.id}')" class="bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition flex items-center shadow-lg cursor-pointer">
+                                <i class="fas fa-camera mr-1.5 text-amber-400"></i> Đổi ảnh
+                            </button>
+                            ${(hasCustomImg && card.type.startsWith('builtin-')) ? `
+                                <button type="button" onclick="restoreWhyCardDefaultGraphic('${card.id}')" class="bg-slate-800/90 hover:bg-cyan-500 hover:text-brand-dark text-cyan-300 text-[10px] font-bold px-2.5 py-1.5 rounded-xl transition shadow-lg" title="Khôi phục đồ họa động ban đầu">
+                                    <i class="fas fa-undo"></i>
+                                </button>
+                            ` : ''}
+                            ${index >= 6 ? `
+                                <button type="button" onclick="deleteWhyCard('${card.id}')" class="bg-red-600/90 hover:bg-red-700 text-white text-[11px] font-bold px-2.5 py-1.5 rounded-xl transition shadow-lg" title="Xóa thẻ này">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+
+                        <div class="absolute bottom-2 left-3 z-10">
+                            <span data-dynamic-edit="why-badge" data-item-id="${card.id}" class="text-[10px] font-bold text-cyan-300 uppercase tracking-widest bg-black/60 px-2.5 py-0.5 rounded-md backdrop-blur-sm">${card.badge}</span>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-grow flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-brand-navy mb-2 flex items-center">
+                                <i class="fas ${card.icon || 'fa-check-circle'} text-brand-accent mr-2"></i>
+                                <span data-dynamic-edit="why-title" data-item-id="${card.id}">${card.title}</span>
+                            </h3>
+                            <p data-dynamic-edit="why-desc" data-item-id="${card.id}" class="text-gray-600 text-xs leading-relaxed">${card.desc}</p>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+
+            // Nút "+ Thêm Thẻ Năng Lực Mẫu" ở cuối lưới (Chỉ hiện khi bật Sửa giao diện)
+            const addCardBtn = document.createElement('div');
+            addCardBtn.className = "cms-only-flex border-2 border-dashed border-amber-500 bg-amber-50/50 hover:bg-amber-100/70 rounded-2xl p-8 flex-col items-center justify-center text-center cursor-pointer transition min-h-[280px]";
+            addCardBtn.onclick = addNewWhyCardTemplate;
+            addCardBtn.innerHTML = `
+                <div class="w-14 h-14 rounded-2xl bg-amber-500 text-brand-dark flex items-center justify-center text-2xl mb-3 shadow-lg">
+                    <i class="fas fa-plus"></i>
+                </div>
+                <h4 class="font-black text-brand-navy text-sm uppercase">THÊM THẺ NĂNG LỰC MỚI (FORM MẪU)</h4>
+                <p class="text-xs text-gray-500 mt-1">Bấm vào đây để tạo thêm 1 thẻ mẫu có sẵn Ảnh & Nội dung</p>
+            `;
+            container.appendChild(addCardBtn);
+
+            if (isCmsEditMode) refreshEditableAttributes();
+        }
+
+        function addNewWhyCardTemplate() {
+            if (!isCmsEditMode) return;
+            const newId = 'why-' + Date.now();
+            whyCardsData.push({
+                id: newId,
+                type: 'image',
+                badge: 'HICON M&E STANDARD',
+                icon: 'fa-star',
+                title: 'Tiêu Đề Năng Lực Mới (Bấm để sửa)',
+                desc: 'Nhập mô tả chi tiết về năng lực, thiết bị hoặc cam kết dịch vụ của HICON M&E tại đây...',
+                customImg: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=900&auto=format&fit=crop'
+            });
+            saveAllDynamicDataToStorage();
+            renderWhyChooseUsSection();
+            showTopToast('Đã thêm Thẻ năng lực mẫu mới! Bạn có thể sửa chữ và đổi ảnh ngay.', false);
+        }
+
+        function restoreWhyCardDefaultGraphic(cardId) {
+            if (!isCmsEditMode) return;
+            const card = whyCardsData.find(c => c.id === cardId);
+            if (card) {
+                card.customImg = '';
+                saveAllDynamicDataToStorage();
+                renderWhyChooseUsSection();
+            }
+        }
+
+        function deleteWhyCard(cardId) {
+            if (!isCmsEditMode) return;
+            whyCardsData = whyCardsData.filter(c => c.id !== cardId);
+            saveAllDynamicDataToStorage();
+            renderWhyChooseUsSection();
+            showTopToast('Đã xóa thẻ năng lực!', false);
+        }
+
+        /* ==================== RENDER DỊCH VỤ M&E (CÓ ẢNH & THÊM FORM MẪU) ==================== */
+        function renderServicesSection() {
+            const container = document.getElementById('services-grid-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            servicesData.forEach((srv) => {
+                const div = document.createElement('div');
+                div.className = "bg-white rounded-2xl shadow-md overflow-hidden border border-gray-200 card-pro-hover flex flex-col";
+                div.innerHTML = `
+                    <div class="cms-editable-img-box h-48 bg-slate-900 relative overflow-hidden">
+                        <img src="${srv.img || 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=900&auto=format&fit=crop'}" onclick="if(isCmsEditMode) openPhotoChangeModal('SRV:${srv.id}')" class="w-full h-full object-cover card-img-zoom transition-transform duration-500">
+                        <div class="cms-only-flex absolute top-2.5 right-2.5 gap-1.5 z-20">
+                            <button type="button" onclick="openPhotoChangeModal('SRV:${srv.id}')" class="bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition flex items-center shadow-lg">
+                                <i class="fas fa-camera mr-1.5 text-amber-400"></i> Đổi ảnh
+                            </button>
+                            <button type="button" onclick="deleteServiceCard('${srv.id}')" class="bg-red-600/90 hover:bg-red-700 text-white text-[11px] font-bold px-2.5 py-1.5 rounded-xl transition shadow-lg" title="Xóa dịch vụ này">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-grow">
+                        <span data-dynamic-edit="srv-tag" data-item-id="${srv.id}" class="text-xs font-bold text-brand-accent bg-cyan-50 px-2.5 py-1 rounded-md inline-block">${srv.tag}</span>
+                        <h3 data-dynamic-edit="srv-title" data-item-id="${srv.id}" class="text-xl font-bold text-brand-navy mt-2 mb-2">${srv.title}</h3>
+                        <p data-dynamic-edit="srv-desc" data-item-id="${srv.id}" class="text-gray-600 text-sm leading-relaxed">${srv.desc}</p>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+
+            // Nút "+ Thêm Dịch Vụ Mẫu" (Chỉ hiện khi bật Sửa giao diện)
+            const addBtn = document.createElement('div');
+            addBtn.className = "cms-only-flex border-2 border-dashed border-amber-500 bg-amber-50/50 hover:bg-amber-100/70 rounded-2xl p-8 flex-col items-center justify-center text-center cursor-pointer transition min-h-[280px]";
+            addBtn.onclick = addNewServiceCardTemplate;
+            addBtn.innerHTML = `
+                <div class="w-14 h-14 rounded-2xl bg-amber-500 text-brand-dark flex items-center justify-center text-2xl mb-3 shadow-lg">
+                    <i class="fas fa-plus"></i>
+                </div>
+                <h4 class="font-black text-brand-navy text-sm uppercase">THÊM DỊCH VỤ M&E MỚI (FORM MẪU)</h4>
+                <p class="text-xs text-gray-500 mt-1">Bấm vào đây để thêm thẻ dịch vụ mẫu mới</p>
+            `;
+            container.appendChild(addBtn);
+
+            if (isCmsEditMode) refreshEditableAttributes();
+        }
+
+        function addNewServiceCardTemplate() {
+            if (!isCmsEditMode) return;
+            servicesData.push({
+                id: 'srv-' + Date.now(),
+                tag: 'HẠNG MỤC M&E MỚI',
+                title: 'Tên Dịch Vụ Cơ Điện Mới (Bấm để sửa)',
+                desc: 'Mô tả chi tiết phạm vi công việc thi công, lắp đặt và bảo trì định kỳ cho hạng mục này...',
+                img: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=900&auto=format&fit=crop'
+            });
+            saveAllDynamicDataToStorage();
+            renderServicesSection();
+            showTopToast('Đã thêm thẻ Dịch vụ M&E mẫu mới!', false);
+        }
+
+        function deleteServiceCard(srvId) {
+            if (!isCmsEditMode) return;
+            servicesData = servicesData.filter(s => s.id !== srvId);
+            saveAllDynamicDataToStorage();
+            renderServicesSection();
+            showTopToast('Đã xóa thẻ dịch vụ!', false);
+        }
+
+        /* ==================== RENDER CÁC DANH MỤC / CHUYÊN MỤC TÙY CHỈNH MỚI ==================== */
+        function renderCustomSections() {
+            const container = document.getElementById('custom-sections-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            customSectionsData.forEach((sec) => {
+                const secEl = document.createElement('div');
+                secEl.className = "py-14 bg-slate-50 border-t border-gray-200 relative";
+
+                let cardsHtml = '';
+                (sec.cards || []).forEach(c => {
+                    cardsHtml += `
+                        <div class="card-pro-hover bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-md flex flex-col">
+                            <div class="cms-editable-img-box h-48 bg-slate-900 relative overflow-hidden">
+                                <img src="${c.img}" onclick="if(isCmsEditMode) openPhotoChangeModal('CSEC:${sec.id}:${c.id}')" class="w-full h-full object-cover card-img-zoom transition-transform duration-500">
+                                <div class="cms-only-flex absolute top-2.5 right-2.5 gap-1.5 z-20">
+                                    <button type="button" onclick="openPhotoChangeModal('CSEC:${sec.id}:${c.id}')" class="bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition flex items-center shadow-lg">
+                                        <i class="fas fa-camera mr-1.5 text-amber-400"></i> Đổi ảnh
+                                    </button>
+                                    <button type="button" onclick="deleteCustomSectionCard('${sec.id}', '${c.id}')" class="bg-red-600/90 hover:bg-red-700 text-white text-[11px] font-bold px-2.5 py-1.5 rounded-xl transition shadow-lg">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                                <div class="absolute bottom-2 left-3">
+                                    <span data-dynamic-edit="csec-card-badge" data-sec-id="${sec.id}" data-item-id="${c.id}" class="text-[10px] font-bold text-cyan-300 uppercase tracking-widest bg-black/65 px-2.5 py-0.5 rounded-md">${c.badge}</span>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-grow">
+                                <h3 data-dynamic-edit="csec-card-title" data-sec-id="${sec.id}" data-item-id="${c.id}" class="text-lg font-bold text-brand-navy mb-2">${c.title}</h3>
+                                <p data-dynamic-edit="csec-card-desc" data-sec-id="${sec.id}" data-item-id="${c.id}" class="text-gray-600 text-xs leading-relaxed">${c.desc}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                secEl.innerHTML = `
+                    <div class="max-w-7xl mx-auto px-4">
+                        <div class="cms-only-flex justify-end mb-2">
+                            <button type="button" onclick="deleteEntireCustomSection('${sec.id}')" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-3.5 py-1.5 rounded-xl shadow flex items-center">
+                                <i class="fas fa-trash-alt mr-1.5"></i> Xóa Danh Mục Này
+                            </button>
+                        </div>
+                        <div class="text-center mb-12">
+                            <h2 data-dynamic-edit="csec-heading" data-sec-id="${sec.id}" class="text-2xl sm:text-3xl font-bold text-brand-navy uppercase">${sec.heading}</h2>
+                            <p data-dynamic-edit="csec-subheading" data-sec-id="${sec.id}" class="text-gray-500 text-xs sm:text-sm mt-2 max-w-2xl mx-auto">${sec.subheading}</p>
+                            <div class="w-20 h-1 bg-brand-accent mx-auto mt-3 rounded-full"></div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            ${cardsHtml}
+                            <div onclick="addCardToCustomSection('${sec.id}')" class="cms-only-flex border-2 border-dashed border-amber-500 bg-amber-50/50 hover:bg-amber-100/70 rounded-2xl p-8 flex-col items-center justify-center text-center cursor-pointer transition min-h-[260px]">
+                                <div class="w-12 h-12 rounded-2xl bg-amber-500 text-brand-dark flex items-center justify-center text-xl mb-2 shadow">
+                                    <i class="fas fa-plus"></i>
+                                </div>
+                                <span class="font-black text-brand-navy text-xs uppercase">+ Thêm Thẻ Mới Vào Danh Mục Này</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(secEl);
+            });
+
+            if (isCmsEditMode) refreshEditableAttributes();
+        }
+
+        function addNewCustomSectionTemplate() {
+            if (!isCmsEditMode) return;
+            const secId = 'csec-' + Date.now();
+            customSectionsData.push({
+                id: secId,
+                heading: 'TÊN DANH MỤC / CHUYÊN MỤC MỚI (BẤM ĐỂ SỬA)',
+                subheading: 'Mô tả ngắn gọn về chuyên mục, thiết bị hoặc giải pháp kỹ thuật của HICON M&E.',
+                cards: [
+                    {
+                        id: 'card-1-' + Date.now(),
+                        badge: 'HẠNG MỤC 01',
+                        title: 'Tiêu Đề Hạng Mục Mẫu 01',
+                        desc: 'Bấm trực tiếp vào nội dung này để thay đổi chữ và bấm nút Đổi ảnh ở góc trên để tải ảnh lên.',
+                        img: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=900&auto=format&fit=crop'
+                    },
+                    {
+                        id: 'card-2-' + Date.now(),
+                        badge: 'HẠNG MỤC 02',
+                        title: 'Tiêu Đề Hạng Mục Mẫu 02',
+                        desc: 'Bấm trực tiếp vào nội dung này để thay đổi chữ và bấm nút Đổi ảnh ở góc trên để tải ảnh lên.',
+                        img: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=900&auto=format&fit=crop'
+                    },
+                    {
+                        id: 'card-3-' + Date.now(),
+                        badge: 'HẠNG MỤC 03',
+                        title: 'Tiêu Đề Hạng Mục Mẫu 03',
+                        desc: 'Bấm trực tiếp vào nội dung này để thay đổi chữ và bấm nút Đổi ảnh ở góc trên để tải ảnh lên.',
+                        img: 'https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?q=80&w=900&auto=format&fit=crop'
+                    }
+                ]
+            });
+            saveAllDynamicDataToStorage();
+            renderCustomSections();
+            navigateTo('home');
+            showTopToast('Đã tạo 1 Danh mục mới kèm 3 thẻ mẫu ở Trang chủ!', false);
+        }
+
+        function addCardToCustomSection(secId) {
+            if (!isCmsEditMode) return;
+            const sec = customSectionsData.find(s => s.id === secId);
+            if (!sec) return;
+            sec.cards.push({
+                id: 'card-' + Date.now(),
+                badge: 'HẠNG MỤC MỚI',
+                title: 'Tiêu Đề Hạng Mục Mới (Bấm để sửa)',
+                desc: 'Nhập mô tả chi tiết cho hạng mục này...',
+                img: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=900&auto=format&fit=crop'
+            });
+            saveAllDynamicDataToStorage();
+            renderCustomSections();
+        }
+
+        function deleteCustomSectionCard(secId, cardId) {
+            if (!isCmsEditMode) return;
+            const sec = customSectionsData.find(s => s.id === secId);
+            if (!sec) return;
+            sec.cards = sec.cards.filter(c => c.id !== cardId);
+            saveAllDynamicDataToStorage();
+            renderCustomSections();
+        }
+
+        function deleteEntireCustomSection(secId) {
+            if (!isCmsEditMode) return;
+            customSectionsData = customSectionsData.filter(s => s.id !== secId);
+            saveAllDynamicDataToStorage();
+            renderCustomSections();
+            showTopToast('Đã xóa danh mục tùy chỉnh!', false);
+        }
 
         /* ==================== ENGINE LIVE VISUAL CMS (SỬA TRỰC TIẾP MỌI CHỮ & ẢNH BẰNG MÃ PIN) ==================== */
         function getSavedCmsTexts() {
@@ -1745,11 +2108,11 @@
             }
 
             refreshEditableAttributes();
-            showTopToast('Đã bật Chế độ Chỉnh sửa Trực tiếp! Hãy chạm vào bất kỳ chữ hoặc ảnh nào để sửa.', false);
+            showTopToast('Đã mở khóa Chế độ Sửa Giao Diện! Các nút Đổi ảnh & Thêm mục mẫu đã hiển thị.', false);
         }
 
         function refreshEditableAttributes() {
-            document.querySelectorAll('[data-cms-id], [data-proj-edit]').forEach(el => {
+            document.querySelectorAll('[data-cms-id], [data-dynamic-edit]').forEach(el => {
                 if (isCmsEditMode) {
                     el.setAttribute('contenteditable', 'true');
                     el.setAttribute('spellcheck', 'false');
@@ -1759,22 +2122,60 @@
             });
         }
 
-        // Lắng nghe gõ phím trực tiếp trên mọi phần tử chữ để lưu tức thì vào RAM & LocalStorage
+        // Lắng nghe gõ phím trực tiếp trên mọi phần tử chữ để lưu tức thì
         document.addEventListener('input', function(e) {
             if (!isCmsEditMode) return;
             const target = e.target;
+            const val = target.innerText.trim();
+
             if (target.hasAttribute('data-cms-id')) {
                 const cmsId = target.getAttribute('data-cms-id');
                 const cmsMap = getSavedCmsTexts();
-                cmsMap[cmsId] = target.innerText.trim();
+                cmsMap[cmsId] = val;
                 localStorage.setItem('hicon_cms_texts', JSON.stringify(cmsMap));
-            } else if (target.hasAttribute('data-proj-edit')) {
-                const projId = target.getAttribute('data-proj-id');
-                const field = target.getAttribute('data-proj-edit');
-                const proj = hiconProjectsData.find(p => p.id === projId);
-                if (proj && field) {
-                    proj[field] = target.innerText.trim();
-                    localStorage.setItem('hicon_projects_custom_text', JSON.stringify(getCustomProjectsTextMap()));
+            } else if (target.hasAttribute('data-dynamic-edit')) {
+                const editType = target.getAttribute('data-dynamic-edit');
+                const itemId = target.getAttribute('data-item-id');
+                const secId = target.getAttribute('data-sec-id');
+
+                if (editType.startsWith('why-')) {
+                    const card = whyCardsData.find(c => c.id === itemId);
+                    if (card) {
+                        if (editType === 'why-badge') card.badge = val;
+                        if (editType === 'why-title') card.title = val;
+                        if (editType === 'why-desc') card.desc = val;
+                        saveAllDynamicDataToStorage();
+                    }
+                } else if (editType.startsWith('srv-')) {
+                    const srv = servicesData.find(s => s.id === itemId);
+                    if (srv) {
+                        if (editType === 'srv-tag') srv.tag = val;
+                        if (editType === 'srv-title') srv.title = val;
+                        if (editType === 'srv-desc') srv.desc = val;
+                        saveAllDynamicDataToStorage();
+                    }
+                } else if (editType.startsWith('proj-')) {
+                    const proj = hiconProjectsData.find(p => p.id === itemId);
+                    if (proj) {
+                        const field = editType.replace('proj-', '');
+                        proj[field] = val;
+                        saveAllDynamicDataToStorage();
+                    }
+                } else if (editType.startsWith('csec-')) {
+                    const sec = customSectionsData.find(s => s.id === secId);
+                    if (sec) {
+                        if (editType === 'csec-heading') sec.heading = val;
+                        if (editType === 'csec-subheading') sec.subheading = val;
+                        if (editType.startsWith('csec-card-')) {
+                            const c = (sec.cards || []).find(item => item.id === itemId);
+                            if (c) {
+                                if (editType === 'csec-card-badge') c.badge = val;
+                                if (editType === 'csec-card-title') c.title = val;
+                                if (editType === 'csec-card-desc') c.desc = val;
+                            }
+                        }
+                        saveAllDynamicDataToStorage();
+                    }
                 }
             }
         });
@@ -1788,7 +2189,7 @@
             const topBtn = document.getElementById('top-cms-btn');
             if (topBtn) {
                 topBtn.className = "bg-cyan-500/20 hover:bg-amber-500 hover:text-brand-dark text-cyan-300 border border-cyan-400/40 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold tracking-wide transition flex items-center shadow";
-                topBtn.innerHTML = `<i class="fas fa-magic mr-1"></i> SỬA GIAO DIỆN (PIN)`;
+                topBtn.innerHTML = `<i class="fas fa-magic mr-1"></i> SỬA GIAO DIỆN`;
             }
             const mobBtn = document.getElementById('mobile-cms-btn');
             if (mobBtn) {
@@ -1796,11 +2197,16 @@
                 mobBtn.innerHTML = `<i class="fas fa-pen mr-1"></i> Sửa`;
             }
 
+            saveAllDynamicDataToStorage();
+            renderWhyChooseUsSection();
+            renderServicesSection();
             renderProjectsSection();
+            renderCustomSections();
+
             showTopToast('Đang lưu và đồng bộ toàn bộ giao diện lên Đám mây...', false);
             const synced = await pushFullSystemToCloud();
             if (synced) {
-                showTopToast('Đã lưu & đồng bộ toàn bộ nội dung giao diện lên Cloud thành công!', false);
+                showTopToast('Đã khóa giao diện & đồng bộ toàn bộ nội dung lên Cloud thành công!', false);
             } else {
                 showTopToast('Đã lưu giao diện Offline! App sẽ tự đồng bộ lên Cloud khi có mạng.', false);
             }
@@ -1873,8 +2279,23 @@
                             localStorage.setItem('hicon_proj_img_' + pid, data.project_images[pid]);
                         });
                     }
-                    if (data.hr_photo) {
-                        localStorage.setItem('hicon_hr_photo_custom', data.hr_photo);
+                    if (data.company_logo) {
+                        localStorage.setItem('hicon_company_logo', data.company_logo);
+                    }
+                    if (data.hero_bg) {
+                        localStorage.setItem('hicon_hero_bg', data.hero_bg);
+                    }
+                    if (data.why_cards_data) {
+                        localStorage.setItem('hicon_why_cards_data', JSON.stringify(data.why_cards_data));
+                    }
+                    if (data.services_data) {
+                        localStorage.setItem('hicon_services_data', JSON.stringify(data.services_data));
+                    }
+                    if (data.projects_full_list) {
+                        localStorage.setItem('hicon_projects_full_list', JSON.stringify(data.projects_full_list));
+                    }
+                    if (data.custom_sections_data) {
+                        localStorage.setItem('hicon_custom_sections_data', JSON.stringify(data.custom_sections_data));
                     }
                     if (data.devices) {
                         localStorage.setItem('hicon_device_db', JSON.stringify(data.devices));
@@ -1886,13 +2307,14 @@
                         localStorage.setItem('hicon_cms_texts', JSON.stringify(data.cms_texts));
                         applySavedCmsTextsToDom();
                     }
-                    if (data.projects_custom_text) {
-                        localStorage.setItem('hicon_projects_custom_text', JSON.stringify(data.projects_custom_text));
-                        loadCustomProjectsText();
-                    }
-                    loadSavedHrPhoto();
+
+                    loadAllDynamicDataFromStorage();
+                    renderWhyChooseUsSection();
+                    renderServicesSection();
                     renderProjectsSection();
+                    renderCustomSections();
                     updateTotalCountDisplay();
+
                     if (currentViewingDeviceCode) {
                         const db = getDeviceDatabase();
                         if (db[currentViewingDeviceCode]) renderDeviceReport(db[currentViewingDeviceCode]);
@@ -1916,11 +2338,15 @@
             });
             const payload = {
                 project_images: projImgs,
-                hr_photo: localStorage.getItem('hicon_hr_photo_custom') || '',
+                company_logo: localStorage.getItem('hicon_company_logo') || '',
+                hero_bg: localStorage.getItem('hicon_hero_bg') || '',
+                why_cards_data: whyCardsData,
+                services_data: servicesData,
+                projects_full_list: hiconProjectsData,
+                custom_sections_data: customSectionsData,
                 devices: getDeviceDatabase(),
                 admin_pass: getStoredPassword(),
                 cms_texts: getSavedCmsTexts(),
-                projects_custom_text: getCustomProjectsTextMap(),
                 updated_at: new Date().toISOString()
             };
             try {
@@ -2051,8 +2477,8 @@
             closeInstallAppGuideModal();
         }
 
-        /* ==================== NÉN ẢNH & ĐỔI ẢNH DỰ ÁN / NHÂN LỰC ==================== */
-        function compressImageFile(file, maxWidth = 850, quality = 0.75) {
+        /* ==================== NÉN ẢNH & ĐỔI ẢNH ĐA NĂNG (CHỈ HOẠT ĐỘNG KHI ĐÃ BẬT CHẾ ĐỘ SỬA GIAO DIỆN) ==================== */
+        function compressImageFile(file, maxWidth = 850, quality = 0.78, isPng = false) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.onload = function(e) {
@@ -2069,7 +2495,7 @@
                         canvas.height = h;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, w, h);
-                        resolve(canvas.toDataURL('image/jpeg', quality));
+                        resolve(isPng ? canvas.toDataURL('image/png') : canvas.toDataURL('image/jpeg', quality));
                     };
                     img.onerror = reject;
                     img.src = e.target.result;
@@ -2079,20 +2505,36 @@
             });
         }
 
-        function openPhotoChangeModal(targetId) {
-            currentPhotoChangeTarget = targetId;
+        function openPhotoChangeModal(targetKey) {
+            // CHỐT CHẶN BẢO MẬT: Khách hàng chưa mở khóa mã PIN Sửa giao diện thì tuyệt đối không mở được hộp thoại đổi ảnh
+            if (!isCmsEditMode) {
+                return;
+            }
+            currentPhotoChangeTarget = targetKey;
             const labelEl = document.getElementById('photo-change-target-label');
             const urlInput = document.getElementById('photo-change-url-input');
+            urlInput.value = '';
 
-            if (targetId === 'HR') {
-                labelEl.innerText = "Mục tiêu: Ảnh Nhân Lực Chuẩn Hóa";
-                urlInput.value = localStorage.getItem('hicon_hr_photo_custom') || '';
-            } else {
-                const proj = hiconProjectsData.find(p => p.id === targetId);
-                labelEl.innerText = `Dự án: ${proj ? proj.title : targetId}`;
-                const saved = getProjectImage(proj);
-                urlInput.value = saved.startsWith('data:') ? '' : saved;
+            if (targetKey === 'LOGO') {
+                labelEl.innerText = "Mục tiêu: Logo Chính Thức Công Ty HICON M&E";
+            } else if (targetKey === 'HERO_BG') {
+                labelEl.innerText = "Mục tiêu: Ảnh Nền Banner Lớn Trang Chủ";
+            } else if (targetKey.startsWith('WHY:')) {
+                const wId = targetKey.split(':')[1];
+                const card = whyCardsData.find(c => c.id === wId);
+                labelEl.innerText = `Thẻ Trang Chủ: ${card ? card.title : wId}`;
+            } else if (targetKey.startsWith('SRV:')) {
+                const sId = targetKey.split(':')[1];
+                const srv = servicesData.find(s => s.id === sId);
+                labelEl.innerText = `Dịch vụ M&E: ${srv ? srv.title : sId}`;
+            } else if (targetKey.startsWith('PROJ:')) {
+                const pId = targetKey.split(':')[1];
+                const proj = hiconProjectsData.find(p => p.id === pId);
+                labelEl.innerText = `Dự án: ${proj ? proj.title : pId}`;
+            } else if (targetKey.startsWith('CSEC:')) {
+                labelEl.innerText = "Mục tiêu: Ảnh Thẻ Danh Mục Tùy Chỉnh";
             }
+
             document.getElementById('photo-change-modal').classList.remove('hidden');
         }
 
@@ -2102,9 +2544,10 @@
 
         async function handleUniversalFileSelect(event) {
             const file = event.target.files[0];
-            if (!file || !currentPhotoChangeTarget) return;
+            if (!file || !currentPhotoChangeTarget || !isCmsEditMode) return;
             try {
-                const base64Data = await compressImageFile(file, 850, 0.75);
+                const isLogo = currentPhotoChangeTarget === 'LOGO';
+                const base64Data = await compressImageFile(file, isLogo ? 400 : 900, 0.78, isLogo);
                 await applyNewPhotoToTarget(currentPhotoChangeTarget, base64Data);
                 closePhotoChangeModal();
             } catch (err) {
@@ -2114,6 +2557,7 @@
         }
 
         async function savePhotoFromUrlInput() {
+            if (!isCmsEditMode) return;
             const url = document.getElementById('photo-change-url-input').value.trim();
             if (!url) {
                 showTopToast('Vui lòng nhập Link URL ảnh!', true);
@@ -2123,21 +2567,56 @@
             closePhotoChangeModal();
         }
 
-        async function applyNewPhotoToTarget(targetId, imgData) {
-            if (targetId === 'HR') {
-                localStorage.setItem('hicon_hr_photo_custom', imgData);
-                loadSavedHrPhoto();
-            } else {
-                localStorage.setItem('hicon_proj_img_' + targetId, imgData);
+        async function applyNewPhotoToTarget(targetKey, imgData) {
+            if (targetKey === 'LOGO') {
+                localStorage.setItem('hicon_company_logo', imgData);
+                loadSavedCompanyLogo();
+            } else if (targetKey === 'HERO_BG') {
+                localStorage.setItem('hicon_hero_bg', imgData);
+                loadSavedHeroBg();
+            } else if (targetKey.startsWith('WHY:')) {
+                const wId = targetKey.split(':')[1];
+                const card = whyCardsData.find(c => c.id === wId);
+                if (card) {
+                    card.customImg = imgData;
+                    saveAllDynamicDataToStorage();
+                    renderWhyChooseUsSection();
+                }
+            } else if (targetKey.startsWith('SRV:')) {
+                const sId = targetKey.split(':')[1];
+                const srv = servicesData.find(s => s.id === sId);
+                if (srv) {
+                    srv.img = imgData;
+                    saveAllDynamicDataToStorage();
+                    renderServicesSection();
+                }
+            } else if (targetKey.startsWith('PROJ:')) {
+                const pId = targetKey.split(':')[1];
+                localStorage.setItem('hicon_proj_img_' + pId, imgData);
+                const proj = hiconProjectsData.find(p => p.id === pId);
+                if (proj) proj.defaultImg = imgData;
+                saveAllDynamicDataToStorage();
                 renderProjectsSection();
-                if (currentModalProjectId === targetId) {
+                if (currentModalProjectId === pId) {
                     document.getElementById('proj-modal-img').src = imgData;
                 }
+            } else if (targetKey.startsWith('CSEC:')) {
+                const parts = targetKey.split(':');
+                const secId = parts[1];
+                const cardId = parts[2];
+                const sec = customSectionsData.find(s => s.id === secId);
+                if (sec) {
+                    const c = (sec.cards || []).find(item => item.id === cardId);
+                    if (c) c.img = imgData;
+                    saveAllDynamicDataToStorage();
+                    renderCustomSections();
+                }
             }
-            const synced = await pushFullSystemToCloud();
-            showTopToast(synced ? 'Đã cập nhật ảnh & đồng bộ lên Cloud cho mọi thiết bị!' : 'Đã lưu ảnh Offline trên máy (Sẽ tự đồng bộ khi có mạng)!', false);
+
+            showTopToast('Đã cập nhật hình ảnh! Bấm "Lưu & Đồng Bộ Tất Cả" khi hoàn tất chỉnh sửa.', false);
         }
 
+        /* ==================== RENDER DỰ ÁN TIÊU BIỂU & THÊM DỰ ÁN MẪU ==================== */
         let currentProjectCategory = 'ALL';
         let currentProjectViewMode = 'GRID';
         let currentModalProjectId = null;
@@ -2195,44 +2674,50 @@
                     const imgSrc = getProjectImage(proj);
                     const isTesa = proj.id === 'proj-tesa';
                     const card = document.createElement('div');
-                    card.style.animationDelay = `${idx * 70}ms`;
+                    card.style.animationDelay = `${idx * 60}ms`;
                     card.className = `project-card-anim card-pro-hover bg-white rounded-3xl overflow-hidden border ${isTesa ? 'border-2 border-brand-accent shadow-xl' : 'border-gray-200 shadow-md'} flex flex-col justify-between group`;
 
-                    const tagsHtml = proj.tags.map(t => `<span class="bg-slate-100 text-brand-navy text-[10px] font-bold px-2.5 py-1 rounded-lg border border-gray-200">${t}</span>`).join('');
+                    const tagsHtml = (proj.tags || []).map(t => `<span class="bg-slate-100 text-brand-navy text-[10px] font-bold px-2.5 py-1 rounded-lg border border-gray-200">${t}</span>`).join('');
 
                     card.innerHTML = `
                         <div>
-                            <div class="h-56 overflow-hidden relative bg-slate-900">
-                                <img src="${imgSrc}" data-proj-img="${proj.id}" onclick="if(isCmsEditMode) openPhotoChangeModal('${proj.id}')" alt="${proj.fallbackAlt}" class="w-full h-full object-cover card-img-zoom transition-transform duration-700">
+                            <div class="cms-editable-img-box h-56 overflow-hidden relative bg-slate-900">
+                                <img src="${imgSrc}" onclick="if(isCmsEditMode) openPhotoChangeModal('PROJ:${proj.id}')" alt="${proj.fallbackAlt || proj.title}" class="w-full h-full object-cover card-img-zoom transition-transform duration-700">
                                 <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/25 to-transparent pointer-events-none"></div>
                                 
                                 <div class="absolute top-3 left-3 flex items-center gap-2">
                                     <span class="w-8 h-8 rounded-xl bg-amber-500 text-brand-dark font-black text-xs flex items-center justify-center shadow-lg">
-                                        0${idx + 1}
+                                        ${idx + 1 < 10 ? '0' + (idx + 1) : idx + 1}
                                     </span>
-                                    <span data-proj-id="${proj.id}" data-proj-edit="categoryName" class="bg-black/60 backdrop-blur-md text-cyan-300 text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-wider border border-white/15">
+                                    <span data-dynamic-edit="proj-categoryName" data-item-id="${proj.id}" class="bg-black/60 backdrop-blur-md text-cyan-300 text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-wider border border-white/15">
                                         ${proj.categoryName}
                                     </span>
                                 </div>
 
-                                <button type="button" onclick="openPhotoChangeModal('${proj.id}')" class="absolute top-3 right-3 bg-black/75 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition flex items-center shadow-lg z-20 cursor-pointer" title="Đổi ảnh dự án">
-                                    <i class="fas fa-camera mr-1.5"></i> Đổi ảnh
-                                </button>
+                                <!-- NÚT ĐỔI ẢNH & XÓA DỰ ÁN (ẨN HOÀN TOÀN VỚI KHÁCH HÀNG, CHỈ HIỆN KHI BẬT SỬA GIAO DIỆN) -->
+                                <div class="cms-only-flex absolute top-3 right-3 gap-1.5 z-20">
+                                    <button type="button" onclick="openPhotoChangeModal('PROJ:${proj.id}')" class="bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition flex items-center shadow-lg cursor-pointer">
+                                        <i class="fas fa-camera mr-1.5 text-amber-400"></i> Đổi ảnh
+                                    </button>
+                                    <button type="button" onclick="deleteProjectItem('${proj.id}')" class="bg-red-600/90 hover:bg-red-700 text-white text-[11px] font-bold px-2.5 py-1.5 rounded-xl transition shadow-lg" title="Xóa dự án này">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
 
                                 <div class="absolute bottom-3 left-4 right-4 text-white">
-                                    <span data-proj-id="${proj.id}" data-proj-edit="status" class="inline-block text-[9px] font-extrabold px-2 py-0.5 rounded bg-emerald-500/90 text-white mb-1">
+                                    <span data-dynamic-edit="proj-status" data-item-id="${proj.id}" class="inline-block text-[9px] font-extrabold px-2 py-0.5 rounded bg-emerald-500/90 text-white mb-1">
                                         ${proj.status}
                                     </span>
-                                    <h3 data-proj-id="${proj.id}" data-proj-edit="title" class="text-lg font-black tracking-wide leading-snug group-hover:text-amber-400 transition">${proj.title}</h3>
+                                    <h3 data-dynamic-edit="proj-title" data-item-id="${proj.id}" class="text-lg font-black tracking-wide leading-snug group-hover:text-amber-400 transition">${proj.title}</h3>
                                 </div>
                             </div>
 
                             <div class="p-5">
                                 <div class="flex items-start text-xs text-gray-600 font-medium mb-3 bg-amber-50/70 p-2.5 rounded-xl border border-amber-200/70">
                                     <i class="fas fa-map-marker-alt text-amber-500 mt-0.5 mr-2 shrink-0 text-sm"></i>
-                                    <span data-proj-id="${proj.id}" data-proj-edit="address" class="text-brand-navy font-semibold leading-snug">${proj.address}</span>
+                                    <span data-dynamic-edit="proj-address" data-item-id="${proj.id}" class="text-brand-navy font-semibold leading-snug">${proj.address}</span>
                                 </div>
-                                <p data-proj-id="${proj.id}" data-proj-edit="desc" class="text-xs text-gray-600 leading-relaxed mb-4">
+                                <p data-dynamic-edit="proj-desc" data-item-id="${proj.id}" class="text-xs text-gray-600 leading-relaxed mb-4">
                                     ${proj.desc}
                                 </p>
                                 <div class="flex flex-wrap gap-1.5">
@@ -2256,6 +2741,19 @@
                     `;
                     gridEl.appendChild(card);
                 });
+
+                // Nút "+ Thêm Dự Án Mới (Form Mẫu)" (Chỉ hiện khi bật Sửa giao diện)
+                const addProjBtn = document.createElement('div');
+                addProjBtn.className = "cms-only-flex border-2 border-dashed border-amber-500 bg-amber-50/50 hover:bg-amber-100/70 rounded-3xl p-8 flex-col items-center justify-center text-center cursor-pointer transition min-h-[360px]";
+                addProjBtn.onclick = addNewProjectCardTemplate;
+                addProjBtn.innerHTML = `
+                    <div class="w-16 h-16 rounded-2xl bg-amber-500 text-brand-dark flex items-center justify-center text-2xl mb-3 shadow-lg">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                    <h4 class="font-black text-brand-navy text-base uppercase">THÊM DỰ ÁN MỚI (FORM MẪU)</h4>
+                    <p class="text-xs text-gray-500 mt-1 max-w-xs">Bấm vào đây để tạo ngay 1 thẻ dự án mới theo mẫu chuẩn, sẵn sàng thay ảnh và gõ nội dung</p>
+                `;
+                gridEl.appendChild(addProjBtn);
             }
 
             const timelineEl = document.getElementById('projects-timeline-items');
@@ -2265,15 +2763,15 @@
                     const imgSrc = getProjectImage(proj);
                     const isEven = idx % 2 === 0;
                     const row = document.createElement('div');
-                    row.style.animationDelay = `${idx * 80}ms`;
+                    row.style.animationDelay = `${idx * 70}ms`;
                     row.className = "project-card-anim flex flex-col md:flex-row items-center justify-between gap-6 relative";
 
                     const imageBox = `
                         <div class="w-full md:w-5/12 group">
-                            <div class="relative h-56 sm:h-64 overflow-hidden shadow-xl border-4 border-white ${isEven ? 'brochure-leaf-left' : 'brochure-leaf-right'} bg-slate-900 card-pro-hover">
-                                <img src="${imgSrc}" data-proj-img="${proj.id}" onclick="if(isCmsEditMode) openPhotoChangeModal('${proj.id}')" alt="${proj.title}" class="w-full h-full object-cover card-img-zoom transition-transform duration-700">
-                                <button type="button" onclick="openPhotoChangeModal('${proj.id}')" class="absolute top-3 right-3 bg-black/75 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition flex items-center shadow-lg z-20 cursor-pointer" title="Đổi ảnh dự án">
-                                    <i class="fas fa-camera mr-1.5"></i> Đổi ảnh
+                            <div class="cms-editable-img-box relative h-56 sm:h-64 overflow-hidden shadow-xl border-4 border-white ${isEven ? 'brochure-leaf-left' : 'brochure-leaf-right'} bg-slate-900 card-pro-hover">
+                                <img src="${imgSrc}" onclick="if(isCmsEditMode) openPhotoChangeModal('PROJ:${proj.id}')" alt="${proj.title}" class="w-full h-full object-cover card-img-zoom transition-transform duration-700">
+                                <button type="button" onclick="openPhotoChangeModal('PROJ:${proj.id}')" class="cms-only-btn absolute top-3 right-3 bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition items-center shadow-lg z-20 cursor-pointer">
+                                    <i class="fas fa-camera mr-1.5 text-amber-400"></i> Đổi ảnh
                                 </button>
                             </div>
                         </div>
@@ -2283,13 +2781,13 @@
                         <div class="w-full md:w-5/12 ${isEven ? 'md:text-left' : 'md:text-right'} flex flex-col ${isEven ? 'md:items-start' : 'md:items-end'}">
                             <div onclick="if(!isCmsEditMode) openProjectDetailModal('${proj.id}')" class="cursor-pointer bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-600 hover:to-amber-500 text-white font-black text-base sm:text-lg px-6 py-3 rounded-full shadow-lg transition transform hover:-translate-y-1 inline-flex items-center gap-2">
                                 ${!isEven ? `<i class="fas fa-caret-left text-white"></i>` : ''}
-                                <span data-proj-id="${proj.id}" data-proj-edit="title">${proj.title}</span>
+                                <span data-dynamic-edit="proj-title" data-item-id="${proj.id}">${proj.title}</span>
                                 ${isEven ? `<i class="fas fa-caret-right text-white"></i>` : ''}
                             </div>
                             <p class="text-brand-navy font-bold text-xs sm:text-sm mt-2.5 px-2">
-                                <i class="fas fa-map-marker-alt text-amber-500 mr-1"></i> <span data-proj-id="${proj.id}" data-proj-edit="address">${proj.address}</span>
+                                <i class="fas fa-map-marker-alt text-amber-500 mr-1"></i> <span data-dynamic-edit="proj-address" data-item-id="${proj.id}">${proj.address}</span>
                             </p>
-                            <p data-proj-id="${proj.id}" data-proj-edit="desc" class="text-gray-500 text-xs mt-1.5 px-2 max-w-md leading-relaxed">
+                            <p data-dynamic-edit="proj-desc" data-item-id="${proj.id}" class="text-gray-500 text-xs mt-1.5 px-2 max-w-md leading-relaxed">
                                 ${proj.desc}
                             </p>
                         </div>
@@ -2297,7 +2795,7 @@
 
                     const centerNode = `
                         <div class="hidden md:flex w-12 h-12 rounded-full bg-white border-4 border-amber-500 shadow-xl items-center justify-center z-10 shrink-0 font-black text-brand-navy text-xs">
-                            0${idx + 1}
+                            ${idx + 1 < 10 ? '0' + (idx + 1) : idx + 1}
                         </div>
                     `;
 
@@ -2316,6 +2814,35 @@
             }
         }
 
+        function addNewProjectCardTemplate() {
+            if (!isCmsEditMode) return;
+            const newId = 'proj-' + Date.now();
+            const cat = currentProjectCategory === 'ALL' ? 'INDUSTRIAL' : currentProjectCategory;
+            hiconProjectsData.push({
+                id: newId,
+                title: 'TÊN DỰ ÁN MỚI (BẤM ĐỂ SỬA)',
+                address: 'Nhập địa chỉ Khu công nghiệp / Tòa nhà dự án tại đây',
+                category: cat,
+                categoryName: 'Dự Án Tiêu Biểu HICON M&E',
+                status: 'ĐÃ TRIỂN KHAI & BẢO TRÌ',
+                defaultImg: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1000&auto=format&fit=crop',
+                fallbackAlt: 'Dự án tiêu biểu HICON M&E',
+                desc: 'Mô tả chi tiết các hạng mục Cơ Điện (M&E), điều hòa thông gió HVAC, Chiller, PCCC và bảo trì định kỳ triển khai tại dự án này...',
+                tags: ['Hệ thống M&E', 'HVAC & Chiller', 'Hệ thống PCCC', 'Bảo trì định kỳ']
+            });
+            saveAllDynamicDataToStorage();
+            renderProjectsSection();
+            showTopToast('Đã thêm Dự án mẫu mới! Bạn có thể bấm sửa tên, địa chỉ và đổi ảnh ngay.', false);
+        }
+
+        function deleteProjectItem(projId) {
+            if (!isCmsEditMode) return;
+            hiconProjectsData = hiconProjectsData.filter(p => p.id !== projId);
+            saveAllDynamicDataToStorage();
+            renderProjectsSection();
+            showTopToast('Đã xóa dự án khỏi danh sách!', false);
+        }
+
         function openProjectDetailModal(projId) {
             const proj = hiconProjectsData.find(p => p.id === projId);
             if (!proj) return;
@@ -2328,21 +2855,13 @@
             document.getElementById('proj-modal-desc').innerText = proj.desc;
 
             const tagsEl = document.getElementById('proj-modal-tags');
-            tagsEl.innerHTML = proj.tags.map(t => `<span class="bg-cyan-50 text-brand-blue font-bold text-xs px-3 py-1 rounded-xl border border-cyan-200"><i class="fas fa-check text-brand-accent mr-1"></i>${t}</span>`).join('');
+            tagsEl.innerHTML = (proj.tags || []).map(t => `<span class="bg-cyan-50 text-brand-blue font-bold text-xs px-3 py-1 rounded-xl border border-cyan-200"><i class="fas fa-check text-brand-accent mr-1"></i>${t}</span>`).join('');
 
             document.getElementById('project-detail-modal').classList.remove('hidden');
         }
 
         function closeProjectDetailModal() {
             document.getElementById('project-detail-modal').classList.add('hidden');
-        }
-
-        function loadSavedHrPhoto() {
-            const savedPhoto = localStorage.getItem('hicon_hr_photo_custom');
-            const imgEl = document.getElementById('hr-custom-img');
-            if (savedPhoto && imgEl) {
-                imgEl.src = savedPhoto;
-            }
         }
 
         function showTopToast(msg, isError = true) {
@@ -2419,11 +2938,6 @@
             });
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function toggleMobileMenu() {
-            const m = document.getElementById('mobile-menu');
-            if (m) m.classList.toggle('hidden');
         }
 
         function updateTotalCountDisplay() {
@@ -3029,10 +3543,12 @@
             }
 
             updateNetworkUI();
-            loadCustomProjectsText();
+            loadAllDynamicDataFromStorage();
             applySavedCmsTextsToDom();
-            loadSavedHrPhoto();
+            renderWhyChooseUsSection();
+            renderServicesSection();
             renderProjectsSection();
+            renderCustomSections();
             updateTotalCountDisplay();
             clearDeviceReportDefault();
 
