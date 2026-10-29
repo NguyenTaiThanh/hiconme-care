@@ -1169,6 +1169,124 @@
                 </div>
             </div>
 
+           <!-- ==================== BƯỚC 1.5 (MỚI): CHỌN LOẠI THIẾT BỊ BẢO TRÌ & QUẢN LÝ FORM CHUẨN ==================== -->
+            <div id="admin-step-select-type" class="hidden">
+                <div class="bg-brand-navy text-white p-5 flex justify-between items-center">
+                    <div>
+                        <h3 class="font-extrabold text-base flex items-center">
+                            <i class="fas fa-layer-group text-amber-400 mr-2"></i> CHỌN LOẠI THIẾT BỊ BẢO TRÌ
+                        </h3>
+                        <p class="text-[10px] text-gray-300 mt-0.5">Chọn đúng chủng loại máy để tải sẵn danh sách hạng mục bảo trì chuẩn tương ứng</p>
+                    </div>
+                    <button onclick="closeAdminModal()" class="text-gray-300 hover:text-white text-xl p-1 rounded-lg transition"><i class="fas fa-times"></i></button>
+                </div>
+
+                <div class="p-6 space-y-5 bg-slate-50 max-h-[75vh] overflow-y-auto">
+                    <!-- Thanh công cụ Sửa & Thêm Loại Thiết Bị -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 bg-white p-3.5 rounded-2xl border border-gray-200 shadow-sm">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span class="text-xs font-extrabold text-brand-navy uppercase">Danh mục Form chuẩn hiện có:</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button type="button" onclick="toggleTemplateEditMode()" id="btn-toggle-edit-template" class="btn-interactive bg-amber-100 hover:bg-amber-500 hover:text-brand-dark text-amber-800 border border-amber-300 font-extrabold px-3.5 py-2 rounded-xl text-xs flex items-center shadow-sm">
+                                <i class="fas fa-edit mr-1.5"></i> Sửa Form Thiết Bị
+                            </button>
+                            <button type="button" onclick="openTemplateEditorModal(null)" class="btn-interactive bg-brand-accent hover:bg-cyan-400 text-brand-dark font-extrabold px-3.5 py-2 rounded-xl text-xs flex items-center shadow-sm">
+                                <i class="fas fa-plus-circle mr-1.5"></i> + Thêm Loại Thiết Bị
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Hướng dẫn nhanh khi bật chế độ Sửa -->
+                    <div id="template-edit-hint" class="hidden bg-amber-50 border-2 border-dashed border-amber-400 text-amber-900 p-3 rounded-xl text-xs font-medium flex items-center justify-between">
+                        <span><i class="fas fa-info-circle text-amber-600 mr-1.5"></i> <strong>Đang bật Chế độ Sửa Form:</strong> Bấm vào nút <strong>"Sửa"</strong> trên từng thẻ thiết bị bên dưới để tinh chỉnh hạng mục chuẩn hoặc xóa thiết bị.</span>
+                        <button type="button" onclick="toggleTemplateEditMode()" class="text-[11px] bg-amber-500 text-brand-dark font-extrabold px-2.5 py-1 rounded-lg shrink-0 ml-2">Xong</button>
+                    </div>
+
+                    <!-- Lưới hiển thị các thẻ loại thiết bị (FCU, AHU, FAN...) -->
+                    <div id="device-type-cards-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+                </div>
+            </div>
+
+            <!-- ==================== BƯỚC 1.6 (MỚI): GIAO DIỆN SỬA / THÊM FORM CHUẨN CỦA TỪNG LOẠI THIẾT BỊ ==================== -->
+            <div id="admin-step-edit-template" class="hidden">
+                <div class="bg-slate-900 text-white p-5 flex justify-between items-center border-b border-amber-500/40">
+                    <div>
+                        <h3 id="template-editor-heading" class="font-extrabold text-base flex items-center text-amber-400">
+                            <i class="fas fa-sliders-h mr-2"></i> CHỈNH SỬA FORM CHUẨN THIẾT BỊ
+                        </h3>
+                        <p class="text-[10px] text-gray-300 mt-0.5">Tinh chỉnh danh sách hạng mục bảo trì mặc định cho loại thiết bị này</p>
+                    </div>
+                    <button type="button" onclick="backToSelectTypeStep()" class="text-gray-300 hover:text-white text-xs font-bold bg-white/10 px-3 py-1.5 rounded-xl flex items-center">
+                        <i class="fas fa-arrow-left mr-1.5"></i> Quay lại
+                    </button>
+                </div>
+
+                <div class="p-6 space-y-4 text-xs max-h-[75vh] overflow-y-auto bg-white">
+                    <input type="hidden" id="tpl-edit-id">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block font-bold text-gray-700 mb-1">Mã Loại Thiết Bị (*)</label>
+                            <input type="text" id="tpl-edit-code" placeholder="VD: FCU, AHU, FAN..." class="w-full p-2.5 border border-gray-300 rounded-xl font-black uppercase text-brand-navy focus:border-amber-500 focus:outline-none">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block font-bold text-gray-700 mb-1">Tên Đầy Đủ Loại Thiết Bị (*)</label>
+                            <input type="text" id="tpl-edit-name" placeholder="VD: Dàn Lạnh FCU (Fan Coil Unit)" class="w-full p-2.5 border border-gray-300 rounded-xl font-bold focus:border-amber-500 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-bold text-gray-700 mb-1">Biểu Tượng (Icon hiển thị)</label>
+                            <select id="tpl-edit-icon" class="w-full p-2.5 border border-gray-300 rounded-xl font-semibold focus:border-amber-500 focus:outline-none">
+                                <option value="fa-wind">🌬️ Hệ thống AHU / MAU (fa-wind)</option>
+                                <option value="fa-snowflake">❄️ Dàn lạnh FCU / Điều hòa (fa-snowflake)</option>
+                                <option value="fa-fan">🌀 Quạt công nghiệp FAN (fa-fan)</option>
+                                <option value="fa-water">💧 Cụm Bơm / Chiller (fa-water)</option>
+                                <option value="fa-fire-extinguisher">🚒 Hệ thống PCCC (fa-fire-extinguisher)</option>
+                                <option value="fa-bolt">⚡ Tủ điện / Trạm biến áp (fa-bolt)</option>
+                                <option value="fa-cogs">⚙️ Thiết bị Cơ điện khác (fa-cogs)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-bold text-gray-700 mb-1">Gợi ý tiền tố Mã QR (Không bắt buộc)</label>
+                            <input type="text" id="tpl-edit-prefix" placeholder="VD: TS-2026-FCU-" class="w-full p-2.5 border border-gray-300 rounded-xl font-mono uppercase focus:border-amber-500 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <!-- Danh sách hạng mục chuẩn của loại thiết bị -->
+                    <div class="bg-amber-50/60 p-4 rounded-2xl border border-amber-200 space-y-3">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="font-extrabold text-brand-navy uppercase text-xs">
+                                    <i class="fas fa-list-ol text-amber-500 mr-1.5"></i> CÁC HẠNG MỤC BẢO TRÌ CHUẨN CỦA LOẠI THIẾT BỊ NÀY
+                                </h4>
+                                <p class="text-[10px] text-gray-500">Khi kỹ thuật viên chọn loại thiết bị này, các hạng mục dưới đây sẽ tự động nạp vào form.</p>
+                            </div>
+                            <button type="button" onclick="addTemplateTaskRow()" class="btn-interactive bg-amber-500 hover:bg-amber-400 text-brand-dark px-3 py-1.5 rounded-xl font-extrabold text-xs flex items-center shadow-sm shrink-0">
+                                <i class="fas fa-plus mr-1"></i> Thêm Hạng Mục Chuẩn
+                            </button>
+                        </div>
+
+                        <div id="tpl-tasks-container" class="space-y-2"></div>
+                    </div>
+
+                    <div class="pt-3 border-t border-gray-100 flex justify-between items-center gap-3">
+                        <button type="button" id="btn-delete-template" onclick="deleteCurrentTemplate()" class="hidden btn-interactive px-4 py-2.5 bg-red-100 hover:bg-red-600 hover:text-white text-red-600 rounded-xl font-bold text-xs">
+                            <i class="fas fa-trash-alt mr-1"></i> Xóa Loại Thiết Bị Này
+                        </button>
+                        <div class="flex gap-2 ml-auto">
+                            <button type="button" onclick="backToSelectTypeStep()" class="btn-interactive px-5 py-2.5 bg-gray-200 text-gray-700 rounded-xl font-bold">Hủy</button>
+                            <button type="button" onclick="saveTemplateForm()" class="btn-interactive px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-extrabold shadow-lg flex items-center">
+                                <i class="fas fa-save mr-1.5"></i> LƯU FORM CHUẨN & ĐỒNG BỘ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== BƯỚC 2: FORM NHẬP BÁO CÁO BẢO TRÌ THIẾT BỊ ==================== -->
             <div id="admin-step-form" class="hidden">
                 <div class="bg-brand-navy text-white p-5 flex justify-between items-center">
                     <div>
@@ -1178,7 +1296,23 @@
                     <button onclick="closeAdminModal()" class="text-gray-300 hover:text-white text-xl p-1 rounded-lg transition"><i class="fas fa-times"></i></button>
                 </div>
 
-                <form onsubmit="handleSaveDevice(event)" class="p-6 space-y-5 text-xs max-h-[75vh] overflow-y-auto">
+                <!-- THANH HIỂN THỊ LOẠI THIẾT BỊ ĐANG CHỌN & NÚT SỬA NHANH FORM CHUẨN -->
+                <div class="bg-cyan-50 border-b border-cyan-200 px-6 py-3 flex flex-wrap items-center justify-between gap-2">
+                    <div class="flex items-center space-x-2">
+                        <span class="bg-brand-navy text-cyan-300 text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider">FORM THIẾT BỊ:</span>
+                        <span id="current-selected-type-label" class="text-xs sm:text-sm font-black text-brand-navy">AHU - Xử Lý Không Khí</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button type="button" onclick="openCurrentTemplateEditorFromForm()" class="btn-interactive bg-amber-500 hover:bg-amber-400 text-brand-dark font-extrabold px-3 py-1.5 rounded-xl text-[11px] flex items-center shadow-sm" title="Sửa danh mục chuẩn của loại thiết bị này">
+                            <i class="fas fa-pen mr-1"></i> Sửa Form Chuẩn Này
+                        </button>
+                        <button type="button" onclick="backToSelectTypeStep()" class="btn-interactive bg-white hover:bg-slate-100 text-brand-blue border border-cyan-300 font-bold px-3 py-1.5 rounded-xl text-[11px] flex items-center shadow-sm">
+                            <i class="fas fa-exchange-alt mr-1.5"></i> Đổi Loại Thiết Bị Khác
+                        </button>
+                    </div>
+                </div>
+
+                <form onsubmit="handleSaveDevice(event)" class="p-6 space-y-5 text-xs max-h-[70vh] overflow-y-auto">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block font-bold text-gray-700 mb-1">Mã QR Thiết Bị (* Dùng để quét)</label>
@@ -2290,9 +2424,13 @@
                     if (data.custom_sections_data) {
                         localStorage.setItem('hicon_custom_sections_data', JSON.stringify(data.custom_sections_data));
                     }
-                    if (data.devices) {
-                        localStorage.setItem('hicon_device_db', JSON.stringify(data.devices));
-                    }
+                  if (data.device_templates) {
+    localStorage.setItem('hicon_device_templates', JSON.stringify(data.device_templates));
+    loadDeviceTemplatesFromStorage();
+}
+if (data.devices) {
+    localStorage.setItem('hicon_device_db', JSON.stringify(data.devices));
+}
                     if (data.admin_pass) {
                         localStorage.setItem('hicon_admin_pass', data.admin_pass);
                     }
@@ -2337,6 +2475,7 @@
                 services_data: servicesData,
                 projects_full_list: hiconProjectsData,
                 custom_sections_data: customSectionsData,
+                device_templates: deviceTemplatesData,
                 devices: getDeviceDatabase(),
                 admin_pass: getStoredPassword(),
                 cms_texts: getSavedCmsTexts(),
@@ -3307,11 +3446,111 @@
             closeDeleteConfirmModal();
         }
 
+       /* ==================== QUẢN LÝ DANH SÁCH LOẠI THIẾT BỊ & FORM BẢO TRÌ CHUẨN (FCU, AHU, FAN...) ==================== */
+        const defaultDeviceTemplatesData = [
+            {
+                id: 'tpl-fcu',
+                code: 'FCU',
+                name: 'Dàn Lạnh FCU (Fan Coil Unit)',
+                icon: 'fa-snowflake',
+                prefix: 'TS-2026-FCU-',
+                tasks: [
+                    { title: 'Vệ sinh lưới lọc gió hồi (Filter)', detail: 'Tháo lưới lọc bụi, xịt rửa sạch sẽ và lắp lại đúng khớp.' },
+                    { title: 'Vệ sinh dàn trao đổi nhiệt (Coil lạnh)', detail: 'Xịt rửa cánh tản nhiệt dàn coil bằng dung dịch chuyên dụng.' },
+                    { title: 'Vệ sinh máng & đường ống nước ngưng', detail: 'Thông rửa máng hứng nước ngưng, kiểm tra độ thoát nước không rò rỉ.' },
+                    { title: 'Kiểm tra cánh quạt & động cơ quạt lồng sóc', detail: 'Vệ sinh lồng quạt, kiểm tra bạc đạn quay êm, không có tiếng kêu lạ.' },
+                    { title: 'Kiểm tra cụm van điện từ / Van 2 ngả (Actuator)', detail: 'Kiểm tra đóng/mở van nước lạnh Chilled Water theo tín hiệu Thermostat.' },
+                    { title: 'Đo dòng điện vận hành & kiểm tra tủ đấu nối', detail: 'Đo dòng tải quạt FCU ổn định, siết chặt cầu đấu điện và kiểm tra Thermostat.' }
+                ]
+            },
+            {
+                id: 'tpl-ahu',
+                code: 'AHU',
+                name: 'Hệ Thống Xử Lý Không Khí (AHU / MAU)',
+                icon: 'fa-wind',
+                prefix: 'TS-2026-AHU-',
+                tasks: [
+                    { title: 'Vệ sinh khoang máy & kiểm tra phin lọc (Pre/Bag Filter)', detail: 'Làm sạch buồng AHU, vệ sinh lọc thô G4 và kiểm tra chênh áp lọc túi F8.' },
+                    { title: 'Vệ sinh dàn Coil lạnh Chilled Water', detail: 'Xịt rửa bề mặt dàn trao đổi nhiệt, kiểm tra vây tản nhiệt không bị bẹp.' },
+                    { title: 'Kiểm tra dây Curoa, Puly & Căn chỉnh độ căng', detail: 'Kiểm tra độ mòn dây đai, độ thẳng hàng Puly và căn chỉnh lực căng tiêu chuẩn.' },
+                    { title: 'Tra mỡ gối đỡ ổ bi quạt & động cơ', detail: 'Bơm bổ sung mỡ chịu nhiệt chuyên dụng cho 2 gối bi trục quạt cấp/hồi.' },
+                    { title: 'Kiểm tra cụm van điều khiển tuyến tính (Modulating Valve)', detail: 'Kiểm tra hành trình đóng mở Actuator từ 0-100% theo tín hiệu PLC/BMS.' },
+                    { title: 'Vệ sinh máng nước ngưng & bẫy nước (U-Trap)', detail: 'Làm sạch bùn cặn trong máng, mồi nước bẫy U-trap chống tràn nước ngưng.' },
+                    { title: 'Đo dòng điện 3 pha, cách điện Motor & kiểm tra biến tần', detail: 'Đo dòng tải 3 pha cân bằng, kiểm tra tần số biến tần VFD và siết ốc tủ nguồn.' }
+                ]
+            },
+            {
+                id: 'tpl-fan',
+                code: 'FAN',
+                name: 'Quạt Công Nghiệp / Thông Gió (FAN)',
+                icon: 'fa-fan',
+                prefix: 'TS-2026-FAN-',
+                tasks: [
+                    { title: 'Vệ sinh cánh quạt, vỏ quạt & lưới bảo vệ', detail: 'Cạo sạch bụi bám trên cánh quạt giúp cân bằng động, lau sạch thân quạt.' },
+                    { title: 'Kiểm tra dây Curoa / Khớp nối truyền động', detail: 'Kiểm tra độ trùng dây đai, tình trạng rạn nứt và căn chỉnh Puly.' },
+                    { title: 'Tra mỡ bạc đạn / Gối bi trục quạt', detail: 'Tra mỡ bò chịu nhiệt cho ổ bi động cơ và gối đỡ trục quạt.' },
+                    { title: 'Kiểm tra lò xo chống rung & bu lông chân đế', detail: 'Siết chặt toàn bộ bu lông bệ máy, kiểm tra khớp nối mềm Canvas không rách.' },
+                    { title: 'Đo tốc độ gió & độ rung cơ khí', detail: 'Đo lưu lượng/tốc độ gió đầu đẩy đạt thiết kế, quạt chạy êm không rung lắc.' },
+                    { title: 'Đo dòng điện vận hành & điện trở cách điện', detail: 'Đo dòng điện 3 pha trong định mức, đo cách điện cuộn dây motor > 50 MΩ.' }
+                ]
+            },
+            {
+                id: 'tpl-pump',
+                code: 'CHILLER / BƠM',
+                name: 'Cụm Bơm Nước Lạnh & Hệ Chiller',
+                icon: 'fa-water',
+                prefix: 'TS-2026-HVAC-',
+                tasks: [
+                    { title: 'Vệ sinh tổng quan vỏ máy & bệ bơm', detail: 'Lau chùi bụi bẩn bám trên thân bơm, động cơ và bệ quán tính.' },
+                    { title: 'Kiểm tra độ rò rỉ phớt cơ khí (Mechanical Seal)', detail: 'Kiểm tra cổ trục phớt bơm, đảm bảo kín khít không rò nước.' },
+                    { title: 'Tra mỡ ổ bi / Bạc đạn động cơ', detail: 'Bổ sung mỡ chịu nhiệt chuyên dụng cho 2 gối đỡ ổ bi.' },
+                    { title: 'Đo điện trở cách điện & dòng điện 3 pha', detail: 'Đo bằng đồng hồ Megaohmmeter > 50 MΩ, dòng tải 3 pha cân bằng.' },
+                    { title: 'Kiểm tra van, khớp nối mềm & đồng hồ áp suất', detail: 'Đồng hồ áp lực đầu hút/đẩy hoạt động chính xác, siết bu lông chân đế.' },
+                    { title: 'Vệ sinh bầu lọc rác chữ Y (Y-Strainer)', detail: 'Khóa van cô lập, tháo xả cặn bẩn tích tụ tại lưới lọc Y đường ống hút.' }
+                ]
+            },
+            {
+                id: 'tpl-pccc',
+                code: 'PCCC',
+                name: 'Hệ Thống Bơm & Thiết Bị PCCC',
+                icon: 'fa-fire-extinguisher',
+                prefix: 'TS-2026-FIRE-',
+                tasks: [
+                    { title: 'Kiểm tra mức nhiên liệu Diesel & nước làm mát', detail: 'Dầu diesel trong bồn chứa > 80%, nước giải nhiệt két nước đầy đủ.' },
+                    { title: 'Kiểm tra điện áp 2 bình ắc quy đề nổ', detail: 'Đo điện áp bình ắc quy và bộ sạc tự động tại tủ điều khiển đạt 24V - 27V.' },
+                    { title: 'Kiểm tra áp lực tuyến ống & bình tích áp', detail: 'Áp suất đường ống duy trì ổn định từ 9.0 - 11.0 bar.' },
+                    { title: 'Chạy thử chế độ Tự động / Bằng tay (Auto/Manual Test)', detail: 'Test khởi động bơm bù áp, bơm điện và bơm Diesel qua tủ điều khiển.' }
+                ]
+            }
+        ];
+
+        let deviceTemplatesData = JSON.parse(JSON.stringify(defaultDeviceTemplatesData));
+        let isTemplateEditMode = false;
+        let currentSelectedTemplateId = 'tpl-ahu';
+
+        function loadDeviceTemplatesFromStorage() {
+            const saved = localStorage.getItem('hicon_device_templates');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        deviceTemplatesData = parsed;
+                    }
+                } catch (e) {}
+            }
+        }
+
+        function saveDeviceTemplatesToStorage() {
+            localStorage.setItem('hicon_device_templates', JSON.stringify(deviceTemplatesData));
+        }
+
         function openAdminModal() {
             hideErrorToast();
             document.getElementById('admin-modal').classList.remove('hidden');
             document.getElementById('admin-step-auth').classList.remove('hidden');
             document.getElementById('admin-step-changepass').classList.add('hidden');
+            document.getElementById('admin-step-select-type').classList.add('hidden');
+            document.getElementById('admin-step-edit-template').classList.add('hidden');
             document.getElementById('admin-step-form').classList.add('hidden');
             
             const passInput = document.getElementById('admin-password-input');
@@ -3375,19 +3614,15 @@
 
             if (pass === currentPass) {
                 passInput.classList.remove('shake-error', 'border-red-500');
+                loadDeviceTemplatesFromStorage();
+                isTemplateEditMode = false;
+
                 document.getElementById('admin-step-auth').classList.add('hidden');
-                document.getElementById('admin-step-form').classList.remove('hidden');
-                
-                loadDefaultFormTasks([
-                    { title: 'Vệ sinh tổng quan vỏ máy', detail: 'Lau chùi sạch sẽ bụi bẩn, kiểm tra ngoại quan.' },
-                    { title: 'Kiểm tra cơ khí / Trục động cơ', detail: 'Kiểm tra độ rơ, độ rung bất thường.' },
-                    { title: 'Tra mỡ / Dầu bôi trơn', detail: 'Bổ sung mỡ bò chịu nhiệt chuyên dụng cho 2 gối đỡ ổ bi.' },
-                    { title: 'Đo điện trở cách điện', detail: 'Đo kiểm tra an toàn điện bằng đồng hồ chuyên dụng.' },
-                    { title: 'Kiểm tra dòng điện vận hành', detail: 'Đo dòng tải thực tế các pha đảm bảo trong định mức.' },
-                    { title: 'Kiểm tra bu lông, đai ốc', detail: 'Siết chặt lại các điểm đấu nối và chân đế.' },
-                    { title: 'Kiểm tra hệ thống van & áp suất', detail: 'Đảm bảo áp suất đường ống nằm trong dải tiêu chuẩn.' },
-                    { title: 'Vệ sinh lưới lọc / Phin lọc', detail: 'Xả cặn, làm sạch thiết bị lọc cặn.' }
-                ]);
+                document.getElementById('admin-step-edit-template').classList.add('hidden');
+                document.getElementById('admin-step-form').classList.add('hidden');
+                document.getElementById('admin-step-select-type').classList.remove('hidden');
+
+                renderDeviceTypeCardsGrid();
             } else {
                 passInput.classList.add('shake-error', 'border-red-500');
                 setTimeout(() => passInput.classList.remove('shake-error'), 500);
@@ -3395,6 +3630,220 @@
             }
         }
 
+        function renderDeviceTypeCardsGrid() {
+            const grid = document.getElementById('device-type-cards-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            const hintBox = document.getElementById('template-edit-hint');
+            const toggleBtn = document.getElementById('btn-toggle-edit-template');
+            if (isTemplateEditMode) {
+                if (hintBox) hintBox.classList.remove('hidden');
+                if (toggleBtn) {
+                    toggleBtn.className = "btn-interactive bg-amber-500 text-brand-dark border border-amber-600 font-black px-3.5 py-2 rounded-xl text-xs flex items-center shadow-md";
+                    toggleBtn.innerHTML = `<i class="fas fa-check mr-1.5"></i> Đang Bật Sửa Form`;
+                }
+            } else {
+                if (hintBox) hintBox.classList.add('hidden');
+                if (toggleBtn) {
+                    toggleBtn.className = "btn-interactive bg-amber-100 hover:bg-amber-500 hover:text-brand-dark text-amber-800 border border-amber-300 font-extrabold px-3.5 py-2 rounded-xl text-xs flex items-center shadow-sm";
+                    toggleBtn.innerHTML = `<i class="fas fa-edit mr-1.5"></i> Sửa Form Thiết Bị`;
+                }
+            }
+
+            deviceTemplatesData.forEach(tpl => {
+                const taskCount = (tpl.tasks || []).length;
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-2xl border-2 border-gray-200 hover:border-brand-accent p-4 shadow-sm hover:shadow-xl transition flex flex-col justify-between relative group";
+
+                card.innerHTML = `
+                    <div onclick="selectDeviceTypeAndOpenForm('${tpl.id}')" class="cursor-pointer">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-brand-navy to-brand-blue text-cyan-300 flex items-center justify-center text-lg shadow-md group-hover:scale-110 transition">
+                                <i class="fas ${tpl.icon || 'fa-cogs'}"></i>
+                            </div>
+                            <span class="bg-cyan-50 text-brand-blue border border-cyan-200 font-extrabold text-[10px] px-2.5 py-1 rounded-full">
+                                ${taskCount} hạng mục chuẩn
+                            </span>
+                        </div>
+                        <div class="text-base font-black text-brand-navy tracking-wide uppercase group-hover:text-brand-accent transition">
+                            ${tpl.code}
+                        </div>
+                        <div class="text-xs font-semibold text-gray-600 mt-0.5 line-clamp-1">
+                            ${tpl.name}
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between gap-2">
+                        <button type="button" onclick="selectDeviceTypeAndOpenForm('${tpl.id}')" class="btn-interactive flex-1 bg-brand-navy hover:bg-brand-blue text-white font-bold py-2 rounded-xl text-[11px] flex items-center justify-center shadow-sm">
+                            <i class="fas fa-check-circle mr-1 text-cyan-300"></i> Chọn Form Này
+                        </button>
+                        <button type="button" onclick="openTemplateEditorModal('${tpl.id}')" class="btn-interactive bg-amber-100 hover:bg-amber-500 text-amber-800 hover:text-brand-dark font-extrabold px-3 py-2 rounded-xl text-[11px] flex items-center border border-amber-300" title="Sửa các hạng mục bảo trì chuẩn của ${tpl.code}">
+                            <i class="fas fa-pen mr-1"></i> Sửa
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function toggleTemplateEditMode() {
+            isTemplateEditMode = !isTemplateEditMode;
+            renderDeviceTypeCardsGrid();
+        }
+
+        function selectDeviceTypeAndOpenForm(tplId) {
+            const tpl = deviceTemplatesData.find(t => t.id === tplId);
+            if (!tpl) return;
+
+            currentSelectedTemplateId = tpl.id;
+
+            document.getElementById('admin-step-select-type').classList.add('hidden');
+            document.getElementById('admin-step-edit-template').classList.add('hidden');
+            document.getElementById('admin-step-form').classList.remove('hidden');
+
+            const labelEl = document.getElementById('current-selected-type-label');
+            if (labelEl) {
+                labelEl.innerText = `${tpl.code} - ${tpl.name}`;
+            }
+
+            const codeInput = document.getElementById('form-code');
+            if (codeInput && !codeInput.value.trim() && tpl.prefix) {
+                codeInput.value = tpl.prefix;
+            }
+
+            loadDefaultFormTasks(tpl.tasks || []);
+            showTopToast(`Đã nạp Form chuẩn của thiết bị: ${tpl.code} (${(tpl.tasks || []).length} hạng mục)`, false);
+        }
+
+        function backToSelectTypeStep() {
+            document.getElementById('admin-step-form').classList.add('hidden');
+            document.getElementById('admin-step-edit-template').classList.add('hidden');
+            document.getElementById('admin-step-select-type').classList.remove('hidden');
+            renderDeviceTypeCardsGrid();
+        }
+
+        function openCurrentTemplateEditorFromForm() {
+            openTemplateEditorModal(currentSelectedTemplateId);
+        }
+
+        function openTemplateEditorModal(tplId) {
+            document.getElementById('admin-step-select-type').classList.add('hidden');
+            document.getElementById('admin-step-form').classList.add('hidden');
+            document.getElementById('admin-step-edit-template').classList.remove('hidden');
+
+            const container = document.getElementById('tpl-tasks-container');
+            container.innerHTML = '';
+            const delBtn = document.getElementById('btn-delete-template');
+
+            if (tplId) {
+                const tpl = deviceTemplatesData.find(t => t.id === tplId);
+                if (!tpl) return;
+                document.getElementById('template-editor-heading').innerHTML = `<i class="fas fa-sliders-h mr-2"></i> SỬA FORM CHUẨN: ${tpl.code}`;
+                document.getElementById('tpl-edit-id').value = tpl.id;
+                document.getElementById('tpl-edit-code').value = tpl.code;
+                document.getElementById('tpl-edit-name').value = tpl.name;
+                document.getElementById('tpl-edit-icon').value = tpl.icon || 'fa-cogs';
+                document.getElementById('tpl-edit-prefix').value = tpl.prefix || '';
+
+                (tpl.tasks || []).forEach(task => addTemplateTaskRow(task.title, task.detail));
+                if (delBtn) delBtn.classList.remove('hidden');
+            } else {
+                document.getElementById('template-editor-heading').innerHTML = `<i class="fas fa-plus-circle mr-2"></i> THÊM LOẠI THIẾT BỊ & FORM CHUẨN MỚI`;
+                document.getElementById('tpl-edit-id').value = '';
+                document.getElementById('tpl-edit-code').value = '';
+                document.getElementById('tpl-edit-name').value = '';
+                document.getElementById('tpl-edit-icon').value = 'fa-cogs';
+                document.getElementById('tpl-edit-prefix').value = 'TS-2026-';
+
+                addTemplateTaskRow('Vệ sinh tổng quan thiết bị', 'Lau chùi sạch sẽ bụi bẩn, kiểm tra ngoại quan.');
+                addTemplateTaskRow('Kiểm tra cơ khí & truyền động', 'Kiểm tra độ rung, độ ồn và tra dầu mỡ.');
+                addTemplateTaskRow('Kiểm tra thông số điện vận hành', 'Đo dòng điện định mức và siết chặt ốc cầu đấu.');
+                if (delBtn) delBtn.classList.add('hidden');
+            }
+        }
+
+        function addTemplateTaskRow(title = '', detail = '') {
+            const container = document.getElementById('tpl-tasks-container');
+            const rowId = 'tpl-row-' + Date.now() + Math.random().toString(36).substring(2, 5);
+            const div = document.createElement('div');
+            div.id = rowId;
+            div.className = "flex gap-2 items-center bg-white p-2 rounded-xl border border-amber-200 shadow-sm";
+            div.innerHTML = `
+                <input type="text" placeholder="Tên hạng mục chuẩn (VD: Vệ sinh lưới lọc)" value="${title}" class="tpl-task-title w-1/3 p-2 border border-gray-300 rounded-lg text-xs font-bold focus:outline-none focus:border-amber-500">
+                <input type="text" placeholder="Nội dung thực hiện mặc định..." value="${detail}" class="tpl-task-detail w-full p-2 border border-gray-300 rounded-lg text-xs focus:outline-none focus:border-amber-500">
+                <button type="button" onclick="document.getElementById('${rowId}').remove()" class="btn-interactive bg-red-100 hover:bg-red-200 text-red-600 px-2.5 py-2 rounded-lg text-xs font-bold" title="Xóa dòng này">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            `;
+            container.appendChild(div);
+        }
+
+        async function saveTemplateForm() {
+            const editId = document.getElementById('tpl-edit-id').value.trim();
+            const code = document.getElementById('tpl-edit-code').value.trim().toUpperCase();
+            const name = document.getElementById('tpl-edit-name').value.trim();
+            const icon = document.getElementById('tpl-edit-icon').value;
+            const prefix = document.getElementById('tpl-edit-prefix').value.trim().toUpperCase();
+
+            if (!code || !name) {
+                showTopErrorToast('Vui lòng nhập đầy đủ Mã loại thiết bị (VD: FCU) và Tên loại thiết bị!');
+                return;
+            }
+
+            const rows = document.querySelectorAll('#tpl-tasks-container > div');
+            const tasks = [];
+            rows.forEach(r => {
+                const tTitle = r.querySelector('.tpl-task-title').value.trim();
+                const tDetail = r.querySelector('.tpl-task-detail').value.trim();
+                if (tTitle) {
+                    tasks.push({
+                        title: tTitle,
+                        detail: tDetail || 'Đã kiểm tra và bảo dưỡng đạt yêu cầu kỹ thuật.'
+                    });
+                }
+            });
+
+            if (tasks.length === 0) {
+                showTopErrorToast('Vui lòng thêm ít nhất 1 hạng mục bảo trì chuẩn cho loại thiết bị này!');
+                return;
+            }
+
+            if (editId) {
+                const idx = deviceTemplatesData.findIndex(t => t.id === editId);
+                if (idx !== -1) {
+                    deviceTemplatesData[idx] = { id: editId, code, name, icon, prefix, tasks };
+                }
+            } else {
+                const newId = 'tpl-' + Date.now();
+                deviceTemplatesData.push({ id: newId, code, name, icon, prefix, tasks });
+            }
+
+            saveDeviceTemplatesToStorage();
+            backToSelectTypeStep();
+
+            const synced = await pushFullSystemToCloud();
+            if (synced) {
+                showTopToast(`Đã lưu Form chuẩn "${code}" & đồng bộ Cloud cho toàn đội bảo trì!`, false);
+            } else {
+                showTopToast(`Đã lưu Form chuẩn "${code}" (Offline)! Sẽ tự đồng bộ khi có mạng.`, false);
+            }
+        }
+
+        async function deleteCurrentTemplate() {
+            const editId = document.getElementById('tpl-edit-id').value.trim();
+            if (!editId) return;
+            if (deviceTemplatesData.length <= 1) {
+                showTopErrorToast('Hệ thống cần giữ lại ít nhất 1 Form thiết bị mẫu!');
+                return;
+            }
+            const tpl = deviceTemplatesData.find(t => t.id === editId);
+            deviceTemplatesData = deviceTemplatesData.filter(t => t.id !== editId);
+            saveDeviceTemplatesToStorage();
+            backToSelectTypeStep();
+            await pushFullSystemToCloud();
+            showTopToast(`Đã xóa loại thiết bị "${tpl ? tpl.code : ''}" khỏi danh mục!`, false);
+        }
         function addMaintenanceTaskRow(title = '', detail = '') {
             const container = document.getElementById('form-tasks-container');
             const rowId = 'task-row-' + Date.now() + Math.random().toString(36).substring(2, 5);
