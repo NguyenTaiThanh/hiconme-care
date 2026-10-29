@@ -401,7 +401,7 @@
             </div>
         </div>
 
-       <!-- ==================== SECTION 2: GIỚI THIỆU (INTRO SIÊU TỐI GIẢN - TẬP TRUNG HÌNH ẢNH THỰC TẾ) ==================== -->
+        <!-- ==================== SECTION 2: GIỚI THIỆU (INTRO SIÊU TỐI GIẢN - TẬP TRUNG HÌNH ẢNH THỰC TẾ) ==================== -->
         <div id="section-about" class="page-section hidden bg-slate-50 relative overflow-hidden">
             
             <style>
@@ -848,8 +848,55 @@
                             const cls = sel.substring(1);
                             el.classList.remove(cls);
                             void el.offsetWidth;
-                            el.classList.add(cls
+                            el.classList.add(cls);
+                        });
+                    });
 
+                    aboutMinimalTimer = setTimeout(() => {
+                        finishAboutIntroAndShowContent();
+                    }, 5800);
+                }
+
+                function finishAboutIntroAndShowContent() {
+                    clearAboutMinimalTimer();
+                    loadSavedAboutRealPhotos();
+                    const introStage = document.getElementById('about-intro-stage');
+                    const detailStage = document.getElementById('about-detail-stage');
+                    if (!introStage || !detailStage) return;
+
+                    introStage.classList.add('intro-stage-exit');
+                    setTimeout(() => {
+                        introStage.classList.add('hidden');
+                        detailStage.classList.remove('hidden');
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }, 350);
+                }
+
+                function replayAboutCinematicIntro() {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    startAboutCinematicIntro();
+                }
+
+                (function initAboutSectionObserver() {
+                    const aboutSec = document.getElementById('section-about');
+                    if (!aboutSec) return;
+                    let wasHidden = aboutSec.classList.contains('hidden');
+
+                    const observer = new MutationObserver(() => {
+                        const isNowHidden = aboutSec.classList.contains('hidden');
+                        if (wasHidden && !isNowHidden) {
+                            if (typeof isCmsEditMode !== 'undefined' && isCmsEditMode) {
+                                finishAboutIntroAndShowContent();
+                            } else {
+                                startAboutCinematicIntro();
+                            }
+                        }
+                        wasHidden = isNowHidden;
+                    });
+                    observer.observe(aboutSec, { attributes: true, attributeFilter: ['class'] });
+                })();
+            </script>
+        </div>
         <!-- ==================== SECTION 3: DỊCH VỤ (ĐỘNG 100%: ẢNH FULL KHUNG & THÊM FORM MẪU) ==================== -->
         <div id="section-services" class="page-section hidden py-12 bg-gray-50">
             <div class="max-w-7xl mx-auto px-4">
