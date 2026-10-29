@@ -401,23 +401,233 @@
             </div>
         </div>
 
-        <!-- ==================== SECTION 2: GIỚI THIỆU ==================== -->
-        <div id="section-about" class="page-section hidden py-14 bg-slate-50">
-            <div class="max-w-7xl mx-auto px-4">
+        <!-- ==================== SECTION 2: GIỚI THIỆU (PHIÊN BẢN CINEMATIC VIDEO & TƯƠNG TÁC M&E) ==================== -->
+        <div id="section-about" class="page-section hidden py-12 sm:py-16 bg-slate-900 relative overflow-hidden">
+            
+            <!-- CSS CHUYÊN BIỆT CHO HIỆU ỨNG VIDEO & CHUYỂN ĐỘNG RA/VÀO MỤC GIỚI THIỆU -->
+            <style>
+                /* Hiệu ứng máy quay Cinema (Ken Burns) cho ảnh/video nền */
+                @keyframes aboutCinemaZoom {
+                    0% { transform: scale(1) translate(0, 0); }
+                    50% { transform: scale(1.12) translate(-1.5%, -1%); }
+                    100% { transform: scale(1) translate(0, 0); }
+                }
+                .about-cinema-motion {
+                    animation: aboutCinemaZoom 16s ease-in-out infinite;
+                }
+
+                /* Hiệu ứng trượt Ra/Vào khi chuyển cảnh Video Showcase */
+                @keyframes showcaseSlideIn {
+                    from { opacity: 0; transform: translateY(18px) scale(0.98); filter: blur(4px); }
+                    to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+                }
+                .showcase-content-anim {
+                    animation: showcaseSlideIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+                }
+
+                /* Hiệu ứng xuất hiện phân tầng khi mở tab Giới Thiệu */
+                #section-about.active-section .about-enter-left {
+                    animation: aboutEnterLeft 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+                }
+                #section-about.active-section .about-enter-right {
+                    animation: aboutEnterRight 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+                }
+                @keyframes aboutEnterLeft {
+                    from { opacity: 0; transform: translateX(-35px); }
+                    to { opacity: 1; transform: translateX(0); }
+                }
+                @keyframes aboutEnterRight {
+                    from { opacity: 0; transform: translateX(35px); }
+                    to { opacity: 1; transform: translateX(0); }
+                }
+
+                /* Dòng chảy năng lượng trên đường ống / dây dẫn SVG */
+                @keyframes meFlowLine {
+                    to { stroke-dashoffset: -40; }
+                }
+                .me-flow-stroke {
+                    stroke-dasharray: 6 6;
+                    animation: meFlowLine 1.2s linear infinite;
+                }
+
+                /* Quét tia hồng ngoại kiểm tra tủ điện / PCCC */
+                @keyframes thermalScan {
+                    0%, 100% { top: 5%; opacity: 0.75; }
+                    50% { top: 90%; opacity: 1; }
+                }
+                .about-thermal-laser {
+                    position: absolute; left: 0; right: 0; height: 2px;
+                    background: linear-gradient(90deg, transparent, #00f2fe, #f59e0b, #00f2fe, transparent);
+                    box-shadow: 0 0 12px 2px rgba(0, 242, 254, 0.8);
+                    animation: thermalScan 3.2s ease-in-out infinite;
+                }
+
+                /* Thanh tiến trình tự động chuyển cảnh Video */
+                @keyframes reelProgress {
+                    from { width: 0%; }
+                    to { width: 100%; }
+                }
+                .reel-progress-bar {
+                    animation: reelProgress 5s linear infinite;
+                }
+
+                /* Hiệu ứng sáng đèn cho thẻ dịch vụ đang trình chiếu */
+                .about-srv-card.active-srv {
+                    background: linear-gradient(90deg, rgba(0, 168, 204, 0.28) 0%, rgba(255, 255, 255, 0.08) 100%) !important;
+                    border-color: #00a8cc !important;
+                    transform: translateX(6px);
+                    box-shadow: 0 10px 25px -5px rgba(0, 168, 204, 0.35);
+                }
+            </style>
+
+            <!-- LỚP NỀN KỸ THUẬT CƠ ĐIỆN MỜ PHÍA SAU -->
+            <div class="absolute inset-0 pointer-events-none opacity-20">
+                <div class="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-brand-accent blur-[110px]"></div>
+                <div class="absolute bottom-10 right-10 w-96 h-96 rounded-full bg-amber-500 blur-[130px]"></div>
+                <svg class="w-full h-full opacity-25" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <pattern id="me-grid" width="48" height="48" patternUnits="userSpaceOnUse">
+                            <path d="M 48 0 L 0 0 0 48" fill="none" stroke="rgba(0, 168, 204, 0.35)" stroke-width="0.7"/>
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#me-grid)" />
+                </svg>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 relative z-10">
                 
-                <div class="text-center mb-12">
-                    <span class="inline-flex items-center bg-brand-navy text-cyan-300 text-xs font-bold px-3.5 py-1 rounded-full uppercase tracking-widest shadow-sm mb-3">
-                        <i class="fas fa-calendar-check mr-2 text-amber-400"></i> <span data-cms-id="about-founded-badge">Thành lập từ ngày 22/12/2015</span>
+                <!-- TIÊU ĐỀ CHÍNH (GIỮ NGUYÊN BẢN GỐC) -->
+                <div class="text-center mb-10">
+                    <span class="inline-flex items-center bg-white/10 backdrop-blur-md text-cyan-300 border border-cyan-400/40 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg mb-3">
+                        <i class="fas fa-calendar-check mr-2 text-amber-400 animate-bounce"></i>
+                        <span data-cms-id="about-founded-badge">Thành lập từ ngày 22/12/2015</span>
                     </span>
-                    <h2 data-cms-id="about-company-heading" class="text-2xl sm:text-4xl font-black text-brand-navy tracking-tight uppercase">
+                    <h2 data-cms-id="about-company-heading" class="text-2xl sm:text-4xl font-black text-white tracking-tight uppercase drop-shadow">
                         CÔNG TY CỔ PHẦN CƠ ĐIỆN VÀ BẢO TRÌ HICON
                     </h2>
-                    <div class="w-24 h-1 bg-brand-accent mx-auto mt-3 rounded-full"></div>
+                    <div class="w-28 h-1 bg-gradient-to-r from-brand-accent via-amber-400 to-brand-accent mx-auto mt-3 rounded-full"></div>
                 </div>
 
+                <!-- ==================== MÀN HÌNH VIDEO & MÔ PHỎNG VẬN HÀNH THỰC TẾ (LIVE M&E CINEMA SHOWCASE) ==================== -->
+                <div class="mb-10 bg-slate-950 rounded-3xl p-2 sm:p-3 border border-cyan-500/40 shadow-[0_20px_50px_rgba(0,0,0,0.6)] relative overflow-hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+                        
+                        <!-- KHUNG VIDEO / HÌNH ẢNH CHUYỂN ĐỘNG TRỰC QUAN BÊN TRÁI (7 CỘT) -->
+                        <div class="lg:col-span-7 relative h-64 sm:h-80 rounded-2xl overflow-hidden bg-black border border-white/15 group">
+                            <!-- Ảnh/Video chuyển động Ken Burns tốc độ thực -->
+                            <img id="about-live-img" src="https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=1200&auto=format&fit=crop" alt="HICON M&E Live Operations" class="absolute inset-0 w-full h-full object-cover about-cinema-motion opacity-85 transition-opacity duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/35 to-transparent"></div>
+                            <div class="about-thermal-laser"></div>
+
+                            <!-- Góc trên trái: Nhãn LIVE CAMERA & Trạng thái hệ thống -->
+                            <div class="absolute top-3 left-3 flex flex-wrap items-center gap-2 z-20">
+                                <span class="bg-red-600/90 backdrop-blur-md text-white text-[10px] font-black px-2.5 py-1 rounded-lg flex items-center shadow-lg uppercase tracking-wider">
+                                    <span class="w-2 h-2 rounded-full bg-white animate-ping mr-1.5"></span> LIVE M&E VIEW
+                                </span>
+                                <span id="about-live-tag" class="bg-slate-900/85 backdrop-blur-md text-cyan-300 border border-cyan-400/40 text-[10px] font-extrabold px-2.5 py-1 rounded-lg uppercase">
+                                    HVAC & CHILLER SYSTEM
+                                </span>
+                            </div>
+
+                            <!-- Góc trên phải: Đồ họa mô phỏng Thiết bị đang chạy (Quạt AHU / Đồng hồ PCCC / Sóng Điện) -->
+                            <div class="absolute top-3 right-3 bg-slate-900/85 backdrop-blur-md border border-white/20 rounded-2xl p-2.5 flex items-center space-x-3 z-20 shadow-xl">
+                                <div id="about-hud-icon-box" class="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-400 flex items-center justify-center text-cyan-300 text-lg">
+                                    <i id="about-hud-icon" class="fas fa-fan animate-vane-spin"></i>
+                                </div>
+                                <div class="text-left font-mono">
+                                    <div id="about-hud-metric-label" class="text-[9px] text-gray-400 uppercase">THÔNG SỐ VẬN HÀNH</div>
+                                    <div id="about-hud-metric-val" class="text-xs font-black text-emerald-400">22.4°C | 1450 RPM</div>
+                                </div>
+                            </div>
+
+                            <!-- Sơ đồ mạch xung điện / đường ống chạy ngầm phía dưới khung video -->
+                            <div class="absolute bottom-3 left-4 right-4 z-20 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+                                <div id="about-live-caption-box" class="showcase-content-anim">
+                                    <div id="about-live-step-badge" class="text-[10px] font-black text-amber-400 uppercase tracking-widest">
+                                        LĨNH VỰC TRỌNG ĐIỂM 01 / 07
+                                    </div>
+                                    <h4 id="about-live-title" class="text-base sm:text-xl font-black text-white leading-snug">
+                                        Bảo Trì Hệ Thống Điều Hoà & Thông Gió (HVAC / Chiller / AHU)
+                                    </h4>
+                                    <p id="about-live-desc" class="text-xs text-gray-200 mt-0.5 line-clamp-2">
+                                        Kiểm tra lưu lượng gió, vệ sinh dàn Coil Chiller/AHU/FCU, cân chỉnh dây đai và đo dòng điện motor định kỳ.
+                                    </p>
+                                </div>
+                                <!-- Nút điều khiển Tạm dừng / Chuyển tiếp cảnh -->
+                                <div class="flex items-center space-x-1.5 shrink-0">
+                                    <button type="button" onclick="stepAboutReel(-1)" class="w-8 h-8 rounded-lg bg-white/15 hover:bg-brand-accent hover:text-brand-dark text-white flex items-center justify-center text-xs transition" title="Cảnh trước">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </button>
+                                    <button type="button" onclick="toggleAboutReelPause()" id="about-reel-pause-btn" class="w-8 h-8 rounded-lg bg-amber-500 text-brand-dark font-bold flex items-center justify-center text-xs shadow transition" title="Tạm dừng / Tiếp tục">
+                                        <i class="fas fa-pause"></i>
+                                    </button>
+                                    <button type="button" onclick="stepAboutReel(1)" class="w-8 h-8 rounded-lg bg-white/15 hover:bg-brand-accent hover:text-brand-dark text-white flex items-center justify-center text-xs transition" title="Cảnh tiếp theo">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Thanh chạy thời gian chuyển cảnh -->
+                            <div class="absolute bottom-0 inset-x-0 h-1 bg-white/15 z-20">
+                                <div id="about-reel-progress" class="h-full bg-gradient-to-r from-brand-accent via-amber-400 to-emerald-400 reel-progress-bar"></div>
+                            </div>
+                        </div>
+
+                        <!-- BẢNG MÔ PHỎNG KỸ THUẬT TRỰC QUAN BÊN PHẢI VIDEO (5 CỘT) -->
+                        <div class="lg:col-span-5 p-3 sm:p-4 text-white space-y-3">
+                            <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
+                                <div class="flex items-center space-x-2">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+                                    <span class="text-xs font-black tracking-wider uppercase text-cyan-300">TRUNG TÂM GIÁM SÁT KỸ THUẬT M&E</span>
+                                </div>
+                                <span class="text-[10px] font-mono bg-white/10 px-2 py-0.5 rounded text-amber-300">TCVN & ISO 9001</span>
+                            </div>
+
+                            <!-- 3 Thanh trạng thái trực quan của HVAC - PCCC - ĐIỆN -->
+                            <div class="grid grid-cols-3 gap-2 text-center">
+                                <div onclick="selectAboutReelSlide(2)" class="cursor-pointer bg-slate-900 hover:bg-slate-800 border border-cyan-500/30 rounded-xl p-2.5 transition group">
+                                    <i class="fas fa-fan text-cyan-400 text-lg mb-1 block animate-vane-spin"></i>
+                                    <div class="text-[10px] font-black text-white">HVAC / AHU</div>
+                                    <div class="text-[9px] text-emerald-400 font-mono mt-0.5">● Chiller OK</div>
+                                </div>
+                                <div onclick="selectAboutReelSlide(1)" class="cursor-pointer bg-slate-900 hover:bg-slate-800 border border-red-500/30 rounded-xl p-2.5 transition group">
+                                    <i class="fas fa-fire-extinguisher text-red-400 text-lg mb-1 block animate-bounce"></i>
+                                    <div class="text-[10px] font-black text-white">HỆ THỐNG PCCC</div>
+                                    <div class="text-[9px] text-amber-400 font-mono mt-0.5">● 10.2 Bar</div>
+                                </div>
+                                <div onclick="selectAboutReelSlide(0)" class="cursor-pointer bg-slate-900 hover:bg-slate-800 border border-amber-500/30 rounded-xl p-2.5 transition group">
+                                    <i class="fas fa-bolt text-amber-400 text-lg mb-1 block animate-pulse"></i>
+                                    <div class="text-[10px] font-black text-white">ĐIỆN & ELV</div>
+                                    <div class="text-[9px] text-cyan-300 font-mono mt-0.5">● 380V 3-Pha</div>
+                                </div>
+                            </div>
+
+                            <!-- Biểu đồ xung dòng chảy Cơ Điện SVG động -->
+                            <div class="bg-slate-900/90 rounded-2xl p-3 border border-white/10 relative overflow-hidden">
+                                <div class="flex justify-between items-center text-[10px] text-gray-400 mb-1 font-mono">
+                                    <span>MÔ PHỎNG TUẦN HOÀN BẢO TRÌ SỐ HÓA</span>
+                                    <span id="about-hud-SpecBadge" class="text-cyan-300 font-bold">CHUẨN HÓA 100%</span>
+                                </div>
+                                <svg class="w-full h-10" viewBox="0 0 300 40" fill="none">
+                                    <path d="M 0 20 Q 25 5, 50 20 T 100 20 T 150 20 T 200 20 T 250 20 T 300 20" stroke="rgba(0, 168, 204, 0.25)" stroke-width="2" fill="none"/>
+                                    <path d="M 0 20 Q 25 5, 50 20 T 100 20 T 150 20 T 200 20 T 250 20 T 300 20" stroke="#00f2fe" stroke-width="2.5" fill="none" class="me-flow-stroke"/>
+                                </svg>
+                                <div class="flex justify-between items-center text-[10px] text-gray-300 pt-1 border-t border-white/10">
+                                    <span><i class="fas fa-check-circle text-emerald-400 mr-1"></i>Kiểm tra định kỳ</span>
+                                    <span><i class="fas fa-check-circle text-amber-400 mr-1"></i>Đo kiểm chuyên dụng</span>
+                                    <span><i class="fas fa-qrcode text-cyan-300 mr-1"></i>Báo cáo QR</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ==================== NỘI DUNG BẢN GỐC (2 CỘT: THƯ NGỎ & 07 LĨNH VỰC) ==================== -->
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
                     
-                    <div class="lg:col-span-7 bg-white rounded-3xl shadow-xl border border-gray-200 p-6 sm:p-9 flex flex-col justify-between relative overflow-hidden">
+                    <!-- CỘT TRÁI: THƯ NGỎ & GIỚI THIỆU (GIỮ NGUYÊN 100% NỘI DUNG GỐC) -->
+                    <div class="lg:col-span-7 about-enter-left bg-white rounded-3xl shadow-2xl border border-gray-200 p-6 sm:p-9 flex flex-col justify-between relative overflow-hidden">
                         <div class="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-brand-navy via-brand-accent to-amber-500"></div>
                         
                         <div class="space-y-5">
@@ -426,12 +636,12 @@
                                     <p data-cms-id="about-letter-sub" class="text-xs font-bold uppercase tracking-widest text-brand-accent mb-1">THƯ NGỎ & GIỚI THIỆU</p>
                                     <h3 data-cms-id="about-letter-dear" class="text-xl sm:text-2xl font-extrabold text-brand-navy">Kính gửi: Quý khách hàng;</h3>
                                 </div>
-                                <div class="w-12 h-12 rounded-2xl bg-brand-light border border-cyan-200 flex items-center justify-center text-brand-blue text-xl shrink-0">
+                                <div class="w-12 h-12 rounded-2xl bg-brand-light border border-cyan-200 flex items-center justify-center text-brand-blue text-xl shrink-0 shadow-sm">
                                     <i class="fas fa-handshake"></i>
                                 </div>
                             </div>
 
-                            <p data-cms-id="about-p1" class="text-gray-700 text-sm sm:text-base font-medium leading-relaxed bg-cyan-50/60 border-l-4 border-brand-accent p-4 rounded-r-xl">
+                            <p data-cms-id="about-p1" class="text-gray-700 text-sm sm:text-base font-medium leading-relaxed bg-cyan-50/70 border-l-4 border-brand-accent p-4 rounded-r-xl shadow-sm">
                                 Công ty Cổ phần Cơ điện và Bảo trì Hicon xin gửi lời chào trân trọng tới Quý Khách hàng.
                             </p>
 
@@ -439,25 +649,34 @@
                                 Được thành lập từ ngày 22/12/2015 với mong muốn đáp ứng nhu cầu ngày càng cao của Khách hàng trong lĩnh vực triển khai vận hành dịch vụ, bảo trì các dịch vụ kỹ thuật cơ điện công trình. Trải qua nhiều năm hoạt động, Hicon chúng tôi nhận được sự tin tưởng cũng như đánh giá cao từ phía khách hàng.
                             </p>
 
-                            <p data-cms-id="about-p3" class="text-gray-600 text-sm leading-relaxed text-justify">
+                            <p data-cms-id="about-p3" class="text-gray-600 text-sm leading-relaxed text-justify font-medium">
                                 HICON là đơn vị chuyên thi công, lắp đặt, kiểm tra, bảo trì và sửa chữa các dịch vụ hệ thống cho:
                             </p>
 
-                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-1">
-                                <div class="bg-slate-50 border border-gray-200 rounded-xl p-2.5 flex items-center space-x-2 text-xs font-bold text-brand-navy">
-                                    <i class="fas fa-industry text-brand-accent text-sm"></i>
+                            <!-- 4 THẺ LOẠI HÌNH CÔNG TRÌNH (CÓ HIỆU ỨNG NỔI 3D & ẢNH NỀN MỜ KHI RÊ CHUỘT) -->
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-1">
+                                <div class="card-pro-hover bg-slate-50 hover:bg-brand-navy hover:text-white border border-gray-200 rounded-xl p-3 flex items-center space-x-2.5 text-xs font-bold text-brand-navy transition group cursor-pointer">
+                                    <div class="w-8 h-8 rounded-lg bg-cyan-100 group-hover:bg-brand-accent text-brand-accent group-hover:text-brand-dark flex items-center justify-center shrink-0 transition">
+                                        <i class="fas fa-industry text-sm"></i>
+                                    </div>
                                     <span data-cms-id="about-scope-1">Nhà máy & Nhà xưởng</span>
                                 </div>
-                                <div class="bg-slate-50 border border-gray-200 rounded-xl p-2.5 flex items-center space-x-2 text-xs font-bold text-brand-navy">
-                                    <i class="fas fa-warehouse text-brand-accent text-sm"></i>
+                                <div class="card-pro-hover bg-slate-50 hover:bg-brand-navy hover:text-white border border-gray-200 rounded-xl p-3 flex items-center space-x-2.5 text-xs font-bold text-brand-navy transition group cursor-pointer">
+                                    <div class="w-8 h-8 rounded-lg bg-cyan-100 group-hover:bg-brand-accent text-brand-accent group-hover:text-brand-dark flex items-center justify-center shrink-0 transition">
+                                        <i class="fas fa-warehouse text-sm"></i>
+                                    </div>
                                     <span data-cms-id="about-scope-2">Kho hàng Logistic</span>
                                 </div>
-                                <div class="bg-slate-50 border border-gray-200 rounded-xl p-2.5 flex items-center space-x-2 text-xs font-bold text-brand-navy">
-                                    <i class="fas fa-building text-brand-accent text-sm"></i>
+                                <div class="card-pro-hover bg-slate-50 hover:bg-brand-navy hover:text-white border border-gray-200 rounded-xl p-3 flex items-center space-x-2.5 text-xs font-bold text-brand-navy transition group cursor-pointer col-span-2 sm:col-span-1">
+                                    <div class="w-8 h-8 rounded-lg bg-cyan-100 group-hover:bg-brand-accent text-brand-accent group-hover:text-brand-dark flex items-center justify-center shrink-0 transition">
+                                        <i class="fas fa-building text-sm"></i>
+                                    </div>
                                     <span data-cms-id="about-scope-3">Văn phòng & Tòa nhà</span>
                                 </div>
-                                <div class="bg-slate-50 border border-gray-200 rounded-xl p-2.5 flex items-center space-x-2 text-xs font-bold text-brand-navy sm:col-span-3">
-                                    <i class="fas fa-city text-brand-accent text-sm"></i>
+                                <div class="card-pro-hover bg-slate-50 hover:bg-brand-navy hover:text-white border border-gray-200 rounded-xl p-3 flex items-center space-x-2.5 text-xs font-bold text-brand-navy col-span-2 sm:col-span-3 transition group cursor-pointer">
+                                    <div class="w-8 h-8 rounded-lg bg-amber-100 group-hover:bg-amber-400 text-amber-600 group-hover:text-brand-dark flex items-center justify-center shrink-0 transition">
+                                        <i class="fas fa-city text-sm"></i>
+                                    </div>
                                     <span data-cms-id="about-scope-4">Các công trình dân dụng và công trình công nghiệp trọng điểm</span>
                                 </div>
                             </div>
@@ -467,114 +686,136 @@
                             </p>
                         </div>
 
+                        <!-- 4 GIÁ TRỊ CỐT LÕI (CÓ HIỆU ỨNG QUÉT SÁNG SHIMMER) -->
                         <div class="mt-6 pt-5 border-t border-gray-100">
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-5">
-                                <div class="bg-brand-navy text-white p-2.5 rounded-xl text-center shadow-sm">
-                                    <i class="fas fa-shield-alt text-amber-400 text-base mb-1 block"></i>
+                                <div class="scan-glow card-pro-hover bg-brand-navy text-white p-3 rounded-xl text-center shadow-md border border-cyan-500/20">
+                                    <i class="fas fa-shield-alt text-amber-400 text-lg mb-1 block"></i>
                                     <span data-cms-id="about-val-1" class="text-[11px] font-bold uppercase tracking-wider">An Toàn</span>
                                 </div>
-                                <div class="bg-brand-navy text-white p-2.5 rounded-xl text-center shadow-sm">
-                                    <i class="fas fa-medal text-cyan-300 text-base mb-1 block"></i>
+                                <div class="scan-glow card-pro-hover bg-brand-navy text-white p-3 rounded-xl text-center shadow-md border border-cyan-500/20">
+                                    <i class="fas fa-medal text-cyan-300 text-lg mb-1 block"></i>
                                     <span data-cms-id="about-val-2" class="text-[11px] font-bold uppercase tracking-wider">Chất Lượng</span>
                                 </div>
-                                <div class="bg-brand-navy text-white p-2.5 rounded-xl text-center shadow-sm">
-                                    <i class="fas fa-bolt text-amber-400 text-base mb-1 block"></i>
+                                <div class="scan-glow card-pro-hover bg-brand-navy text-white p-3 rounded-xl text-center shadow-md border border-cyan-500/20">
+                                    <i class="fas fa-bolt text-amber-400 text-lg mb-1 block"></i>
                                     <span data-cms-id="about-val-3" class="text-[11px] font-bold uppercase tracking-wider">Tiến Độ</span>
                                 </div>
-                                <div class="bg-brand-navy text-white p-2.5 rounded-xl text-center shadow-sm">
-                                    <i class="fas fa-hands-helping text-cyan-300 text-base mb-1 block"></i>
+                                <div class="scan-glow card-pro-hover bg-brand-navy text-white p-3 rounded-xl text-center shadow-md border border-cyan-500/20">
+                                    <i class="fas fa-hands-helping text-cyan-300 text-lg mb-1 block"></i>
                                     <span data-cms-id="about-val-4" class="text-[11px] font-bold uppercase tracking-wider">Đồng Hành Lâu Dài</span>
                                 </div>
                             </div>
 
                             <div class="flex flex-col sm:flex-row items-center justify-between bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 gap-3">
                                 <div class="flex items-center space-x-2.5">
-                                    <i class="fas fa-star text-amber-500 text-lg"></i>
+                                    <i class="fas fa-star text-amber-500 text-lg animate-spin" style="animation-duration: 6s;"></i>
                                     <span data-cms-id="about-thanks" class="text-xs sm:text-sm font-extrabold text-brand-navy italic">
                                         Rất hân hạnh được phục vụ Quý khách hàng!
                                     </span>
                                 </div>
-                                <button onclick="if(!isCmsEditMode) navigateTo('contact')" class="btn-interactive bg-brand-navy hover:bg-brand-blue text-white text-xs font-bold px-4 py-2 rounded-xl shrink-0 shadow">
+                                <button onclick="if(!isCmsEditMode) navigateTo('contact')" class="btn-interactive bg-brand-navy hover:bg-brand-blue text-white text-xs font-bold px-4 py-2.5 rounded-xl shrink-0 shadow-md">
                                     Liên Hệ Hợp Tác <i class="fas fa-arrow-right ml-1"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                    <div class="lg:col-span-5 flex flex-col justify-between space-y-6">
-                        <div class="bg-brand-navy text-white rounded-3xl shadow-xl p-6 sm:p-8 border border-cyan-500/30 flex-grow flex flex-col justify-between">
+                    <!-- CỘT PHẢI: 07 LĨNH VỰC NĂNG LỰC (BẤM HOẶC RÊ CHUỘT ĐỂ ĐỔI CẢNH VIDEO TƯƠNG ỨNG) -->
+                    <div class="lg:col-span-5 about-enter-right flex flex-col justify-between">
+                        <div class="bg-gradient-to-b from-brand-navy via-slate-900 to-brand-dark text-white rounded-3xl shadow-2xl p-6 sm:p-8 border border-cyan-400/30 flex-grow flex flex-col justify-between relative overflow-hidden">
+                            
                             <div>
-                                <div class="flex items-center justify-between mb-6 pb-3 border-b border-white/15">
+                                <div class="flex items-center justify-between mb-4 pb-3 border-b border-white/15">
                                     <div>
-                                        <span class="text-[10px] font-bold text-cyan-300 uppercase tracking-widest block">DANH MỤC NĂNG LỰC</span>
+                                        <span class="text-[10px] font-bold text-cyan-300 uppercase tracking-widest block flex items-center">
+                                            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping mr-1.5"></span> DANH MỤC NĂNG LỰC (CHẠM ĐỂ XEM MÔ PHỎNG)
+                                        </span>
                                         <h3 data-cms-id="about-srv-heading" class="text-lg sm:text-xl font-black text-white mt-0.5">CÁC DỊCH VỤ HICON CUNG CẤP GỒM:</h3>
                                     </div>
-                                    <span data-cms-id="about-srv-count-badge" class="bg-amber-500 text-brand-dark font-black text-xs px-2.5 py-1 rounded-lg">07 LĨNH VỰC</span>
+                                    <span data-cms-id="about-srv-count-badge" class="bg-amber-500 text-brand-dark font-black text-xs px-2.5 py-1 rounded-lg shrink-0 shadow">07 LĨNH VỰC</span>
                                 </div>
 
-                                <div id="about-capabilities-list" class="space-y-3">
-                                    <div class="bg-white/10 hover:bg-white/15 border border-white/10 rounded-2xl p-3.5 flex items-center space-x-3.5 transition group">
-                                        <div class="w-10 h-10 rounded-xl bg-amber-500 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
+                                <!-- DANH SÁCH 07 LĨNH VỰC (GIỮ NGUYÊN BẢN GỐC + THÊM TƯƠNG TÁC VIDEO) -->
+                                <div id="about-capabilities-list" class="space-y-2.5">
+                                    
+                                    <!-- Mục 1: Điện công nghiệp -->
+                                    <div onclick="selectAboutReelSlide(0)" onmouseenter="selectAboutReelSlide(0)" id="about-srv-card-0" class="about-srv-card active-srv cursor-pointer bg-white/10 hover:bg-white/15 border border-white/10 rounded-2xl p-3.5 flex items-center space-x-3.5 transition-all duration-300 group">
+                                        <div class="w-10 h-10 rounded-xl bg-amber-500 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition shadow-md">
                                             <i class="fas fa-bolt"></i>
                                         </div>
                                         <div data-cms-id="about-srv-1" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug flex-1">
                                             Thi công lắp đặt hệ thống điện công trình dân dụng, công nghiệp
                                         </div>
+                                        <i class="fas fa-play-circle text-cyan-300 opacity-70 group-hover:opacity-100 text-sm"></i>
                                     </div>
 
-                                    <div class="bg-white/10 hover:bg-white/15 border border-white/10 rounded-2xl p-3.5 flex items-center space-x-3.5 transition group">
-                                        <div class="w-10 h-10 rounded-xl bg-red-500 text-white flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
+                                    <!-- Mục 2: PCCC -->
+                                    <div onclick="selectAboutReelSlide(1)" onmouseenter="selectAboutReelSlide(1)" id="about-srv-card-1" class="about-srv-card cursor-pointer bg-white/10 hover:bg-white/15 border border-white/10 rounded-2xl p-3.5 flex items-center space-x-3.5 transition-all duration-300 group">
+                                        <div class="w-10 h-10 rounded-xl bg-red-500 text-white flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition shadow-md">
                                             <i class="fas fa-fire-extinguisher"></i>
                                         </div>
                                         <div data-cms-id="about-srv-2" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug flex-1">
                                             Dịch vụ bảo trì hệ thống PCCC
                                         </div>
+                                        <i class="fas fa-play-circle text-cyan-300 opacity-70 group-hover:opacity-100 text-sm"></i>
                                     </div>
 
-                                    <div class="bg-white/10 hover:bg-white/15 border border-white/10 rounded-2xl p-3.5 flex items-center space-x-3.5 transition group">
-                                        <div class="w-10 h-10 rounded-xl bg-cyan-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
-                                            <i class="fas fa-fan"></i>
+                                    <!-- Mục 3: HVAC -->
+                                    <div onclick="selectAboutReelSlide(2)" onmouseenter="selectAboutReelSlide(2)" id="about-srv-card-2" class="about-srv-card cursor-pointer bg-white/10 hover:bg-white/15 border border-white/10 rounded-2xl p-3.5 flex items-center space-x-3.5 transition-all duration-300 group">
+                                        <div class="w-10 h-10 rounded-xl bg-cyan-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition shadow-md">
+                                            <i class="fas fa-fan animate-vane-spin"></i>
                                         </div>
                                         <div data-cms-id="about-srv-3" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug flex-1">
                                             Dịch vụ bảo trì hệ thống điều hoà & thông gió (HVAC)
                                         </div>
+                                        <i class="fas fa-play-circle text-cyan-300 opacity-70 group-hover:opacity-100 text-sm"></i>
                                     </div>
 
-                                    <div class="bg-white/10 hover:bg-white/15 border border-white/10 rounded-2xl p-3.5 flex items-center space-x-3.5 transition group">
-                                        <div class="w-10 h-10 rounded-xl bg-blue-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
+                                    <!-- Mục 4: Điện & Điện nhẹ ELV -->
+                                    <div onclick="selectAboutReelSlide(3)" onmouseenter="selectAboutReelSlide(3)" id="about-srv-card-3" class="about-srv-card cursor-pointer bg-white/10 hover:bg-white/15 border border-white/10 rounded-2xl p-3.5 flex items-center space-x-3.5 transition-all duration-300 group">
+                                        <div class="w-10 h-10 rounded-xl bg-blue-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition shadow-md">
                                             <i class="fas fa-network-wired"></i>
                                         </div>
                                         <div data-cms-id="about-srv-4" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug flex-1">
                                             Dịch vụ bảo trì hệ thống Điện & Điện nhẹ (ELV)
                                         </div>
+                                        <i class="fas fa-play-circle text-cyan-300 opacity-70 group-hover:opacity-100 text-sm"></i>
                                     </div>
 
-                                    <div class="bg-white/10 hover:bg-white/15 border border-white/10 rounded-2xl p-3.5 flex items-center space-x-3.5 transition group">
-                                        <div class="w-10 h-10 rounded-xl bg-emerald-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
+                                    <!-- Mục 5: Khí nén & Gas -->
+                                    <div onclick="selectAboutReelSlide(4)" onmouseenter="selectAboutReelSlide(4)" id="about-srv-card-4" class="about-srv-card cursor-pointer bg-white/10 hover:bg-white/15 border border-white/10 rounded-2xl p-3.5 flex items-center space-x-3.5 transition-all duration-300 group">
+                                        <div class="w-10 h-10 rounded-xl bg-emerald-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition shadow-md">
                                             <i class="fas fa-tachometer-alt"></i>
                                         </div>
                                         <div data-cms-id="about-srv-5" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug flex-1">
                                             Dịch vụ bảo trì hệ thống khí nén & gas
                                         </div>
+                                        <i class="fas fa-play-circle text-cyan-300 opacity-70 group-hover:opacity-100 text-sm"></i>
                                     </div>
 
-                                    <div class="bg-white/10 hover:bg-white/15 border border-white/10 rounded-2xl p-3.5 flex items-center space-x-3.5 transition group">
-                                        <div class="w-10 h-10 rounded-xl bg-sky-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
+                                    <!-- Mục 6: Cấp thoát nước & XLNT -->
+                                    <div onclick="selectAboutReelSlide(5)" onmouseenter="selectAboutReelSlide(5)" id="about-srv-card-5" class="about-srv-card cursor-pointer bg-white/10 hover:bg-white/15 border border-white/10 rounded-2xl p-3.5 flex items-center space-x-3.5 transition-all duration-300 group">
+                                        <div class="w-10 h-10 rounded-xl bg-sky-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition shadow-md">
                                             <i class="fas fa-tint"></i>
                                         </div>
                                         <div data-cms-id="about-srv-6" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug flex-1">
                                             Dịch vụ bảo trì hệ thống cấp thoát nước & Xử lý nước thải
                                         </div>
+                                        <i class="fas fa-play-circle text-cyan-300 opacity-70 group-hover:opacity-100 text-sm"></i>
                                     </div>
 
-                                    <div class="bg-white/10 hover:bg-white/15 border border-white/10 rounded-2xl p-3.5 flex items-center space-x-3.5 transition group">
-                                        <div class="w-10 h-10 rounded-xl bg-purple-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
+                                    <!-- Mục 7: Camera CCTV -->
+                                    <div onclick="selectAboutReelSlide(6)" onmouseenter="selectAboutReelSlide(6)" id="about-srv-card-6" class="about-srv-card cursor-pointer bg-white/10 hover:bg-white/15 border border-white/10 rounded-2xl p-3.5 flex items-center space-x-3.5 transition-all duration-300 group">
+                                        <div class="w-10 h-10 rounded-xl bg-purple-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition shadow-md">
                                             <i class="fas fa-video"></i>
                                         </div>
                                         <div data-cms-id="about-srv-7" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug flex-1">
                                             Dịch vụ bảo trì hệ thống camera giám sát (CCTV)
                                         </div>
+                                        <i class="fas fa-play-circle text-cyan-300 opacity-70 group-hover:opacity-100 text-sm"></i>
                                     </div>
+
                                 </div>
                             </div>
 
@@ -589,6 +830,193 @@
 
                 </div>
             </div>
+
+            <!-- SCRIPT ĐIỀU KHIỂN CHUYỂN CẢNH VIDEO & ĐỒNG BỘ 07 LĨNH VỰC BẢO TRÌ -->
+            <script>
+                const aboutMeShowcaseSlides = [
+                    {
+                        step: 'LĨNH VỰC 01 / 07 • ĐIỆN CÔNG NGHIỆP',
+                        tag: 'ELECTRICAL & SWITCHGEAR',
+                        title: 'Thi Công & Bảo Trì Hệ Thống Điện Dân Dụng, Công Nghiệp',
+                        desc: 'Kiểm tra tủ điện tổng MSB/DB, trạm biến áp, đo nhiệt độ hồng ngoại thanh cái và đo điện trở cách điện.',
+                        img: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=1200&auto=format&fit=crop',
+                        icon: 'fa-bolt animate-pulse',
+                        metricLabel: 'ĐIỆN ÁP & CÁCH ĐIỆN',
+                        metricVal: '380V 3-Pha | >100 MΩ',
+                        badge: 'AN TOÀN ĐIỆN TCVN'
+                    },
+                    {
+                        step: 'LĨNH VỰC 02 / 07 • AN TOÀN PCCC',
+                        tag: 'FIRE PROTECTION (PCCC)',
+                        title: 'Dịch Vụ Bảo Trì Hệ Thống Phòng Cháy Chữa Cháy (PCCC)',
+                        desc: 'Vận hành thử tải trạm bơm chữa cháy Diesel/Electric (Tornatech), kiểm tra tủ báo cháy trung tâm, đầu báo khói và mạng lưới Sprinkler.',
+                        img: 'https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?q=80&w=1200&auto=format&fit=crop',
+                        icon: 'fa-fire-extinguisher animate-bounce',
+                        metricLabel: 'ÁP LỰC TUYẾN ỐNG PCCC',
+                        metricVal: '10.2 BAR | AUTO READY',
+                        badge: 'TIÊU CHUẨN NFPA / PCCC'
+                    },
+                    {
+                        step: 'LĨNH VỰC 03 / 07 • THẾ MẠNH CỐT LÕI HVAC',
+                        tag: 'HVAC & CHILLER MAINTENANCE',
+                        title: 'Dịch Vụ Bảo Trì Hệ Thống Điều Hoà & Thông Gió (HVAC)',
+                        desc: 'Bảo dưỡng chuyên sâu hệ thống Chiller, AHU, MAU, FCU, tháp giải nhiệt và quạt thông gió công nghiệp cho nhà máy & tòa nhà.',
+                        img: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=1200&auto=format&fit=crop',
+                        icon: 'fa-fan animate-vane-spin',
+                        metricLabel: 'LƯU LƯỢNG & NHIỆT ĐỘ',
+                        metricVal: '16.5°C | 1450 RPM',
+                        badge: 'CHUẨN PHÒNG SẠCH & NHÀ XƯỞNG'
+                    },
+                    {
+                        step: 'LĨNH VỰC 04 / 07 • HỆ THỐNG ĐIỆN NHẸ ELV',
+                        tag: 'ELV & BMS CONTROL',
+                        title: 'Dịch Vụ Bảo Trì Hệ Thống Điện & Điện Nhẹ (ELV)',
+                        desc: 'Kiểm tra tủ điều khiển BMS/PLC, hệ thống âm thanh thông báo PA, mạng nội bộ LAN/Server và kiểm soát vào ra Access Control.',
+                        img: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1200&auto=format&fit=crop',
+                        icon: 'fa-network-wired animate-pulse',
+                        metricLabel: 'TÍN HIỆU ĐIỀU KHIỂN BMS',
+                        metricVal: 'ONLINE 100% | 24VDC',
+                        badge: 'ĐỒNG BỘ TỰ ĐỘNG HÓA'
+                    },
+                    {
+                        step: 'LĨNH VỰC 05 / 07 • KHÍ NÉN & GAS CÔNG NGHIỆP',
+                        tag: 'COMPRESSED AIR & GAS',
+                        title: 'Dịch Vụ Bảo Trì Hệ Thống Khí Nén & Gas Công Nghiệp',
+                        desc: 'Bảo dưỡng máy nén khí trục vít, máy sấy khí, thay lọc tách dầu, kiểm tra van an toàn bình tích áp và rò rỉ đường ống.',
+                        img: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1200&auto=format&fit=crop',
+                        icon: 'fa-tachometer-alt',
+                        metricLabel: 'ÁP SUẤT KHÍ NÉN',
+                        metricVal: '7.5 BAR | DEW POINT OK',
+                        badge: 'TIẾT KIỆM NĂNG LƯỢNG'
+                    },
+                    {
+                        step: 'LĨNH VỰC 06 / 07 • CẤP THOÁT NƯỚC & XLNT',
+                        tag: 'WATER SUPPLY & TREATMENT',
+                        title: 'Dịch Vụ Bảo Trì Hệ Thống Cấp Thoát Nước & Xử Lý Nước Thải',
+                        desc: 'Kiểm tra cụm bơm cấp nước Booster, bơm chìm nước thải, máy thổi khí, bồn lọc áp lực và hệ thống định lượng hóa chất.',
+                        img: 'https://images.unsplash.com/photo-1513828583688-c52646db42da?q=80&w=1200&auto=format&fit=crop',
+                        icon: 'fa-tint animate-bounce',
+                        metricLabel: 'LƯU LƯỢNG & ÁP LỰC BƠM',
+                        metricVal: '4.5 BAR | pH 7.2 OK',
+                        badge: 'QCVN MÔI TRƯỜNG'
+                    },
+                    {
+                        step: 'LĨNH VỰC 07 / 07 • AN NINH GIÁM SÁT',
+                        tag: 'CCTV SECURITY SYSTEM',
+                        title: 'Dịch Vụ Bảo Trì Hệ Thống Camera Giám Sát (CCTV)',
+                        desc: 'Vệ sinh ống kính Camera IP/PTZ, kiểm tra đầu ghi NVR, dung lượng ổ cứng lưu trữ, nguồn PoE và đường truyền cáp quang.',
+                        img: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=1200&auto=format&fit=crop',
+                        icon: 'fa-video animate-pulse',
+                        metricLabel: 'TRẠNG THÁI GHI HÌNH NVR',
+                        metricVal: 'RECORDING 24/7 | FHD',
+                        badge: 'GIÁM SÁT AN NINH TOÀN KHU'
+                    }
+                ];
+
+                let currentAboutSlideIdx = 2; // Mặc định mở sẵn thế mạnh HVAC & Chiller
+                let isAboutReelPaused = false;
+                let aboutReelInterval = null;
+
+                function renderAboutShowcaseSlide(idx) {
+                    const slide = aboutMeShowcaseSlides[idx];
+                    if (!slide) return;
+
+                    const imgEl = document.getElementById('about-live-img');
+                    const captionBox = document.getElementById('about-live-caption-box');
+
+                    if (imgEl) {
+                        imgEl.style.opacity = '0.25';
+                        setTimeout(() => {
+                            imgEl.src = slide.img;
+                            imgEl.style.opacity = '0.85';
+                        }, 160);
+                    }
+
+                    if (captionBox) {
+                        captionBox.classList.remove('showcase-content-anim');
+                        void captionBox.offsetWidth;
+                        captionBox.classList.add('showcase-content-anim');
+                    }
+
+                    const setTxt = (id, txt) => {
+                        const el = document.getElementById(id);
+                        if (el) el.innerText = txt;
+                    };
+
+                    setTxt('about-live-step-badge', slide.step);
+                    setTxt('about-live-tag', slide.tag);
+                    setTxt('about-live-title', slide.title);
+                    setTxt('about-live-desc', slide.desc);
+                    setTxt('about-hud-metric-label', slide.metricLabel);
+                    setTxt('about-hud-metric-val', slide.metricVal);
+                    setTxt('about-hud-SpecBadge', slide.badge);
+
+                    const hudIcon = document.getElementById('about-hud-icon');
+                    if (hudIcon) {
+                        hudIcon.className = 'fas ' + slide.icon;
+                    }
+
+                    // Làm nổi bật đúng dòng dịch vụ trong cột 07 LĨNH VỰC bên phải
+                    for (let i = 0; i < 7; i++) {
+                        const cardEl = document.getElementById('about-srv-card-' + i);
+                        if (cardEl) {
+                            if (i === idx) cardEl.classList.add('active-srv');
+                            else cardEl.classList.remove('active-srv');
+                        }
+                    }
+
+                    // Reset thanh chạy tiến trình
+                    const prog = document.getElementById('about-reel-progress');
+                    if (prog && !isAboutReelPaused) {
+                        prog.classList.remove('reel-progress-bar');
+                        void prog.offsetWidth;
+                        prog.classList.add('reel-progress-bar');
+                    }
+                }
+
+                function selectAboutReelSlide(idx) {
+                    currentAboutSlideIdx = idx;
+                    renderAboutShowcaseSlide(idx);
+                    restartAboutReelTimer();
+                }
+
+                function stepAboutReel(dir) {
+                    currentAboutSlideIdx = (currentAboutSlideIdx + dir + aboutMeShowcaseSlides.length) % aboutMeShowcaseSlides.length;
+                    renderAboutShowcaseSlide(currentAboutSlideIdx);
+                    restartAboutReelTimer();
+                }
+
+                function toggleAboutReelPause() {
+                    isAboutReelPaused = !isAboutReelPaused;
+                    const btn = document.getElementById('about-reel-pause-btn');
+                    const prog = document.getElementById('about-reel-progress');
+                    if (isAboutReelPaused) {
+                        if (btn) btn.innerHTML = '<i class="fas fa-play"></i>';
+                        if (prog) prog.style.animationPlayState = 'paused';
+                        if (aboutReelInterval) clearInterval(aboutReelInterval);
+                    } else {
+                        if (btn) btn.innerHTML = '<i class="fas fa-pause"></i>';
+                        if (prog) prog.style.animationPlayState = 'running';
+                        restartAboutReelTimer();
+                    }
+                }
+
+                function restartAboutReelTimer() {
+                    if (aboutReelInterval) clearInterval(aboutReelInterval);
+                    if (!isAboutReelPaused) {
+                        aboutReelInterval = setInterval(() => {
+                            currentAboutSlideIdx = (currentAboutSlideIdx + 1) % aboutMeShowcaseSlides.length;
+                            renderAboutShowcaseSlide(currentAboutSlideIdx);
+                        }, 5000);
+                    }
+                }
+
+                // Khởi chạy ngay khi tải trang
+                setTimeout(() => {
+                    renderAboutShowcaseSlide(currentAboutSlideIdx);
+                    restartAboutReelTimer();
+                }, 300);
+            </script>
         </div>
 
         <!-- ==================== SECTION 3: DỊCH VỤ (ĐỘNG 100%: ẢNH FULL KHUNG & THÊM FORM MẪU) ==================== -->
