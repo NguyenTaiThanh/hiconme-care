@@ -735,7 +735,7 @@
                     </div>
                 </div>
 
-                <!-- REPORT RESULTS DISPLAY -->
+               <!-- REPORT RESULTS DISPLAY -->
                 <div id="report-container" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div class="lg:col-span-1 space-y-6">
                         <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-200 card-pro-hover">
@@ -757,8 +757,20 @@
                             <div class="space-y-3 text-xs">
                                 <div class="flex justify-between"><span class="text-gray-500">Khu vực:</span><span id="device-location" class="font-semibold text-gray-800 text-right">--</span></div>
                                 <div class="flex justify-between"><span class="text-gray-500">Chủ Đầu Tư:</span><span id="device-client" class="font-semibold text-brand-navy text-right">--</span></div>
-                                <div class="flex justify-between"><span class="text-gray-500">Ngày bảo trì:</span><span id="device-date" class="font-bold text-gray-800">--</span></div>
-                                <div class="flex justify-between"><span class="text-gray-500">Kỹ sư phụ trách:</span><span id="device-tech" class="font-semibold text-gray-800 text-right">--</span></div>
+                                
+                                <!-- NGÀY BẢO TRÌ & NGÀY BẢO TRÌ TIẾP THEO NẰM CẠNH NHAU -->
+                                <div class="grid grid-cols-2 gap-2 pt-1 pb-1">
+                                    <div class="bg-slate-50 border border-gray-200 rounded-xl p-2.5 text-center">
+                                        <span class="text-[10px] text-gray-500 uppercase font-bold block"><i class="fas fa-calendar-check text-brand-accent mr-1"></i>Ngày bảo trì</span>
+                                        <span id="device-date" class="font-black text-brand-navy text-xs sm:text-sm mt-0.5 block">--</span>
+                                    </div>
+                                    <div class="bg-amber-50 border border-amber-300 rounded-xl p-2.5 text-center">
+                                        <span class="text-[10px] text-amber-800 uppercase font-bold block"><i class="fas fa-calendar-alt text-amber-500 mr-1"></i>Bảo trì tiếp theo</span>
+                                        <span id="device-next-date" class="font-black text-amber-600 text-xs sm:text-sm mt-0.5 block">--</span>
+                                    </div>
+                                </div>
+
+                                <div class="flex justify-between pt-1"><span class="text-gray-500">Kỹ sư phụ trách:</span><span id="device-tech" class="font-semibold text-gray-800 text-right">--</span></div>
                             </div>
 
                             <div class="mt-5 pt-4 border-t border-gray-100 grid grid-cols-2 gap-2">
@@ -798,21 +810,25 @@
                                 </div>
                             </div>
 
-                            <!-- THÔNG SỐ KỸ THUẬT -->
+                            <!-- THÔNG SỐ KỸ THUẬT (5 CỘT: STT, HẠNG MỤC, THÔNG SỐ, ĐƠN VỊ, ĐÁNH GIÁ) -->
                             <div>
-                                <h4 class="text-sm font-bold text-brand-navy uppercase mb-3"><i class="fas fa-list-check text-brand-accent mr-2"></i> Thông Số Đo Đạc Thực Tế</h4>
-                                <div class="overflow-x-auto">
+                                <h4 class="text-sm font-bold text-brand-navy uppercase mb-3 flex items-center justify-between">
+                                    <span><i class="fas fa-list-check text-brand-accent mr-2"></i> Thông Số Đo Đạc Thực Tế</span>
+                                    <span id="spec-count-badge" class="text-xs bg-cyan-50 text-brand-blue border border-cyan-200 px-2.5 py-0.5 rounded-full font-bold">0 Thông Số</span>
+                                </h4>
+                                <div class="overflow-x-auto border border-gray-200 rounded-xl">
                                     <table class="w-full text-left text-xs border-collapse">
                                         <thead>
                                             <tr class="bg-slate-100 text-brand-navy border-b border-gray-200">
-                                                <th class="p-3 font-bold">Chỉ Tiêu</th>
-                                                <th class="p-3 font-bold">Tiêu Chuẩn</th>
-                                                <th class="p-3 font-bold">Thực Tế</th>
-                                                <th class="p-3 font-bold text-center">Đánh Giá</th>
+                                                <th class="p-3 font-bold w-12 text-center">STT</th>
+                                                <th class="p-3 font-bold">Hạng Mục Đo Đạc</th>
+                                                <th class="p-3 font-bold w-28 text-center">Thông Số</th>
+                                                <th class="p-3 font-bold w-24 text-center">Đơn Vị</th>
+                                                <th class="p-3 font-bold w-28 text-center">Đánh Giá</th>
                                             </tr>
                                         </thead>
                                         <tbody id="specs-table-body" class="divide-y divide-gray-100">
-                                            <tr><td colspan="4" class="p-6 text-center text-gray-400">Chưa có thông số đo đạc.</td></tr>
+                                            <tr><td colspan="5" class="p-6 text-center text-gray-400">Chưa có thông số đo đạc.</td></tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -838,7 +854,6 @@
 
             </div>
         </div>
-
         <!-- ==================== SECTION 6: LIÊN HỆ ==================== -->
         <div id="section-contact" class="page-section hidden py-12 bg-white">
             <div class="max-w-7xl mx-auto px-4">
@@ -1118,6 +1133,7 @@
     <div id="admin-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden border border-gray-200 my-8 transition-all duration-300 transform scale-100">
             
+            <!-- BƯỚC 1: ĐĂNG NHẬP -->
             <div id="admin-step-auth" class="p-8 text-center">
                 <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 shadow-inner">
                     <i class="fas fa-user-lock"></i>
@@ -1141,6 +1157,7 @@
                 </div>
             </div>
 
+            <!-- BƯỚC ĐỔI MẬT KHẨU -->
             <div id="admin-step-changepass" class="p-8 text-center hidden">
                 <div class="w-16 h-16 bg-blue-100 text-brand-blue rounded-full flex items-center justify-center text-3xl mx-auto mb-4 shadow-inner">
                     <i class="fas fa-shield-alt"></i>
@@ -1169,20 +1186,19 @@
                 </div>
             </div>
 
-           <!-- ==================== BƯỚC 1.5 (MỚI): CHỌN LOẠI THIẾT BỊ BẢO TRÌ & QUẢN LÝ FORM CHUẨN ==================== -->
+            <!-- BƯỚC 1.5: CHỌN LOẠI THIẾT BỊ BẢO TRÌ (FCU, AHU, FAN...) -->
             <div id="admin-step-select-type" class="hidden">
                 <div class="bg-brand-navy text-white p-5 flex justify-between items-center">
                     <div>
                         <h3 class="font-extrabold text-base flex items-center">
                             <i class="fas fa-layer-group text-amber-400 mr-2"></i> CHỌN LOẠI THIẾT BỊ BẢO TRÌ
                         </h3>
-                        <p class="text-[10px] text-gray-300 mt-0.5">Chọn đúng chủng loại máy để tải sẵn danh sách hạng mục bảo trì chuẩn tương ứng</p>
+                        <p class="text-[10px] text-gray-300 mt-0.5">Chọn đúng chủng loại máy để tự động nạp Hạng mục bảo trì, Thông số đo & Chu kỳ bảo trì tiếp theo</p>
                     </div>
                     <button onclick="closeAdminModal()" class="text-gray-300 hover:text-white text-xl p-1 rounded-lg transition"><i class="fas fa-times"></i></button>
                 </div>
 
                 <div class="p-6 space-y-5 bg-slate-50 max-h-[75vh] overflow-y-auto">
-                    <!-- Thanh công cụ Sửa & Thêm Loại Thiết Bị -->
                     <div class="flex flex-wrap items-center justify-between gap-2 bg-white p-3.5 rounded-2xl border border-gray-200 shadow-sm">
                         <div class="flex items-center space-x-2">
                             <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -1198,32 +1214,30 @@
                         </div>
                     </div>
 
-                    <!-- Hướng dẫn nhanh khi bật chế độ Sửa -->
                     <div id="template-edit-hint" class="hidden bg-amber-50 border-2 border-dashed border-amber-400 text-amber-900 p-3 rounded-xl text-xs font-medium flex items-center justify-between">
-                        <span><i class="fas fa-info-circle text-amber-600 mr-1.5"></i> <strong>Đang bật Chế độ Sửa Form:</strong> Bấm vào nút <strong>"Sửa"</strong> trên từng thẻ thiết bị bên dưới để tinh chỉnh hạng mục chuẩn hoặc xóa thiết bị.</span>
+                        <span><i class="fas fa-info-circle text-amber-600 mr-1.5"></i> <strong>Đang bật Chế độ Sửa Form:</strong> Bấm nút <strong>"Sửa"</strong> trên từng thẻ thiết bị để cài đặt chu kỳ số tháng bảo trì, hạng mục và thông số đo chuẩn.</span>
                         <button type="button" onclick="toggleTemplateEditMode()" class="text-[11px] bg-amber-500 text-brand-dark font-extrabold px-2.5 py-1 rounded-lg shrink-0 ml-2">Xong</button>
                     </div>
 
-                    <!-- Lưới hiển thị các thẻ loại thiết bị (FCU, AHU, FAN...) -->
                     <div id="device-type-cards-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
                 </div>
             </div>
 
-            <!-- ==================== BƯỚC 1.6 (MỚI): GIAO DIỆN SỬA / THÊM FORM CHUẨN CỦA TỪNG LOẠI THIẾT BỊ ==================== -->
+            <!-- BƯỚC 1.6: SỬA / THÊM FORM CHUẨN CỦA TỪNG LOẠI THIẾT BỊ -->
             <div id="admin-step-edit-template" class="hidden">
                 <div class="bg-slate-900 text-white p-5 flex justify-between items-center border-b border-amber-500/40">
                     <div>
                         <h3 id="template-editor-heading" class="font-extrabold text-base flex items-center text-amber-400">
                             <i class="fas fa-sliders-h mr-2"></i> CHỈNH SỬA FORM CHUẨN THIẾT BỊ
                         </h3>
-                        <p class="text-[10px] text-gray-300 mt-0.5">Tinh chỉnh danh sách hạng mục bảo trì mặc định cho loại thiết bị này</p>
+                        <p class="text-[10px] text-gray-300 mt-0.5">Cài đặt Chu kỳ bảo trì (tháng), Hạng mục bảo trì chuẩn & Danh mục thông số đo đạc</p>
                     </div>
                     <button type="button" onclick="backToSelectTypeStep()" class="text-gray-300 hover:text-white text-xs font-bold bg-white/10 px-3 py-1.5 rounded-xl flex items-center">
                         <i class="fas fa-arrow-left mr-1.5"></i> Quay lại
                     </button>
                 </div>
 
-                <div class="p-6 space-y-4 text-xs max-h-[75vh] overflow-y-auto bg-white">
+                <div class="p-6 space-y-5 text-xs max-h-[75vh] overflow-y-auto bg-white">
                     <input type="hidden" id="tpl-edit-id">
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
@@ -1236,7 +1250,14 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block font-bold text-amber-700 mb-1"><i class="fas fa-clock mr-1"></i>Chu Kỳ Bảo Trì (Số Tháng) (*)</label>
+                            <div class="flex items-center">
+                                <input type="number" id="tpl-edit-cycle" min="1" max="60" value="3" class="w-full p-2.5 border-2 border-amber-400 bg-amber-50/40 rounded-l-xl font-black text-brand-navy text-center focus:outline-none">
+                                <span class="bg-amber-500 text-brand-dark font-extrabold px-3 py-2.5 rounded-r-xl border-2 border-l-0 border-amber-400 whitespace-nowrap">Tháng / Lần</span>
+                            </div>
+                        </div>
                         <div>
                             <label class="block font-bold text-gray-700 mb-1">Biểu Tượng (Icon hiển thị)</label>
                             <select id="tpl-edit-icon" class="w-full p-2.5 border border-gray-300 rounded-xl font-semibold focus:border-amber-500 focus:outline-none">
@@ -1250,26 +1271,48 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block font-bold text-gray-700 mb-1">Gợi ý tiền tố Mã QR (Không bắt buộc)</label>
+                            <label class="block font-bold text-gray-700 mb-1">Gợi ý tiền tố Mã QR</label>
                             <input type="text" id="tpl-edit-prefix" placeholder="VD: TS-2026-FCU-" class="w-full p-2.5 border border-gray-300 rounded-xl font-mono uppercase focus:border-amber-500 focus:outline-none">
                         </div>
                     </div>
 
-                    <!-- Danh sách hạng mục chuẩn của loại thiết bị -->
+                    <!-- 1. Danh sách hạng mục bảo trì chuẩn -->
                     <div class="bg-amber-50/60 p-4 rounded-2xl border border-amber-200 space-y-3">
                         <div class="flex justify-between items-center">
                             <div>
                                 <h4 class="font-extrabold text-brand-navy uppercase text-xs">
-                                    <i class="fas fa-list-ol text-amber-500 mr-1.5"></i> CÁC HẠNG MỤC BẢO TRÌ CHUẨN CỦA LOẠI THIẾT BỊ NÀY
+                                    <i class="fas fa-tasks text-amber-500 mr-1.5"></i> 1. DANH SÁCH HẠNG MỤC BẢO TRÌ CHUẨN
                                 </h4>
-                                <p class="text-[10px] text-gray-500">Khi kỹ thuật viên chọn loại thiết bị này, các hạng mục dưới đây sẽ tự động nạp vào form.</p>
+                                <p class="text-[10px] text-gray-500">Các công việc bảo dưỡng định kỳ mặc định của loại thiết bị này.</p>
                             </div>
                             <button type="button" onclick="addTemplateTaskRow()" class="btn-interactive bg-amber-500 hover:bg-amber-400 text-brand-dark px-3 py-1.5 rounded-xl font-extrabold text-xs flex items-center shadow-sm shrink-0">
-                                <i class="fas fa-plus mr-1"></i> Thêm Hạng Mục Chuẩn
+                                <i class="fas fa-plus mr-1"></i> Thêm Hạng Mục
                             </button>
                         </div>
-
                         <div id="tpl-tasks-container" class="space-y-2"></div>
+                    </div>
+
+                    <!-- 2. Danh sách thông số đo đạc chuẩn (5 cột) -->
+                    <div class="bg-cyan-50/60 p-4 rounded-2xl border border-cyan-200 space-y-3">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="font-extrabold text-brand-navy uppercase text-xs">
+                                    <i class="fas fa-tachometer-alt text-brand-accent mr-1.5"></i> 2. DANH MỤC THÔNG SỐ ĐO ĐẠC CHUẨN (5 CỘT)
+                                </h4>
+                                <p class="text-[10px] text-gray-500">Thiết lập sẵn các chỉ tiêu cần đo (VD: Dòng điện, Áp suất, Nhiệt độ...) và đơn vị tính.</p>
+                            </div>
+                            <button type="button" onclick="addTemplateSpecRow()" class="btn-interactive bg-brand-accent hover:bg-cyan-400 text-brand-dark px-3 py-1.5 rounded-xl font-extrabold text-xs flex items-center shadow-sm shrink-0">
+                                <i class="fas fa-plus mr-1"></i> Thêm Thông Số Đo
+                            </button>
+                        </div>
+                        <div class="hidden sm:grid sm:grid-cols-12 gap-2 px-2 text-[10px] font-extrabold text-brand-navy uppercase">
+                            <div class="col-span-1 text-center">STT</div>
+                            <div class="col-span-4">Hạng Mục Đo</div>
+                            <div class="col-span-3 text-center">Thông Số Mẫu</div>
+                            <div class="col-span-2 text-center">Đơn Vị</div>
+                            <div class="col-span-2 text-center">Đánh Giá</div>
+                        </div>
+                        <div id="tpl-specs-container" class="space-y-2"></div>
                     </div>
 
                     <div class="pt-3 border-t border-gray-100 flex justify-between items-center gap-3">
@@ -1286,7 +1329,7 @@
                 </div>
             </div>
 
-            <!-- ==================== BƯỚC 2: FORM NHẬP BÁO CÁO BẢO TRÌ THIẾT BỊ ==================== -->
+            <!-- BƯỚC 2: FORM NHẬP BÁO CÁO BẢO TRÌ THIẾT BỊ -->
             <div id="admin-step-form" class="hidden">
                 <div class="bg-brand-navy text-white p-5 flex justify-between items-center">
                     <div>
@@ -1300,10 +1343,11 @@
                 <div class="bg-cyan-50 border-b border-cyan-200 px-6 py-3 flex flex-wrap items-center justify-between gap-2">
                     <div class="flex items-center space-x-2">
                         <span class="bg-brand-navy text-cyan-300 text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider">FORM THIẾT BỊ:</span>
-                        <span id="current-selected-type-label" class="text-xs sm:text-sm font-black text-brand-navy">AHU - Xử Lý Không Khí</span>
+                        <span id="current-selected-type-label" class="text-xs sm:text-sm font-black text-brand-navy">FCU</span>
+                        <span id="current-selected-cycle-badge" class="bg-amber-500/20 text-amber-800 border border-amber-400 text-[10px] font-extrabold px-2 py-0.5 rounded-full">Chu kỳ: 3 tháng/lần</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <button type="button" onclick="openCurrentTemplateEditorFromForm()" class="btn-interactive bg-amber-500 hover:bg-amber-400 text-brand-dark font-extrabold px-3 py-1.5 rounded-xl text-[11px] flex items-center shadow-sm" title="Sửa danh mục chuẩn của loại thiết bị này">
+                        <button type="button" onclick="openCurrentTemplateEditorFromForm()" class="btn-interactive bg-amber-500 hover:bg-amber-400 text-brand-dark font-extrabold px-3 py-1.5 rounded-xl text-[11px] flex items-center shadow-sm">
                             <i class="fas fa-pen mr-1"></i> Sửa Form Chuẩn Này
                         </button>
                         <button type="button" onclick="backToSelectTypeStep()" class="btn-interactive bg-white hover:bg-slate-100 text-brand-blue border border-cyan-300 font-bold px-3 py-1.5 rounded-xl text-[11px] flex items-center shadow-sm">
@@ -1316,18 +1360,18 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block font-bold text-gray-700 mb-1">Mã QR Thiết Bị (* Dùng để quét)</label>
-                            <input type="text" id="form-code" required placeholder="VD: TS-2026-CHILLER02" class="w-full p-2.5 border border-gray-300 rounded-lg font-mono focus:ring-2 focus:ring-brand-blue uppercase transition">
+                            <input type="text" id="form-code" required placeholder="VD: TS-2026-FCU-01" class="w-full p-2.5 border border-gray-300 rounded-lg font-mono focus:ring-2 focus:ring-brand-blue uppercase transition">
                         </div>
                         <div>
                             <label class="block font-bold text-gray-700 mb-1">Tên Thiết Bị (*)</label>
-                            <input type="text" id="form-name" required placeholder="VD: Cụm Bơm Nước Chilled Water #02" class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-blue transition">
+                            <input type="text" id="form-name" required placeholder="VD: Dàn Lạnh FCU Khu Văn Phòng #01" class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-blue transition">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block font-bold text-gray-700 mb-1">Khu Vực Lắp Đặt (*)</label>
-                            <input type="text" id="form-location" required placeholder="VD: Phòng Máy Chiller Tầng Chốt" class="w-full p-2.5 border border-gray-300 rounded-lg transition">
+                            <input type="text" id="form-location" required placeholder="VD: Tầng 2 - Khu Văn Phòng Nhà Máy" class="w-full p-2.5 border border-gray-300 rounded-lg transition">
                         </div>
                         <div>
                             <label class="block font-bold text-gray-700 mb-1">Chủ Đầu Tư / Tên Nhà Máy</label>
@@ -1335,18 +1379,25 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <!-- DÒNG 4 CỘT: KỸ SƯ | NGÀY BẢO TRÌ | NGÀY BẢO TRÌ TIẾP THEO (NẰM CẠNH NHAU) | TRẠNG THÁI -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 bg-slate-50 p-3.5 rounded-2xl border border-gray-200">
                         <div>
-                            <label class="block font-bold text-gray-700 mb-1">Kỹ Sư Phụ Trách</label>
-                            <input type="text" id="form-tech" required placeholder="VD: Nguyễn Văn Kỹ Thuật" class="w-full p-2.5 border border-gray-300 rounded-lg transition">
+                            <label class="block font-bold text-gray-700 mb-1">Kỹ Sư Phụ Trách (*)</label>
+                            <input type="text" id="form-tech" required placeholder="VD: Nguyễn Văn Kỹ Thuật" class="w-full p-2.5 bg-white border border-gray-300 rounded-lg transition">
                         </div>
                         <div>
-                            <label class="block font-bold text-gray-700 mb-1">Ngày Kiểm Tra</label>
-                            <input type="date" id="form-date" required class="w-full p-2.5 border border-gray-300 rounded-lg transition">
+                            <label class="block font-bold text-brand-navy mb-1"><i class="fas fa-calendar-check text-brand-accent mr-1"></i>Ngày Bảo Trì (*)</label>
+                            <input type="date" id="form-date" required onchange="autoUpdateNextMaintenanceDate()" class="w-full p-2.5 bg-white border-2 border-brand-accent rounded-lg font-bold text-brand-navy transition">
+                            <span id="form-date-vn-preview" class="text-[10px] text-gray-500 font-semibold mt-0.5 block">Định dạng: --/--/----</span>
+                        </div>
+                        <div>
+                            <label class="block font-bold text-amber-700 mb-1"><i class="fas fa-calendar-plus text-amber-500 mr-1"></i>Bảo Trì Tiếp Theo (*)</label>
+                            <input type="date" id="form-next-date" required onchange="updateDatePreviewLabels()" class="w-full p-2.5 bg-amber-50 border-2 border-amber-400 rounded-lg font-black text-amber-800 transition">
+                            <span id="form-next-date-vn-preview" class="text-[10px] text-amber-700 font-bold mt-0.5 block">Tự nhảy theo chu kỳ máy</span>
                         </div>
                         <div>
                             <label class="block font-bold text-gray-700 mb-1">Trạng Thái Đánh Giá</label>
-                            <select id="form-status" class="w-full p-2.5 border border-gray-300 rounded-lg font-bold transition">
+                            <select id="form-status" class="w-full p-2.5 bg-white border border-gray-300 rounded-lg font-bold transition">
                                 <option value="OK">✅ HOẠT ĐỘNG TỐT</option>
                                 <option value="WARN">⚠️ CẦN LƯU Ý KỸ THUẬT</option>
                                 <option value="BAD">❌ CẦN SỬA CHỮA NGAY</option>
@@ -1354,18 +1405,39 @@
                         </div>
                     </div>
 
+                    <!-- BẢNG 1: DANH SÁCH HẠNG MỤC BẢO TRÌ THỰC TẾ -->
                     <div class="bg-slate-50 p-4 rounded-xl border border-gray-200 space-y-3">
                         <div class="flex justify-between items-center">
                             <div>
-                                <h4 class="font-bold text-brand-navy"><i class="fas fa-tasks text-brand-accent mr-1"></i> DANH SÁCH HẠNG MỤC BẢO TRÌ THỰC TẾ</h4>
-                                <p class="text-[10px] text-gray-500">Thêm các hạng mục (vệ sinh vỏ, đo điện, tra mỡ...) và nội dung thực hiện tương ứng.</p>
+                                <h4 class="font-bold text-brand-navy"><i class="fas fa-tasks text-brand-accent mr-1"></i> 1. DANH SÁCH HẠNG MỤC BẢO TRÌ THỰC TẾ</h4>
+                                <p class="text-[10px] text-gray-500">Các hạng mục công việc bảo dưỡng đã thực hiện trên thiết bị.</p>
                             </div>
                             <button type="button" onclick="addMaintenanceTaskRow()" class="btn-interactive bg-brand-accent hover:bg-cyan-600 text-brand-dark px-3 py-1.5 rounded-lg font-bold text-xs flex items-center shadow-sm">
                                 <i class="fas fa-plus mr-1"></i> Thêm Hạng Mục
                             </button>
                         </div>
-                        
                         <div id="form-tasks-container" class="space-y-2"></div>
+                    </div>
+
+                    <!-- BẢNG 2: DANH MỤC THÔNG SỐ ĐO ĐẠC THỰC TẾ (5 CỘT: STT, HẠNG MỤC, THÔNG SỐ, ĐƠN VỊ, ĐÁNH GIÁ) -->
+                    <div class="bg-cyan-50/50 p-4 rounded-xl border border-cyan-200 space-y-3">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="font-bold text-brand-navy uppercase"><i class="fas fa-tachometer-alt text-brand-accent mr-1"></i> 2. DANH MỤC THÔNG SỐ ĐO ĐẠC THỰC TẾ</h4>
+                                <p class="text-[10px] text-gray-500">Nhập kết quả đo thực tế tại hiện trường (Dòng điện, Điện áp, Áp suất, Nhiệt độ...).</p>
+                            </div>
+                            <button type="button" onclick="addFormSpecRow()" class="btn-interactive bg-brand-navy hover:bg-brand-blue text-white px-3 py-1.5 rounded-lg font-bold text-xs flex items-center shadow-sm">
+                                <i class="fas fa-plus mr-1 text-cyan-300"></i> Thêm Thông Số
+                            </button>
+                        </div>
+                        <div class="hidden sm:grid sm:grid-cols-12 gap-2 px-2 text-[10px] font-extrabold text-brand-navy uppercase">
+                            <div class="col-span-1 text-center">STT</div>
+                            <div class="col-span-4">Hạng Mục Đo Đạc</div>
+                            <div class="col-span-3 text-center">Thông Số Thực Tế</div>
+                            <div class="col-span-2 text-center">Đơn Vị</div>
+                            <div class="col-span-2 text-center">Đánh Giá</div>
+                        </div>
+                        <div id="form-specs-container" class="space-y-2"></div>
                     </div>
 
                     <div>
@@ -1393,6 +1465,7 @@
                     </div>
                 </form>
             </div>
+
         </div>
     </div>
 
@@ -3129,6 +3202,33 @@ if (data.devices) {
             if (e.key === 'Escape') closeLightbox(null, true);
         });
 
+        function formatDateVN(dateStr) {
+            if (!dateStr || dateStr === '--') return '--';
+            const parts = String(dateStr).split('-');
+            if (parts.length === 3) {
+                return `${parts[2]}/${parts[1]}/${parts[0]}`;
+            }
+            return dateStr;
+        }
+
+        function computeNextDateByMonths(dateStr, monthsToAdd) {
+            if (!dateStr) return '';
+            const parts = String(dateStr).split('-');
+            if (parts.length !== 3) return '';
+            const y = parseInt(parts[0], 10);
+            const m = parseInt(parts[1], 10);
+            const d = parseInt(parts[2], 10);
+            const cycle = parseInt(monthsToAdd, 10) || 3;
+
+            const totalMonths = (m - 1) + cycle;
+            const newYear = y + Math.floor(totalMonths / 12);
+            const newMonth = (totalMonths % 12) + 1;
+            const maxDaysInTargetMonth = new Date(newYear, newMonth, 0).getDate();
+            const newDay = Math.min(d, maxDaysInTargetMonth);
+
+            return `${newYear}-${String(newMonth).padStart(2, '0')}-${String(newDay).padStart(2, '0')}`;
+        }
+
         function renderDeviceReport(data) {
             currentViewingDeviceCode = data.code;
             document.getElementById('device-name').innerText = data.name;
@@ -3136,7 +3236,14 @@ if (data.devices) {
             document.getElementById('device-location').innerText = data.location;
             document.getElementById('device-client').innerText = data.client;
             document.getElementById('device-tech').innerText = data.tech;
-            document.getElementById('device-date').innerText = data.date;
+            document.getElementById('device-date').innerText = formatDateVN(data.date);
+
+            const nextDateRaw = data.nextDate || computeNextDateByMonths(data.date, 3);
+            const nextDateEl = document.getElementById('device-next-date');
+            if (nextDateEl) {
+                nextDateEl.innerText = formatDateVN(nextDateRaw);
+            }
+
             document.getElementById('device-status-badge').innerHTML = data.statusBadge;
             document.getElementById('engineer-note').innerText = data.note;
 
@@ -3172,18 +3279,30 @@ if (data.devices) {
 
             const tbody = document.getElementById('specs-table-body');
             tbody.innerHTML = '';
-            (data.specs || []).forEach(s => {
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 border-b border-gray-100 transition">
-                        <td class="p-3 font-medium text-gray-800">${s.item}</td>
-                        <td class="p-3 text-gray-500">${s.std}</td>
-                        <td class="p-3 font-bold text-brand-navy">${s.val}</td>
-                        <td class="p-3 text-center">
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${s.isOk ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">${s.status}</span>
-                        </td>
-                    </tr>
-                `;
-            });
+            const specs = data.specs || [];
+            const specCountEl = document.getElementById('spec-count-badge');
+            if (specCountEl) specCountEl.innerText = specs.length + ' Thông Số';
+
+            if (specs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-gray-400">Chưa có thông số đo đạc.</td></tr>`;
+            } else {
+                specs.forEach((s, idx) => {
+                    const statusText = s.status || 'Đạt';
+                    const isOk = (s.isOk !== undefined) ? s.isOk : (statusText === 'Đạt' || statusText === 'Ổn định' || statusText === 'Bình thường');
+                    const unitText = s.unit !== undefined ? s.unit : (s.std || '--');
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50 border-b border-gray-100 transition">
+                            <td class="p-3 text-center font-bold text-gray-500">${idx + 1}</td>
+                            <td class="p-3 font-bold text-brand-navy">${s.item || '--'}</td>
+                            <td class="p-3 text-center font-black text-brand-blue">${s.val || '--'}</td>
+                            <td class="p-3 text-center font-mono text-gray-600">${unitText}</td>
+                            <td class="p-3 text-center">
+                                <span class="px-2.5 py-0.5 rounded text-[10px] font-bold ${isOk ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${statusText}</span>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
 
             currentLightboxPhotos = data.photos || [];
             const gallery = document.getElementById('photo-gallery');
@@ -3221,10 +3340,14 @@ if (data.devices) {
             document.getElementById('device-location').innerText = '--';
             document.getElementById('device-client').innerText = '--';
             document.getElementById('device-date').innerText = '--';
+            const nextDateEl = document.getElementById('device-next-date');
+            if (nextDateEl) nextDateEl.innerText = '--';
             document.getElementById('device-tech').innerText = '--';
             document.getElementById('device-status-badge').innerHTML = '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-gray-100 text-gray-500"><i class="fas fa-info-circle mr-1"></i> CHƯA CHỌN THIẾT BỊ</span>';
             document.getElementById('engineer-note').innerText = 'Chưa có ghi chú.';
             document.getElementById('task-count-badge').innerText = '0 Hạng Mục';
+            const specCountEl = document.getElementById('spec-count-badge');
+            if (specCountEl) specCountEl.innerText = '0 Thông Số';
 
             const qrThumb = document.getElementById('device-qr-thumb');
             const qrPlace = document.getElementById('device-qr-placeholder');
@@ -3234,7 +3357,7 @@ if (data.devices) {
             }
 
             document.getElementById('report-tasks-body').innerHTML = `<tr><td colspan="4" class="p-6 text-center text-gray-400">Vui lòng quét QR, nhập mã hoặc chọn thiết bị từ danh sách để xem báo cáo.</td></tr>`;
-            document.getElementById('specs-table-body').innerHTML = `<tr><td colspan="4" class="p-6 text-center text-gray-400">Chưa có thông số đo đạc.</td></tr>`;
+            document.getElementById('specs-table-body').innerHTML = `<tr><td colspan="5" class="p-6 text-center text-gray-400">Chưa có thông số đo đạc.</td></tr>`;
             
             const gallery = document.getElementById('photo-gallery');
             gallery.className = "grid grid-cols-1 sm:grid-cols-2 gap-4 text-center text-gray-400 text-xs py-6 bg-slate-50 rounded-xl border border-dashed border-gray-300";
@@ -3366,9 +3489,7 @@ if (data.devices) {
                 const nameStr = (dev.name || '').toLowerCase();
                 const codeStr = (dev.code || '').toLowerCase();
                 const locStr = (dev.location || '').toLowerCase();
-                
                 const matchesSearch = nameStr.includes(searchQuery) || codeStr.includes(searchQuery) || locStr.includes(searchQuery);
-                
                 if (currentSelectedLetter === 'ALL') {
                     return matchesSearch;
                 } else {
@@ -3446,7 +3567,7 @@ if (data.devices) {
             closeDeleteConfirmModal();
         }
 
-       /* ==================== QUẢN LÝ DANH SÁCH LOẠI THIẾT BỊ & FORM BẢO TRÌ CHUẨN (FCU, AHU, FAN...) ==================== */
+        /* ==================== QUẢN LÝ LOẠI THIẾT BỊ, CHU KỲ THÁNG & THÔNG SỐ ĐO ĐẠC CHUẨN ==================== */
         const defaultDeviceTemplatesData = [
             {
                 id: 'tpl-fcu',
@@ -3454,6 +3575,7 @@ if (data.devices) {
                 name: 'Dàn Lạnh FCU (Fan Coil Unit)',
                 icon: 'fa-snowflake',
                 prefix: 'TS-2026-FCU-',
+                cycleMonths: 3,
                 tasks: [
                     { title: 'Vệ sinh lưới lọc gió hồi (Filter)', detail: 'Tháo lưới lọc bụi, xịt rửa sạch sẽ và lắp lại đúng khớp.' },
                     { title: 'Vệ sinh dàn trao đổi nhiệt (Coil lạnh)', detail: 'Xịt rửa cánh tản nhiệt dàn coil bằng dung dịch chuyên dụng.' },
@@ -3461,6 +3583,12 @@ if (data.devices) {
                     { title: 'Kiểm tra cánh quạt & động cơ quạt lồng sóc', detail: 'Vệ sinh lồng quạt, kiểm tra bạc đạn quay êm, không có tiếng kêu lạ.' },
                     { title: 'Kiểm tra cụm van điện từ / Van 2 ngả (Actuator)', detail: 'Kiểm tra đóng/mở van nước lạnh Chilled Water theo tín hiệu Thermostat.' },
                     { title: 'Đo dòng điện vận hành & kiểm tra tủ đấu nối', detail: 'Đo dòng tải quạt FCU ổn định, siết chặt cầu đấu điện và kiểm tra Thermostat.' }
+                ],
+                specs: [
+                    { item: 'Dòng điện vận hành quạt FCU', val: '0.85', unit: 'A', status: 'Đạt' },
+                    { item: 'Điện áp nguồn cấp', val: '220', unit: 'V', status: 'Đạt' },
+                    { item: 'Nhiệt độ gió cấp (Supply Air)', val: '16.5', unit: '°C', status: 'Đạt' },
+                    { item: 'Tốc độ gió tại miệng thổi', val: '3.2', unit: 'm/s', status: 'Đạt' }
                 ]
             },
             {
@@ -3469,6 +3597,7 @@ if (data.devices) {
                 name: 'Hệ Thống Xử Lý Không Khí (AHU / MAU)',
                 icon: 'fa-wind',
                 prefix: 'TS-2026-AHU-',
+                cycleMonths: 3,
                 tasks: [
                     { title: 'Vệ sinh khoang máy & kiểm tra phin lọc (Pre/Bag Filter)', detail: 'Làm sạch buồng AHU, vệ sinh lọc thô G4 và kiểm tra chênh áp lọc túi F8.' },
                     { title: 'Vệ sinh dàn Coil lạnh Chilled Water', detail: 'Xịt rửa bề mặt dàn trao đổi nhiệt, kiểm tra vây tản nhiệt không bị bẹp.' },
@@ -3477,6 +3606,13 @@ if (data.devices) {
                     { title: 'Kiểm tra cụm van điều khiển tuyến tính (Modulating Valve)', detail: 'Kiểm tra hành trình đóng mở Actuator từ 0-100% theo tín hiệu PLC/BMS.' },
                     { title: 'Vệ sinh máng nước ngưng & bẫy nước (U-Trap)', detail: 'Làm sạch bùn cặn trong máng, mồi nước bẫy U-trap chống tràn nước ngưng.' },
                     { title: 'Đo dòng điện 3 pha, cách điện Motor & kiểm tra biến tần', detail: 'Đo dòng tải 3 pha cân bằng, kiểm tra tần số biến tần VFD và siết ốc tủ nguồn.' }
+                ],
+                specs: [
+                    { item: 'Dòng điện vận hành Motor quạt', val: '14.5', unit: 'A', status: 'Đạt' },
+                    { item: 'Điện trở cách điện Motor', val: '120', unit: 'MΩ', status: 'Đạt' },
+                    { item: 'Chênh áp qua phin lọc', val: '110', unit: 'Pa', status: 'Đạt' },
+                    { item: 'Nhiệt độ gió cấp / gió hồi', val: '15.2 / 24.5', unit: '°C', status: 'Đạt' },
+                    { item: 'Tốc độ vòng quay quạt', val: '1450', unit: 'RPM', status: 'Đạt' }
                 ]
             },
             {
@@ -3485,6 +3621,7 @@ if (data.devices) {
                 name: 'Quạt Công Nghiệp / Thông Gió (FAN)',
                 icon: 'fa-fan',
                 prefix: 'TS-2026-FAN-',
+                cycleMonths: 6,
                 tasks: [
                     { title: 'Vệ sinh cánh quạt, vỏ quạt & lưới bảo vệ', detail: 'Cạo sạch bụi bám trên cánh quạt giúp cân bằng động, lau sạch thân quạt.' },
                     { title: 'Kiểm tra dây Curoa / Khớp nối truyền động', detail: 'Kiểm tra độ trùng dây đai, tình trạng rạn nứt và căn chỉnh Puly.' },
@@ -3492,6 +3629,12 @@ if (data.devices) {
                     { title: 'Kiểm tra lò xo chống rung & bu lông chân đế', detail: 'Siết chặt toàn bộ bu lông bệ máy, kiểm tra khớp nối mềm Canvas không rách.' },
                     { title: 'Đo tốc độ gió & độ rung cơ khí', detail: 'Đo lưu lượng/tốc độ gió đầu đẩy đạt thiết kế, quạt chạy êm không rung lắc.' },
                     { title: 'Đo dòng điện vận hành & điện trở cách điện', detail: 'Đo dòng điện 3 pha trong định mức, đo cách điện cuộn dây motor > 50 MΩ.' }
+                ],
+                specs: [
+                    { item: 'Dòng điện vận hành 3 pha', val: '8.2', unit: 'A', status: 'Đạt' },
+                    { item: 'Tốc độ vòng quay trục quạt', val: '1480', unit: 'RPM', status: 'Đạt' },
+                    { item: 'Tốc độ gió đầu đẩy', val: '6.5', unit: 'm/s', status: 'Đạt' },
+                    { item: 'Điện trở cách điện cuộn dây', val: '85', unit: 'MΩ', status: 'Đạt' }
                 ]
             },
             {
@@ -3500,6 +3643,7 @@ if (data.devices) {
                 name: 'Cụm Bơm Nước Lạnh & Hệ Chiller',
                 icon: 'fa-water',
                 prefix: 'TS-2026-HVAC-',
+                cycleMonths: 3,
                 tasks: [
                     { title: 'Vệ sinh tổng quan vỏ máy & bệ bơm', detail: 'Lau chùi bụi bẩn bám trên thân bơm, động cơ và bệ quán tính.' },
                     { title: 'Kiểm tra độ rò rỉ phớt cơ khí (Mechanical Seal)', detail: 'Kiểm tra cổ trục phớt bơm, đảm bảo kín khít không rò nước.' },
@@ -3507,6 +3651,12 @@ if (data.devices) {
                     { title: 'Đo điện trở cách điện & dòng điện 3 pha', detail: 'Đo bằng đồng hồ Megaohmmeter > 50 MΩ, dòng tải 3 pha cân bằng.' },
                     { title: 'Kiểm tra van, khớp nối mềm & đồng hồ áp suất', detail: 'Đồng hồ áp lực đầu hút/đẩy hoạt động chính xác, siết bu lông chân đế.' },
                     { title: 'Vệ sinh bầu lọc rác chữ Y (Y-Strainer)', detail: 'Khóa van cô lập, tháo xả cặn bẩn tích tụ tại lưới lọc Y đường ống hút.' }
+                ],
+                specs: [
+                    { item: 'Áp suất đầu hút', val: '3.1', unit: 'bar', status: 'Đạt' },
+                    { item: 'Áp suất đầu đẩy', val: '6.8', unit: 'bar', status: 'Đạt' },
+                    { item: 'Dòng điện vận hành 3 pha', val: '38.2', unit: 'A', status: 'Đạt' },
+                    { item: 'Điện trở cách điện Motor', val: '95', unit: 'MΩ', status: 'Đạt' }
                 ]
             },
             {
@@ -3515,18 +3665,24 @@ if (data.devices) {
                 name: 'Hệ Thống Bơm & Thiết Bị PCCC',
                 icon: 'fa-fire-extinguisher',
                 prefix: 'TS-2026-FIRE-',
+                cycleMonths: 1,
                 tasks: [
                     { title: 'Kiểm tra mức nhiên liệu Diesel & nước làm mát', detail: 'Dầu diesel trong bồn chứa > 80%, nước giải nhiệt két nước đầy đủ.' },
                     { title: 'Kiểm tra điện áp 2 bình ắc quy đề nổ', detail: 'Đo điện áp bình ắc quy và bộ sạc tự động tại tủ điều khiển đạt 24V - 27V.' },
                     { title: 'Kiểm tra áp lực tuyến ống & bình tích áp', detail: 'Áp suất đường ống duy trì ổn định từ 9.0 - 11.0 bar.' },
                     { title: 'Chạy thử chế độ Tự động / Bằng tay (Auto/Manual Test)', detail: 'Test khởi động bơm bù áp, bơm điện và bơm Diesel qua tủ điều khiển.' }
+                ],
+                specs: [
+                    { item: 'Áp lực tuyến ống PCCC', val: '10.2', unit: 'bar', status: 'Đạt' },
+                    { item: 'Điện áp bình ắc quy đề nổ', val: '24.6', unit: 'V', status: 'Đạt' },
+                    { item: 'Mức dầu bồn Diesel dự phòng', val: '85', unit: '%', status: 'Đạt' }
                 ]
             }
         ];
 
         let deviceTemplatesData = JSON.parse(JSON.stringify(defaultDeviceTemplatesData));
         let isTemplateEditMode = false;
-        let currentSelectedTemplateId = 'tpl-ahu';
+        let currentSelectedTemplateId = 'tpl-fcu';
 
         function loadDeviceTemplatesFromStorage() {
             const saved = localStorage.getItem('hicon_device_templates');
@@ -3534,7 +3690,17 @@ if (data.devices) {
                 try {
                     const parsed = JSON.parse(saved);
                     if (Array.isArray(parsed) && parsed.length > 0) {
-                        deviceTemplatesData = parsed;
+                        deviceTemplatesData = parsed.map(tpl => {
+                            const fallback = defaultDeviceTemplatesData.find(d => d.id === tpl.id || d.code === tpl.code);
+                            return {
+                                ...tpl,
+                                cycleMonths: tpl.cycleMonths || (fallback ? fallback.cycleMonths : 3),
+                                specs: Array.isArray(tpl.specs) ? tpl.specs : (fallback ? fallback.specs : [
+                                    { item: 'Dòng điện vận hành', val: '', unit: 'A', status: 'Đạt' },
+                                    { item: 'Điện áp nguồn', val: '220/380', unit: 'V', status: 'Đạt' }
+                                ])
+                            };
+                        });
                     }
                 } catch (e) {}
             }
@@ -3542,6 +3708,104 @@ if (data.devices) {
 
         function saveDeviceTemplatesToStorage() {
             localStorage.setItem('hicon_device_templates', JSON.stringify(deviceTemplatesData));
+        }
+
+        // GHI ĐÈ HÀM ĐỒNG BỘ CLOUD ĐỂ TỰ ĐỘNG LƯU/TẢI CẢ FORM CHUẨN MÀ KHÔNG CẦN SỬA Ở GIỮA FILE
+        async function pullFromCloudInBackground() {
+            if (!navigator.onLine) return;
+            try {
+                if (localStorage.getItem('hicon_offline_pending_sync') === 'true') {
+                    await pushFullSystemToCloud();
+                    return;
+                }
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
+                const res = await fetch(`${FIREBASE_DB_URL}/hicon_system.json`, { signal: controller.signal });
+                clearTimeout(timeoutId);
+
+                if (!res.ok) return;
+                const data = await res.json();
+                if (data) {
+                    if (data.project_images) {
+                        Object.keys(data.project_images).forEach(pid => {
+                            localStorage.setItem('hicon_proj_img_' + pid, data.project_images[pid]);
+                        });
+                    }
+                    if (data.company_logo) localStorage.setItem('hicon_company_logo', data.company_logo);
+                    if (data.hero_bg) localStorage.setItem('hicon_hero_bg', data.hero_bg);
+                    if (data.why_cards_data) localStorage.setItem('hicon_why_cards_data', JSON.stringify(data.why_cards_data));
+                    if (data.services_data) localStorage.setItem('hicon_services_data', JSON.stringify(data.services_data));
+                    if (data.projects_full_list) localStorage.setItem('hicon_projects_full_list', JSON.stringify(data.projects_full_list));
+                    if (data.custom_sections_data) localStorage.setItem('hicon_custom_sections_data', JSON.stringify(data.custom_sections_data));
+                    if (data.device_templates) {
+                        localStorage.setItem('hicon_device_templates', JSON.stringify(data.device_templates));
+                        loadDeviceTemplatesFromStorage();
+                    }
+                    if (data.devices) localStorage.setItem('hicon_device_db', JSON.stringify(data.devices));
+                    if (data.admin_pass) localStorage.setItem('hicon_admin_pass', data.admin_pass);
+                    if (data.cms_texts) {
+                        localStorage.setItem('hicon_cms_texts', JSON.stringify(data.cms_texts));
+                        applySavedCmsTextsToDom();
+                    }
+
+                    loadAllDynamicDataFromStorage();
+                    loadDeviceTemplatesFromStorage();
+                    renderWhyChooseUsSection();
+                    renderServicesSection();
+                    renderProjectsSection();
+                    renderCustomSections();
+                    updateTotalCountDisplay();
+
+                    if (currentViewingDeviceCode) {
+                        const db = getDeviceDatabase();
+                        if (db[currentViewingDeviceCode]) renderDeviceReport(db[currentViewingDeviceCode]);
+                    }
+                } else {
+                    await pushFullSystemToCloud();
+                }
+            } catch (e) {}
+        }
+
+        async function pushFullSystemToCloud() {
+            if (!navigator.onLine) {
+                localStorage.setItem('hicon_offline_pending_sync', 'true');
+                updateNetworkUI();
+                return false;
+            }
+            const projImgs = {};
+            hiconProjectsData.forEach(p => {
+                const saved = localStorage.getItem('hicon_proj_img_' + p.id);
+                if (saved) projImgs[p.id] = saved;
+            });
+            const payload = {
+                project_images: projImgs,
+                company_logo: localStorage.getItem('hicon_company_logo') || '',
+                hero_bg: localStorage.getItem('hicon_hero_bg') || '',
+                why_cards_data: whyCardsData,
+                services_data: servicesData,
+                projects_full_list: hiconProjectsData,
+                custom_sections_data: customSectionsData,
+                device_templates: deviceTemplatesData,
+                devices: getDeviceDatabase(),
+                admin_pass: getStoredPassword(),
+                cms_texts: getSavedCmsTexts(),
+                updated_at: new Date().toISOString()
+            };
+            try {
+                const res = await fetch(`${FIREBASE_DB_URL}/hicon_system.json`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    localStorage.removeItem('hicon_offline_pending_sync');
+                    updateNetworkUI();
+                    return true;
+                }
+            } catch (e) {}
+            localStorage.setItem('hicon_offline_pending_sync', 'true');
+            updateNetworkUI();
+            return false;
         }
 
         function openAdminModal() {
@@ -3557,7 +3821,8 @@ if (data.devices) {
             passInput.value = '';
             passInput.classList.remove('shake-error', 'border-red-500');
             
-            document.getElementById('form-date').value = new Date().toISOString().split('T')[0];
+            const todayStr = new Date().toISOString().split('T')[0];
+            document.getElementById('form-date').value = todayStr;
         }
 
         function closeAdminModal() {
@@ -3590,12 +3855,10 @@ if (data.devices) {
                 showTopErrorToast('Mã PIN xác nhận bảo mật không đúng!');
                 return;
             }
-
             if (!newPass) {
                 showTopErrorToast('Vui lòng nhập mật khẩu mới!');
                 return;
             }
-
             if (newPass !== confirmPass) {
                 showTopErrorToast('Mật khẩu mới và xác nhận mật khẩu không khớp!');
                 return;
@@ -3653,6 +3916,8 @@ if (data.devices) {
 
             deviceTemplatesData.forEach(tpl => {
                 const taskCount = (tpl.tasks || []).length;
+                const specCount = (tpl.specs || []).length;
+                const cycleMonths = tpl.cycleMonths || 3;
                 const card = document.createElement('div');
                 card.className = "bg-white rounded-2xl border-2 border-gray-200 hover:border-brand-accent p-4 shadow-sm hover:shadow-xl transition flex flex-col justify-between relative group";
 
@@ -3662,8 +3927,8 @@ if (data.devices) {
                             <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-brand-navy to-brand-blue text-cyan-300 flex items-center justify-center text-lg shadow-md group-hover:scale-110 transition">
                                 <i class="fas ${tpl.icon || 'fa-cogs'}"></i>
                             </div>
-                            <span class="bg-cyan-50 text-brand-blue border border-cyan-200 font-extrabold text-[10px] px-2.5 py-1 rounded-full">
-                                ${taskCount} hạng mục chuẩn
+                            <span class="bg-amber-100 text-amber-800 border border-amber-300 font-extrabold text-[10px] px-2.5 py-1 rounded-full">
+                                <i class="fas fa-clock mr-1"></i>Định kỳ: ${cycleMonths} tháng
                             </span>
                         </div>
                         <div class="text-base font-black text-brand-navy tracking-wide uppercase group-hover:text-brand-accent transition">
@@ -3672,13 +3937,17 @@ if (data.devices) {
                         <div class="text-xs font-semibold text-gray-600 mt-0.5 line-clamp-1">
                             ${tpl.name}
                         </div>
+                        <div class="flex flex-wrap gap-1.5 mt-2.5">
+                            <span class="bg-slate-100 text-gray-700 text-[10px] font-bold px-2 py-0.5 rounded-md border border-gray-200">${taskCount} hạng mục</span>
+                            <span class="bg-cyan-50 text-brand-blue text-[10px] font-bold px-2 py-0.5 rounded-md border border-cyan-200">${specCount} thông số đo</span>
+                        </div>
                     </div>
 
                     <div class="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between gap-2">
                         <button type="button" onclick="selectDeviceTypeAndOpenForm('${tpl.id}')" class="btn-interactive flex-1 bg-brand-navy hover:bg-brand-blue text-white font-bold py-2 rounded-xl text-[11px] flex items-center justify-center shadow-sm">
                             <i class="fas fa-check-circle mr-1 text-cyan-300"></i> Chọn Form Này
                         </button>
-                        <button type="button" onclick="openTemplateEditorModal('${tpl.id}')" class="btn-interactive bg-amber-100 hover:bg-amber-500 text-amber-800 hover:text-brand-dark font-extrabold px-3 py-2 rounded-xl text-[11px] flex items-center border border-amber-300" title="Sửa các hạng mục bảo trì chuẩn của ${tpl.code}">
+                        <button type="button" onclick="openTemplateEditorModal('${tpl.id}')" class="btn-interactive bg-amber-100 hover:bg-amber-500 text-amber-800 hover:text-brand-dark font-extrabold px-3 py-2 rounded-xl text-[11px] flex items-center border border-amber-300" title="Sửa chu kỳ tháng, hạng mục & thông số của ${tpl.code}">
                             <i class="fas fa-pen mr-1"></i> Sửa
                         </button>
                     </div>
@@ -3692,28 +3961,63 @@ if (data.devices) {
             renderDeviceTypeCardsGrid();
         }
 
+        function autoUpdateNextMaintenanceDate() {
+            const dateInput = document.getElementById('form-date');
+            const nextDateInput = document.getElementById('form-next-date');
+            if (!dateInput || !nextDateInput) return;
+
+            const tpl = deviceTemplatesData.find(t => t.id === currentSelectedTemplateId);
+            const cycleMonths = tpl ? (parseInt(tpl.cycleMonths, 10) || 3) : 3;
+
+            if (dateInput.value) {
+                nextDateInput.value = computeNextDateByMonths(dateInput.value, cycleMonths);
+            }
+            updateDatePreviewLabels();
+        }
+
+        function updateDatePreviewLabels() {
+            const dateVal = document.getElementById('form-date')?.value || '';
+            const nextDateVal = document.getElementById('form-next-date')?.value || '';
+            const tpl = deviceTemplatesData.find(t => t.id === currentSelectedTemplateId);
+            const cycleMonths = tpl ? (parseInt(tpl.cycleMonths, 10) || 3) : 3;
+
+            const p1 = document.getElementById('form-date-vn-preview');
+            const p2 = document.getElementById('form-next-date-vn-preview');
+            if (p1) p1.innerText = dateVal ? `Ngày: ${formatDateVN(dateVal)}` : 'Chưa chọn ngày';
+            if (p2) p2.innerText = nextDateVal ? `Kỳ tới (+${cycleMonths} tháng): ${formatDateVN(nextDateVal)}` : 'Tự nhảy theo chu kỳ';
+        }
+
         function selectDeviceTypeAndOpenForm(tplId) {
             const tpl = deviceTemplatesData.find(t => t.id === tplId);
             if (!tpl) return;
 
             currentSelectedTemplateId = tpl.id;
+            const cycleMonths = tpl.cycleMonths || 3;
 
             document.getElementById('admin-step-select-type').classList.add('hidden');
             document.getElementById('admin-step-edit-template').classList.add('hidden');
             document.getElementById('admin-step-form').classList.remove('hidden');
 
             const labelEl = document.getElementById('current-selected-type-label');
-            if (labelEl) {
-                labelEl.innerText = `${tpl.code} - ${tpl.name}`;
-            }
+            if (labelEl) labelEl.innerText = `${tpl.code} - ${tpl.name}`;
+
+            const cycleBadge = document.getElementById('current-selected-cycle-badge');
+            if (cycleBadge) cycleBadge.innerText = `Chu kỳ: ${cycleMonths} tháng/lần`;
 
             const codeInput = document.getElementById('form-code');
-            if (codeInput && !codeInput.value.trim() && tpl.prefix) {
+            if (codeInput && tpl.prefix) {
                 codeInput.value = tpl.prefix;
             }
 
+            if (!document.getElementById('form-date').value) {
+                document.getElementById('form-date').value = new Date().toISOString().split('T')[0];
+            }
+            autoUpdateNextMaintenanceDate();
+
             loadDefaultFormTasks(tpl.tasks || []);
-            showTopToast(`Đã nạp Form chuẩn của thiết bị: ${tpl.code} (${(tpl.tasks || []).length} hạng mục)`, false);
+            loadDefaultFormSpecs(tpl.specs || []);
+
+            showTopToast(`Đã nạp Form ${tpl.code}: Chu kỳ ${cycleMonths} tháng • ${(tpl.tasks || []).length} hạng mục • ${(tpl.specs || []).length} thông số đo`, false);
         }
 
         function backToSelectTypeStep() {
@@ -3732,8 +4036,10 @@ if (data.devices) {
             document.getElementById('admin-step-form').classList.add('hidden');
             document.getElementById('admin-step-edit-template').classList.remove('hidden');
 
-            const container = document.getElementById('tpl-tasks-container');
-            container.innerHTML = '';
+            const taskContainer = document.getElementById('tpl-tasks-container');
+            const specContainer = document.getElementById('tpl-specs-container');
+            taskContainer.innerHTML = '';
+            specContainer.innerHTML = '';
             const delBtn = document.getElementById('btn-delete-template');
 
             if (tplId) {
@@ -3743,22 +4049,28 @@ if (data.devices) {
                 document.getElementById('tpl-edit-id').value = tpl.id;
                 document.getElementById('tpl-edit-code').value = tpl.code;
                 document.getElementById('tpl-edit-name').value = tpl.name;
+                document.getElementById('tpl-edit-cycle').value = tpl.cycleMonths || 3;
                 document.getElementById('tpl-edit-icon').value = tpl.icon || 'fa-cogs';
                 document.getElementById('tpl-edit-prefix').value = tpl.prefix || '';
 
                 (tpl.tasks || []).forEach(task => addTemplateTaskRow(task.title, task.detail));
+                (tpl.specs || []).forEach(spec => addTemplateSpecRow(spec.item, spec.val, spec.unit, spec.status));
                 if (delBtn) delBtn.classList.remove('hidden');
             } else {
                 document.getElementById('template-editor-heading').innerHTML = `<i class="fas fa-plus-circle mr-2"></i> THÊM LOẠI THIẾT BỊ & FORM CHUẨN MỚI`;
                 document.getElementById('tpl-edit-id').value = '';
                 document.getElementById('tpl-edit-code').value = '';
                 document.getElementById('tpl-edit-name').value = '';
+                document.getElementById('tpl-edit-cycle').value = 3;
                 document.getElementById('tpl-edit-icon').value = 'fa-cogs';
                 document.getElementById('tpl-edit-prefix').value = 'TS-2026-';
 
                 addTemplateTaskRow('Vệ sinh tổng quan thiết bị', 'Lau chùi sạch sẽ bụi bẩn, kiểm tra ngoại quan.');
                 addTemplateTaskRow('Kiểm tra cơ khí & truyền động', 'Kiểm tra độ rung, độ ồn và tra dầu mỡ.');
                 addTemplateTaskRow('Kiểm tra thông số điện vận hành', 'Đo dòng điện định mức và siết chặt ốc cầu đấu.');
+
+                addTemplateSpecRow('Dòng điện vận hành', '10.5', 'A', 'Đạt');
+                addTemplateSpecRow('Điện áp nguồn cấp', '380', 'V', 'Đạt');
                 if (delBtn) delBtn.classList.add('hidden');
             }
         }
@@ -3779,10 +4091,51 @@ if (data.devices) {
             container.appendChild(div);
         }
 
+        function addTemplateSpecRow(item = '', val = '', unit = '', status = 'Đạt') {
+            const container = document.getElementById('tpl-specs-container');
+            const rowId = 'tpl-spec-' + Date.now() + Math.random().toString(36).substring(2, 5);
+            const div = document.createElement('div');
+            div.id = rowId;
+            div.className = "grid grid-cols-1 sm:grid-cols-12 gap-2 items-center bg-white p-2 rounded-xl border border-cyan-200 shadow-sm";
+            div.innerHTML = `
+                <div class="sm:col-span-1 text-center font-black text-brand-navy bg-slate-100 py-2 rounded-lg tpl-spec-stt">1</div>
+                <div class="sm:col-span-4">
+                    <input type="text" placeholder="Hạng mục đo (VD: Dòng điện)" value="${item}" class="tpl-spec-item w-full p-2 border border-gray-300 rounded-lg text-xs font-bold focus:outline-none focus:border-brand-blue">
+                </div>
+                <div class="sm:col-span-3">
+                    <input type="text" placeholder="Thông số mẫu (VD: 12.5)" value="${val}" class="tpl-spec-val w-full p-2 border border-gray-300 rounded-lg text-xs text-center font-semibold focus:outline-none focus:border-brand-blue">
+                </div>
+                <div class="sm:col-span-2">
+                    <input type="text" placeholder="Đơn vị (A, V, bar, °C)" value="${unit}" class="tpl-spec-unit w-full p-2 border border-gray-300 rounded-lg text-xs text-center font-mono focus:outline-none focus:border-brand-blue">
+                </div>
+                <div class="sm:col-span-2 flex gap-1.5 items-center">
+                    <select class="tpl-spec-status w-full p-2 border border-gray-300 rounded-lg text-xs font-bold focus:outline-none">
+                        <option value="Đạt" ${status === 'Đạt' ? 'selected' : ''}>Đạt</option>
+                        <option value="Cần chú ý" ${status === 'Cần chú ý' ? 'selected' : ''}>Cần chú ý</option>
+                        <option value="Không đạt" ${status === 'Không đạt' ? 'selected' : ''}>Không đạt</option>
+                    </select>
+                    <button type="button" onclick="document.getElementById('${rowId}').remove(); renumberSpecRows('tpl-specs-container', '.tpl-spec-stt');" class="btn-interactive bg-red-100 hover:bg-red-200 text-red-600 px-2.5 py-2 rounded-lg text-xs font-bold shrink-0" title="Xóa thông số này">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            `;
+            container.appendChild(div);
+            renumberSpecRows('tpl-specs-container', '.tpl-spec-stt');
+        }
+
+        function renumberSpecRows(containerId, sttSelector) {
+            const rows = document.querySelectorAll(`#${containerId} > div`);
+            rows.forEach((r, idx) => {
+                const sttEl = r.querySelector(sttSelector);
+                if (sttEl) sttEl.innerText = idx + 1;
+            });
+        }
+
         async function saveTemplateForm() {
             const editId = document.getElementById('tpl-edit-id').value.trim();
             const code = document.getElementById('tpl-edit-code').value.trim().toUpperCase();
             const name = document.getElementById('tpl-edit-name').value.trim();
+            const cycleMonths = parseInt(document.getElementById('tpl-edit-cycle').value, 10) || 3;
             const icon = document.getElementById('tpl-edit-icon').value;
             const prefix = document.getElementById('tpl-edit-prefix').value.trim().toUpperCase();
 
@@ -3791,9 +4144,9 @@ if (data.devices) {
                 return;
             }
 
-            const rows = document.querySelectorAll('#tpl-tasks-container > div');
+            const taskRows = document.querySelectorAll('#tpl-tasks-container > div');
             const tasks = [];
-            rows.forEach(r => {
+            taskRows.forEach(r => {
                 const tTitle = r.querySelector('.tpl-task-title').value.trim();
                 const tDetail = r.querySelector('.tpl-task-detail').value.trim();
                 if (tTitle) {
@@ -3804,27 +4157,40 @@ if (data.devices) {
                 }
             });
 
+            const specRows = document.querySelectorAll('#tpl-specs-container > div');
+            const specs = [];
+            specRows.forEach(r => {
+                const sItem = r.querySelector('.tpl-spec-item').value.trim();
+                const sVal = r.querySelector('.tpl-spec-val').value.trim();
+                const sUnit = r.querySelector('.tpl-spec-unit').value.trim();
+                const sStatus = r.querySelector('.tpl-spec-status').value;
+                if (sItem) {
+                    specs.push({ item: sItem, val: sVal, unit: sUnit, status: sStatus });
+                }
+            });
+
             if (tasks.length === 0) {
                 showTopErrorToast('Vui lòng thêm ít nhất 1 hạng mục bảo trì chuẩn cho loại thiết bị này!');
                 return;
             }
 
+            let targetId = editId;
             if (editId) {
                 const idx = deviceTemplatesData.findIndex(t => t.id === editId);
                 if (idx !== -1) {
-                    deviceTemplatesData[idx] = { id: editId, code, name, icon, prefix, tasks };
+                    deviceTemplatesData[idx] = { id: editId, code, name, cycleMonths, icon, prefix, tasks, specs };
                 }
             } else {
-                const newId = 'tpl-' + Date.now();
-                deviceTemplatesData.push({ id: newId, code, name, icon, prefix, tasks });
+                targetId = 'tpl-' + Date.now();
+                deviceTemplatesData.push({ id: targetId, code, name, cycleMonths, icon, prefix, tasks, specs });
             }
 
             saveDeviceTemplatesToStorage();
-            backToSelectTypeStep();
+            selectDeviceTypeAndOpenForm(targetId);
 
             const synced = await pushFullSystemToCloud();
             if (synced) {
-                showTopToast(`Đã lưu Form chuẩn "${code}" & đồng bộ Cloud cho toàn đội bảo trì!`, false);
+                showTopToast(`Đã lưu Form chuẩn "${code}" (Chu kỳ ${cycleMonths} tháng) & đồng bộ Cloud!`, false);
             } else {
                 showTopToast(`Đã lưu Form chuẩn "${code}" (Offline)! Sẽ tự đồng bộ khi có mạng.`, false);
             }
@@ -3844,6 +4210,7 @@ if (data.devices) {
             await pushFullSystemToCloud();
             showTopToast(`Đã xóa loại thiết bị "${tpl ? tpl.code : ''}" khỏi danh mục!`, false);
         }
+
         function addMaintenanceTaskRow(title = '', detail = '') {
             const container = document.getElementById('form-tasks-container');
             const rowId = 'task-row-' + Date.now() + Math.random().toString(36).substring(2, 5);
@@ -3865,6 +4232,46 @@ if (data.devices) {
             const container = document.getElementById('form-tasks-container');
             container.innerHTML = '';
             tasks.forEach(t => addMaintenanceTaskRow(t.title, t.detail));
+        }
+
+        function addFormSpecRow(item = '', val = '', unit = '', status = 'Đạt') {
+            const container = document.getElementById('form-specs-container');
+            const rowId = 'form-spec-' + Date.now() + Math.random().toString(36).substring(2, 5);
+
+            const div = document.createElement('div');
+            div.id = rowId;
+            div.className = "grid grid-cols-1 sm:grid-cols-12 gap-2 items-center bg-white p-2 rounded-lg border border-cyan-200 shadow-sm transition";
+            div.innerHTML = `
+                <div class="sm:col-span-1 text-center font-black text-brand-navy bg-slate-100 py-2 rounded form-spec-stt">1</div>
+                <div class="sm:col-span-4">
+                    <input type="text" placeholder="Hạng mục đo (VD: Dòng điện)" value="${item}" class="spec-item-input w-full p-2 border border-gray-300 rounded text-xs font-bold text-brand-navy focus:outline-none focus:border-brand-blue">
+                </div>
+                <div class="sm:col-span-3">
+                    <input type="text" placeholder="Nhập thông số đo..." value="${val}" class="spec-val-input w-full p-2 border-2 border-cyan-400 bg-cyan-50/30 rounded text-xs text-center font-black text-brand-blue focus:outline-none focus:border-brand-navy">
+                </div>
+                <div class="sm:col-span-2">
+                    <input type="text" placeholder="Đơn vị (A, V, bar...)" value="${unit}" class="spec-unit-input w-full p-2 border border-gray-300 rounded text-xs text-center font-mono focus:outline-none focus:border-brand-blue">
+                </div>
+                <div class="sm:col-span-2 flex gap-1.5 items-center">
+                    <select class="spec-status-input w-full p-2 border border-gray-300 rounded text-xs font-bold focus:outline-none">
+                        <option value="Đạt" ${status === 'Đạt' ? 'selected' : ''}>✅ Đạt</option>
+                        <option value="Cần chú ý" ${status === 'Cần chú ý' ? 'selected' : ''}>⚠️ Cần chú ý</option>
+                        <option value="Không đạt" ${status === 'Không đạt' ? 'selected' : ''}>❌ Không đạt</option>
+                    </select>
+                    <button type="button" onclick="document.getElementById('${rowId}').remove(); renumberSpecRows('form-specs-container', '.form-spec-stt');" class="btn-interactive bg-red-100 hover:bg-red-200 text-red-600 px-2.5 py-2 rounded text-xs font-bold shrink-0" title="Xóa thông số này">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            `;
+            container.appendChild(div);
+            renumberSpecRows('form-specs-container', '.form-spec-stt');
+        }
+
+        function loadDefaultFormSpecs(specs) {
+            const container = document.getElementById('form-specs-container');
+            if (!container) return;
+            container.innerHTML = '';
+            specs.forEach(s => addFormSpecRow(s.item, s.val, s.unit, s.status || 'Đạt'));
         }
 
         async function previewImages(event) {
@@ -3911,6 +4318,7 @@ if (data.devices) {
             const client = document.getElementById('form-client').value.trim();
             const tech = document.getElementById('form-tech').value.trim();
             const date = document.getElementById('form-date').value;
+            const nextDate = document.getElementById('form-next-date').value || computeNextDateByMonths(date, 3);
             const statusVal = document.getElementById('form-status').value;
             const note = document.getElementById('form-note').value.trim();
 
@@ -3931,6 +4339,24 @@ if (data.devices) {
                 }
             });
 
+            const specRows = document.querySelectorAll('#form-specs-container > div');
+            let collectedSpecs = [];
+            specRows.forEach(row => {
+                const sItem = row.querySelector('.spec-item-input').value.trim();
+                const sVal = row.querySelector('.spec-val-input').value.trim();
+                const sUnit = row.querySelector('.spec-unit-input').value.trim();
+                const sStatus = row.querySelector('.spec-status-input').value;
+                if (sItem) {
+                    collectedSpecs.push({
+                        item: sItem,
+                        val: sVal || '--',
+                        unit: sUnit || '--',
+                        status: sStatus,
+                        isOk: sStatus === 'Đạt'
+                    });
+                }
+            });
+
             const db = getDeviceDatabase();
 
             let finalPhotos = [...uploadedPhotosBase64];
@@ -3947,14 +4373,14 @@ if (data.devices) {
                 client: client,
                 tech: tech,
                 date: date,
+                nextDate: nextDate,
                 statusBadge: statusBadge,
                 note: note || 'Đã kiểm tra vận hành hệ thống đạt tiêu chuẩn.',
                 tasks: collectedTasks.length > 0 ? collectedTasks : [
                     { title: 'Vệ sinh tổng quan thiết bị', detail: 'Lau chùi sạch sẽ.', status: 'Đạt' }
                 ],
-                specs: [
-                    { item: 'Kiểm tra tổng quan thiết bị', std: 'Tiêu chuẩn TCVN', val: 'Đạt yêu cầu', status: 'Đạt', isOk: true },
-                    { item: 'Thông số điện / Áp suất vận hành', std: 'Theo hồ sơ', val: 'Ổn định', status: 'Đạt', isOk: true }
+                specs: collectedSpecs.length > 0 ? collectedSpecs : [
+                    { item: 'Kiểm tra thông số vận hành', val: 'Ổn định', unit: 'TCVN', status: 'Đạt', isOk: true }
                 ],
                 photos: finalPhotos
             };
@@ -3969,7 +4395,7 @@ if (data.devices) {
 
             const synced = await saveDeviceDatabase(db);
             if (synced) {
-                showTopToast(`Đã lưu thiết bị ${code} & đồng bộ Cloud cho toàn bộ kỹ thuật viên!`, false);
+                showTopToast(`Đã lưu thiết bị ${code} (Kỳ bảo trì tới: ${formatDateVN(nextDate)}) & đồng bộ Cloud!`, false);
             } else {
                 showTopToast(`Đã lưu Offline thiết bị ${code}! App sẽ tự đẩy lên Cloud khi có mạng.`, false);
             }
@@ -3983,6 +4409,7 @@ if (data.devices) {
 
             updateNetworkUI();
             loadAllDynamicDataFromStorage();
+            loadDeviceTemplatesFromStorage();
             applySavedCmsTextsToDom();
             renderWhyChooseUsSection();
             renderServicesSection();
