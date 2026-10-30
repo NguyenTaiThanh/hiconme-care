@@ -401,652 +401,479 @@
             </div>
         </div>
 
-      <!-- ==================== SECTION 2: GIỚI THIỆU (FULL-FRAME VIDEO INTRO -> TỰ ĐỘNG CHUYỂN SANG NỘI DUNG CHI TIẾT) ==================== -->
+     <!-- ==================== SECTION 2: GIỚI THIỆU (CINEMA INTRO + CORPORATE EDITORIAL LAYOUT) ==================== -->
         <div id="section-about" class="page-section hidden bg-slate-50 relative overflow-hidden">
             
             <style>
-                /* ==================== CSS CHO GIAI ĐOẠN 1: VIDEO INTRO TOÀN KHUNG ==================== */
-                #about-intro-stage {
-                    transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+                /* Chuyển cảnh mượt từ Video Intro sang Trang Đọc Hồ Sơ */
+                #about-cinema-intro {
+                    transition: opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1), transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
                 }
-                #about-intro-stage.intro-stage-exit {
+                #about-cinema-intro.cinema-curtain-up {
                     opacity: 0;
-                    transform: scale(1.06);
+                    transform: translateY(-25px) scale(1.02);
                     pointer-events: none;
                 }
 
-                /* Cảnh 1: Thu phóng máy quay xuyên không gian thiết bị HVAC - PCCC - Điện */
-                @keyframes introCamFlyThrough {
-                    0% { transform: scale(1.38) translate3d(0, 2%, 0); filter: brightness(0.4) contrast(1.2); }
-                    50% { transform: scale(1.12) translate3d(-1%, 0, 0); filter: brightness(0.85) contrast(1.1); }
-                    100% { transform: scale(1) translate3d(0, 0, 0); filter: brightness(0.35) contrast(1.2); }
+                /* Chuyển động thu phóng chậm chuẩn phim tài liệu doanh nghiệp */
+                @keyframes cinemaSlowScale {
+                    0% { transform: scale(1.14); }
+                    100% { transform: scale(1.0); }
                 }
-                .intro-cam-fly {
-                    animation: introCamFlyThrough 6.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-                }
-
-                /* Lưới tia Laser Hologram quét dọc thiết bị cơ điện (Giống cảnh 00:04 trong video mẫu) */
-                @keyframes introLaserGrid {
-                    0% { transform: translateY(-100%) perspective(500px) rotateX(45deg); opacity: 0; }
-                    20% { opacity: 0.85; }
-                    60% { opacity: 0.75; }
-                    100% { transform: translateY(100%) perspective(500px) rotateX(45deg); opacity: 0; }
-                }
-                .intro-hologram-scan {
-                    background: linear-gradient(180deg, transparent 0%, rgba(0, 242, 254, 0.35) 50%, rgba(245, 158, 11, 0.75) 52%, transparent 100%);
-                    animation: introLaserGrid 2.8s ease-in-out forwards;
+                .cinema-video-scale {
+                    animation: cinemaSlowScale 6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
                 }
 
-                /* Cảnh 2: Khối Logo 3D HICON M&E thu phóng từ lớn về tâm (Giống cảnh 00:24 - 00:27) */
-                @keyframes logo3dCinematicZoom {
-                    0% { opacity: 0; transform: scale(2.4) perspective(800px) rotateY(-28deg) translateY(20px); filter: blur(12px); }
-                    35% { opacity: 1; transform: scale(1.08) perspective(800px) rotateY(6deg) translateY(0); filter: blur(0px) drop-shadow(0 0 45px rgba(245, 158, 11, 0.85)); }
-                    75% { opacity: 1; transform: scale(1) perspective(800px) rotateY(0deg); filter: drop-shadow(0 15px 35px rgba(0, 168, 204, 0.6)); }
-                    100% { opacity: 1; transform: scale(1); }
+                /* Hiệu ứng xuất hiện Logo 3D HICON M&E êm ái ở trung tâm */
+                @keyframes cinemaLogoReveal {
+                    0% { opacity: 0; transform: translateY(20px) scale(0.94); filter: blur(6px); }
+                    100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0px); }
                 }
-                .intro-logo-3d-enter {
-                    animation: logo3dCinematicZoom 2.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+                .cinema-logo-box-anim {
+                    animation: cinemaLogoReveal 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both;
                 }
 
-                /* Luồng sáng Vàng Kim quét ngang qua Logo 3D */
-                @keyframes lightRaySweep {
-                    0% { left: -60%; opacity: 0; }
-                    30% { opacity: 1; }
-                    100% { left: 130%; opacity: 0; }
+                /* Luồng sáng lướt qua Logo 1 lần duy nhất */
+                @keyframes metallicShine {
+                    0% { left: -75%; }
+                    100% { left: 135%; }
                 }
-                .intro-light-ray {
-                    position: absolute; top: -20%; bottom: -20%; width: 45%;
-                    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.85), rgba(245, 158, 11, 0.6), transparent);
-                    transform: skewX(-25deg);
-                    animation: lightRaySweep 1.8s ease-in-out 0.3s forwards;
-                }
-
-                /* Cảnh 3: Chớp sáng Flash Reveal mở ra Lời chào Công ty (Giống cảnh 00:28 - 00:30) */
-                @keyframes introFlashBurst {
-                    0% { opacity: 0; }
-                    25% { opacity: 0.95; }
-                    100% { opacity: 0; }
-                }
-                .intro-flash-overlay {
-                    animation: introFlashBurst 0.9s ease-out forwards;
+                .cinema-metallic-shine {
+                    position: absolute; top: 0; bottom: 0; width: 45%;
+                    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.75), transparent);
+                    transform: skewX(-22deg);
+                    animation: metallicShine 1.6s ease-in-out 1.2s forwards;
                 }
 
-                @keyframes greetingTextReveal {
-                    0% { opacity: 0; transform: translateY(24px) scale(0.95); letter-spacing: 0.25em; }
-                    100% { opacity: 1; transform: translateY(0) scale(1); letter-spacing: 0.06em; }
-                }
-                .intro-greeting-anim {
-                    animation: greetingTextReveal 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-                }
-
-                /* Thanh thời gian Video Intro 6.5 giây */
-                @keyframes introTimelineProgress {
+                /* Thanh thời gian Intro 5.2 giây */
+                @keyframes cinemaProgressLine {
                     from { width: 0%; }
                     to { width: 100%; }
                 }
-                .intro-timeline-bar {
-                    animation: introTimelineProgress 6.5s linear forwards;
+                .cinema-timer-bar {
+                    animation: cinemaProgressLine 5.2s linear forwards;
                 }
 
-                /* ==================== CSS CHO GIAI ĐOẠN 2: NỘI DUNG CHI TIẾT SIÊU CHUYÊN NGHIỆP ==================== */
-                @keyframes contentStaggerUp {
-                    from { opacity: 0; transform: translateY(32px); }
+                /* Hiệu ứng dàn trang tuần tự khi vào phần đọc nội dung */
+                @keyframes editorialSlideUp {
+                    from { opacity: 0; transform: translateY(28px); }
                     to { opacity: 1; transform: translateY(0); }
                 }
-                .about-stagger-1 { animation: contentStaggerUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both; }
-                .about-stagger-2 { animation: contentStaggerUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both; }
-                .about-stagger-3 { animation: contentStaggerUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.30s both; }
-
-                @keyframes slowPanImage {
-                    0%, 100% { transform: scale(1.02) translateX(0); }
-                    50% { transform: scale(1.1) translateX(-1.5%); }
-                }
-                .about-detail-pan-img {
-                    animation: slowPanImage 18s ease-in-out infinite;
-                }
+                .editorial-block-1 { animation: editorialSlideUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both; }
+                .editorial-block-2 { animation: editorialSlideUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both; }
+                .editorial-block-3 { animation: editorialSlideUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.30s both; }
             </style>
 
-            <!-- Input ẩn để người dùng có thể chọn bức ảnh Trần nhà xưởng HVAC & PCCC từ máy làm ảnh Video Intro -->
-            <input type="file" id="about-intro-bg-file" accept="image/*" class="hidden" onchange="handleAboutIntroBgChange(event)">
-
             <!-- ======================================================================================== -->
-            <!-- GIAI ĐOẠN 1: MÀN HÌNH VIDEO INTRO CHUYỂN ĐỘNG TOÀN KHUNG (TỰ ĐỘNG CHUYỂN SAU 6.5 GIÂY) -->
+            <!-- GIAI ĐOẠN 1: INTRO VIDEO ĐIỆN ẢNH TỐI GIẢN, SANG TRỌNG (TỰ CHUYỂN SAU 5.2 GIÂY)          -->
             <!-- ======================================================================================== -->
-            <div id="about-intro-stage" class="relative min-h-[82vh] w-full bg-slate-950 flex items-center justify-center overflow-hidden select-none">
+            <div id="about-cinema-intro" class="relative h-[82vh] min-h-[500px] w-full bg-slate-950 overflow-hidden select-none flex items-center justify-center">
                 
-                <!-- Lớp nền hình ảnh thiết bị HVAC / PCCC / Điện thu phóng 3D liên tục -->
-                <img id="about-intro-bg-img" 
-                     src="https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=1800&auto=format&fit=crop" 
-                     alt="HICON M&E Industrial Intro" 
-                     class="absolute inset-0 w-full h-full object-cover intro-cam-fly">
+                <!-- Video / Hình ảnh công trường Cơ Điện thực tế quay chậm phía sau -->
+                <video autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=1800&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover cinema-video-scale opacity-55">
+                    <source src="https://assets.mixkit.co/videos/preview/mixkit-industrial-pipes-and-valves-in-a-factory-42934-large.mp4" type="video/mp4">
+                </video>
                 
-                <!-- Lớp phủ tối điện ảnh & lưới kỹ thuật số -->
-                <div class="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-brand-navy/70 to-slate-950/95"></div>
-                <div id="intro-hologram-layer" class="absolute inset-0 intro-hologram-scan pointer-events-none"></div>
+                <!-- Lớp phủ Vignette điện ảnh làm nổi bật thương hiệu -->
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-slate-950/80"></div>
 
-                <!-- Lớp Chớp sáng trắng-vàng khi chuyển sang cảnh Chào mừng (Act 3) -->
-                <div id="intro-flash-layer" class="hidden absolute inset-0 bg-white z-30 pointer-events-none"></div>
-
-                <!-- Góc trên trái: Nhãn trạng thái Phim Intro Doanh Nghiệp -->
-                <div class="absolute top-5 left-5 z-30 flex items-center space-x-2.5 bg-black/55 backdrop-blur-md border border-white/15 px-3.5 py-1.5 rounded-full">
-                    <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping"></span>
-                    <span id="intro-act-indicator" class="text-[10px] sm:text-xs font-mono font-bold text-cyan-300 uppercase tracking-widest">
-                        INTRO 01/03 • HỆ THỐNG CƠ ĐIỆN HVAC &amp; PCCC
-                    </span>
-                </div>
-
-                <!-- Góc trên phải: Nút "Bỏ qua Video Intro" để vào thẳng nội dung ngay lập tức -->
-                <div class="absolute top-5 right-5 z-30 flex items-center gap-2">
-                    <button type="button" onclick="finishAboutIntroAndShowContent()" class="btn-interactive bg-white/15 hover:bg-amber-500 hover:text-brand-dark text-white border border-white/30 backdrop-blur-md px-4 py-2 rounded-full text-xs font-extrabold flex items-center shadow-xl">
-                        <span>Vào Nội Dung Chi Tiết</span>
-                        <i class="fas fa-step-forward ml-2"></i>
+                <!-- Nút bỏ qua Intro nhanh ở góc trên phải -->
+                <div class="absolute top-5 right-5 z-30">
+                    <button type="button" onclick="openAboutEditorialContent()" class="btn-interactive bg-white/10 hover:bg-amber-500 hover:text-brand-dark text-white border border-white/25 backdrop-blur-md px-4 py-2 rounded-full text-xs font-bold flex items-center transition">
+                        <span>Đọc Hồ Sơ Ngay</span>
+                        <i class="fas fa-arrow-right ml-2"></i>
                     </button>
                 </div>
 
-                <!-- ================= CẢNH 1 (0.0s - 2.2s): THU PHÓNG THIẾT BỊ HVAC - PCCC - ĐIỆN ================= -->
-                <div id="intro-scene-1" class="relative z-20 max-w-4xl mx-auto px-4 text-center space-y-6">
-                    <div class="inline-flex items-center space-x-2 bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest">
-                        <i class="fas fa-microchip animate-pulse"></i>
-                        <span>CÔNG NGHỆ VẬN HÀNH &amp; BẢO TRÌ CƠ ĐIỆN HIỆN ĐẠI</span>
-                    </div>
-                    <h2 class="text-3xl sm:text-5xl font-black text-white uppercase tracking-tight leading-tight drop-shadow-2xl">
-                        HỆ THỐNG <span class="text-cyan-400">HVAC</span> • <span class="text-red-400">PCCC</span> • <span class="text-amber-400">ĐIỆN CÔNG NGHIỆP</span>
-                    </h2>
-                    <!-- 3 Vòng tròn khóa mục tiêu thiết bị như video công nghệ -->
-                    <div class="grid grid-cols-3 gap-3 sm:gap-6 max-w-2xl mx-auto pt-2">
-                        <div class="bg-slate-900/80 backdrop-blur-md border border-cyan-400/50 rounded-2xl p-3 sm:p-4 text-center shadow-[0_0_25px_rgba(0,168,204,0.3)]">
-                            <i class="fas fa-fan text-cyan-400 text-2xl sm:text-3xl animate-vane-spin mb-2 block"></i>
-                            <div class="text-[10px] sm:text-xs font-black text-white uppercase">ĐIỀU HÒA &amp; ỐNG GIÓ</div>
-                            <div class="text-[9px] text-cyan-300 font-mono mt-0.5">AHU • FCU • CHILLER</div>
-                        </div>
-                        <div class="bg-slate-900/80 backdrop-blur-md border border-red-400/50 rounded-2xl p-3 sm:p-4 text-center shadow-[0_0_25px_rgba(239,68,68,0.3)]">
-                            <i class="fas fa-fire-extinguisher text-red-400 text-2xl sm:text-3xl animate-bounce mb-2 block"></i>
-                            <div class="text-[10px] sm:text-xs font-black text-white uppercase">HỆ THỐNG PCCC</div>
-                            <div class="text-[9px] text-amber-300 font-mono mt-0.5">SPRINKLER • BƠM PCCC</div>
-                        </div>
-                        <div class="bg-slate-900/80 backdrop-blur-md border border-amber-400/50 rounded-2xl p-3 sm:p-4 text-center shadow-[0_0_25px_rgba(245,158,11,0.3)]">
-                            <i class="fas fa-bolt text-amber-400 text-2xl sm:text-3xl animate-pulse mb-2 block"></i>
-                            <div class="text-[10px] sm:text-xs font-black text-white uppercase">ĐIỆN &amp; ĐIỆN NHẸ</div>
-                            <div class="text-[9px] text-emerald-300 font-mono mt-0.5">TỦ MSB • MÁNG CÁP</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ================= CẢNH 2 (2.2s - 4.3s): THU PHÓNG LOGO 3D HICON M&E & TIA SÁNG QUÉT NGANG ================= -->
-                <div id="intro-scene-2" class="hidden relative z-20 max-w-3xl mx-auto px-4 text-center">
-                    <div class="relative inline-block p-8 sm:p-12 rounded-3xl bg-white/95 shadow-[0_0_70px_rgba(245,158,11,0.55)] border-2 border-amber-400 overflow-hidden intro-logo-3d-enter">
-                        <!-- Luồng sáng quét ngang qua Logo -->
-                        <div class="intro-light-ray"></div>
-                        
-                        <div class="flex flex-col sm:flex-row items-center justify-center gap-5 relative z-10">
-                            <!-- Biểu tượng Khối 3D H-C chuẩn theo ảnh Logo công ty -->
-                            <svg class="w-24 h-24 sm:w-28 sm:h-28 shrink-0 drop-shadow-lg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <polygon points="50,10 70,20 50,30" fill="#432818"/>
-                                <polygon points="12,25 29,34 29,52 46,60 46,34 60,41 60,90 46,82 46,70 29,61 29,79 12,70" fill="#432818"/>
-                                <polygon points="60,41 93,25 93,41 72,51 72,71 93,61 93,76 60,90" fill="#f59e0b"/>
-                                <polygon points="72,51 91,61 72,71" fill="#432818"/>
-                            </svg>
-                            <div class="text-center sm:text-left leading-none">
-                                <div class="text-4xl sm:text-6xl font-black tracking-tight text-[#432818] flex items-start justify-center sm:justify-start">
-                                    <span>HICON</span>
-                                    <span class="text-base sm:text-xl font-bold ml-1 -mt-1">®</span>
-                                </div>
-                                <div class="flex items-center justify-center sm:justify-start text-3xl sm:text-5xl font-extrabold tracking-widest text-stone-500 mt-1">
-                                    <span>M&amp;</span>
-                                    <span class="relative inline-flex items-center text-stone-500">
-                                        E
-                                        <i class="fas fa-bolt text-amber-500 text-2xl sm:text-3xl absolute -right-3 top-1/2 -translate-y-1/2 animate-pulse"></i>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="text-amber-300 font-extrabold text-xs sm:text-sm uppercase tracking-[0.3em] mt-6 animate-pulse">
-                        THƯƠNG HIỆU UY TÍN TỪ NĂM 2015
-                    </p>
-                </div>
-
-                <!-- ================= CẢNH 3 (4.3s - 6.5s): HIỆN LỜI CHÀO TRANG TRỌNG TRƯỚC KHI VÀO NỘI DUNG ================= -->
-                <div id="intro-scene-3" class="hidden relative z-20 max-w-4xl mx-auto px-4 text-center space-y-5 intro-greeting-anim">
-                    <!-- Logo thu nhỏ tinh tế phía trên lời chào -->
-                    <div class="inline-flex items-center bg-white px-5 py-2.5 rounded-2xl shadow-2xl border border-amber-400">
-                        <svg class="w-10 h-10 mr-2.5" viewBox="0 0 100 100" fill="none">
+                <!-- Tâm điểm duy nhất: Logo 3D HICON M&E & Tên Công Ty (Tinh gọn, Đẳng cấp) -->
+                <div class="relative z-20 text-center px-4 max-w-3xl mx-auto cinema-logo-box-anim space-y-6">
+                    
+                    <!-- Khối Logo 3D HICON M&E chuẩn nhận diện thương hiệu -->
+                    <div class="relative inline-flex items-center bg-white px-7 py-4 rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.75)] border-2 border-amber-400/80 overflow-hidden">
+                        <div class="cinema-metallic-shine"></div>
+                        <svg class="w-16 h-16 sm:w-20 sm:h-20 mr-4 shrink-0" viewBox="0 0 100 100" fill="none">
                             <polygon points="50,10 70,20 50,30" fill="#432818"/>
                             <polygon points="12,25 29,34 29,52 46,60 46,34 60,41 60,90 46,82 46,70 29,61 29,79 12,70" fill="#432818"/>
                             <polygon points="60,41 93,25 93,41 72,51 72,71 93,61 93,76 60,90" fill="#f59e0b"/>
                             <polygon points="72,51 91,61 72,71" fill="#432818"/>
                         </svg>
-                        <div class="text-left leading-none">
-                            <div class="text-lg font-black text-[#432818]">HICON<sup class="text-[8px]">®</sup></div>
-                            <div class="text-xs font-extrabold text-stone-500 tracking-widest">M&amp;E</div>
+                        <div class="text-left leading-none pr-1">
+                            <div class="text-3xl sm:text-5xl font-black tracking-tight text-[#432818] flex items-start">
+                                <span>HICON</span>
+                                <span class="text-xs sm:text-sm font-bold ml-1 -mt-0.5">®</span>
+                            </div>
+                            <div class="flex items-center text-2xl sm:text-3xl font-extrabold tracking-widest text-stone-500 mt-1">
+                                <span>M&amp;</span>
+                                <span class="relative inline-flex items-center text-stone-500">
+                                    E
+                                    <i class="fas fa-bolt text-amber-500 text-base sm:text-lg absolute -right-2.5 top-1/2 -translate-y-1/2"></i>
+                                </span>
+                            </div>
                         </div>
                     </div>
 
                     <div class="space-y-2">
-                        <p class="text-cyan-300 text-xs sm:text-sm font-extrabold uppercase tracking-[0.25em]">
-                            WELCOME TO HICON M&amp;E CORPORATION
+                        <p class="text-amber-400 text-xs sm:text-sm font-bold uppercase tracking-[0.3em]">
+                            SINCE 22 . 12 . 2015
                         </p>
-                        <h1 class="text-2xl sm:text-5xl font-black text-white uppercase leading-tight tracking-wide">
-                            CÔNG TY CỔ PHẦN CƠ ĐIỆN VÀ BẢO TRÌ HICON <br>
-                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-400 to-cyan-300">
-                                XIN CHÀO QUÝ KHÁCH HÀNG!
-                            </span>
+                        <h1 class="text-xl sm:text-4xl font-black text-white uppercase tracking-wide">
+                            CÔNG TY CỔ PHẦN CƠ ĐIỆN VÀ BẢO TRÌ HICON
                         </h1>
                     </div>
 
-                    <div class="flex flex-wrap justify-center gap-3 pt-2 text-xs font-bold text-gray-200">
-                        <span class="bg-white/10 border border-white/20 px-3.5 py-1.5 rounded-full"><i class="fas fa-shield-alt text-amber-400 mr-1.5"></i>An Toàn</span>
-                        <span class="bg-white/10 border border-white/20 px-3.5 py-1.5 rounded-full"><i class="fas fa-medal text-cyan-300 mr-1.5"></i>Chất Lượng</span>
-                        <span class="bg-white/10 border border-white/20 px-3.5 py-1.5 rounded-full"><i class="fas fa-bolt text-amber-400 mr-1.5"></i>Tiến Độ</span>
-                        <span class="bg-white/10 border border-white/20 px-3.5 py-1.5 rounded-full"><i class="fas fa-hands-helping text-cyan-300 mr-1.5"></i>Đồng Hành Lâu Dài</span>
-                    </div>
                 </div>
 
-                <!-- Thanh tiến trình chạy 6.5s ở đáy khung Video -->
-                <div class="absolute bottom-0 inset-x-0 h-1.5 bg-white/15 z-30">
-                    <div id="intro-progress-line" class="h-full bg-gradient-to-r from-brand-accent via-amber-400 to-emerald-400 intro-timeline-bar"></div>
+                <!-- Thanh tiến trình mỏng tinh tế ở đáy màn hình -->
+                <div class="absolute bottom-0 inset-x-0 h-1 bg-white/10 z-30">
+                    <div id="about-cinema-timer" class="h-full bg-amber-400 cinema-timer-bar"></div>
                 </div>
             </div>
 
 
             <!-- ======================================================================================== -->
-            <!-- GIAI ĐOẠN 2: HỒ SƠ NĂNG LỰC & NỘI DUNG CHI TIẾT SIÊU CHUYÊN NGHIỆP (HIỆN RA SAU INTRO) -->
+            <!-- GIAI ĐOẠN 2: HỒ SƠ NĂNG LỰC CHI TIẾT (BỐ CỤC TẠP CHÍ DOANH NGHIỆP - DỄ ĐỌC & SANG TRỌNG) -->
             <!-- ======================================================================================== -->
-            <div id="about-detail-stage" class="hidden py-10 sm:py-14">
-                <div class="max-w-7xl mx-auto px-4 space-y-10">
+            <div id="about-editorial-content" class="hidden py-12 sm:py-16">
+                <div class="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
 
-                    <!-- 1. THANH HEADER THƯƠNG HIỆU & NÚT XEM LẠI VIDEO INTRO -->
-                    <div class="about-stagger-1 bg-gradient-to-r from-brand-navy via-slate-900 to-brand-blue rounded-3xl p-6 sm:p-8 text-white shadow-2xl border border-cyan-500/30 relative overflow-hidden">
-                        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
-                            
-                            <!-- Cụm Logo 3D HICON M&E & Tên Công Ty -->
-                            <div class="flex flex-col sm:flex-row sm:items-center gap-5">
-                                <div class="bg-white px-4 py-3 rounded-2xl shadow-xl border-2 border-amber-400 flex items-center w-fit shrink-0">
-                                    <svg class="w-12 h-12 mr-3 shrink-0" viewBox="0 0 100 100" fill="none">
+                    <!-- ==================== TẦNG 1: THƯ NGỎ & CÂU CHUYỆN THƯƠNG HIỆU ==================== -->
+                    <div class="editorial-block-1 bg-white rounded-3xl shadow-xl border border-gray-200/80 overflow-hidden">
+                        
+                        <!-- Thanh Masthead nhận diện thương hiệu trên đầu thư ngỏ -->
+                        <div class="bg-gradient-to-r from-brand-navy via-slate-900 to-brand-blue px-6 py-5 sm:px-10 sm:py-6 flex flex-wrap items-center justify-between gap-4 border-b border-cyan-500/30">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-white px-3.5 py-2 rounded-xl shadow flex items-center shrink-0">
+                                    <svg class="w-9 h-9 mr-2.5" viewBox="0 0 100 100" fill="none">
                                         <polygon points="50,10 70,20 50,30" fill="#432818"/>
                                         <polygon points="12,25 29,34 29,52 46,60 46,34 60,41 60,90 46,82 46,70 29,61 29,79 12,70" fill="#432818"/>
                                         <polygon points="60,41 93,25 93,41 72,51 72,71 93,61 93,76 60,90" fill="#f59e0b"/>
                                         <polygon points="72,51 91,61 72,71" fill="#432818"/>
                                     </svg>
-                                    <div class="leading-none pr-1">
-                                        <div class="text-xl font-black text-[#432818]">HICON<sup class="text-[9px]">®</sup></div>
-                                        <div class="flex items-center text-base font-extrabold text-stone-500 tracking-widest mt-0.5">
-                                            <span>M&amp;</span>
-                                            <span class="relative inline-flex items-center">
-                                                E
-                                                <i class="fas fa-bolt text-amber-500 text-[10px] absolute -right-1.5 top-1/2 -translate-y-1/2"></i>
-                                            </span>
-                                        </div>
+                                    <div class="leading-none">
+                                        <div class="text-sm font-black text-[#432818]">HICON<sup class="text-[7px]">®</sup></div>
+                                        <div class="text-[11px] font-extrabold text-stone-500 tracking-widest">M&amp;E</div>
                                     </div>
                                 </div>
-
                                 <div>
-                                    <span class="inline-flex items-center bg-amber-500/20 text-amber-300 border border-amber-400/40 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider mb-2">
-                                        <i class="fas fa-calendar-check mr-1.5 text-amber-400"></i>
-                                        <span data-cms-id="about-founded-badge">Thành lập từ ngày 22/12/2015</span>
+                                    <span data-cms-id="about-founded-badge" class="text-[11px] font-bold text-amber-400 uppercase tracking-widest block">
+                                        Thành lập từ ngày 22/12/2015
                                     </span>
-                                    <h2 data-cms-id="about-company-heading" class="text-xl sm:text-3xl font-black text-white tracking-tight uppercase">
+                                    <h2 data-cms-id="about-company-heading" class="text-base sm:text-xl font-black text-white uppercase tracking-wide">
                                         CÔNG TY CỔ PHẦN CƠ ĐIỆN VÀ BẢO TRÌ HICON
                                     </h2>
                                 </div>
                             </div>
 
-                            <!-- Nút Phát lại Video Mở đầu & Đổi ảnh nền thiết bị -->
-                            <div class="flex flex-wrap items-center gap-2.5 shrink-0">
-                                <button type="button" onclick="document.getElementById('about-intro-bg-file').click()" class="cms-only-btn bg-amber-500 hover:bg-amber-400 text-brand-dark font-extrabold text-xs px-3.5 py-2.5 rounded-xl shadow-lg items-center">
-                                    <i class="fas fa-camera mr-1.5"></i> Đổi Ảnh Nền Cơ Điện
-                                </button>
-                                <button type="button" onclick="replayAboutCinematicIntro()" class="btn-interactive bg-white/15 hover:bg-brand-accent hover:text-brand-dark text-cyan-300 border border-cyan-400/50 font-extrabold px-4 py-2.5 rounded-xl text-xs flex items-center shadow-lg">
-                                    <i class="fas fa-play-circle mr-2 text-base text-amber-400"></i> Xem Lại Video Mở Đầu
-                                </button>
-                            </div>
-
+                            <button type="button" onclick="replayAboutCinemaIntro()" class="btn-interactive bg-white/10 hover:bg-amber-500 hover:text-brand-dark text-cyan-200 border border-white/20 px-3.5 py-2 rounded-xl text-xs font-bold flex items-center transition">
+                                <i class="fas fa-play mr-1.5 text-[10px] text-amber-400"></i> Phát Lại Intro
+                            </button>
                         </div>
-                    </div>
 
-                    <!-- 2. KHỐI NỘI DUNG CHÍNH: THƯ NGỎ + HÌNH ẢNH HỆ THỐNG CƠ ĐIỆN + 07 LĨNH VỰC -->
-                    <div class="about-stagger-2 grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-                        
-                        <!-- CỘT TRÁI (7 CỘT): THƯ NGỎ & NĂNG LỰC TRIỂN KHAI (GIỮ NGUYÊN 100% VĂN BẢN GỐC) -->
-                        <div class="lg:col-span-7 bg-white rounded-3xl shadow-xl border border-gray-200 overflow-hidden flex flex-col justify-between">
-                            
-                            <!-- Khung hình ảnh trần đường ống gió HVAC & ống cứu hỏa PCCC chuyển động nhẹ -->
-                            <div class="relative h-52 sm:h-60 bg-slate-900 overflow-hidden">
-                                <img id="about-detail-hero-img" 
-                                     src="https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=1400&auto=format&fit=crop" 
-                                     alt="Hệ thống ống gió HVAC và đường ống PCCC nhà xưởng" 
-                                     class="absolute inset-0 w-full h-full object-cover about-detail-pan-img opacity-85">
-                                <div class="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/35 to-transparent"></div>
+                        <!-- Nội dung Thư Ngỏ được dàn trang 2 cột bất đối xứng thoáng đãng -->
+                        <div class="p-6 sm:p-10 lg:p-12">
+                            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
                                 
-                                <div class="absolute bottom-4 left-6 right-6 flex items-end justify-between text-white">
-                                    <div>
-                                        <p data-cms-id="about-letter-sub" class="text-[11px] font-extrabold uppercase tracking-widest text-amber-400 mb-0.5">
-                                            THƯ NGỎ &amp; GIỚI THIỆU
-                                        </p>
-                                        <h3 data-cms-id="about-letter-dear" class="text-xl sm:text-2xl font-black text-white">
-                                            Kính gửi: Quý khách hàng;
-                                        </h3>
+                                <!-- Cột trái (5 cột): Lời chào mở đầu & Điểm nhấn thương hiệu -->
+                                <div class="lg:col-span-5 space-y-4">
+                                    <div class="inline-flex items-center space-x-2 text-brand-accent font-extrabold text-xs uppercase tracking-widest">
+                                        <span class="w-8 h-0.5 bg-brand-accent"></span>
+                                        <span data-cms-id="about-letter-sub">THƯ NGỎ &amp; GIỚI THIỆU</span>
                                     </div>
-                                    <div class="w-11 h-11 rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 flex items-center justify-center text-amber-400 text-lg shrink-0">
-                                        <i class="fas fa-handshake"></i>
+                                    
+                                    <h3 data-cms-id="about-letter-dear" class="text-2xl sm:text-3xl font-black text-brand-navy leading-tight">
+                                        Kính gửi: Quý khách hàng;
+                                    </h3>
+
+                                    <div class="bg-gradient-to-br from-brand-light to-cyan-50/60 border-l-4 border-brand-accent p-5 rounded-r-2xl shadow-sm">
+                                        <p data-cms-id="about-p1" class="text-brand-navy text-base sm:text-lg font-bold leading-relaxed">
+                                            Công ty cổ phần cơ điện và Bảo trì Hicon xin gửi lời chào trân trọng tới Quý Khách hàng
+                                        </p>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- Phần diễn giải nội dung Thư Ngỏ chuẩn bản gốc -->
-                            <div class="p-6 sm:p-8 space-y-5 flex-grow flex flex-col justify-between">
-                                <div class="space-y-4">
-                                    <div class="bg-gradient-to-r from-cyan-50 via-cyan-50/40 to-transparent border-l-4 border-brand-accent p-4 rounded-r-2xl">
-                                        <p data-cms-id="about-p1" class="text-brand-navy text-sm sm:text-base font-extrabold leading-relaxed">
-                                            Công ty Cổ phần Cơ điện và Bảo trì Hicon xin gửi lời chào trân trọng tới Quý Khách hàng.
-                                        </p>
-                                    </div>
-
-                                    <p data-cms-id="about-p2" class="text-gray-600 text-sm leading-relaxed text-justify">
+                                <!-- Cột phải (7 cột): Diễn giải lịch sử & Phạm vi hoạt động -->
+                                <div class="lg:col-span-7 space-y-5 text-gray-700 text-sm sm:text-base leading-relaxed">
+                                    <p data-cms-id="about-p2" class="text-justify">
                                         Được thành lập từ ngày 22/12/2015 với mong muốn đáp ứng nhu cầu ngày càng cao của Khách hàng trong lĩnh vực triển khai vận hành dịch vụ, bảo trì các dịch vụ kỹ thuật cơ điện công trình. Trải qua nhiều năm hoạt động, Hicon chúng tôi nhận được sự tin tưởng cũng như đánh giá cao từ phía khách hàng.
                                     </p>
 
-                                    <p data-cms-id="about-p3" class="text-brand-navy text-sm font-bold leading-relaxed">
-                                        HICON là đơn vị chuyên thi công, lắp đặt, kiểm tra, bảo trì và sửa chữa các dịch vụ hệ thống cho:
-                                    </p>
-
-                                    <!-- 4 Loại hình công trình được thiết kế dạng thẻ nổi sang trọng -->
-                                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-                                        <div class="card-pro-hover bg-slate-50 hover:bg-brand-navy hover:text-white border border-gray-200 rounded-2xl p-3.5 flex items-center space-x-3 text-xs font-bold text-brand-navy transition group">
-                                            <div class="w-9 h-9 rounded-xl bg-cyan-100 group-hover:bg-brand-accent text-brand-blue group-hover:text-brand-dark flex items-center justify-center shrink-0 transition">
-                                                <i class="fas fa-industry text-sm"></i>
-                                            </div>
-                                            <span data-cms-id="about-scope-1">Nhà máy &amp; Nhà xưởng</span>
-                                        </div>
-                                        <div class="card-pro-hover bg-slate-50 hover:bg-brand-navy hover:text-white border border-gray-200 rounded-2xl p-3.5 flex items-center space-x-3 text-xs font-bold text-brand-navy transition group">
-                                            <div class="w-9 h-9 rounded-xl bg-cyan-100 group-hover:bg-brand-accent text-brand-blue group-hover:text-brand-dark flex items-center justify-center shrink-0 transition">
-                                                <i class="fas fa-warehouse text-sm"></i>
-                                            </div>
-                                            <span data-cms-id="about-scope-2">Kho hàng Logistic</span>
-                                        </div>
-                                        <div class="card-pro-hover bg-slate-50 hover:bg-brand-navy hover:text-white border border-gray-200 rounded-2xl p-3.5 flex items-center space-x-3 text-xs font-bold text-brand-navy transition group">
-                                            <div class="w-9 h-9 rounded-xl bg-cyan-100 group-hover:bg-brand-accent text-brand-blue group-hover:text-brand-dark flex items-center justify-center shrink-0 transition">
-                                                <i class="fas fa-building text-sm"></i>
-                                            </div>
-                                            <span data-cms-id="about-scope-3">Văn phòng &amp; Tòa nhà</span>
-                                        </div>
-                                        <div class="card-pro-hover bg-slate-50 hover:bg-brand-navy hover:text-white border border-gray-200 rounded-2xl p-3.5 flex items-center space-x-3 text-xs font-bold text-brand-navy sm:col-span-3 transition group">
-                                            <div class="w-9 h-9 rounded-xl bg-amber-100 group-hover:bg-amber-400 text-amber-600 group-hover:text-brand-dark flex items-center justify-center shrink-0 transition">
-                                                <i class="fas fa-city text-sm"></i>
-                                            </div>
-                                            <span data-cms-id="about-scope-4">Các công trình dân dụng và công trình công nghiệp trọng điểm</span>
-                                        </div>
-                                    </div>
-
-                                    <p data-cms-id="about-p4" class="text-gray-600 text-sm leading-relaxed text-justify pt-1">
-                                        Bên cạnh lĩnh vực triển khai về các dự án Cơ điện, Hicon đặc biệt chú trọng các dịch vụ vận hành và bảo trì đến khách hàng. Với đội ngũ kỹ thuật có kinh nghiệm thực tế và phương châm “An toàn – Chất lượng – Tiến độ – Đồng hành lâu dài”, HICON luôn nỗ lực cung cấp giải pháp phù hợp với nhu cầu và điều kiện vận hành thực tế của từng công trình.
-                                    </p>
-                                </div>
-
-                                <!-- 4 Phương châm & Lời cảm ơn -->
-                                <div class="pt-5 border-t border-gray-100 space-y-4 mt-4">
-                                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                                        <div class="card-pro-hover bg-brand-navy text-white p-3 rounded-2xl text-center shadow-sm border-b-4 border-amber-400">
-                                            <i class="fas fa-shield-alt text-amber-400 text-base mb-1 block"></i>
-                                            <span data-cms-id="about-val-1" class="text-[11px] font-extrabold uppercase tracking-wider">An Toàn</span>
-                                        </div>
-                                        <div class="card-pro-hover bg-brand-navy text-white p-3 rounded-2xl text-center shadow-sm border-b-4 border-cyan-400">
-                                            <i class="fas fa-medal text-cyan-300 text-base mb-1 block"></i>
-                                            <span data-cms-id="about-val-2" class="text-[11px] font-extrabold uppercase tracking-wider">Chất Lượng</span>
-                                        </div>
-                                        <div class="card-pro-hover bg-brand-navy text-white p-3 rounded-2xl text-center shadow-sm border-b-4 border-amber-400">
-                                            <i class="fas fa-bolt text-amber-400 text-base mb-1 block"></i>
-                                            <span data-cms-id="about-val-3" class="text-[11px] font-extrabold uppercase tracking-wider">Tiến Độ</span>
-                                        </div>
-                                        <div class="card-pro-hover bg-brand-navy text-white p-3 rounded-2xl text-center shadow-sm border-b-4 border-cyan-400">
-                                            <i class="fas fa-hands-helping text-cyan-300 text-base mb-1 block"></i>
-                                            <span data-cms-id="about-val-4" class="text-[11px] font-extrabold uppercase tracking-wider">Đồng Hành Lâu Dài</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="flex flex-col sm:flex-row items-center justify-between bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 gap-3">
-                                        <div class="flex items-center space-x-2.5">
-                                            <i class="fas fa-star text-amber-500 text-lg"></i>
-                                            <span data-cms-id="about-thanks" class="text-xs sm:text-sm font-extrabold text-brand-navy italic">
-                                                Rất hân hạnh được phục vụ Quý khách hàng!
+                                    <div class="bg-slate-50 border border-gray-200 rounded-2xl p-5 space-y-3">
+                                        <p data-cms-id="about-p3" class="font-bold text-brand-navy text-justify">
+                                            HICON là đơn vị chuyên thi công, lắp đặt, kiểm tra, bảo trì và sửa chữa các dịch vụ hệ thống cho nhà máy, nhà xưởng, kho hàng, văn phòng và các công trình dân dụng, công nghiệp.
+                                        </p>
+                                        <!-- Dải Tag minh họa trực quan cho các loại hình công trình -->
+                                        <div class="flex flex-wrap gap-2 pt-1">
+                                            <span class="bg-white border border-gray-200 text-brand-navy text-xs font-bold px-3 py-1.5 rounded-xl shadow-sm">
+                                                <i class="fas fa-industry text-brand-accent mr-1.5"></i><span data-cms-id="about-scope-1">Nhà máy &amp; Nhà xưởng</span>
+                                            </span>
+                                            <span class="bg-white border border-gray-200 text-brand-navy text-xs font-bold px-3 py-1.5 rounded-xl shadow-sm">
+                                                <i class="fas fa-warehouse text-brand-accent mr-1.5"></i><span data-cms-id="about-scope-2">Kho hàng</span>
+                                            </span>
+                                            <span class="bg-white border border-gray-200 text-brand-navy text-xs font-bold px-3 py-1.5 rounded-xl shadow-sm">
+                                                <i class="fas fa-building text-brand-accent mr-1.5"></i><span data-cms-id="about-scope-3">Văn phòng</span>
+                                            </span>
+                                            <span class="bg-white border border-gray-200 text-brand-navy text-xs font-bold px-3 py-1.5 rounded-xl shadow-sm">
+                                                <i class="fas fa-city text-amber-500 mr-1.5"></i><span data-cms-id="about-scope-4">Công trình dân dụng &amp; công nghiệp</span>
                                             </span>
                                         </div>
-                                        <button onclick="if(!isCmsEditMode) navigateTo('contact')" class="btn-interactive bg-brand-navy hover:bg-brand-blue text-white text-xs font-bold px-4 py-2 rounded-xl shrink-0 shadow">
-                                            Liên Hệ Hợp Tác <i class="fas fa-arrow-right ml-1"></i>
-                                        </button>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
+                    </div>
 
-                        <!-- CỘT PHẢI (5 CỘT): 07 LĨNH VỰC HICON CUNG CẤP -->
-                        <div class="lg:col-span-5 flex flex-col justify-between">
-                            <div class="bg-brand-navy text-white rounded-3xl shadow-xl p-6 sm:p-8 border border-cyan-500/30 flex-grow flex flex-col justify-between">
-                                <div>
-                                    <div class="flex items-center justify-between mb-6 pb-3 border-b border-white/15">
-                                        <div>
-                                            <span class="text-[10px] font-bold text-cyan-300 uppercase tracking-widest block">DANH MỤC NĂNG LỰC</span>
-                                            <h3 data-cms-id="about-srv-heading" class="text-lg sm:text-xl font-black text-white mt-0.5">CÁC DỊCH VỤ HICON CUNG CẤP GỒM:</h3>
-                                        </div>
-                                        <span data-cms-id="about-srv-count-badge" class="bg-amber-500 text-brand-dark font-black text-xs px-2.5 py-1 rounded-lg">07 LĨNH VỰC</span>
+                    <!-- ==================== TẦNG 2: BENTO GRID 07 DỊCH VỤ HICON CUNG CẤP ==================== -->
+                    <div class="editorial-block-2 space-y-6">
+                        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b-2 border-gray-200 pb-4">
+                            <div>
+                                <span class="text-xs font-extrabold text-brand-accent uppercase tracking-widest block">HỆ SINH THÁI KỸ THUẬT M&amp;E</span>
+                                <h3 data-cms-id="about-srv-heading" class="text-2xl sm:text-3xl font-black text-brand-navy mt-1">
+                                    Các dịch vụ HICON cung cấp gồm:
+                                </h3>
+                            </div>
+                            <span data-cms-id="about-srv-count-badge" class="bg-brand-navy text-amber-400 font-black text-xs px-4 py-2 rounded-xl uppercase tracking-wider w-fit shadow-sm">
+                                07 Lĩnh Vực Chuyên Sâu
+                            </span>
+                        </div>
+
+                        <!-- Lưới Bento 7 Thẻ dịch vụ thoáng, rõ ràng và có chiều sâu -->
+                        <div id="about-capabilities-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                            
+                            <!-- Dịch vụ 01 -->
+                            <div class="card-pro-hover bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:border-amber-400 flex flex-col justify-between relative overflow-hidden group">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="w-12 h-12 rounded-2xl bg-amber-500/15 text-amber-600 flex items-center justify-center text-xl font-bold group-hover:bg-amber-500 group-hover:text-brand-dark transition">
+                                        <i class="fas fa-bolt"></i>
                                     </div>
+                                    <span class="text-2xl font-black text-slate-200 group-hover:text-amber-400/40 font-mono transition">01</span>
+                                </div>
+                                <div data-cms-id="about-srv-1" class="text-base font-bold text-brand-navy leading-snug">
+                                    Thi công lắp đặt hệ thống điện công trình dân dụng, công nghiệp
+                                </div>
+                            </div>
 
-                                    <div id="about-capabilities-list" class="space-y-3">
-                                        <div class="card-pro-hover bg-white/10 hover:bg-white/15 border border-white/10 hover:border-amber-400/60 rounded-2xl p-3.5 flex items-center space-x-3.5 transition group">
-                                            <div class="w-10 h-10 rounded-xl bg-amber-500 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
-                                                <i class="fas fa-bolt"></i>
-                                            </div>
-                                            <div data-cms-id="about-srv-1" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug flex-1">
-                                                Thi công lắp đặt hệ thống điện công trình dân dụng, công nghiệp
-                                            </div>
-                                        </div>
+                            <!-- Dịch vụ 02 -->
+                            <div class="card-pro-hover bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:border-red-400 flex flex-col justify-between relative overflow-hidden group">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="w-12 h-12 rounded-2xl bg-red-500/15 text-red-600 flex items-center justify-center text-xl font-bold group-hover:bg-red-500 group-hover:text-white transition">
+                                        <i class="fas fa-fire-extinguisher"></i>
+                                    </div>
+                                    <span class="text-2xl font-black text-slate-200 group-hover:text-red-400/40 font-mono transition">02</span>
+                                </div>
+                                <div data-cms-id="about-srv-2" class="text-base font-bold text-brand-navy leading-snug">
+                                    Dịch vụ bảo trì hệ thống PCCC
+                                </div>
+                            </div>
 
-                                        <div class="card-pro-hover bg-white/10 hover:bg-white/15 border border-white/10 hover:border-red-400/60 rounded-2xl p-3.5 flex items-center space-x-3.5 transition group">
-                                            <div class="w-10 h-10 rounded-xl bg-red-500 text-white flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
-                                                <i class="fas fa-fire-extinguisher"></i>
-                                            </div>
-                                            <div data-cms-id="about-srv-2" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug flex-1">
-                                                Dịch vụ bảo trì hệ thống PCCC
-                                            </div>
-                                        </div>
+                            <!-- Dịch vụ 03 -->
+                            <div class="card-pro-hover bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:border-cyan-400 flex flex-col justify-between relative overflow-hidden group">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="w-12 h-12 rounded-2xl bg-cyan-500/15 text-brand-accent flex items-center justify-center text-xl font-bold group-hover:bg-brand-accent group-hover:text-brand-dark transition">
+                                        <i class="fas fa-fan"></i>
+                                    </div>
+                                    <span class="text-2xl font-black text-slate-200 group-hover:text-cyan-400/40 font-mono transition">03</span>
+                                </div>
+                                <div data-cms-id="about-srv-3" class="text-base font-bold text-brand-navy leading-snug">
+                                    Dịch vụ bảo trì hệ thống điều hoà &amp; thông gió
+                                </div>
+                            </div>
 
-                                        <div class="card-pro-hover bg-white/10 hover:bg-white/15 border border-white/10 hover:border-cyan-400/60 rounded-2xl p-3.5 flex items-center space-x-3.5 transition group">
-                                            <div class="w-10 h-10 rounded-xl bg-cyan-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
-                                                <i class="fas fa-fan"></i>
-                                            </div>
-                                            <div data-cms-id="about-srv-3" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug flex-1">
-                                                Dịch vụ bảo trì hệ thống điều hoà &amp; thông gió (HVAC)
-                                            </div>
-                                        </div>
+                            <!-- Dịch vụ 04 -->
+                            <div class="card-pro-hover bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:border-blue-400 flex flex-col justify-between relative overflow-hidden group">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="w-12 h-12 rounded-2xl bg-blue-500/15 text-brand-blue flex items-center justify-center text-xl font-bold group-hover:bg-brand-blue group-hover:text-white transition">
+                                        <i class="fas fa-network-wired"></i>
+                                    </div>
+                                    <span class="text-2xl font-black text-slate-200 group-hover:text-blue-400/40 font-mono transition">04</span>
+                                </div>
+                                <div data-cms-id="about-srv-4" class="text-base font-bold text-brand-navy leading-snug">
+                                    Dịch vụ bảo trì hệ thống Điện &amp; Điện nhẹ
+                                </div>
+                            </div>
 
-                                        <div class="card-pro-hover bg-white/10 hover:bg-white/15 border border-white/10 hover:border-blue-400/60 rounded-2xl p-3.5 flex items-center space-x-3.5 transition group">
-                                            <div class="w-10 h-10 rounded-xl bg-blue-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
-                                                <i class="fas fa-network-wired"></i>
-                                            </div>
-                                            <div data-cms-id="about-srv-4" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug flex-1">
-                                                Dịch vụ bảo trì hệ thống Điện &amp; Điện nhẹ (ELV)
-                                            </div>
-                                        </div>
+                            <!-- Dịch vụ 05 -->
+                            <div class="card-pro-hover bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:border-emerald-400 flex flex-col justify-between relative overflow-hidden group">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="w-12 h-12 rounded-2xl bg-emerald-500/15 text-emerald-600 flex items-center justify-center text-xl font-bold group-hover:bg-emerald-500 group-hover:text-white transition">
+                                        <i class="fas fa-tachometer-alt"></i>
+                                    </div>
+                                    <span class="text-2xl font-black text-slate-200 group-hover:text-emerald-400/40 font-mono transition">05</span>
+                                </div>
+                                <div data-cms-id="about-srv-5" class="text-base font-bold text-brand-navy leading-snug">
+                                    Dịch vụ bảo trì hệ thống khí nén &amp; gas
+                                </div>
+                            </div>
 
-                                        <div class="card-pro-hover bg-white/10 hover:bg-white/15 border border-white/10 hover:border-emerald-400/60 rounded-2xl p-3.5 flex items-center space-x-3.5 transition group">
-                                            <div class="w-10 h-10 rounded-xl bg-emerald-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
-                                                <i class="fas fa-tachometer-alt"></i>
-                                            </div>
-                                            <div data-cms-id="about-srv-5" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug flex-1">
-                                                Dịch vụ bảo trì hệ thống khí nén &amp; gas
-                                            </div>
-                                        </div>
+                            <!-- Dịch vụ 06 -->
+                            <div class="card-pro-hover bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:border-sky-400 flex flex-col justify-between relative overflow-hidden group">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="w-12 h-12 rounded-2xl bg-sky-500/15 text-sky-600 flex items-center justify-center text-xl font-bold group-hover:bg-sky-500 group-hover:text-white transition">
+                                        <i class="fas fa-tint"></i>
+                                    </div>
+                                    <span class="text-2xl font-black text-slate-200 group-hover:text-sky-400/40 font-mono transition">06</span>
+                                </div>
+                                <div data-cms-id="about-srv-6" class="text-base font-bold text-brand-navy leading-snug">
+                                    Dịch vụ bảo trì hệ thống cấp thoát nước &amp; Xử lý nước thải
+                                </div>
+                            </div>
 
-                                        <div class="card-pro-hover bg-white/10 hover:bg-white/15 border border-white/10 hover:border-sky-400/60 rounded-2xl p-3.5 flex items-center space-x-3.5 transition group">
-                                            <div class="w-10 h-10 rounded-xl bg-sky-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
-                                                <i class="fas fa-tint"></i>
-                                            </div>
-                                            <div data-cms-id="about-srv-6" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug flex-1">
-                                                Dịch vụ bảo trì hệ thống cấp thoát nước &amp; Xử lý nước thải
-                                            </div>
-                                        </div>
-
-                                        <div class="card-pro-hover bg-white/10 hover:bg-white/15 border border-white/10 hover:border-purple-400/60 rounded-2xl p-3.5 flex items-center space-x-3.5 transition group">
-                                            <div class="w-10 h-10 rounded-xl bg-purple-400 text-brand-dark flex items-center justify-center font-bold text-base shrink-0 group-hover:scale-110 transition">
-                                                <i class="fas fa-video"></i>
-                                            </div>
-                                            <div data-cms-id="about-srv-7" class="text-xs sm:text-sm font-semibold text-gray-100 leading-snug flex-1">
-                                                Dịch vụ bảo trì hệ thống camera giám sát (CCTV)
-                                            </div>
-                                        </div>
+                            <!-- Dịch vụ 07 (Trải ngang 3 cột ở dòng cuối tạo điểm nhấn cân đối) -->
+                            <div class="card-pro-hover bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:border-purple-400 md:col-span-2 lg:col-span-3 flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative overflow-hidden group">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 rounded-2xl bg-purple-500/15 text-purple-600 flex items-center justify-center text-xl font-bold shrink-0 group-hover:bg-purple-600 group-hover:text-white transition">
+                                        <i class="fas fa-video"></i>
+                                    </div>
+                                    <div data-cms-id="about-srv-7" class="text-base font-bold text-brand-navy leading-snug">
+                                        Dịch vụ bảo trì hệ thống camera giám sát
                                     </div>
                                 </div>
+                                <span class="text-2xl font-black text-slate-200 group-hover:text-purple-400/40 font-mono transition hidden sm:block">07</span>
+                            </div>
 
-                                <div class="mt-6 pt-4 border-t border-white/15 flex items-center justify-between text-xs text-cyan-200">
-                                    <span><i class="fas fa-check-double mr-1.5 text-amber-400"></i> Đáp ứng tiêu chuẩn TCVN &amp; ISO</span>
-                                    <button onclick="if(!isCmsEditMode) navigateTo('maintenance-portal')" class="text-amber-400 hover:underline font-bold flex items-center">
-                                        Xem Cổng QR <i class="fas fa-external-link-alt ml-1 text-[10px]"></i>
-                                    </button>
+                        </div>
+                    </div>
+
+                    <!-- ==================== TẦNG 3: CAM KẾT VẬN HÀNH, PHƯƠNG CHÂM 4 TRỤ CỘT & LỜI CẢM ƠN ==================== -->
+                    <div class="editorial-block-3 bg-brand-navy text-white rounded-3xl shadow-2xl p-6 sm:p-10 lg:p-12 border border-cyan-500/30 relative overflow-hidden">
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+                            
+                            <!-- Đoạn kết: Định hướng vận hành & bảo trì -->
+                            <div class="lg:col-span-7 space-y-4">
+                                <span class="text-xs font-extrabold text-amber-400 uppercase tracking-widest block">
+                                    GIÁ TRỊ CỐT LÕI &amp; CAM KẾT ĐỒNG HÀNH
+                                </span>
+                                <p data-cms-id="about-p4" class="text-gray-100 text-sm sm:text-base leading-relaxed text-justify">
+                                    Bên cạnh lĩnh vực triển khai về các dự án Cơ điện, Hicon đặc biệt chú trọng các dịch vụ vận hành và bảo trì đến khách hàng. Với đội ngũ kỹ thuật có kinh nghiệm thực tế và phương châm “An toàn – Chất lượng – Tiến độ – Đồng hành lâu dài”, HICON luôn nỗ lực cung cấp giải pháp phù hợp với nhu cầu và điều kiện vận hành thực tế của từng công trình.
+                                </p>
+                            </div>
+
+                            <!-- 4 Phương châm cốt lõi -->
+                            <div class="lg:col-span-5 grid grid-cols-2 gap-3">
+                                <div class="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl p-4 text-center">
+                                    <i class="fas fa-shield-alt text-amber-400 text-xl mb-1.5 block"></i>
+                                    <span data-cms-id="about-val-1" class="text-xs font-extrabold uppercase tracking-wider">An Toàn</span>
                                 </div>
+                                <div class="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl p-4 text-center">
+                                    <i class="fas fa-medal text-cyan-300 text-xl mb-1.5 block"></i>
+                                    <span data-cms-id="about-val-2" class="text-xs font-extrabold uppercase tracking-wider">Chất Lượng</span>
+                                </div>
+                                <div class="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl p-4 text-center">
+                                    <i class="fas fa-bolt text-amber-400 text-xl mb-1.5 block"></i>
+                                    <span data-cms-id="about-val-3" class="text-xs font-extrabold uppercase tracking-wider">Tiến Độ</span>
+                                </div>
+                                <div class="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl p-4 text-center">
+                                    <i class="fas fa-hands-helping text-cyan-300 text-xl mb-1.5 block"></i>
+                                    <span data-cms-id="about-val-4" class="text-xs font-extrabold uppercase tracking-wider">Đồng Hành Lâu Dài</span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Dải kết thư trang trọng -->
+                        <div class="mt-8 pt-6 border-t border-white/15 flex flex-col sm:flex-row items-center justify-between gap-4 relative z-10">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-9 h-9 rounded-full bg-amber-500 text-brand-dark flex items-center justify-center font-bold shrink-0">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                <span data-cms-id="about-thanks" class="text-base sm:text-lg font-black text-amber-300 italic tracking-wide">
+                                    Rất hân hạnh được phục vụ Quý khách hàng!
+                                </span>
+                            </div>
+
+                            <div class="flex items-center gap-3">
+                                <button onclick="if(!isCmsEditMode) navigateTo('maintenance-portal')" class="btn-interactive bg-white/10 hover:bg-white/20 text-white border border-white/25 text-xs font-bold px-4 py-2.5 rounded-xl">
+                                    <i class="fas fa-qrcode mr-1.5 text-cyan-300"></i> Cổng Bảo Trì QR
+                                </button>
+                                <button onclick="if(!isCmsEditMode) navigateTo('contact')" class="btn-interactive bg-amber-500 hover:bg-amber-400 text-brand-dark text-xs font-extrabold px-5 py-2.5 rounded-xl shadow-lg">
+                                    Liên Hệ Hợp Tác <i class="fas fa-arrow-right ml-1.5"></i>
+                                </button>
                             </div>
                         </div>
 
                     </div>
+
                 </div>
             </div>
 
-            <!-- ==================== SCRIPT ĐIỀU KHIỂN KỊCH BẢN VIDEO INTRO -> NỘI DUNG CHI TIẾT ==================== -->
+            <!-- ==================== SCRIPT ĐIỀU KHIỂN CHUYỂN GIAI ĐOẠN ==================== -->
             <script>
-                let aboutIntroTimers = [];
+                let aboutEditorialTimer = null;
 
-                function clearAboutIntroTimers() {
-                    aboutIntroTimers.forEach(t => clearTimeout(t));
-                    aboutIntroTimers = [];
-                }
-
-                function loadSavedAboutIntroImage() {
-                    const savedBg = localStorage.getItem('hicon_about_custom_bg');
-                    if (savedBg) {
-                        const introImg = document.getElementById('about-intro-bg-img');
-                        const detailImg = document.getElementById('about-detail-hero-img');
-                        if (introImg) introImg.src = savedBg;
-                        if (detailImg) detailImg.src = savedBg;
+                function clearAboutEditorialTimer() {
+                    if (aboutEditorialTimer) {
+                        clearTimeout(aboutEditorialTimer);
+                        aboutEditorialTimer = null;
                     }
                 }
 
-                async function handleAboutIntroBgChange(event) {
-                    const file = event.target.files[0];
-                    if (!file) return;
-                    try {
-                        const base64 = await compressImageFile(file, 1400, 0.82);
-                        localStorage.setItem('hicon_about_custom_bg', base64);
-                        loadSavedAboutIntroImage();
-                        showTopToast('Đã cập nhật hình ảnh Hệ thống Cơ Điện cho Video Mở Đầu & trang Giới Thiệu!', false);
-                    } catch (e) {}
-                    event.target.value = '';
+                function startAboutCinemaIntro() {
+                    clearAboutEditorialTimer();
+                    const introEl = document.getElementById('about-cinema-intro');
+                    const contentEl = document.getElementById('about-editorial-content');
+                    if (!introEl || !contentEl) return;
+
+                    contentEl.classList.add('hidden');
+                    introEl.classList.remove('hidden', 'cinema-curtain-up');
+
+                    // Khởi động lại các hiệu ứng trong Intro
+                    ['.cinema-video-scale', '.cinema-logo-box-anim', '.cinema-metallic-shine', '.cinema-timer-bar'].forEach(sel => {
+                        const target = introEl.querySelector(sel);
+                        if (target) {
+                            const cls = sel.substring(1);
+                            target.classList.remove(cls);
+                            void target.offsetWidth;
+                            target.classList.add(cls);
+                        }
+                    });
+
+                    // Tự động mở sang trang Nội dung chi tiết sau 5.2 giây
+                    aboutEditorialTimer = setTimeout(() => {
+                        openAboutEditorialContent();
+                    }, 5200);
                 }
 
-                // Hàm chạy kịch bản 3 Cảnh Video Mở Đầu và tự động chuyển sang Nội dung chi tiết
-                function startAboutCinematicIntro() {
-                    clearAboutIntroTimers();
-                    loadSavedAboutIntroImage();
+                function openAboutEditorialContent() {
+                    clearAboutEditorialTimer();
+                    const introEl = document.getElementById('about-cinema-intro');
+                    const contentEl = document.getElementById('about-editorial-content');
+                    if (!introEl || !contentEl) return;
 
-                    const introStage = document.getElementById('about-intro-stage');
-                    const detailStage = document.getElementById('about-detail-stage');
-                    const s1 = document.getElementById('intro-scene-1');
-                    const s2 = document.getElementById('intro-scene-2');
-                    const s3 = document.getElementById('intro-scene-3');
-                    const flash = document.getElementById('intro-flash-layer');
-                    const indicator = document.getElementById('intro-act-indicator');
-                    const prog = document.getElementById('intro-progress-line');
-                    const bgImg = document.getElementById('about-intro-bg-img');
-
-                    if (!introStage || !detailStage) return;
-
-                    // Hiển thị sân khấu Video Intro toàn khung, ẩn phần nội dung chi tiết
-                    detailStage.classList.add('hidden');
-                    introStage.classList.remove('hidden', 'intro-stage-exit');
-
-                    // Reset hiệu ứng Camera và Thanh thời gian
-                    if (bgImg) {
-                        bgImg.classList.remove('intro-cam-fly');
-                        void bgImg.offsetWidth;
-                        bgImg.classList.add('intro-cam-fly');
-                    }
-                    if (prog) {
-                        prog.classList.remove('intro-timeline-bar');
-                        void prog.offsetWidth;
-                        prog.classList.add('intro-timeline-bar');
-                    }
-
-                    // CẢNH 1 (0.0s -> 2.2s): Thu phóng thiết bị HVAC - PCCC - Điện
-                    s1.classList.remove('hidden');
-                    s2.classList.add('hidden');
-                    s3.classList.add('hidden');
-                    flash.classList.add('hidden');
-                    if (indicator) indicator.innerText = 'INTRO 01/03 • HỆ THỐNG CƠ ĐIỆN HVAC & PCCC';
-
-                    // CẢNH 2 (2.2s -> 4.3s): Thu phóng Logo 3D HICON M&E & Tia sáng vàng kim
-                    aboutIntroTimers.push(setTimeout(() => {
-                        s1.classList.add('hidden');
-                        s2.classList.remove('hidden');
-                        if (indicator) indicator.innerText = 'INTRO 02/03 • THƯƠNG HIỆU HICON M&E';
-                    }, 2200));
-
-                    // CẢNH 3 (4.3s -> 6.5s): Chớp sáng Flash Reveal & Hiện lời chào "Công ty CP Cơ điện và Bảo trì Hicon Xin Chào"
-                    aboutIntroTimers.push(setTimeout(() => {
-                        flash.classList.remove('hidden', 'intro-flash-overlay');
-                        void flash.offsetWidth;
-                        flash.classList.add('intro-flash-overlay');
-
-                        s2.classList.add('hidden');
-                        s3.classList.remove('hidden');
-                        if (indicator) indicator.innerText = 'INTRO 03/03 • KÍNH CHÀO QUÝ KHÁCH HÀNG';
-                    }, 4300));
-
-                    // KẾT THÚC INTRO (6.5s): Tự động chuyển mượt mà sang Nội dung chi tiết
-                    aboutIntroTimers.push(setTimeout(() => {
-                        finishAboutIntroAndShowContent();
-                    }, 6500));
-                }
-
-                function finishAboutIntroAndShowContent() {
-                    clearAboutIntroTimers();
-                    const introStage = document.getElementById('about-intro-stage');
-                    const detailStage = document.getElementById('about-detail-stage');
-                    if (!introStage || !detailStage) return;
-
-                    introStage.classList.add('intro-stage-exit');
+                    introEl.classList.add('cinema-curtain-up');
                     setTimeout(() => {
-                        introStage.classList.add('hidden');
-                        detailStage.classList.remove('hidden');
+                        introEl.classList.add('hidden');
+                        contentEl.classList.remove('hidden');
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                     }, 420);
                 }
 
-                function replayAboutCinematicIntro() {
+                function replayAboutCinemaIntro() {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
-                    startAboutCinematicIntro();
+                    startAboutCinemaIntro();
                 }
 
-                // Tự động kích hoạt Video Intro mỗi khi người dùng bấm mở tab "GIỚI THIỆU"
-                (function initAboutSectionObserver() {
-                    const aboutSec = document.getElementById('section-about');
-                    if (!aboutSec) return;
-                    let wasHidden = aboutSec.classList.contains('hidden');
+                // Tự động phát Intro mỗi khi người dùng bấm mở tab "GIỚI THIỆU"
+                (function watchAboutSectionOpen() {
+                    const sec = document.getElementById('section-about');
+                    if (!sec) return;
+                    let wasHidden = sec.classList.contains('hidden');
 
                     const observer = new MutationObserver(() => {
-                        const isNowHidden = aboutSec.classList.contains('hidden');
+                        const isNowHidden = sec.classList.contains('hidden');
                         if (wasHidden && !isNowHidden) {
-                            // Nếu đang ở chế độ Sửa Giao Diện (CMS) thì mở thẳng nội dung để sửa chữ ngay
                             if (typeof isCmsEditMode !== 'undefined' && isCmsEditMode) {
-                                finishAboutIntroAndShowContent();
+                                openAboutEditorialContent();
                             } else {
-                                startAboutCinematicIntro();
+                                startAboutCinemaIntro();
                             }
                         }
                         wasHidden = isNowHidden;
                     });
-                    observer.observe(aboutSec, { attributes: true, attributeFilter: ['class'] });
+                    observer.observe(sec, { attributes: true, attributeFilter: ['class'] });
                 })();
             </script>
         </div>
-
 
         <!-- ==================== SECTION 3: DỊCH VỤ (ĐỘNG 100%: ẢNH FULL KHUNG & THÊM FORM MẪU) ==================== -->
         <div id="section-services" class="page-section hidden py-12 bg-gray-50">
