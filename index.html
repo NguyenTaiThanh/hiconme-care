@@ -401,194 +401,133 @@
             </div>
         </div>
 
-     <!-- ==================== SECTION 2: GIỚI THIỆU (60FPS 3D MOTION GRAPHICS INTRO + HỒ SƠ NĂNG LỰC) ==================== -->
+    <!-- ==================== SECTION 2: GIỚI THIỆU (INTRO 3.8S SIÊU MƯỢT + 07 LĨNH VỰC ĐỔI ĐƯỢC ẢNH) ==================== -->
         <div id="section-about" class="page-section hidden bg-slate-950 relative overflow-hidden">
             
             <style>
-                /* ==================== ENGINE CHUYỂN ĐỘNG 3D AFTER EFFECTS (STAGE 1) ==================== */
+                /* ==================== ENGINE CHUYỂN ĐỘNG 60FPS SIÊU MƯỢT (KHÔNG KHỰNG LAG) ==================== */
                 #hicon-ae-intro {
-                    perspective: 1200px;
-                    transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+                    transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1), transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+                    will-change: opacity, transform;
                 }
                 #hicon-ae-intro.ae-shutter-open {
                     opacity: 0;
-                    transform: scale(1.12);
+                    transform: scale3d(1.06, 1.06, 1);
                     pointer-events: none;
                 }
 
-                /* Chuyển động Camera 3D bay xuyên không gian nhà máy M&E */
-                @keyframes aeCamera3DFly {
-                    0% { transform: scale(1.35) translate3d(0, 3%, -80px) rotateX(4deg); filter: brightness(0.45) contrast(1.25); }
-                    45% { transform: scale(1.12) translate3d(-1.5%, -1%, 0px) rotateX(0deg); filter: brightness(0.75) contrast(1.15); }
-                    100% { transform: scale(1.0) translate3d(0, 0, 0px) rotateX(0deg); filter: brightness(0.22) contrast(1.3); }
+                /* Chuyển động thu phóng nền bằng GPU 100% */
+                @keyframes aeCameraSmoothZoom {
+                    0% { transform: scale3d(1.18, 1.18, 1); }
+                    100% { transform: scale3d(1.0, 1.0, 1); }
                 }
                 .ae-camera-rig {
-                    animation: aeCamera3DFly 6.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-                    will-change: transform, filter;
+                    animation: aeCameraSmoothZoom 3.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+                    will-change: transform;
                 }
 
-                /* Hiệu ứng HUD Callout khóa mục tiêu thiết bị cơ điện (Giống 0:04 - 0:12 trong video mẫu) */
-                @keyframes hudTargetPop {
-                    0% { opacity: 0; transform: scale(0.3); }
-                    20% { opacity: 1; transform: scale(1.08); }
-                    30%, 80% { opacity: 1; transform: scale(1); }
-                    100% { opacity: 0; transform: scale(0.85) translateY(-15px); }
+                /* Khối Logo 3D HICON M&E xuất hiện mượt bằng phần cứng GPU (Không dùng filter blur gây khựng) */
+                @keyframes aeLogoSmoothGlide {
+                    0% { opacity: 0; transform: translate3d(0, 22px, 0) scale3d(0.86, 0.86, 1); }
+                    100% { opacity: 1; transform: translate3d(0, 0, 0) scale3d(1, 1, 1); }
                 }
-                .ae-hud-node-1 { animation: hudTargetPop 2.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
-                .ae-hud-node-2 { animation: hudTargetPop 2.9s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both; }
-                .ae-hud-node-3 { animation: hudTargetPop 2.9s cubic-bezier(0.16, 1, 0.3, 1) 0.75s both; }
-
-                @keyframes hudRingSpin {
-                    from { transform: rotate(0deg); }
-                    to { transform: rotate(360deg); }
+                .ae-logo-3d-stage {
+                    animation: aeLogoSmoothGlide 0.95s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+                    will-change: transform, opacity;
                 }
-                .ae-reticle-spin { animation: hudRingSpin 4s linear infinite; }
 
-                /* Hiệu ứng Vẽ nét Wireframe & Đùn khối 3D Logo HICON M&E (Giống 0:20 - 0:28 trong video mẫu) */
-                @keyframes svgWireframeDraw {
-                    0% { stroke-dashoffset: 600; fill-opacity: 0; }
-                    55% { stroke-dashoffset: 0; fill-opacity: 0; }
+                /* Vẽ nét Wireframe SVG mượt mà ngay từ giây 0.15s */
+                @keyframes svgSmoothDraw {
+                    0% { stroke-dashoffset: 450; fill-opacity: 0; }
+                    45% { fill-opacity: 0.15; }
                     100% { stroke-dashoffset: 0; fill-opacity: 1; }
                 }
                 .ae-logo-path-brown {
                     stroke: #f59e0b;
-                    stroke-width: 2.2;
-                    stroke-dasharray: 600;
+                    stroke-width: 2;
+                    stroke-dasharray: 450;
                     fill: #432818;
-                    animation: svgWireframeDraw 1.9s cubic-bezier(0.22, 1, 0.36, 1) 2.7s both;
+                    animation: svgSmoothDraw 1.35s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
                 }
                 .ae-logo-path-gold {
-                    stroke: #fffbeb;
-                    stroke-width: 2.2;
-                    stroke-dasharray: 600;
+                    stroke: #ffffff;
+                    stroke-width: 2;
+                    stroke-dasharray: 450;
                     fill: #f59e0b;
-                    animation: svgWireframeDraw 1.9s cubic-bezier(0.22, 1, 0.36, 1) 2.85s both;
+                    animation: svgSmoothDraw 1.35s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both;
                 }
 
-                /* Khung 3D xoay khối Logo trong không gian */
-                @keyframes aeLogo3DExtrude {
-                    0% { opacity: 0; transform: perspective(1000px) rotateY(-55deg) rotateX(20deg) scale(0.5); filter: blur(8px); }
-                    40% { opacity: 1; transform: perspective(1000px) rotateY(12deg) rotateX(-5deg) scale(1.06); filter: blur(0px) drop-shadow(0 0 50px rgba(245, 158, 11, 0.9)); }
-                    75% { opacity: 1; transform: perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1); filter: drop-shadow(0 20px 40px rgba(0, 168, 204, 0.55)); }
-                    100% { opacity: 1; transform: perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1); }
-                }
-                .ae-logo-3d-stage {
-                    animation: aeLogo3DExtrude 3.6s cubic-bezier(0.16, 1, 0.3, 1) 2.65s both;
-                }
-
-                /* Luồng sáng Anamorphic Lens Flare quét ngang Logo */
-                @keyframes anamorphicFlareSweep {
-                    0% { transform: translateX(-120%) scaleX(0.5); opacity: 0; }
-                    40% { opacity: 1; transform: translateX(0%) scaleX(1.3); }
-                    100% { transform: translateX(120%) scaleX(0.6); opacity: 0; }
+                /* Luồng sáng lướt ngang qua Logo */
+                @keyframes smoothFlareSweep {
+                    0% { transform: translate3d(-130%, 0, 0) skewX(-22deg); opacity: 0; }
+                    35% { opacity: 0.95; }
+                    100% { transform: translate3d(140%, 0, 0) skewX(-22deg); opacity: 0; }
                 }
                 .ae-lens-flare {
-                    background: radial-gradient(ellipse at center, rgba(255,255,255,1) 0%, rgba(251,191,36,0.85) 35%, rgba(0,242,254,0) 75%);
-                    mix-blend-mode: screen;
-                    animation: anamorphicFlareSweep 1.7s cubic-bezier(0.22, 1, 0.36, 1) 3.9s both;
+                    width: 55%;
+                    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), rgba(251,191,36,0.6), transparent);
+                    animation: smoothFlareSweep 1.3s cubic-bezier(0.22, 1, 0.36, 1) 0.95s both;
+                    will-change: transform, opacity;
                 }
 
-                /* Chữ Kinetic Typography: Công ty CP Cơ điện và Bảo trì Hicon Xin Chào */
-                @keyframes kineticTitleReveal {
-                    0% { opacity: 0; transform: translateY(26px) scale(0.92); letter-spacing: 0.3em; filter: blur(6px); }
-                    100% { opacity: 1; transform: translateY(0) scale(1); letter-spacing: 0.05em; filter: blur(0px); }
+                /* Chữ chào mừng trượt lên mượt mà */
+                @keyframes smoothTitleUp {
+                    0% { opacity: 0; transform: translate3d(0, 18px, 0); }
+                    100% { opacity: 1; transform: translate3d(0, 0, 0); }
                 }
                 .ae-kinetic-title {
-                    animation: kineticTitleReveal 1.1s cubic-bezier(0.16, 1, 0.3, 1) 4.1s both;
+                    animation: smoothTitleUp 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.65s both;
+                    will-change: transform, opacity;
                 }
 
-                /* ==================== CSS CHO GIAI ĐOẠN 2: TRANG ĐỌC NỘI DUNG CHI TIẾT ==================== */
+                /* ==================== CSS CHO GIAI ĐOẠN 2: HỒ SƠ NĂNG LỰC CHI TIẾT ==================== */
                 @keyframes stage2Reveal {
-                    from { opacity: 0; transform: translateY(30px); }
-                    to { opacity: 1; transform: translateY(0); }
+                    from { opacity: 0; transform: translate3d(0, 24px, 0); }
+                    to { opacity: 1; transform: translate3d(0, 0, 0); }
                 }
-                .stage2-anim-1 { animation: stage2Reveal 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both; }
-                .stage2-anim-2 { animation: stage2Reveal 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both; }
-                .stage2-anim-3 { animation: stage2Reveal 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.30s both; }
+                .stage2-anim-1 { animation: stage2Reveal 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both; }
+                .stage2-anim-2 { animation: stage2Reveal 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
+                .stage2-anim-3 { animation: stage2Reveal 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both; }
 
-                .service- interactive-card {
+                .service-interactive-card {
                     transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
                 }
                 .service-interactive-card:hover {
                     transform: translateY(-6px);
-                    box-shadow: 0 20px 35px -10px rgba(15, 43, 72, 0.18);
+                    box-shadow: 0 20px 35px -10px rgba(15, 43, 72, 0.22);
+                }
+                .service-interactive-card:hover .srv-card-img {
+                    transform: scale(1.08);
                 }
             </style>
 
             <!-- ======================================================================================== -->
-            <!-- GIAI ĐOẠN 1: SÂN KHẤU VIDEO 3D MOTION GRAPHICS (CANVAS 60FPS + HUD + 3D LOGO EXTRUSION)  -->
+            <!-- GIAI ĐOẠN 1: INTRO VIDEO 3.8 GIÂY GỌN GÀNG, MƯỢT MÀ (KHÔNG CÒN 3 MỤC RỐI MẮT)            -->
             <!-- ======================================================================================== -->
-            <div id="hicon-ae-intro" class="relative h-[85vh] min-h-[540px] w-full bg-slate-950 overflow-hidden select-none flex items-center justify-center">
+            <div id="hicon-ae-intro" class="relative h-[82vh] min-h-[500px] w-full bg-slate-950 overflow-hidden select-none flex items-center justify-center">
                 
-                <!-- 1. Lớp nền Không gian Công trình Cơ Điện (HVAC - PCCC - Điện) chuyển động 3D -->
+                <!-- 1. Lớp nền Không gian Công trình Cơ Điện thu phóng mượt -->
                 <div class="absolute inset-0 ae-camera-rig">
                     <img src="https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=1800&auto=format&fit=crop" 
                          alt="HICON M&E Industrial Space" 
-                         class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/45 to-slate-950/80"></div>
+                         class="w-full h-full object-cover opacity-40">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-slate-950/85"></div>
                 </div>
 
-                <!-- 2. Lớp HTML5 Canvas 60FPS: Dựng luồng hạt năng lượng 3D, Lưới Không Gian & Tia Xung Hội Tụ -->
+                <!-- 2. Lớp HTML5 Canvas 60FPS: Luồng hạt năng lượng 3D & Sóng xung kích hội tụ -->
                 <canvas id="hicon-ae-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-10"></canvas>
 
-                <!-- 3. PHÂN CẢNH ĐẦU (0.0s - 3.0s): CÁC ĐIỂM KHÓA MỤC TIÊU HUD CALLOUT TRÊN THIẾT BỊ (GIỐNG VIDEO MẪU) -->
-                <div class="absolute inset-0 pointer-events-none z-20 max-w-6xl mx-auto">
-                    
-                    <!-- HUD Node 1: Khóa mục tiêu Hệ thống HVAC & Ống gió -->
-                    <div class="ae-hud-node-1 absolute top-[20%] left-[8%] sm:left-[12%] flex items-center space-x-3">
-                        <div class="relative w-12 h-12 flex items-center justify-center">
-                            <svg class="w-full h-full ae-reticle-spin text-cyan-400" viewBox="0 0 60 60">
-                                <circle cx="30" cy="30" r="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="12 8"/>
-                                <circle cx="30" cy="30" r="4" fill="#00f2fe"/>
-                            </svg>
-                        </div>
-                        <div class="bg-slate-950/85 backdrop-blur-md border-l-2 border-cyan-400 px-3.5 py-2 rounded-r-xl shadow-[0_0_25px_rgba(0,242,254,0.3)]">
-                            <div class="text-[10px] font-mono font-bold text-cyan-300 uppercase">SYS.01 // HVAC &amp; DUCTWORK</div>
-                            <div class="text-xs sm:text-sm font-black text-white">Hệ Thống Điều Hòa &amp; Thông Gió</div>
-                        </div>
-                    </div>
-
-                    <!-- HUD Node 2: Khóa mục tiêu Hệ thống PCCC -->
-                    <div class="ae-hud-node-2 absolute top-[32%] right-[6%] sm:right-[12%] flex items-center space-x-3">
-                        <div class="bg-slate-950/85 backdrop-blur-md border-r-2 border-red-500 px-3.5 py-2 rounded-l-xl text-right shadow-[0_0_25px_rgba(239,68,68,0.35)]">
-                            <div class="text-[10px] font-mono font-bold text-red-400 uppercase">SYS.02 // FIRE PROTECTION</div>
-                            <div class="text-xs sm:text-sm font-black text-white">Hệ Thống Bơm &amp; Ống Cứu Hỏa PCCC</div>
-                        </div>
-                        <div class="relative w-12 h-12 flex items-center justify-center">
-                            <svg class="w-full h-full ae-reticle-spin text-red-500" viewBox="0 0 60 60">
-                                <circle cx="30" cy="30" r="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="12 8"/>
-                                <circle cx="30" cy="30" r="4" fill="#ef4444"/>
-                            </svg>
-                        </div>
-                    </div>
-
-                    <!-- HUD Node 3: Khóa mục tiêu Hệ thống Điện Công Nghiệp -->
-                    <div class="ae-hud-node-3 absolute bottom-[22%] left-[15%] sm:left-[28%] flex items-center space-x-3">
-                        <div class="relative w-12 h-12 flex items-center justify-center">
-                            <svg class="w-full h-full ae-reticle-spin text-amber-400" viewBox="0 0 60 60">
-                                <circle cx="30" cy="30" r="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="12 8"/>
-                                <circle cx="30" cy="30" r="4" fill="#f59e0b"/>
-                            </svg>
-                        </div>
-                        <div class="bg-slate-950/85 backdrop-blur-md border-l-2 border-amber-400 px-3.5 py-2 rounded-r-xl shadow-[0_0_25px_rgba(245,158,11,0.35)]">
-                            <div class="text-[10px] font-mono font-bold text-amber-400 uppercase">SYS.03 // M&amp;E ELECTRICAL POWER</div>
-                            <div class="text-xs sm:text-sm font-black text-white">Thi Công &amp; Bảo Trì Điện Công Nghiệp</div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- 4. PHÂN CẢNH ĐỈNH CAO (2.7s - 6.8s): VẼ WIREFRAME 3D LOGO HICON M&E + TIA FLARE + LỜI CHÀO -->
+                <!-- 3. TÂM ĐIỂM DUY NHẤT: KHỐI 3D LOGO HICON M&E + LỜI CHÀO TRANG TRỌNG -->
                 <div class="relative z-30 flex flex-col items-center justify-center px-4 text-center max-w-4xl mx-auto">
                     
-                    <!-- Khối 3D Logo HICON M&E dựng bằng SVG Stroke-Animation & Extrusion -->
-                    <div class="ae-logo-3d-stage relative inline-flex items-center bg-white/95 backdrop-blur-xl px-7 py-5 sm:px-10 sm:py-6 rounded-3xl shadow-[0_25px_80px_rgba(245,158,11,0.5)] border-2 border-amber-400 overflow-hidden">
+                    <!-- Khối 3D Logo HICON M&E mượt 60FPS -->
+                    <div class="ae-logo-3d-stage relative inline-flex items-center bg-white px-7 py-5 sm:px-10 sm:py-6 rounded-3xl shadow-[0_25px_70px_rgba(245,158,11,0.45)] border-2 border-amber-400 overflow-hidden">
                         
-                        <!-- Tia sáng Anamorphic Lens Flare quét ngang -->
-                        <div class="ae-lens-flare absolute inset-y-0 w-full pointer-events-none z-20"></div>
+                        <!-- Luồng sáng lướt ngang qua Logo -->
+                        <div class="ae-lens-flare absolute inset-y-0 left-0 pointer-events-none z-20"></div>
 
-                        <!-- Biểu tượng Khối lập phương 3D H-C tự vẽ nét rồi tô đặc -->
-                        <svg class="w-20 h-20 sm:w-24 sm:h-24 mr-4 sm:mr-5 shrink-0 drop-shadow-md" viewBox="0 0 100 100" fill="none">
+                        <!-- Biểu tượng Khối lập phương 3D H-C tự vẽ nét mượt mà -->
+                        <svg class="w-20 h-20 sm:w-24 sm:h-24 mr-4 sm:mr-5 shrink-0" viewBox="0 0 100 100" fill="none">
                             <polygon class="ae-logo-path-brown" points="50,10 70,20 50,30"/>
                             <polygon class="ae-logo-path-brown" points="12,25 29,34 29,52 46,60 46,34 60,41 60,90 46,82 46,70 29,61 29,79 12,70"/>
                             <polygon class="ae-logo-path-gold" points="60,41 93,25 93,41 72,51 72,71 93,61 93,76 60,90"/>
@@ -611,10 +550,10 @@
                         </div>
                     </div>
 
-                    <!-- Dòng chữ Kinetic Typography hiện lên dưới Logo -->
+                    <!-- Dòng chữ chào mừng trượt lên êm ái -->
                     <div class="ae-kinetic-title mt-6 space-y-2">
                         <div class="text-amber-400 text-[11px] sm:text-xs font-mono font-extrabold uppercase tracking-[0.35em]">
-                            ESTABLISHED 22 . 12 . 2015
+                            SINCE 22 . 12 . 2015
                         </div>
                         <h1 class="text-xl sm:text-4xl font-black text-white uppercase tracking-wide drop-shadow-lg">
                             CÔNG TY CỔ PHẦN CƠ ĐIỆN VÀ BẢO TRÌ HICON
@@ -629,20 +568,20 @@
                 <!-- Nút Bỏ qua nhanh góc trên phải -->
                 <div class="absolute top-5 right-5 z-40">
                     <button type="button" onclick="endAeIntroAndShowEditorial()" class="btn-interactive bg-slate-900/80 hover:bg-amber-500 hover:text-brand-dark text-white border border-white/25 backdrop-blur-md px-4 py-2 rounded-full text-xs font-extrabold flex items-center shadow-xl">
-                        <span>Xem Hồ Sơ Chi Tiết</span>
+                        <span>Xem Hồ Sơ Ngay</span>
                         <i class="fas fa-arrow-right ml-2"></i>
                     </button>
                 </div>
 
-                <!-- Thanh thời gian chạy ở đáy màn hình -->
+                <!-- Thanh thời gian chạy 3.8 giây ở đáy màn hình -->
                 <div class="absolute bottom-0 inset-x-0 h-1 bg-white/10 z-40">
-                    <div id="ae-intro-progress" class="h-full bg-gradient-to-r from-cyan-400 via-amber-400 to-emerald-400" style="width: 0%; transition: width 6.8s linear;"></div>
+                    <div id="ae-intro-progress" class="h-full bg-gradient-to-r from-cyan-400 via-amber-400 to-emerald-400" style="width: 0%; transition: width 3.8s linear;"></div>
                 </div>
             </div>
 
 
             <!-- ======================================================================================== -->
-            <!-- GIAI ĐOẠN 2: NỘI DUNG ĐỌC CHI TIẾT (CHUẨN 100% VĂN BẢN CỦA BẠN - BỐ CỤC TẠP CHÍ CAO CẤP) -->
+            <!-- GIAI ĐOẠN 2: NỘI DUNG ĐỌC CHI TIẾT (07 LĨNH VỰC CÓ ẢNH & ĐỔI ĐƯỢC TRONG SỬA GIAO DIỆN)  -->
             <!-- ======================================================================================== -->
             <div id="hicon-editorial-stage" class="hidden bg-slate-50 py-12 sm:py-16">
                 <div class="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
@@ -650,7 +589,6 @@
                     <!-- ==================== PHẦN 1: THƯ NGỎ & LỊCH SỬ HÌNH THÀNH ==================== -->
                     <div class="stage2-anim-1 bg-white rounded-3xl shadow-xl border border-gray-200 overflow-hidden">
                         
-                        <!-- Thanh Header Thương hiệu kèm nút Xem lại Video Intro -->
                         <div class="bg-gradient-to-r from-brand-navy via-slate-900 to-brand-blue px-6 py-5 sm:px-10 sm:py-6 flex flex-wrap items-center justify-between gap-4">
                             <div class="flex items-center space-x-4">
                                 <div class="bg-white px-3.5 py-2 rounded-xl shadow-md flex items-center shrink-0 border border-amber-400">
@@ -680,11 +618,9 @@
                             </button>
                         </div>
 
-                        <!-- Bố cục Thư Ngỏ sang trọng -->
                         <div class="p-6 sm:p-10 lg:p-12">
                             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
                                 
-                                <!-- Cột trái: Lời chào mở đầu -->
                                 <div class="lg:col-span-5 space-y-4">
                                     <div class="inline-flex items-center space-x-2 text-brand-accent font-extrabold text-xs uppercase tracking-widest">
                                         <span class="w-8 h-0.5 bg-brand-accent"></span>
@@ -702,7 +638,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Cột phải: Nội dung lịch sử & đối tượng phục vụ -->
                                 <div class="lg:col-span-7 space-y-5 text-gray-700 text-sm sm:text-base leading-relaxed">
                                     <p data-cms-id="about-p2" class="text-justify">
                                         Được thành lập từ ngày 22/12/2015 với mong muốn đáp ứng nhu cầu ngày càng cao của Khách hàng trong lĩnh vực triển khai vận hành dịch vụ, bảo trì các dịch vụ kỹ thuật cơ điện công trình. Trải qua nhiều năm hoạt động, Hicon chúng tôi nhận được sự tin tưởng cũng như đánh giá cao từ phía khách hàng.
@@ -733,7 +668,7 @@
                         </div>
                     </div>
 
-                    <!-- ==================== PHẦN 2: CÁC DỊCH VỤ HICON CUNG CẤP (07 LĨNH VỰC) ==================== -->
+                    <!-- ==================== PHẦN 2: 07 LĨNH VỰC TRỌNG ĐIỂM (ĐỔI ĐƯỢC HÌNH ẢNH KHI BẬT SỬA GIAO DIỆN) ==================== -->
                     <div class="stage2-anim-2 space-y-6">
                         <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b-2 border-gray-200 pb-4">
                             <div>
@@ -747,97 +682,150 @@
                             </span>
                         </div>
 
-                        <div id="about-capabilities-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                        <!-- Lưới 07 Lĩnh Vực Trọng Điểm (Tích hợp Khung Ảnh tràn viền & Nút Đổi Ảnh CMS) -->
+                        <div id="about-capabilities-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             
-                            <!-- 01 -->
-                            <div class="service-interactive-card bg-white rounded-2xl p-6 border border-gray-200 hover:border-amber-400 flex flex-col justify-between group">
-                                <div class="flex items-center justify-between mb-4">
-                                    <div class="w-12 h-12 rounded-2xl bg-amber-500/15 text-amber-600 flex items-center justify-center text-xl font-bold group-hover:bg-amber-500 group-hover:text-brand-dark transition">
+                            <!-- 01: Điện dân dụng & công nghiệp -->
+                            <div class="service-interactive-card bg-white rounded-2xl border border-gray-200 hover:border-amber-400 overflow-hidden shadow-md flex flex-col justify-between group">
+                                <div class="cms-editable-img-box h-44 bg-slate-900 relative overflow-hidden">
+                                    <img id="about-srv-img-1" src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=900&auto=format&fit=crop" onclick="if(isCmsEditMode) openPhotoChangeModal('ABOUT_SRV:1')" class="srv-card-img absolute inset-0 w-full h-full object-cover transition-transform duration-500">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/85 via-brand-navy/20 to-transparent pointer-events-none"></div>
+                                    <span class="absolute top-3 left-3 bg-amber-500 text-brand-dark font-black text-xs px-2.5 py-1 rounded-lg shadow">01</span>
+                                    <button type="button" onclick="openPhotoChangeModal('ABOUT_SRV:1')" class="cms-only-btn absolute top-2.5 right-2.5 bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition items-center shadow-lg z-20 cursor-pointer">
+                                        <i class="fas fa-camera mr-1.5 text-amber-400"></i> Đổi ảnh
+                                    </button>
+                                    <div class="absolute bottom-3 left-3 w-10 h-10 rounded-xl bg-amber-500 text-brand-dark flex items-center justify-center font-bold text-base shadow-md">
                                         <i class="fas fa-bolt"></i>
                                     </div>
-                                    <span class="text-2xl font-black text-slate-200 group-hover:text-amber-400 font-mono transition">01</span>
                                 </div>
-                                <div data-cms-id="about-srv-1" class="text-base font-bold text-brand-navy leading-snug">
-                                    Thi công lắp đặt hệ thống điện công trình dân dụng, công nghiệp
+                                <div class="p-5 flex-grow flex items-center">
+                                    <div data-cms-id="about-srv-1" class="text-sm sm:text-base font-bold text-brand-navy leading-snug">
+                                        Thi công lắp đặt hệ thống điện công trình dân dụng, công nghiệp
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- 02 -->
-                            <div class="service-interactive-card bg-white rounded-2xl p-6 border border-gray-200 hover:border-red-400 flex flex-col justify-between group">
-                                <div class="flex items-center justify-between mb-4">
-                                    <div class="w-12 h-12 rounded-2xl bg-red-500/15 text-red-600 flex items-center justify-center text-xl font-bold group-hover:bg-red-500 group-hover:text-white transition">
+                            <!-- 02: PCCC -->
+                            <div class="service-interactive-card bg-white rounded-2xl border border-gray-200 hover:border-red-400 overflow-hidden shadow-md flex flex-col justify-between group">
+                                <div class="cms-editable-img-box h-44 bg-slate-900 relative overflow-hidden">
+                                    <img id="about-srv-img-2" src="https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?q=80&w=900&auto=format&fit=crop" onclick="if(isCmsEditMode) openPhotoChangeModal('ABOUT_SRV:2')" class="srv-card-img absolute inset-0 w-full h-full object-cover transition-transform duration-500">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/85 via-brand-navy/20 to-transparent pointer-events-none"></div>
+                                    <span class="absolute top-3 left-3 bg-red-600 text-white font-black text-xs px-2.5 py-1 rounded-lg shadow">02</span>
+                                    <button type="button" onclick="openPhotoChangeModal('ABOUT_SRV:2')" class="cms-only-btn absolute top-2.5 right-2.5 bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition items-center shadow-lg z-20 cursor-pointer">
+                                        <i class="fas fa-camera mr-1.5 text-amber-400"></i> Đổi ảnh
+                                    </button>
+                                    <div class="absolute bottom-3 left-3 w-10 h-10 rounded-xl bg-red-500 text-white flex items-center justify-center font-bold text-base shadow-md">
                                         <i class="fas fa-fire-extinguisher"></i>
                                     </div>
-                                    <span class="text-2xl font-black text-slate-200 group-hover:text-red-400 font-mono transition">02</span>
                                 </div>
-                                <div data-cms-id="about-srv-2" class="text-base font-bold text-brand-navy leading-snug">
-                                    Dịch vụ bảo trì hệ thống PCCC
+                                <div class="p-5 flex-grow flex items-center">
+                                    <div data-cms-id="about-srv-2" class="text-sm sm:text-base font-bold text-brand-navy leading-snug">
+                                        Dịch vụ bảo trì hệ thống PCCC
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- 03 -->
-                            <div class="service-interactive-card bg-white rounded-2xl p-6 border border-gray-200 hover:border-cyan-400 flex flex-col justify-between group">
-                                <div class="flex items-center justify-between mb-4">
-                                    <div class="w-12 h-12 rounded-2xl bg-cyan-500/15 text-brand-accent flex items-center justify-center text-xl font-bold group-hover:bg-brand-accent group-hover:text-brand-dark transition">
+                            <!-- 03: Điều hoà & thông gió (HVAC) -->
+                            <div class="service-interactive-card bg-white rounded-2xl border border-gray-200 hover:border-cyan-400 overflow-hidden shadow-md flex flex-col justify-between group">
+                                <div class="cms-editable-img-box h-44 bg-slate-900 relative overflow-hidden">
+                                    <img id="about-srv-img-3" src="https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=900&auto=format&fit=crop" onclick="if(isCmsEditMode) openPhotoChangeModal('ABOUT_SRV:3')" class="srv-card-img absolute inset-0 w-full h-full object-cover transition-transform duration-500">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/85 via-brand-navy/20 to-transparent pointer-events-none"></div>
+                                    <span class="absolute top-3 left-3 bg-brand-accent text-brand-dark font-black text-xs px-2.5 py-1 rounded-lg shadow">03</span>
+                                    <button type="button" onclick="openPhotoChangeModal('ABOUT_SRV:3')" class="cms-only-btn absolute top-2.5 right-2.5 bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition items-center shadow-lg z-20 cursor-pointer">
+                                        <i class="fas fa-camera mr-1.5 text-amber-400"></i> Đổi ảnh
+                                    </button>
+                                    <div class="absolute bottom-3 left-3 w-10 h-10 rounded-xl bg-cyan-400 text-brand-dark flex items-center justify-center font-bold text-base shadow-md">
                                         <i class="fas fa-fan"></i>
                                     </div>
-                                    <span class="text-2xl font-black text-slate-200 group-hover:text-cyan-400 font-mono transition">03</span>
                                 </div>
-                                <div data-cms-id="about-srv-3" class="text-base font-bold text-brand-navy leading-snug">
-                                    Dịch vụ bảo trì hệ thống điều hoà &amp; thông gió
+                                <div class="p-5 flex-grow flex items-center">
+                                    <div data-cms-id="about-srv-3" class="text-sm sm:text-base font-bold text-brand-navy leading-snug">
+                                        Dịch vụ bảo trì hệ thống điều hoà &amp; thông gió
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- 04 -->
-                            <div class="service-interactive-card bg-white rounded-2xl p-6 border border-gray-200 hover:border-blue-400 flex flex-col justify-between group">
-                                <div class="flex items-center justify-between mb-4">
-                                    <div class="w-12 h-12 rounded-2xl bg-blue-500/15 text-brand-blue flex items-center justify-center text-xl font-bold group-hover:bg-brand-blue group-hover:text-white transition">
+                            <!-- 04: Điện & Điện nhẹ -->
+                            <div class="service-interactive-card bg-white rounded-2xl border border-gray-200 hover:border-blue-400 overflow-hidden shadow-md flex flex-col justify-between group">
+                                <div class="cms-editable-img-box h-44 bg-slate-900 relative overflow-hidden">
+                                    <img id="about-srv-img-4" src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=900&auto=format&fit=crop" onclick="if(isCmsEditMode) openPhotoChangeModal('ABOUT_SRV:4')" class="srv-card-img absolute inset-0 w-full h-full object-cover transition-transform duration-500">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/85 via-brand-navy/20 to-transparent pointer-events-none"></div>
+                                    <span class="absolute top-3 left-3 bg-blue-500 text-white font-black text-xs px-2.5 py-1 rounded-lg shadow">04</span>
+                                    <button type="button" onclick="openPhotoChangeModal('ABOUT_SRV:4')" class="cms-only-btn absolute top-2.5 right-2.5 bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition items-center shadow-lg z-20 cursor-pointer">
+                                        <i class="fas fa-camera mr-1.5 text-amber-400"></i> Đổi ảnh
+                                    </button>
+                                    <div class="absolute bottom-3 left-3 w-10 h-10 rounded-xl bg-blue-400 text-brand-dark flex items-center justify-center font-bold text-base shadow-md">
                                         <i class="fas fa-network-wired"></i>
                                     </div>
-                                    <span class="text-2xl font-black text-slate-200 group-hover:text-blue-400 font-mono transition">04</span>
                                 </div>
-                                <div data-cms-id="about-srv-4" class="text-base font-bold text-brand-navy leading-snug">
-                                    Dịch vụ bảo trì hệ thống Điện &amp; Điện nhẹ
+                                <div class="p-5 flex-grow flex items-center">
+                                    <div data-cms-id="about-srv-4" class="text-sm sm:text-base font-bold text-brand-navy leading-snug">
+                                        Dịch vụ bảo trì hệ thống Điện &amp; Điện nhẹ
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- 05 -->
-                            <div class="service-interactive-card bg-white rounded-2xl p-6 border border-gray-200 hover:border-emerald-400 flex flex-col justify-between group">
-                                <div class="flex items-center justify-between mb-4">
-                                    <div class="w-12 h-12 rounded-2xl bg-emerald-500/15 text-emerald-600 flex items-center justify-center text-xl font-bold group-hover:bg-emerald-500 group-hover:text-white transition">
+                            <!-- 05: Khí nén & gas -->
+                            <div class="service-interactive-card bg-white rounded-2xl border border-gray-200 hover:border-emerald-400 overflow-hidden shadow-md flex flex-col justify-between group">
+                                <div class="cms-editable-img-box h-44 bg-slate-900 relative overflow-hidden">
+                                    <img id="about-srv-img-5" src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=900&auto=format&fit=crop" onclick="if(isCmsEditMode) openPhotoChangeModal('ABOUT_SRV:5')" class="srv-card-img absolute inset-0 w-full h-full object-cover transition-transform duration-500">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/85 via-brand-navy/20 to-transparent pointer-events-none"></div>
+                                    <span class="absolute top-3 left-3 bg-emerald-500 text-brand-dark font-black text-xs px-2.5 py-1 rounded-lg shadow">05</span>
+                                    <button type="button" onclick="openPhotoChangeModal('ABOUT_SRV:5')" class="cms-only-btn absolute top-2.5 right-2.5 bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition items-center shadow-lg z-20 cursor-pointer">
+                                        <i class="fas fa-camera mr-1.5 text-amber-400"></i> Đổi ảnh
+                                    </button>
+                                    <div class="absolute bottom-3 left-3 w-10 h-10 rounded-xl bg-emerald-400 text-brand-dark flex items-center justify-center font-bold text-base shadow-md">
                                         <i class="fas fa-tachometer-alt"></i>
                                     </div>
-                                    <span class="text-2xl font-black text-slate-200 group-hover:text-emerald-400 font-mono transition">05</span>
                                 </div>
-                                <div data-cms-id="about-srv-5" class="text-base font-bold text-brand-navy leading-snug">
-                                    Dịch vụ bảo trì hệ thống khí nén &amp; gas
+                                <div class="p-5 flex-grow flex items-center">
+                                    <div data-cms-id="about-srv-5" class="text-sm sm:text-base font-bold text-brand-navy leading-snug">
+                                        Dịch vụ bảo trì hệ thống khí nén &amp; gas
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- 06 -->
-                            <div class="service-interactive-card bg-white rounded-2xl p-6 border border-gray-200 hover:border-sky-400 flex flex-col justify-between group">
-                                <div class="flex items-center justify-between mb-4">
-                                    <div class="w-12 h-12 rounded-2xl bg-sky-500/15 text-sky-600 flex items-center justify-center text-xl font-bold group-hover:bg-sky-500 group-hover:text-white transition">
+                            <!-- 06: Cấp thoát nước & Xử lý nước thải -->
+                            <div class="service-interactive-card bg-white rounded-2xl border border-gray-200 hover:border-sky-400 overflow-hidden shadow-md flex flex-col justify-between group">
+                                <div class="cms-editable-img-box h-44 bg-slate-900 relative overflow-hidden">
+                                    <img id="about-srv-img-6" src="https://images.unsplash.com/photo-1513828583688-c52646db42da?q=80&w=900&auto=format&fit=crop" onclick="if(isCmsEditMode) openPhotoChangeModal('ABOUT_SRV:6')" class="srv-card-img absolute inset-0 w-full h-full object-cover transition-transform duration-500">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/85 via-brand-navy/20 to-transparent pointer-events-none"></div>
+                                    <span class="absolute top-3 left-3 bg-sky-500 text-brand-dark font-black text-xs px-2.5 py-1 rounded-lg shadow">06</span>
+                                    <button type="button" onclick="openPhotoChangeModal('ABOUT_SRV:6')" class="cms-only-btn absolute top-2.5 right-2.5 bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition items-center shadow-lg z-20 cursor-pointer">
+                                        <i class="fas fa-camera mr-1.5 text-amber-400"></i> Đổi ảnh
+                                    </button>
+                                    <div class="absolute bottom-3 left-3 w-10 h-10 rounded-xl bg-sky-400 text-brand-dark flex items-center justify-center font-bold text-base shadow-md">
                                         <i class="fas fa-tint"></i>
                                     </div>
-                                    <span class="text-2xl font-black text-slate-200 group-hover:text-sky-400 font-mono transition">06</span>
                                 </div>
-                                <div data-cms-id="about-srv-6" class="text-base font-bold text-brand-navy leading-snug">
-                                    Dịch vụ bảo trì hệ thống cấp thoát nước &amp; Xử lý nước thải
+                                <div class="p-5 flex-grow flex items-center">
+                                    <div data-cms-id="about-srv-6" class="text-sm sm:text-base font-bold text-brand-navy leading-snug">
+                                        Dịch vụ bảo trì hệ thống cấp thoát nước &amp; Xử lý nước thải
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- 07 -->
-                            <div class="service-interactive-card bg-white rounded-2xl p-6 border border-gray-200 hover:border-purple-400 md:col-span-2 lg:col-span-3 flex flex-col sm:flex-row sm:items-center justify-between gap-4 group">
-                                <div class="flex items-center space-x-4">
-                                    <div class="w-12 h-12 rounded-2xl bg-purple-500/15 text-purple-600 flex items-center justify-center text-xl font-bold shrink-0 group-hover:bg-purple-600 group-hover:text-white transition">
-                                        <i class="fas fa-video"></i>
-                                    </div>
-                                    <div data-cms-id="about-srv-7" class="text-base font-bold text-brand-navy leading-snug">
-                                        Dịch vụ bảo trì hệ thống camera giám sát
-                                    </div>
+                            <!-- 07: Camera giám sát (CCTV) -->
+                            <div class="service-interactive-card bg-white rounded-2xl border border-gray-200 hover:border-purple-400 md:col-span-2 lg:col-span-3 overflow-hidden shadow-md flex flex-col sm:flex-row items-stretch group">
+                                <div class="cms-editable-img-box sm:w-1/3 h-44 sm:h-auto min-h-[160px] bg-slate-900 relative overflow-hidden shrink-0">
+                                    <img id="about-srv-img-7" src="https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=900&auto=format&fit=crop" onclick="if(isCmsEditMode) openPhotoChangeModal('ABOUT_SRV:7')" class="srv-card-img absolute inset-0 w-full h-full object-cover transition-transform duration-500">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/85 via-brand-navy/20 to-transparent pointer-events-none"></div>
+                                    <span class="absolute top-3 left-3 bg-purple-500 text-white font-black text-xs px-2.5 py-1 rounded-lg shadow">07</span>
+                                    <button type="button" onclick="openPhotoChangeModal('ABOUT_SRV:7')" class="cms-only-btn absolute top-2.5 right-2.5 bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition items-center shadow-lg z-20 cursor-pointer">
+                                        <i class="fas fa-camera mr-1.5 text-amber-400"></i> Đổi ảnh
+                                    </button>
                                 </div>
-                                <span class="text-2xl font-black text-slate-200 group-hover:text-purple-400 font-mono transition hidden sm:block">07</span>
+                                <div class="p-6 flex-grow flex items-center justify-between gap-4">
+                                    <div class="flex items-center space-x-4">
+                                        <div class="w-12 h-12 rounded-2xl bg-purple-500/15 text-purple-600 flex items-center justify-center text-xl font-bold shrink-0 group-hover:bg-purple-600 group-hover:text-white transition">
+                                            <i class="fas fa-video"></i>
+                                        </div>
+                                        <div data-cms-id="about-srv-7" class="text-base sm:text-lg font-bold text-brand-navy leading-snug">
+                                            Dịch vụ bảo trì hệ thống camera giám sát
+                                        </div>
+                                    </div>
+                                    <span class="text-3xl font-black text-slate-200 group-hover:text-purple-400 font-mono transition hidden md:block">07</span>
+                                </div>
                             </div>
 
                         </div>
@@ -901,10 +889,64 @@
                 </div>
             </div>
 
-            <!-- ==================== ENGINE JAVASCRIPT DỰNG HẠT NĂNG LƯỢNG 3D CANVAS 60FPS ==================== -->
+            <!-- ==================== ENGINE JAVASCRIPT: INTRO 3.8S + ĐỔI ẢNH 07 LĨNH VỰC TRỌNG ĐIỂM ==================== -->
             <script>
                 let aeIntroTimeout = null;
                 let aeCanvasAnimId = null;
+
+                // Quản lý lưu & tải ảnh của 07 Lĩnh vực trọng điểm
+                function getSavedAboutSrvImages() {
+                    const raw = localStorage.getItem('hicon_about_srv_imgs');
+                    if (raw) {
+                        try { return JSON.parse(raw); } catch (e) {}
+                    }
+                    return {};
+                }
+
+                function applySavedAboutSrvImagesToDom() {
+                    const map = getSavedAboutSrvImages();
+                    for (let i = 1; i <= 7; i++) {
+                        if (map[i]) {
+                            const imgEl = document.getElementById('about-srv-img-' + i);
+                            if (imgEl) imgEl.src = map[i];
+                        }
+                    }
+                }
+
+                // Tích hợp trực tiếp vào Modal Đổi Ảnh chung của hệ thống
+                (function hookAboutSrvPhotoChanger() {
+                    const origOpenModal = window.openPhotoChangeModal;
+                    if (typeof origOpenModal === 'function' && !window._aboutSrvHooked) {
+                        window._aboutSrvHooked = true;
+                        window.openPhotoChangeModal = function(targetKey) {
+                            origOpenModal(targetKey);
+                            if (targetKey && targetKey.startsWith('ABOUT_SRV:')) {
+                                const idx = targetKey.split(':')[1];
+                                const labelEl = document.getElementById('photo-change-target-label');
+                                const srvTxtEl = document.querySelector(`[data-cms-id="about-srv-${idx}"]`);
+                                if (labelEl) {
+                                    labelEl.innerText = `Lĩnh vực trọng điểm 0${idx}: ${srvTxtEl ? srvTxtEl.innerText.trim() : ''}`;
+                                }
+                            }
+                        };
+
+                        const origApplyPhoto = window.applyNewPhotoToTarget;
+                        window.applyNewPhotoToTarget = async function(targetKey, imgData) {
+                            if (targetKey && targetKey.startsWith('ABOUT_SRV:')) {
+                                const idx = targetKey.split(':')[1];
+                                const map = getSavedAboutSrvImages();
+                                map[idx] = imgData;
+                                localStorage.setItem('hicon_about_srv_imgs', JSON.stringify(map));
+                                applySavedAboutSrvImagesToDom();
+                                showTopToast(`Đã cập nhật ảnh Lĩnh vực 0${idx}! Bấm "Lưu & Đồng Bộ Tất Cả" khi hoàn tất.`, false);
+                                return;
+                            }
+                            if (typeof origApplyPhoto === 'function') {
+                                return await origApplyPhoto(targetKey, imgData);
+                            }
+                        };
+                    }
+                })();
 
                 function stopAeCanvasEngine() {
                     if (aeCanvasAnimId) {
@@ -917,7 +959,7 @@
                     }
                 }
 
-                // Engine hạt 3D & sóng năng lượng hội tụ vào Logo HICON M&E (60FPS)
+                // Engine hạt 3D 60FPS nhẹ và mượt
                 function runAeCanvas3DEngine() {
                     const canvas = document.getElementById('hicon-ae-canvas');
                     if (!canvas) return;
@@ -926,14 +968,14 @@
                     let height = canvas.height = canvas.offsetHeight || 600;
 
                     const particles = [];
-                    const count = 85;
+                    const count = 65;
                     for (let i = 0; i < count; i++) {
                         particles.push({
-                            x: (Math.random() - 0.5) * width * 1.6,
-                            y: (Math.random() - 0.5) * height * 1.6,
-                            z: Math.random() * 1000 + 50,
+                            x: (Math.random() - 0.5) * width * 1.5,
+                            y: (Math.random() - 0.5) * height * 1.5,
+                            z: Math.random() * 900 + 80,
                             color: i % 3 === 0 ? '#f59e0b' : (i % 3 === 1 ? '#00f2fe' : '#ef4444'),
-                            size: Math.random() * 2.4 + 1
+                            size: Math.random() * 2.2 + 1
                         });
                     }
 
@@ -946,40 +988,38 @@
                         const cx = width / 2;
                         const cy = height / 2;
 
-                        // Vẽ sóng xung kích (Shockwave Ring) khi Logo 3D đóng khối ở giây thứ 3.2
-                        if (elapsed > 2.8 && elapsed < 5.2) {
-                            const waveProgress = (elapsed - 2.8) / 2.4;
-                            const radius = waveProgress * Math.max(width, height) * 0.55;
+                        // Vòng sóng xung kích lan tỏa ngay ở giây 0.8s khi Logo hoàn tất vẽ nét
+                        if (elapsed > 0.75 && elapsed < 2.6) {
+                            const waveProgress = (elapsed - 0.75) / 1.85;
+                            const radius = waveProgress * Math.max(width, height) * 0.5;
                             ctx.beginPath();
                             ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-                            ctx.strokeStyle = `rgba(245, 158, 11, ${Math.max(0, 0.65 - waveProgress * 0.65)})`;
-                            ctx.lineWidth = 3;
+                            ctx.strokeStyle = `rgba(245, 158, 11, ${Math.max(0, 0.55 - waveProgress * 0.55)})`;
+                            ctx.lineWidth = 2.5;
                             ctx.stroke();
                         }
 
-                        // Chuyển động hạt 3D bay xuyên không gian & hội tụ
                         particles.forEach(p => {
-                            p.z -= elapsed < 2.7 ? 14 : 6;
-                            if (p.z <= 10) {
-                                p.z = 1000;
-                                p.x = (Math.random() - 0.5) * width * 1.6;
-                                p.y = (Math.random() - 0.5) * height * 1.6;
+                            p.z -= 11;
+                            if (p.z <= 15) {
+                                p.z = 900;
+                                p.x = (Math.random() - 0.5) * width * 1.5;
+                                p.y = (Math.random() - 0.5) * height * 1.5;
                             }
 
-                            const scale = 500 / p.z;
+                            const scale = 480 / p.z;
                             const sx = cx + p.x * scale;
                             const sy = cy + p.y * scale;
-                            const prevScale = 500 / (p.z + 28);
+                            const prevScale = 480 / (p.z + 24);
                             const px = cx + p.x * prevScale;
                             const py = cy + p.y * prevScale;
 
-                            // Vẽ vệt tia năng lượng 3D (Warp Speed / Tech Trails)
                             ctx.beginPath();
                             ctx.moveTo(px, py);
                             ctx.lineTo(sx, sy);
                             ctx.strokeStyle = p.color;
-                            ctx.globalAlpha = Math.min(1, (1000 - p.z) / 400);
-                            ctx.lineWidth = p.size * scale * 0.65;
+                            ctx.globalAlpha = Math.min(1, (900 - p.z) / 350);
+                            ctx.lineWidth = p.size * scale * 0.6;
                             ctx.stroke();
                         });
 
@@ -992,6 +1032,7 @@
 
                 function startAeIntroVideo() {
                     stopAeCanvasEngine();
+                    applySavedAboutSrvImagesToDom();
 
                     const introEl = document.getElementById('hicon-ae-intro');
                     const editorialEl = document.getElementById('hicon-editorial-stage');
@@ -1002,8 +1043,8 @@
                     editorialEl.classList.add('hidden');
                     introEl.classList.remove('hidden', 'ae-shutter-open');
 
-                    // Reset các lớp animation CSS 3D
-                    ['.ae-camera-rig', '.ae-hud-node-1', '.ae-hud-node-2', '.ae-hud-node-3', '.ae-logo-3d-stage', '.ae-logo-path-brown', '.ae-logo-path-gold', '.ae-lens-flare', '.ae-kinetic-title'].forEach(sel => {
+                    // Khởi động lại các lớp animation mượt
+                    ['.ae-camera-rig', '.ae-logo-3d-stage', '.ae-logo-path-brown', '.ae-logo-path-gold', '.ae-lens-flare', '.ae-kinetic-title'].forEach(sel => {
                         introEl.querySelectorAll(sel).forEach(el => {
                             const cls = sel.substring(1);
                             el.classList.remove(cls);
@@ -1016,21 +1057,22 @@
                         progEl.style.transition = 'none';
                         progEl.style.width = '0%';
                         setTimeout(() => {
-                            progEl.style.transition = 'width 6.8s linear';
+                            progEl.style.transition = 'width 3.8s linear';
                             progEl.style.width = '100%';
-                        }, 50);
+                        }, 40);
                     }
 
                     runAeCanvas3DEngine();
 
-                    // Tự động mở màn trập sang Giai đoạn 2 sau 6.8 giây
+                    // Tự động chuyển sang Giai đoạn 2 sau 3.8 giây
                     aeIntroTimeout = setTimeout(() => {
                         endAeIntroAndShowEditorial();
-                    }, 6800);
+                    }, 3800);
                 }
 
                 function endAeIntroAndShowEditorial() {
                     stopAeCanvasEngine();
+                    applySavedAboutSrvImagesToDom();
                     const introEl = document.getElementById('hicon-ae-intro');
                     const editorialEl = document.getElementById('hicon-editorial-stage');
                     if (!introEl || !editorialEl) return;
@@ -1040,7 +1082,7 @@
                         introEl.classList.add('hidden');
                         editorialEl.classList.remove('hidden');
                         window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }, 450);
+                    }, 380);
                 }
 
                 function replayAeIntroVideo() {
@@ -1048,8 +1090,9 @@
                     startAeIntroVideo();
                 }
 
-                // Tự động chạy khi khách hàng bấm vào mục GIỚI THIỆU
+                // Tự động tải ảnh 07 lĩnh vực đã lưu và kích hoạt khi bấm vào tab GIỚI THIỆU
                 (function observeAboutTabActivation() {
+                    applySavedAboutSrvImagesToDom();
                     const sec = document.getElementById('section-about');
                     if (!sec) return;
                     let wasHidden = sec.classList.contains('hidden');
