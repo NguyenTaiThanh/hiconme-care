@@ -401,7 +401,7 @@
             </div>
         </div>
 
-    <!-- ==================== SECTION 2: GIỚI THIỆU (INTRO RÚT GỌN 2.4S + 07 LĨNH VỰC ĐỔI ẢNH) ==================== -->
+  <!-- ==================== SECTION 2: GIỚI THIỆU (INTRO 2.4S HOÀN TOÀN TỰ ĐỘNG - KHÔNG VƯỚNG NÚT) ==================== -->
         <div id="section-about" class="page-section hidden bg-slate-950 relative overflow-hidden">
             
             <style>
@@ -498,7 +498,7 @@
             <input type="file" id="about-real-photo-input" accept="image/*" class="hidden" onchange="handleAboutRealPhotoUpload(event)">
 
             <!-- ======================================================================================== -->
-            <!-- GIAI ĐOẠN 1: INTRO TỐC ĐỘ CAO 2.4 GIÂY (SIÊU NHANH, SIÊU MƯỢT)                             -->
+            <!-- GIAI ĐOẠN 1: INTRO TỰ ĐỘNG 2.4 GIÂY (HOÀN TOÀN SẠCH SẼ, KHÔNG CÓ NÚT THỪA)                 -->
             <!-- ======================================================================================== -->
             <div id="hicon-ae-intro" class="relative h-[82vh] min-h-[500px] w-full bg-slate-950 overflow-hidden select-none flex items-center justify-center">
                 
@@ -552,14 +552,7 @@
 
                 </div>
 
-                <div class="absolute top-5 right-5 z-40">
-                    <button type="button" onclick="endAeIntroAndShowEditorial()" class="btn-interactive bg-slate-900/80 hover:bg-amber-500 hover:text-brand-dark text-white border border-white/25 backdrop-blur-md px-4 py-2 rounded-full text-xs font-extrabold flex items-center shadow-xl">
-                        <span>Xem Hồ Sơ Ngay</span>
-                        <i class="fas fa-arrow-right ml-2"></i>
-                    </button>
-                </div>
-
-                <!-- Thanh thời gian chạy 2.4 giây -->
+                <!-- Thanh thời gian chạy 2.4 giây ở đáy -->
                 <div class="absolute bottom-0 inset-x-0 h-1 bg-white/10 z-40">
                     <div id="ae-intro-progress" class="h-full bg-gradient-to-r from-cyan-400 via-amber-400 to-emerald-400" style="width: 0%; transition: width 2.4s linear;"></div>
                 </div>
@@ -575,7 +568,7 @@
                     <!-- PHẦN 1: THƯ NGỎ -->
                     <div class="stage2-anim-1 bg-white rounded-3xl shadow-xl border border-gray-200 overflow-hidden">
                         
-                        <div class="bg-gradient-to-r from-brand-navy via-slate-900 to-brand-blue px-6 py-5 sm:px-10 sm:py-6 flex flex-wrap items-center justify-between gap-4">
+                        <div class="bg-gradient-to-r from-brand-navy via-slate-900 to-brand-blue px-6 py-5 sm:px-10 sm:py-6 flex items-center justify-between gap-4">
                             <div class="flex items-center space-x-4">
                                 <div class="bg-white px-3.5 py-2 rounded-xl shadow-md flex items-center shrink-0 border border-amber-400">
                                     <svg class="w-9 h-9 mr-2.5" viewBox="0 0 100 100" fill="none">
@@ -598,10 +591,6 @@
                                     </h2>
                                 </div>
                             </div>
-
-                            <button type="button" onclick="replayAeIntroVideo()" class="btn-interactive bg-amber-500 hover:bg-amber-400 text-brand-dark px-4 py-2 rounded-xl text-xs font-extrabold flex items-center shadow-lg">
-                                <i class="fas fa-play-circle mr-1.5 text-sm"></i> Xem Lại Intro 3D
-                            </button>
                         </div>
 
                         <div class="p-6 sm:p-10 lg:p-12">
@@ -874,7 +863,7 @@
                 </div>
             </div>
 
-            <!-- ==================== ENGINE JAVASCRIPT: INTRO 2.4S + ĐỔI ẢNH 07 LĨNH VỰC ==================== -->
+            <!-- ==================== SCRIPT ĐIỀU KHIỂN: INTRO 2.4S TỰ ĐỘNG ==================== -->
             <script>
                 let aeIntroTimeout = null;
                 let aeCanvasAnimId = null;
@@ -950,12 +939,12 @@
                     let height = canvas.height = canvas.offsetHeight || 600;
 
                     const particles = [];
-                    const count = 50;
+                    const count = 40;
                     for (let i = 0; i < count; i++) {
                         particles.push({
-                            x: (Math.random() - 0.5) * width * 1.4,
-                            y: (Math.random() - 0.5) * height * 1.4,
-                            z: Math.random() * 800 + 60,
+                            x: (Math.random() - 0.5) * width * 1.3,
+                            y: (Math.random() - 0.5) * height * 1.3,
+                            z: Math.random() * 700 + 50,
                             color: i % 3 === 0 ? '#f59e0b' : (i % 3 === 1 ? '#00f2fe' : '#ef4444'),
                             size: Math.random() * 2 + 1
                         });
@@ -970,28 +959,28 @@
                         const cx = width / 2;
                         const cy = height / 2;
 
-                        if (elapsed > 0.4 && elapsed < 1.8) {
-                            const waveProgress = (elapsed - 0.4) / 1.4;
-                            const radius = waveProgress * Math.max(width, height) * 0.45;
+                        if (elapsed > 0.3 && elapsed < 1.4) {
+                            const waveProgress = (elapsed - 0.3) / 1.1;
+                            const radius = waveProgress * Math.max(width, height) * 0.4;
                             ctx.beginPath();
                             ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-                            ctx.strokeStyle = `rgba(245, 158, 11, ${Math.max(0, 0.5 - waveProgress * 0.5)})`;
-                            ctx.lineWidth = 2.5;
+                            ctx.strokeStyle = `rgba(245, 158, 11, ${Math.max(0, 0.45 - waveProgress * 0.45)})`;
+                            ctx.lineWidth = 2;
                             ctx.stroke();
                         }
 
                         particles.forEach(p => {
-                            p.z -= 14;
+                            p.z -= 16;
                             if (p.z <= 15) {
-                                p.z = 800;
-                                p.x = (Math.random() - 0.5) * width * 1.4;
-                                p.y = (Math.random() - 0.5) * height * 1.4;
+                                p.z = 700;
+                                p.x = (Math.random() - 0.5) * width * 1.3;
+                                p.y = (Math.random() - 0.5) * height * 1.3;
                             }
 
-                            const scale = 450 / p.z;
+                            const scale = 400 / p.z;
                             const sx = cx + p.x * scale;
                             const sy = cy + p.y * scale;
-                            const prevScale = 450 / (p.z + 22);
+                            const prevScale = 400 / (p.z + 20);
                             const px = cx + p.x * prevScale;
                             const py = cy + p.y * prevScale;
 
@@ -999,8 +988,8 @@
                             ctx.moveTo(px, py);
                             ctx.lineTo(sx, sy);
                             ctx.strokeStyle = p.color;
-                            ctx.globalAlpha = Math.min(1, (800 - p.z) / 300);
-                            ctx.lineWidth = p.size * scale * 0.55;
+                            ctx.globalAlpha = Math.min(1, (700 - p.z) / 280);
+                            ctx.lineWidth = p.size * scale * 0.5;
                             ctx.stroke();
                         });
 
@@ -1039,7 +1028,7 @@
                         setTimeout(() => {
                             progEl.style.transition = 'width 2.4s linear';
                             progEl.style.width = '100%';
-                        }, 30);
+                        }, 25);
                     }
 
                     runAeCanvas3DEngine();
@@ -1062,12 +1051,7 @@
                         introEl.classList.add('hidden');
                         editorialEl.classList.remove('hidden');
                         window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }, 320);
-                }
-
-                function replayAeIntroVideo() {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                    startAeIntroVideo();
+                    }, 300);
                 }
 
                 (function observeAboutTabActivation() {
@@ -1093,7 +1077,6 @@
                 })();
             </script>
         </div>
-
         <!-- ==================== SECTION 3: DỊCH VỤ (ĐỘNG 100%: ẢNH FULL KHUNG & THÊM FORM MẪU) ==================== -->
         <div id="section-services" class="page-section hidden py-12 bg-gray-50">
             <div class="max-w-7xl mx-auto px-4">
