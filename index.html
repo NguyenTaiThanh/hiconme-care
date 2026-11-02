@@ -401,7 +401,7 @@
             </div>
         </div>
 
-  <!-- ==================== SECTION 2: GIỚI THIỆU (INTRO 2.4S HOÀN TOÀN TỰ ĐỘNG - KHÔNG VƯỚNG NÚT) ==================== -->
+  <!-- ==================== SECTION 2: GIỚI THIỆU (ĐÃ XÓA ICON LỖI [?] & KẾT NỐI ĐỔI ẢNH 07 LĨNH VỰC) ==================== -->
         <div id="section-about" class="page-section hidden bg-slate-950 relative overflow-hidden">
             
             <style>
@@ -415,11 +415,15 @@
                     pointer-events: none;
                 }
 
+                /* Nền CSS thuần + Gradient (Loại bỏ hoàn toàn thẻ <img> gây lỗi icon [?] trên điện thoại) */
                 @keyframes aeCameraFastZoom {
                     0% { transform: scale3d(1.12, 1.12, 1); }
                     100% { transform: scale3d(1.0, 1.0, 1); }
                 }
                 .ae-camera-rig {
+                    background: 
+                        radial-gradient(circle at 50% 42%, rgba(19, 84, 138, 0.45) 0%, rgba(15, 43, 72, 0.85) 55%, #020617 100%),
+                        linear-gradient(135deg, #020617 0%, #0f2b48 50%, #020617 100%);
                     animation: aeCameraFastZoom 2.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
                     will-change: transform;
                 }
@@ -494,21 +498,15 @@
                 }
             </style>
 
-            <!-- Input ẩn để đổi ảnh 07 lĩnh vực -->
-            <input type="file" id="about-real-photo-input" accept="image/*" class="hidden" onchange="handleAboutRealPhotoUpload(event)">
-
             <!-- ======================================================================================== -->
-            <!-- GIAI ĐOẠN 1: INTRO TỰ ĐỘNG 2.4 GIÂY (HOÀN TOÀN SẠCH SẼ, KHÔNG CÓ NÚT THỪA)                 -->
+            <!-- GIAI ĐOẠN 1: INTRO TỰ ĐỘNG 2.4 GIÂY (KHÔNG DÙNG THẺ IMG NỀN -> KHÔNG BAO GIỜ LỖI [?])     -->
             <!-- ======================================================================================== -->
             <div id="hicon-ae-intro" class="relative h-[82vh] min-h-[500px] w-full bg-slate-950 overflow-hidden select-none flex items-center justify-center">
                 
-                <div class="absolute inset-0 ae-camera-rig">
-                    <img src="https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=1800&auto=format&fit=crop" 
-                         alt="HICON M&E Industrial Space" 
-                         class="w-full h-full object-cover opacity-40">
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-slate-950/85"></div>
-                </div>
+                <!-- Lớp nền Gradient kỹ thuật số sạch tuyệt đối trên cả iOS & Android -->
+                <div class="absolute inset-0 ae-camera-rig"></div>
 
+                <!-- Lớp đồ họa Hạt Năng Lượng & Vòng Sóng Xung Kích 3D -->
                 <canvas id="hicon-ae-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-10"></canvas>
 
                 <div class="relative z-30 flex flex-col items-center justify-center px-4 text-center max-w-4xl mx-auto">
@@ -560,7 +558,7 @@
 
 
             <!-- ======================================================================================== -->
-            <!-- GIAI ĐOẠN 2: NỘI DUNG ĐỌC CHI TIẾT (CHUẨN 100% VĂN BẢN + 07 LĨNH VỰC ĐỔI ẢNH)               -->
+            <!-- GIAI ĐOẠN 2: NỘI DUNG ĐỌC CHI TIẾT (ĐỔI ẢNH 07 LĨNH VỰC HOẠT ĐỘNG 100%)                   -->
             <!-- ======================================================================================== -->
             <div id="hicon-editorial-stage" class="hidden bg-slate-50 py-12 sm:py-16">
                 <div class="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
@@ -643,7 +641,7 @@
                         </div>
                     </div>
 
-                    <!-- PHẦN 2: 07 LĨNH VỰC TRỌNG ĐIỂM -->
+                    <!-- PHẦN 2: 07 LĨNH VỰC TRỌNG ĐIỂM (BẤM ĐỔI ẢNH TRỰC TIẾP TRONG CHẾ ĐỘ SỬA) -->
                     <div class="stage2-anim-2 space-y-6">
                         <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b-2 border-gray-200 pb-4">
                             <div>
@@ -662,10 +660,10 @@
                             <!-- 01 -->
                             <div class="service-interactive-card bg-white rounded-2xl border border-gray-200 hover:border-amber-400 overflow-hidden shadow-md flex flex-col justify-between group">
                                 <div class="cms-editable-img-box h-44 bg-slate-900 relative overflow-hidden">
-                                    <img id="about-srv-img-1" src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=900&auto=format&fit=crop" onclick="if(isCmsEditMode) openPhotoChangeModal('ABOUT_SRV:1')" class="srv-card-img absolute inset-0 w-full h-full object-cover transition-transform duration-500">
+                                    <img id="about-srv-img-1" src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=900&auto=format&fit=crop" onerror="this.style.opacity='0'" onclick="if(isCmsEditMode) openAboutSrvPhotoModal(1)" class="srv-card-img absolute inset-0 w-full h-full object-cover transition-transform duration-500">
                                     <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/85 via-brand-navy/20 to-transparent pointer-events-none"></div>
                                     <span class="absolute top-3 left-3 bg-amber-500 text-brand-dark font-black text-xs px-2.5 py-1 rounded-lg shadow">01</span>
-                                    <button type="button" onclick="openPhotoChangeModal('ABOUT_SRV:1')" class="cms-only-btn absolute top-2.5 right-2.5 bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition items-center shadow-lg z-20 cursor-pointer">
+                                    <button type="button" onclick="openAboutSrvPhotoModal(1)" class="cms-only-btn absolute top-2.5 right-2.5 bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition items-center shadow-lg z-20 cursor-pointer">
                                         <i class="fas fa-camera mr-1.5 text-amber-400"></i> Đổi ảnh
                                     </button>
                                     <div class="absolute bottom-3 left-3 w-10 h-10 rounded-xl bg-amber-500 text-brand-dark flex items-center justify-center font-bold text-base shadow-md">
@@ -682,10 +680,10 @@
                             <!-- 02 -->
                             <div class="service-interactive-card bg-white rounded-2xl border border-gray-200 hover:border-red-400 overflow-hidden shadow-md flex flex-col justify-between group">
                                 <div class="cms-editable-img-box h-44 bg-slate-900 relative overflow-hidden">
-                                    <img id="about-srv-img-2" src="https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?q=80&w=900&auto=format&fit=crop" onclick="if(isCmsEditMode) openPhotoChangeModal('ABOUT_SRV:2')" class="srv-card-img absolute inset-0 w-full h-full object-cover transition-transform duration-500">
+                                    <img id="about-srv-img-2" src="https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?q=80&w=900&auto=format&fit=crop" onerror="this.style.opacity='0'" onclick="if(isCmsEditMode) openAboutSrvPhotoModal(2)" class="srv-card-img absolute inset-0 w-full h-full object-cover transition-transform duration-500">
                                     <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/85 via-brand-navy/20 to-transparent pointer-events-none"></div>
                                     <span class="absolute top-3 left-3 bg-red-600 text-white font-black text-xs px-2.5 py-1 rounded-lg shadow">02</span>
-                                    <button type="button" onclick="openPhotoChangeModal('ABOUT_SRV:2')" class="cms-only-btn absolute top-2.5 right-2.5 bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition items-center shadow-lg z-20 cursor-pointer">
+                                    <button type="button" onclick="openAboutSrvPhotoModal(2)" class="cms-only-btn absolute top-2.5 right-2.5 bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition items-center shadow-lg z-20 cursor-pointer">
                                         <i class="fas fa-camera mr-1.5 text-amber-400"></i> Đổi ảnh
                                     </button>
                                     <div class="absolute bottom-3 left-3 w-10 h-10 rounded-xl bg-red-500 text-white flex items-center justify-center font-bold text-base shadow-md">
@@ -702,10 +700,10 @@
                             <!-- 03 -->
                             <div class="service-interactive-card bg-white rounded-2xl border border-gray-200 hover:border-cyan-400 overflow-hidden shadow-md flex flex-col justify-between group">
                                 <div class="cms-editable-img-box h-44 bg-slate-900 relative overflow-hidden">
-                                    <img id="about-srv-img-3" src="https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=900&auto=format&fit=crop" onclick="if(isCmsEditMode) openPhotoChangeModal('ABOUT_SRV:3')" class="srv-card-img absolute inset-0 w-full h-full object-cover transition-transform duration-500">
+                                    <img id="about-srv-img-3" src="https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=900&auto=format&fit=crop" onerror="this.style.opacity='0'" onclick="if(isCmsEditMode) openAboutSrvPhotoModal(3)" class="srv-card-img absolute inset-0 w-full h-full object-cover transition-transform duration-500">
                                     <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/85 via-brand-navy/20 to-transparent pointer-events-none"></div>
                                     <span class="absolute top-3 left-3 bg-brand-accent text-brand-dark font-black text-xs px-2.5 py-1 rounded-lg shadow">03</span>
-                                    <button type="button" onclick="openPhotoChangeModal('ABOUT_SRV:3')" class="cms-only-btn absolute top-2.5 right-2.5 bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition items-center shadow-lg z-20 cursor-pointer">
+                                    <button type="button" onclick="openAboutSrvPhotoModal(3)" class="cms-only-btn absolute top-2.5 right-2.5 bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition items-center shadow-lg z-20 cursor-pointer">
                                         <i class="fas fa-camera mr-1.5 text-amber-400"></i> Đổi ảnh
                                     </button>
                                     <div class="absolute bottom-3 left-3 w-10 h-10 rounded-xl bg-cyan-400 text-brand-dark flex items-center justify-center font-bold text-base shadow-md">
@@ -722,10 +720,10 @@
                             <!-- 04 -->
                             <div class="service-interactive-card bg-white rounded-2xl border border-gray-200 hover:border-blue-400 overflow-hidden shadow-md flex flex-col justify-between group">
                                 <div class="cms-editable-img-box h-44 bg-slate-900 relative overflow-hidden">
-                                    <img id="about-srv-img-4" src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=900&auto=format&fit=crop" onclick="if(isCmsEditMode) openPhotoChangeModal('ABOUT_SRV:4')" class="srv-card-img absolute inset-0 w-full h-full object-cover transition-transform duration-500">
+                                    <img id="about-srv-img-4" src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=900&auto=format&fit=crop" onerror="this.style.opacity='0'" onclick="if(isCmsEditMode) openAboutSrvPhotoModal(4)" class="srv-card-img absolute inset-0 w-full h-full object-cover transition-transform duration-500">
                                     <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/85 via-brand-navy/20 to-transparent pointer-events-none"></div>
                                     <span class="absolute top-3 left-3 bg-blue-500 text-white font-black text-xs px-2.5 py-1 rounded-lg shadow">04</span>
-                                    <button type="button" onclick="openPhotoChangeModal('ABOUT_SRV:4')" class="cms-only-btn absolute top-2.5 right-2.5 bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition items-center shadow-lg z-20 cursor-pointer">
+                                    <button type="button" onclick="openAboutSrvPhotoModal(4)" class="cms-only-btn absolute top-2.5 right-2.5 bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition items-center shadow-lg z-20 cursor-pointer">
                                         <i class="fas fa-camera mr-1.5 text-amber-400"></i> Đổi ảnh
                                     </button>
                                     <div class="absolute bottom-3 left-3 w-10 h-10 rounded-xl bg-blue-400 text-brand-dark flex items-center justify-center font-bold text-base shadow-md">
@@ -742,10 +740,10 @@
                             <!-- 05 -->
                             <div class="service-interactive-card bg-white rounded-2xl border border-gray-200 hover:border-emerald-400 overflow-hidden shadow-md flex flex-col justify-between group">
                                 <div class="cms-editable-img-box h-44 bg-slate-900 relative overflow-hidden">
-                                    <img id="about-srv-img-5" src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=900&auto=format&fit=crop" onclick="if(isCmsEditMode) openPhotoChangeModal('ABOUT_SRV:5')" class="srv-card-img absolute inset-0 w-full h-full object-cover transition-transform duration-500">
+                                    <img id="about-srv-img-5" src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=900&auto=format&fit=crop" onerror="this.style.opacity='0'" onclick="if(isCmsEditMode) openAboutSrvPhotoModal(5)" class="srv-card-img absolute inset-0 w-full h-full object-cover transition-transform duration-500">
                                     <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/85 via-brand-navy/20 to-transparent pointer-events-none"></div>
                                     <span class="absolute top-3 left-3 bg-emerald-500 text-brand-dark font-black text-xs px-2.5 py-1 rounded-lg shadow">05</span>
-                                    <button type="button" onclick="openPhotoChangeModal('ABOUT_SRV:5')" class="cms-only-btn absolute top-2.5 right-2.5 bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition items-center shadow-lg z-20 cursor-pointer">
+                                    <button type="button" onclick="openAboutSrvPhotoModal(5)" class="cms-only-btn absolute top-2.5 right-2.5 bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition items-center shadow-lg z-20 cursor-pointer">
                                         <i class="fas fa-camera mr-1.5 text-amber-400"></i> Đổi ảnh
                                     </button>
                                     <div class="absolute bottom-3 left-3 w-10 h-10 rounded-xl bg-emerald-400 text-brand-dark flex items-center justify-center font-bold text-base shadow-md">
@@ -762,10 +760,10 @@
                             <!-- 06 -->
                             <div class="service-interactive-card bg-white rounded-2xl border border-gray-200 hover:border-sky-400 overflow-hidden shadow-md flex flex-col justify-between group">
                                 <div class="cms-editable-img-box h-44 bg-slate-900 relative overflow-hidden">
-                                    <img id="about-srv-img-6" src="https://images.unsplash.com/photo-1513828583688-c52646db42da?q=80&w=900&auto=format&fit=crop" onclick="if(isCmsEditMode) openPhotoChangeModal('ABOUT_SRV:6')" class="srv-card-img absolute inset-0 w-full h-full object-cover transition-transform duration-500">
+                                    <img id="about-srv-img-6" src="https://images.unsplash.com/photo-1513828583688-c52646db42da?q=80&w=900&auto=format&fit=crop" onerror="this.style.opacity='0'" onclick="if(isCmsEditMode) openAboutSrvPhotoModal(6)" class="srv-card-img absolute inset-0 w-full h-full object-cover transition-transform duration-500">
                                     <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/85 via-brand-navy/20 to-transparent pointer-events-none"></div>
                                     <span class="absolute top-3 left-3 bg-sky-500 text-brand-dark font-black text-xs px-2.5 py-1 rounded-lg shadow">06</span>
-                                    <button type="button" onclick="openPhotoChangeModal('ABOUT_SRV:6')" class="cms-only-btn absolute top-2.5 right-2.5 bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition items-center shadow-lg z-20 cursor-pointer">
+                                    <button type="button" onclick="openAboutSrvPhotoModal(6)" class="cms-only-btn absolute top-2.5 right-2.5 bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition items-center shadow-lg z-20 cursor-pointer">
                                         <i class="fas fa-camera mr-1.5 text-amber-400"></i> Đổi ảnh
                                     </button>
                                     <div class="absolute bottom-3 left-3 w-10 h-10 rounded-xl bg-sky-400 text-brand-dark flex items-center justify-center font-bold text-base shadow-md">
@@ -782,10 +780,10 @@
                             <!-- 07 -->
                             <div class="service-interactive-card bg-white rounded-2xl border border-gray-200 hover:border-purple-400 md:col-span-2 lg:col-span-3 overflow-hidden shadow-md flex flex-col sm:flex-row items-stretch group">
                                 <div class="cms-editable-img-box sm:w-1/3 h-44 sm:h-auto min-h-[160px] bg-slate-900 relative overflow-hidden shrink-0">
-                                    <img id="about-srv-img-7" src="https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=900&auto=format&fit=crop" onclick="if(isCmsEditMode) openPhotoChangeModal('ABOUT_SRV:7')" class="srv-card-img absolute inset-0 w-full h-full object-cover transition-transform duration-500">
+                                    <img id="about-srv-img-7" src="https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=900&auto=format&fit=crop" onerror="this.style.opacity='0'" onclick="if(isCmsEditMode) openAboutSrvPhotoModal(7)" class="srv-card-img absolute inset-0 w-full h-full object-cover transition-transform duration-500">
                                     <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/85 via-brand-navy/20 to-transparent pointer-events-none"></div>
                                     <span class="absolute top-3 left-3 bg-purple-500 text-white font-black text-xs px-2.5 py-1 rounded-lg shadow">07</span>
-                                    <button type="button" onclick="openPhotoChangeModal('ABOUT_SRV:7')" class="cms-only-btn absolute top-2.5 right-2.5 bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition items-center shadow-lg z-20 cursor-pointer">
+                                    <button type="button" onclick="openAboutSrvPhotoModal(7)" class="cms-only-btn absolute top-2.5 right-2.5 bg-black/80 hover:bg-amber-500 hover:text-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-xl backdrop-blur-md transition items-center shadow-lg z-20 cursor-pointer">
                                         <i class="fas fa-camera mr-1.5 text-amber-400"></i> Đổi ảnh
                                     </button>
                                 </div>
@@ -863,7 +861,7 @@
                 </div>
             </div>
 
-            <!-- ==================== SCRIPT ĐIỀU KHIỂN: INTRO 2.4S TỰ ĐỘNG ==================== -->
+            <!-- ==================== SCRIPT ĐIỀU KHIỂN INTRO 2.4S & ĐỔI ẢNH 07 LĨNH VỰC ==================== -->
             <script>
                 let aeIntroTimeout = null;
                 let aeCanvasAnimId = null;
@@ -881,44 +879,51 @@
                     for (let i = 1; i <= 7; i++) {
                         if (map[i]) {
                             const imgEl = document.getElementById('about-srv-img-' + i);
-                            if (imgEl) imgEl.src = map[i];
+                            if (imgEl) {
+                                imgEl.style.opacity = '1';
+                                imgEl.src = map[i];
+                            }
                         }
                     }
                 }
 
-                (function hookAboutSrvPhotoChanger() {
-                    const origOpenModal = window.openPhotoChangeModal;
-                    if (typeof origOpenModal === 'function' && !window._aboutSrvHooked) {
-                        window._aboutSrvHooked = true;
-                        window.openPhotoChangeModal = function(targetKey) {
-                            origOpenModal(targetKey);
-                            if (targetKey && targetKey.startsWith('ABOUT_SRV:')) {
-                                const idx = targetKey.split(':')[1];
-                                const labelEl = document.getElementById('photo-change-target-label');
-                                const srvTxtEl = document.querySelector(`[data-cms-id="about-srv-${idx}"]`);
-                                if (labelEl) {
-                                    labelEl.innerText = `Lĩnh vực trọng điểm 0${idx}: ${srvTxtEl ? srvTxtEl.innerText.trim() : ''}`;
-                                }
-                            }
-                        };
+                // Kết nối trực tiếp vào Hộp thoại Đổi Ảnh của hệ thống (Đảm bảo hoạt động 100% bất kể thứ tự tải script)
+                function ensureAboutSrvPhotoHooksInstalled() {
+                    if (window._aboutSrvPhotoHookInstalled) return;
+                    if (typeof window.applyNewPhotoToTarget !== 'function') return;
 
-                        const origApplyPhoto = window.applyNewPhotoToTarget;
-                        window.applyNewPhotoToTarget = async function(targetKey, imgData) {
-                            if (targetKey && targetKey.startsWith('ABOUT_SRV:')) {
-                                const idx = targetKey.split(':')[1];
-                                const map = getSavedAboutSrvImages();
-                                map[idx] = imgData;
-                                localStorage.setItem('hicon_about_srv_imgs', JSON.stringify(map));
-                                applySavedAboutSrvImagesToDom();
-                                showTopToast(`Đã cập nhật ảnh Lĩnh vực 0${idx}! Bấm "Lưu & Đồng Bộ Tất Cả" khi hoàn tất.`, false);
-                                return;
-                            }
-                            if (typeof origApplyPhoto === 'function') {
-                                return await origApplyPhoto(targetKey, imgData);
-                            }
-                        };
+                    window._aboutSrvPhotoHookInstalled = true;
+                    const origApply = window.applyNewPhotoToTarget;
+                    window.applyNewPhotoToTarget = async function(targetKey, imgData) {
+                        if (targetKey && targetKey.startsWith('ABOUT_SRV:')) {
+                            const idx = targetKey.split(':')[1];
+                            const map = getSavedAboutSrvImages();
+                            map[idx] = imgData;
+                            localStorage.setItem('hicon_about_srv_imgs', JSON.stringify(map));
+                            applySavedAboutSrvImagesToDom();
+                            showTopToast(`Đã cập nhật ảnh Lĩnh vực 0${idx}! Bấm "Lưu & Đồng Bộ Tất Cả" để lưu lên Cloud.`, false);
+                            return;
+                        }
+                        return await origApply(targetKey, imgData);
+                    };
+                }
+
+                // Hàm mở hộp thoại Đổi ảnh cho 07 Lĩnh vực trọng điểm
+                function openAboutSrvPhotoModal(slotIdx) {
+                    if (typeof isCmsEditMode !== 'undefined' && !isCmsEditMode) return;
+                    ensureAboutSrvPhotoHooksInstalled();
+
+                    currentPhotoChangeTarget = 'ABOUT_SRV:' + slotIdx;
+                    const labelEl = document.getElementById('photo-change-target-label');
+                    const urlInput = document.getElementById('photo-change-url-input');
+                    const srvTxtEl = document.querySelector(`[data-cms-id="about-srv-${slotIdx}"]`);
+
+                    if (urlInput) urlInput.value = '';
+                    if (labelEl) {
+                        labelEl.innerText = `Lĩnh vực 0${slotIdx}: ${srvTxtEl ? srvTxtEl.innerText.trim() : ''}`;
                     }
-                })();
+                    document.getElementById('photo-change-modal').classList.remove('hidden');
+                }
 
                 function stopAeCanvasEngine() {
                     if (aeCanvasAnimId) {
@@ -1033,7 +1038,6 @@
 
                     runAeCanvas3DEngine();
 
-                    // Tự động chuyển sang trang đọc chi tiết sau 2.4 giây
                     aeIntroTimeout = setTimeout(() => {
                         endAeIntroAndShowEditorial();
                     }, 2400);
@@ -1055,7 +1059,23 @@
                 }
 
                 (function observeAboutTabActivation() {
-                    applySavedAboutSrvImagesToDom();
+                    window.addEventListener('load', () => {
+                        ensureAboutSrvPhotoHooksInstalled();
+                        applySavedAboutSrvImagesToDom();
+                    });
+
+                    // Nếu người dùng bật chế độ "Sửa" khi đang ở màn hình Intro thì mở thẳng vào nội dung để đổi ảnh ngay
+                    const bodyObserver = new MutationObserver(() => {
+                        if (document.body.classList.contains('cms-edit-active')) {
+                            ensureAboutSrvPhotoHooksInstalled();
+                            const sec = document.getElementById('section-about');
+                            if (sec && !sec.classList.contains('hidden')) {
+                                endAeIntroAndShowEditorial();
+                            }
+                        }
+                    });
+                    bodyObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
                     const sec = document.getElementById('section-about');
                     if (!sec) return;
                     let wasHidden = sec.classList.contains('hidden');
@@ -1063,6 +1083,7 @@
                     const observer = new MutationObserver(() => {
                         const isNowHidden = sec.classList.contains('hidden');
                         if (wasHidden && !isNowHidden) {
+                            ensureAboutSrvPhotoHooksInstalled();
                             if (typeof isCmsEditMode !== 'undefined' && isCmsEditMode) {
                                 endAeIntroAndShowEditorial();
                             } else {
