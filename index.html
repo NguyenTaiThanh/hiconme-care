@@ -3277,69 +3277,9 @@ if (data.devices) {
             await applyNewPhotoToTarget(currentPhotoChangeTarget, url);
             closePhotoChangeModal();
         }
-/* ==================== HỆ THỐNG XỬ LÝ & ĐỒNG BỘ ẢNH ĐA NĂNG (GIỚI THIỆU & 07 LĨNH VỰC) ==================== --> */
-        function getSavedAboutSrvImages() {
-            const raw = localStorage.getItem('hicon_about_srv_imgs');
-            if (raw) {
-                try { return JSON.parse(raw); } catch (e) {}
-            }
-            return {};
-        }
 
-        function applySavedAboutSrvImagesToDom() {
-            const map = getSavedAboutSrvImages();
-            for (let i = 1; i <= 7; i++) {
-                if (map[i]) {
-                    const imgEl = document.getElementById('about-srv-img-' + i);
-                    if (imgEl) {
-                        imgEl.style.opacity = '1';
-                        imgEl.src = map[i];
-                    }
-                }
-            }
-        }
-
-        // Mở rộng hàm applyNewPhotoToTarget để lưu trữ và đẩy thẳng lên Firebase Cloud
-        const originalApplyPhotoToTarget = window.applyNewPhotoToTarget;
-        window.applyNewPhotoToTarget = async function(targetKey, imgData) {
-            if (targetKey && targetKey.startsWith('ABOUT_SRV:')) {
-                const idx = targetKey.split(':')[1];
-                const map = getSavedAboutSrvImages();
-                map[idx] = imgData;
-                localStorage.setItem('hicon_about_srv_imgs', JSON.stringify(map));
-                applySavedAboutSrvImagesToDom();
-                
-                // Đồng bộ ngay lập tức lên Cloud để các thiết bị khác (điện thoại) nhận được
-                await pushFullSystemToCloud();
-                closePhotoChangeModal();
-                showTopToast(`Đã cập nhật & đồng bộ ảnh Lĩnh vực 0${idx} lên Cloud thành công!`, false);
-                return;
-            }
-            if (typeof originalApplyPhotoToTarget === 'function') {
-                return await originalApplyPhotoToTarget(targetKey, imgData);
-            }
-        };
-
-        // Bổ sung đồng bộ ảnh Lĩnh vực vào gói payload đẩy lên Firebase Cloud
-        const originalPushToCloud = window.pushFullSystemToCloud;
-        if (typeof originalPushToCloud === 'function' && !window._cloudPushHooked) {
-            window._cloudPushHooked = true;
-            window.pushFullSystemToCloud = async function() {
-                // Lưu bổ sung map ảnh 07 lĩnh vực vào localStorage chung trước khi push
-                const res = await originalPushToCloud();
-                return res;
-            };
-        }
-
-        // Cập nhật lại hàm pull từ Cloud để tải về cả ảnh 07 lĩnh vực
-        const originalPullFromCloud = window.pullFromCloudInBackground;
-        if (typeof originalPullFromCloud === 'function') {
-            // Tự động áp dụng ảnh ngay khi khởi động
-            window.addEventListener('load', () => {
-                applySavedAboutSrvImagesToDom();
-            });
-        }
-        if (targetKey === 'LOGO') {
+        async function applyNewPhotoToTarget(targetKey, imgData) {
+            if (targetKey === 'LOGO') {
                 localStorage.setItem('hicon_company_logo', imgData);
                 loadSavedCompanyLogo();
             } else if (targetKey === 'HERO_BG') {
