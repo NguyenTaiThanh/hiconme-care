@@ -5248,40 +5248,41 @@ if (data.devices) {
         }
 
         // 5. Dựng Bảng Thông Tin Chung (Nhãn in đậm; dấu ":" và nội dung sau dấu ":" là chữ nét thường, giữ nguyên viết hoa chuẩn)
+       // 5. Dựng Bảng Thông Tin Chung (Không kẻ ô, dấu ":" kéo sát vào chữ chuẩn mẫu Excel)
         function renderExcelGeneralInfoRows(dev) {
             const dateVN = typeof formatDateVN === 'function' ? formatDateVN(dev.date) : (dev.date || '');
             const nextDateRaw = dev.nextDate || (typeof computeNextDateByMonths === 'function' ? computeNextDateByMonths(dev.date, 3) : '');
             const nextDateVN = typeof formatDateVN === 'function' ? formatDateVN(nextDateRaw) : (nextDateRaw || '');
 
             return `
-                <table class="excel-info-grid">
+                <table style="width: 100%; border-collapse: collapse; font-size: 12px; color: #000; margin-bottom: 12px; border: none !important;">
                     <tr>
-                        <td style="width: 20%; font-weight: 700;">Chủ đầu tư</td>
-                        <td style="width: 3%; text-align: center; font-weight: normal;">:</td>
-                        <td colspan="2" style="font-weight: normal;">${dev.client || 'Nhà máy Tesa Tape DEEP C Hải Phòng'}</td>
+                        <td style="width: 112px; font-weight: 700; padding: 2.5px 0; border: none !important;">Chủ đầu tư</td>
+                        <td style="width: 16px; text-align: left; font-weight: normal; padding: 2.5px 0; border: none !important;">:</td>
+                        <td colspan="2" style="font-weight: normal; padding: 2.5px 0; border: none !important;">${dev.client || 'Nhà máy Tesa Tape DEEP C Hải Phòng'}</td>
                     </tr>
                     <tr>
-                        <td style="font-weight: 700;">Dự án</td>
-                        <td style="text-align: center; font-weight: normal;">:</td>
-                        <td colspan="2" style="font-weight: normal;">${dev.client || 'Nhà máy Tesa Tape DEEP C Hải Phòng'}</td>
+                        <td style="font-weight: 700; padding: 2.5px 0; border: none !important;">Dự án</td>
+                        <td style="text-align: left; font-weight: normal; padding: 2.5px 0; border: none !important;">:</td>
+                        <td colspan="2" style="font-weight: normal; padding: 2.5px 0; border: none !important;">${dev.client || 'Nhà máy Tesa Tape DEEP C Hải Phòng'}</td>
                     </tr>
                     <tr>
-                        <td style="font-weight: 700;">Kỹ sư phụ trách</td>
-                        <td style="text-align: center; font-weight: normal;">:</td>
-                        <td style="width: 42%; font-weight: normal;">${dev.tech || ''}</td>
-                        <td style="width: 35%;"><strong style="font-weight: 700;">Mã thiết bị</strong><span style="font-weight: normal;"> : ${dev.code || ''}</span></td>
+                        <td style="font-weight: 700; padding: 2.5px 0; border: none !important;">Kỹ sư phụ trách</td>
+                        <td style="text-align: left; font-weight: normal; padding: 2.5px 0; border: none !important;">:</td>
+                        <td style="width: 44%; font-weight: normal; padding: 2.5px 0; border: none !important;">${dev.tech || ''}</td>
+                        <td style="padding: 2.5px 0; border: none !important;"><strong style="font-weight: 700;">Mã thiết bị</strong><span style="font-weight: normal;"> : ${dev.code || ''}</span></td>
                     </tr>
                     <tr>
-                        <td style="font-weight: 700;">Ngày thực hiện</td>
-                        <td style="text-align: center; font-weight: normal;">:</td>
-                        <td style="font-weight: normal;">${dateVN}</td>
-                        <td><strong style="font-weight: 700;">Bảo trì tiếp theo</strong><span style="font-weight: normal;"> : ${nextDateVN}</span></td>
+                        <td style="font-weight: 700; padding: 2.5px 0; border: none !important;">Ngày thực hiện</td>
+                        <td style="text-align: left; font-weight: normal; padding: 2.5px 0; border: none !important;">:</td>
+                        <td style="font-weight: normal; padding: 2.5px 0; border: none !important;">${dateVN}</td>
+                        <td style="padding: 2.5px 0; border: none !important;"><strong style="font-weight: 700;">Bảo trì tiếp theo</strong><span style="font-weight: normal;"> : ${nextDateVN}</span></td>
                     </tr>
                     <tr>
-                        <td style="font-weight: 700;">Đối tượng bảo trì</td>
-                        <td style="text-align: center; font-weight: normal;">:</td>
-                        <td style="font-weight: normal;">${dev.name || ''}</td>
-                        <td><strong style="font-weight: 700;">Vị trí</strong><span style="font-weight: normal;"> : ${dev.location || ''}</span></td>
+                        <td style="font-weight: 700; padding: 2.5px 0; border: none !important;">Đối tượng bảo trì</td>
+                        <td style="text-align: left; font-weight: normal; padding: 2.5px 0; border: none !important;">:</td>
+                        <td style="font-weight: normal; padding: 2.5px 0; border: none !important;">${dev.name || ''}</td>
+                        <td style="padding: 2.5px 0; border: none !important;"><strong style="font-weight: 700;">Vị trí</strong><span style="font-weight: normal;"> : ${dev.location || ''}</span></td>
                     </tr>
                 </table>
             `;
