@@ -5019,397 +5019,365 @@ if (data.devices) {
 
             pullFromCloudInBackground();
         };
-   /* ========================================================================================================= */
-        /* HỆ THỐNG XUẤT BÁO CÁO PDF 2 TRANG/THIẾT BỊ (CHUẨN FORM EXCEL HICON M&E) & XUẤT HÀNG LOẠT THEO CHỮ CÁI    */
+ /* ========================================================================================================= */
+        /* BỘ XUẤT BÁO CÁO CHUẨN BIỂU MẪU EXCEL 2 TRANG A4 (ĐỂ IN ĐÓNG QUYỂN & XUẤT PDF HÀNG LOẠT THEO CHỮ CÁI)      */
         /* ========================================================================================================= */
 
-        // 1. Tự động nạp thư viện html2pdf.js để tải thẳng file .pdf về máy tính / điện thoại
-        (function loadHtml2PdfLibrary() {
-            if (!document.getElementById('html2pdf-cdn-script')) {
+        // 1. Nạp thư viện html2pdf.js để hỗ trợ tải trực tiếp file .pdf về máy
+        (function loadHtml2PdfScript() {
+            if (!document.getElementById('html2pdf-lib')) {
                 const s = document.createElement('script');
-                s.id = 'html2pdf-cdn-script';
+                s.id = 'html2pdf-lib';
                 s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
                 document.head.appendChild(s);
             }
         })();
 
-        // 2. Thêm CSS chuẩn trang giấy A4 và bảng báo cáo Excel
-        (function injectExcelPdfStyles() {
+        // 2. CSS định dạng Biểu mẫu Excel A4 & ẨN TUYỆT ĐỐI 100% giao diện web khi In / Lưu PDF
+        (function injectStrictExcelPrintCss() {
+            const oldStyle = document.getElementById('hicon-excel-print-style');
+            if (oldStyle) oldStyle.remove();
+
             const style = document.createElement('style');
+            style.id = 'hicon-excel-print-style';
             style.innerHTML = `
-                .hicon-a4-page {
+                /* Định dạng chuẩn trang giấy A4 đóng quyển */
+                .excel-a4-page {
                     width: 210mm;
                     min-height: 296mm;
-                    max-height: 296mm;
-                    background: #ffffff;
-                    color: #000000;
+                    background: #ffffff !important;
+                    color: #000000 !important;
                     padding: 10mm 12mm;
                     box-sizing: border-box;
-                    font-family: 'Roboto', Arial, sans-serif;
+                    font-family: Arial, Helvetica, sans-serif;
                     position: relative;
                     display: flex;
                     flex-direction: column;
                     justify-content: space-between;
-                    box-shadow: 0 15px 35px rgba(0,0,0,0.45);
-                    overflow: hidden;
+                    margin: 0 auto 24px auto;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
                     page-break-after: always;
                     break-after: page;
                 }
-                .hicon-excel-table {
+                .excel-a4-page:last-child {
+                    page-break-after: auto;
+                    break-after: auto;
+                }
+
+                /* Bảng lưới thông tin đầu trang giống Excel */
+                .excel-info-grid {
                     width: 100%;
                     border-collapse: collapse;
-                    font-size: 11px;
+                    font-size: 12px;
                     color: #000;
+                    margin-bottom: 10px;
                 }
-                .hicon-excel-table th {
-                    background-color: #1f4e78 !important;
+                .excel-info-grid td {
+                    border: 1px solid #d4d4d4;
+                    padding: 4px 6px;
+                    vertical-align: middle;
+                }
+
+                /* Thanh tiêu đề xám đậm của bảng Excel */
+                .excel-gray-section {
+                    background-color: #bfbfbf !important;
+                    color: #000000 !important;
+                    font-weight: 700;
+                    font-size: 12px;
+                    text-transform: uppercase;
+                    padding: 6px 8px;
+                    border: 1px solid #000000;
+                    border-bottom: none;
+                    margin-top: 8px;
+                    -webkit-print-color-adjust: exact !important;
+                    print-color-adjust: exact !important;
+                }
+
+                /* Bảng dữ liệu kẻ khung đen đậm chuẩn Excel */
+                .excel-data-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    font-size: 11.5px;
+                    color: #000000;
+                }
+                .excel-data-table th {
+                    background-color: #2f5597 !important;
                     color: #ffffff !important;
                     font-weight: 700;
                     border: 1px solid #000000;
-                    padding: 6px 8px;
+                    padding: 6px 6px;
                     text-align: center;
-                    -webkit-print-color-adjust: exact;
-                    print-color-adjust: exact;
+                    -webkit-print-color-adjust: exact !important;
+                    print-color-adjust: exact !important;
                 }
-                .hicon-excel-table td {
+                .excel-data-table td {
                     border: 1px solid #000000;
-                    padding: 5px 8px;
+                    padding: 6px 8px;
                     vertical-align: middle;
+                    color: #000000;
                 }
-                .hicon-excel-sec-bar {
-                    background-color: #c0c0c0 !important;
-                    color: #000000 !important;
-                    font-weight: 800;
-                    font-size: 12px;
-                    text-transform: uppercase;
-                    padding: 6px 10px;
-                    border: 1px solid #000000;
-                    margin-top: 10px;
-                    -webkit-print-color-adjust: exact;
-                    print-color-adjust: exact;
-                }
+
                 @media (max-width: 820px) {
-                    #hicon-pdf-pages-wrapper {
-                        transform: scale(0.44);
+                    #excel-preview-pages-container {
+                        transform: scale(0.43);
                         transform-origin: top center;
                     }
                 }
+
+                /* KHI IN RA GIẤY HOẶC LƯU PDF: ẨN SẠCH 100% GIAO DIỆN TRANG WEB, CHỈ IN ĐÚNG TỜ EXCEL */
                 @media print {
-                    body * { visibility: hidden !important; }
-                    #hicon-pdf-print-container, #hicon-pdf-print-container * {
-                        visibility: visible !important;
+                    @page {
+                        size: A4 portrait;
+                        margin: 0mm !important;
                     }
-                    #hicon-pdf-print-container {
-                        position: absolute !important;
-                        left: 0 !important;
-                        top: 0 !important;
+                    html, body {
+                        background: #ffffff !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                    }
+                    /* Ẩn toàn bộ các thành phần giao diện web */
+                    body > *:not(#hicon-excel-print-mount) {
+                        display: none !important;
+                    }
+                    #hicon-excel-print-mount {
+                        display: block !important;
                         width: 210mm !important;
                         margin: 0 !important;
                         padding: 0 !important;
-                        background: #fff !important;
+                        background: #ffffff !important;
                     }
-                    .hicon-a4-page {
+                    .excel-a4-page {
                         box-shadow: none !important;
                         margin: 0 !important;
                         width: 210mm !important;
-                        height: 296mm !important;
+                        min-height: 296mm !important;
+                        max-height: 296mm !important;
+                        padding: 10mm 12mm !important;
+                        overflow: hidden !important;
                         page-break-after: always !important;
                         break-after: page !important;
                     }
-                    @page {
-                        size: A4 portrait;
-                        margin: 0mm;
+                    .excel-a4-page:last-child {
+                        page-break-after: auto !important;
+                        break-after: auto !important;
                     }
                 }
             `;
             document.head.appendChild(style);
         })();
 
-        let currentPdfExportDevices = [];
-        let currentPdfExportFilename = 'Bao_Cao_Bao_Tri_HICON.pdf';
-
-        // 3. Lấy danh sách thiết bị đang được lọc theo Chữ cái đầu tiên & Ô tìm kiếm
-        function getFilteredDevicesInModal() {
-            const db = getDeviceDatabase();
-            const devicesArray = Object.values(db);
-            const searchInput = document.getElementById('modal-search-input');
-            const searchQuery = searchInput ? searchInput.value.trim().toLowerCase() : '';
-
-            let filtered = devicesArray.filter(dev => {
-                const nameStr = (dev.name || '').toLowerCase();
-                const codeStr = (dev.code || '').toLowerCase();
-                const locStr = (dev.location || '').toLowerCase();
-                const matchesSearch = nameStr.includes(searchQuery) || codeStr.includes(searchQuery) || locStr.includes(searchQuery);
-
-                if (currentSelectedLetter === 'ALL') {
-                    return matchesSearch;
-                } else {
-                    const firstChar = (dev.name || dev.code || '').trim().toUpperCase().charAt(0);
-                    return matchesSearch && firstChar === currentSelectedLetter;
-                }
-            });
-
-            filtered.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-            return filtered;
-        }
-
-        // 4. Ghi đè hàm renderDeviceListModalContent để cập nhật nút Xuất PDF theo chữ cái đang chọn
-        renderDeviceListModalContent = function() {
-            const db = getDeviceDatabase();
-            const devicesArray = Object.values(db);
-
-            document.getElementById('modal-total-count').innerText = `Tổng số lượng: ${devicesArray.length} thiết bị`;
-
-            const letterCounts = {};
-            for (let char of "ABCDEFGHIJKLMNOPQRSTUVWXYZ0-9") { letterCounts[char] = 0; }
-
-            devicesArray.forEach(dev => {
-                const firstChar = (dev.name || dev.code || '').trim().toUpperCase().charAt(0);
-                if (letterCounts[firstChar] !== undefined) {
-                    letterCounts[firstChar]++;
-                } else {
-                    if (!letterCounts['#']) letterCounts['#'] = 0;
-                    letterCounts['#']++;
-                }
-            });
-
-            const filterContainer = document.getElementById('alphabet-filter-container');
-            filterContainer.innerHTML = '';
-
-            const allBtn = document.createElement('button');
-            allBtn.className = `px-2.5 py-1 rounded-lg text-xs font-bold transition ${currentSelectedLetter === 'ALL' ? 'bg-brand-navy text-white shadow-md' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'}`;
-            allBtn.innerHTML = `Tất cả (${devicesArray.length})`;
-            allBtn.onclick = () => { currentSelectedLetter = 'ALL'; renderDeviceListModalContent(); };
-            filterContainer.appendChild(allBtn);
-
-            for (let char of "ABCDEFGHIJKLMNOPQRSTUVWXYZ") {
-                const count = letterCounts[char] || 0;
-                const btn = document.createElement('button');
-                btn.className = `px-2 py-1 rounded-lg text-xs font-bold transition ${currentSelectedLetter === char ? 'bg-red-600 text-white shadow-md ring-2 ring-red-300' : (count > 0 ? 'bg-white text-brand-navy border border-cyan-200 hover:bg-cyan-50' : 'bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed')}`;
-                btn.innerHTML = `${char} (${count})`;
-                if (count > 0) {
-                    btn.onclick = () => { currentSelectedLetter = char; renderDeviceListModalContent(); };
-                } else {
-                    btn.disabled = true;
-                }
-                filterContainer.appendChild(btn);
+        // 3. Tự động tạo khung Modal Xem Trước Biểu Mẫu Excel & Vùng In Đóng Quyển
+        (function createExcelPreviewDom() {
+            if (!document.getElementById('hicon-excel-print-mount')) {
+                const printMount = document.createElement('div');
+                printMount.id = 'hicon-excel-print-mount';
+                printMount.className = 'hidden';
+                document.body.appendChild(printMount);
             }
 
-            const filtered = getFilteredDevicesInModal();
+            if (!document.getElementById('hicon-excel-preview-modal')) {
+                const modal = document.createElement('div');
+                modal.id = 'hicon-excel-preview-modal';
+                modal.className = 'fixed inset-0 z-[200] bg-slate-900/95 backdrop-blur-md hidden flex flex-col';
+                modal.innerHTML = `
+                    <div class="bg-brand-navy text-white px-4 py-3 sm:px-6 flex flex-wrap items-center justify-between gap-3 border-b border-amber-400/40 shrink-0 shadow-2xl">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-black text-lg shadow">
+                                <i class="fas fa-file-excel"></i>
+                            </div>
+                            <div>
+                                <h3 id="excel-modal-title" class="font-black text-sm sm:text-base text-white uppercase tracking-wide">
+                                    BIỂU MẪU BÁO CÁO BẢO TRÌ (CHUẨN IN ĐÓNG QUYỂN 2 TRANG A4)
+                                </h3>
+                                <p id="excel-modal-subtitle" class="text-[11px] text-amber-300">
+                                    Trang 1: Chi tiết công việc &amp; thông số đo • Trang 2: Hình ảnh thực tế riêng biệt
+                                </p>
+                            </div>
+                        </div>
 
-            // Cập nhật nhãn nút Xuất PDF Hàng Loạt theo đúng chữ cái đang chọn
-            const exportLabelEl = document.getElementById('btn-export-batch-pdf-label');
-            if (exportLabelEl) {
-                if (currentSelectedLetter === 'ALL') {
-                    exportLabelEl.innerText = `Xuất PDF Hàng Loạt (Tất cả: ${filtered.length} máy)`;
-                } else {
-                    exportLabelEl.innerText = `Xuất PDF Chữ "${currentSelectedLetter}" (${filtered.length} thiết bị)`;
-                }
-            }
-
-            const tbody = document.getElementById('modal-device-tbody');
-            tbody.innerHTML = '';
-
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="${isListAdminMode ? 8 : 7}" class="p-6 text-center text-gray-400">Không tìm thấy thiết bị nào phù hợp.</td></tr>`;
-                return;
-            }
-
-            filtered.forEach((dev, idx) => {
-                let actionTd = '';
-                if (isListAdminMode) {
-                    actionTd = `
-                        <td class="p-3 text-center">
-                            <button onclick="promptDeleteDevice('${dev.code}')" class="btn-interactive bg-red-100 hover:bg-red-200 text-red-600 px-2.5 py-1.5 rounded-lg text-xs font-bold transition shadow-sm" title="Xóa thiết bị này">
-                                <i class="fas fa-trash-alt mr-1"></i> Xóa
+                        <div class="flex flex-wrap items-center gap-2.5 ml-auto">
+                            <button type="button" onclick="triggerNativeExcelPrint()" class="btn-interactive bg-amber-500 hover:bg-amber-400 text-brand-dark font-black px-4 py-2.5 rounded-xl text-xs flex items-center shadow-lg">
+                                <i class="fas fa-print mr-1.5 text-sm"></i> IN RA GIẤY / LƯU PDF SẮC NÉT
                             </button>
-                        </td>
-                    `;
-                }
+                            <button type="button" id="btn-direct-save-pdf" onclick="triggerDirectPdfDownload()" class="btn-interactive bg-emerald-500 hover:bg-emerald-400 text-brand-dark font-black px-4 py-2.5 rounded-xl text-xs flex items-center shadow-lg">
+                                <i class="fas fa-download mr-1.5 text-sm"></i> TẢI FILE .PDF VỀ MÁY
+                            </button>
+                            <button type="button" onclick="closeExcelPreviewModal()" class="bg-white/15 hover:bg-red-600 text-white font-bold px-3.5 py-2.5 rounded-xl text-xs transition">
+                                <i class="fas fa-times mr-1"></i> Đóng
+                            </button>
+                        </div>
+                    </div>
 
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 border-b border-gray-100 transition">
-                        <td class="p-3 text-center font-bold text-gray-500">${idx + 1}</td>
-                        <td class="p-3 font-mono font-bold text-brand-accent cursor-pointer hover:underline" onclick="closeDeviceListModal(); loadSampleDevice('${dev.code}'); navigateTo('maintenance-portal');">${dev.code}</td>
-                        <td class="p-3 font-bold text-brand-navy cursor-pointer hover:text-brand-blue" onclick="closeDeviceListModal(); loadSampleDevice('${dev.code}'); navigateTo('maintenance-portal');">${dev.name}</td>
-                        <td class="p-3 text-gray-600">${dev.location}</td>
-                        <td class="p-3 text-gray-600">${dev.tech}</td>
-                        <td class="p-3 text-center">
-                            <button onclick="exportSingleDevicePdf('${dev.code}')" class="bg-red-50 hover:bg-red-600 hover:text-white text-red-600 px-2.5 py-1 rounded-lg font-extrabold text-[11px] border border-red-200 transition">
-                                <i class="fas fa-file-pdf mr-1"></i> Xuất PDF
-                            </button>
-                        </td>
-                        <td class="p-3 text-center">
-                            <button onclick="openQrLabelModal('${dev.code}')" class="bg-cyan-50 hover:bg-cyan-100 text-brand-blue px-2.5 py-1 rounded-lg font-bold text-[11px] border border-cyan-200">
-                                <i class="fas fa-qrcode mr-1"></i> Tem QR
-                            </button>
-                        </td>
-                        ${actionTd}
-                    </tr>
+                    <div class="flex-grow overflow-y-auto p-4 sm:p-8 bg-slate-800 flex flex-col items-center">
+                        <div id="excel-preview-pages-container"></div>
+                    </div>
                 `;
-            });
-        };
+                document.body.appendChild(modal);
+            }
+        })();
 
-        // 5. Tạo Header Công ty HICON M&E chuẩn theo file Excel (Dùng chung cho cả Trang 1 & Trang 2)
-        function buildExcelCompanyHeaderHtml() {
-            const topAddress = document.querySelector('[data-cms-id="top-address"]')?.innerText.trim() || 'Tầng 2, Số nhà C.TT8-5 đường C5, Khu 5, Tòa nhà Himlam Vạn Phúc, Hà Đông, Hà Nội';
-            const topEmail = document.querySelector('[data-cms-id="top-email"]')?.innerText.trim() || 'contact@hiconmne.vn';
-            const topHotline = document.querySelector('[data-cms-id="top-hotline-1"]')?.innerText.trim() || '0868 117 116';
-
+        // 4. Hàm dựng Header Công ty giống hệt file Excel (Font Times New Roman + đường kẻ cam dưới đáy)
+        function renderExcelHeaderBlock() {
             return `
-                <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2.5px solid #d97706; padding-bottom: 8px; margin-bottom: 10px;">
-                    <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
-                        <svg style="width: 44px; height: 44px;" viewBox="0 0 100 100" fill="none">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                    <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0; padding-right: 10px;">
+                        <svg style="width: 46px; height: 46px;" viewBox="0 0 100 100" fill="none">
                             <polygon points="50,10 70,20 50,30" fill="#432818"/>
                             <polygon points="12,25 29,34 29,52 46,60 46,34 60,41 60,90 46,82 46,70 29,61 29,79 12,70" fill="#432818"/>
                             <polygon points="60,41 93,25 93,41 72,51 72,71 93,61 93,76 60,90" fill="#f59e0b"/>
                             <polygon points="72,51 91,61 72,71" fill="#432818"/>
                         </svg>
-                        <div style="line-height: 1.05;">
-                            <div style="font-size: 18px; font-weight: 900; color: #432818; letter-spacing: -0.5px;">HICON<sup style="font-size: 9px;">®</sup></div>
-                            <div style="font-size: 14px; font-weight: 800; color: #57534e; letter-spacing: 2px;">M&amp;E<span style="color: #f59e0b;">⚡</span></div>
+                        <div style="line-height: 1.05; font-family: Arial, sans-serif;">
+                            <div style="font-size: 18px; font-weight: 900; color: #432818;">HICON<sup style="font-size: 9px;">®</sup></div>
+                            <div style="font-size: 14px; font-weight: 800; color: #6b6661; letter-spacing: 1.5px;">M&amp;E<span style="color: #f59e0b;">⚡</span></div>
                         </div>
                     </div>
-                    <div style="text-align: right; font-size: 10.5px; line-height: 1.55; color: #111827; font-weight: 700;">
-                        <div>Địa chỉ: ${topAddress}</div>
-                        <div style="display: flex; justify-content: flex-end; gap: 18px;">
-                            <span>Website: hiconmne.vn</span>
-                            <span>Email: ${topEmail}</span>
-                            <span>Hotline: ${topHotline}</span>
+
+                    <div style="flex-grow: 1; font-family: 'Times New Roman', Times, serif; font-size: 12.5px; color: #000; border-bottom: 2px solid #f39c12; padding-bottom: 5px; line-height: 1.55;">
+                        <div>
+                            <span>Địa chỉ: </span>
+                            <strong style="font-weight: 700;">Tầng 2, Số nhà C.TT8-5 đường C5, Khu 5, Tòa nhà Himlam Vạn Phúc, Hà Đông, Hà Nội</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Website: <strong style="font-weight: 700;">hiconmne.vn</strong></span>
+                            <span>Email: <strong style="font-weight: 700;">contact@hiconmne.vn</strong></span>
+                            <span>Hotline: <strong style="font-weight: 700;">0868 117 116</strong></span>
                         </div>
                     </div>
                 </div>
             `;
         }
 
-        // 6. Tạo Khối Thông tin chung của Thiết bị (Chủ đầu tư, Dự án, Đợt bảo trì, Ngày thực hiện, Đối tượng, Vị trí)
-        function buildExcelGeneralInfoHtml(dev) {
-            const dateFormatted = typeof formatDateVN === 'function' ? formatDateVN(dev.date) : (dev.date || '--/--/----');
+        // 5. Hàm dựng Bảng Thông Tin Chung ở đầu mỗi trang (Giống hệt khung Excel + bổ sung Ngày bảo trì tiếp theo & Kỹ sư)
+        function renderExcelGeneralInfoRows(dev) {
+            const dateVN = typeof formatDateVN === 'function' ? formatDateVN(dev.date) : (dev.date || '');
             const nextDateRaw = dev.nextDate || (typeof computeNextDateByMonths === 'function' ? computeNextDateByMonths(dev.date, 3) : '');
-            const nextDateFormatted = typeof formatDateVN === 'function' ? formatDateVN(nextDateRaw) : (nextDateRaw || '--/--/----');
-            const yearStr = (dev.date && dev.date.includes('-')) ? dev.date.split('-')[0] : new Date().getFullYear();
+            const nextDateVN = typeof formatDateVN === 'function' ? formatDateVN(nextDateRaw) : (nextDateRaw || '');
 
             return `
-                <table style="width: 100%; border-collapse: collapse; font-size: 11.5px; margin-bottom: 8px; line-height: 1.45;">
+                <table class="excel-info-grid">
                     <tr>
-                        <td style="width: 19%; font-weight: 700; padding: 2px 4px; border: 1px solid #d1d5db;">Chủ đầu tư</td>
-                        <td style="width: 3%; text-align: center; border: 1px solid #d1d5db;">:</td>
-                        <td colspan="2" style="padding: 2px 6px; border: 1px solid #d1d5db; font-weight: 600;">${dev.client || 'Công ty TNHH Tesa Site HaiPhong'}</td>
+                        <td style="width: 20%; font-weight: 700;">Chủ đầu tư</td>
+                        <td style="width: 3%; text-align: center; font-weight: 700;">:</td>
+                        <td colspan="2">${dev.client || 'Nhà máy Tesa Tape DEEP C Hải Phòng'}</td>
                     </tr>
                     <tr>
-                        <td style="font-weight: 700; padding: 2px 4px; border: 1px solid #d1d5db;">Dự án / Nhà máy</td>
-                        <td style="text-align: center; border: 1px solid #d1d5db;">:</td>
-                        <td colspan="2" style="padding: 2px 6px; border: 1px solid #d1d5db;">${dev.client || 'Nhà máy Tesa Site Haiphong'}</td>
+                        <td style="font-weight: 700;">Dự án</td>
+                        <td style="text-align: center; font-weight: 700;">:</td>
+                        <td colspan="2">${dev.client || 'Nhà máy Tesa Tape DEEP C Hải Phòng'}</td>
                     </tr>
                     <tr>
-                        <td style="font-weight: 700; padding: 2px 4px; border: 1px solid #d1d5db;">Đợt bảo trì</td>
-                        <td style="text-align: center; border: 1px solid #d1d5db;">:</td>
-                        <td style="width: 43%; padding: 2px 6px; border: 1px solid #d1d5db;">Năm ${yearStr} (Bảo trì tiếp theo: <strong>${nextDateFormatted}</strong>)</td>
-                        <td style="width: 35%; padding: 2px 6px; border: 1px solid #d1d5db;"><strong>Kỹ sư:</strong> ${dev.tech || 'Kỹ thuật HICON M&E'}</td>
+                        <td style="font-weight: 700;">Kỹ sư phụ trách</td>
+                        <td style="text-align: center; font-weight: 700;">:</td>
+                        <td style="width: 42%;">${dev.tech || ''}</td>
+                        <td style="width: 35%; font-weight: 700;">Mã thiết bị : ${dev.code || ''}</td>
                     </tr>
                     <tr>
-                        <td style="font-weight: 700; padding: 2px 4px; border: 1px solid #d1d5db;">Ngày thực hiện</td>
-                        <td style="text-align: center; border: 1px solid #d1d5db;">:</td>
-                        <td colspan="2" style="padding: 2px 6px; border: 1px solid #d1d5db; font-weight: 700;">${dateFormatted}</td>
+                        <td style="font-weight: 700;">Ngày thực hiện</td>
+                        <td style="text-align: center; font-weight: 700;">:</td>
+                        <td>${dateVN}</td>
+                        <td style="font-weight: 700;">Bảo trì tiếp theo : ${nextDateVN}</td>
                     </tr>
                     <tr>
-                        <td style="font-weight: 700; padding: 2px 4px; border: 1px solid #d1d5db;">Đối tượng bảo trì</td>
-                        <td style="text-align: center; border: 1px solid #d1d5db;">:</td>
-                        <td style="padding: 2px 6px; border: 1px solid #d1d5db; font-weight: 800; color: #0f2b48;">${dev.name || '--'} (${dev.code || '--'})</td>
-                        <td style="padding: 2px 6px; border: 1px solid #d1d5db; font-weight: 800;">Vị trí : ${dev.location || '--'}</td>
+                        <td style="font-weight: 700;">Đối tượng bảo trì</td>
+                        <td style="text-align: center; font-weight: 700;">:</td>
+                        <td>${dev.name || ''}</td>
+                        <td style="font-weight: 700;">Vị trí : ${dev.location || ''}</td>
                     </tr>
                 </table>
             `;
         }
 
-        // 7. Dựng TRANG 1 (Chi tiết Hạng mục bảo trì + Thông số đo + Kết luận tình trạng)
-        function buildDevicePage1Html(dev) {
+        // 6. Dựng TRANG 1: BÁO CÁO DỊCH VỤ KỸ THUẬT & BẢO TRÌ (Không có ảnh, không có QR)
+        function buildExcelSheetPage1(dev) {
             const tasks = Array.isArray(dev.tasks) && dev.tasks.length > 0 ? dev.tasks : [
-                { title: 'Kiểm tra ngoại quan & vệ sinh', detail: 'Kiểm tra kết cấu & vệ sinh làm sạch thiết bị', status: 'TỐT' }
+                { title: 'Kiểm tra ngoại quan', detail: 'Kiểm tra kết cấu & vệ sinh thiết bị', status: 'TỐT' }
             ];
 
-            let tasksRowsHtml = '';
-            tasks.forEach((t, idx) => {
-                const stText = (t.status || 'TỐT').toUpperCase();
-                tasksRowsHtml += `
+            let taskRows = '';
+            tasks.forEach((t, i) => {
+                const st = (t.status || 'Đạt').toUpperCase();
+                taskRows += `
                     <tr>
-                        <td style="text-align: center; font-weight: 700; width: 6%;">${idx + 1}</td>
-                        <td style="font-weight: 700; width: 25%;">${t.title || '--'}</td>
-                        <td style="width: 39%;">${t.detail || '--'}</td>
-                        <td style="text-align: center; font-weight: 700; width: 12%;">${stText === 'ĐẠT' ? 'TỐT / SẠCH' : stText}</td>
-                        <td style="width: 18%;">${t.note || 'Đã vệ sinh & bảo dưỡng'}</td>
+                        <td style="text-align: center; width: 6%;">${i + 1}</td>
+                        <td style="width: 26%;">${t.title || ''}</td>
+                        <td style="width: 40%;">${t.detail || ''}</td>
+                        <td style="text-align: center; width: 12%;">${st === 'ĐẠT' ? 'TỐT' : st}</td>
+                        <td style="width: 16%;">${t.note || 'Đã bảo dưỡng'}</td>
                     </tr>
                 `;
             });
 
             const specs = Array.isArray(dev.specs) && dev.specs.length > 0 ? dev.specs : [
-                { item: 'Cách điện (MΩ)', val: 'Đạt tiêu chuẩn', unit: 'MΩ', status: 'Hoạt động tốt' }
+                { item: 'Thông số vận hành', val: 'Ổn định', unit: '', status: 'Đạt' }
             ];
 
-            let specsRowsHtml = '';
-            specs.forEach((s, idx) => {
-                const unitStr = s.unit || s.std || '';
-                specsRowsHtml += `
+            let specRows = '';
+            specs.forEach((s, i) => {
+                const unitTxt = s.unit !== undefined ? s.unit : (s.std || '');
+                specRows += `
                     <tr>
-                        <td style="text-align: center; font-weight: 700; width: 6%;">${idx + 1}</td>
-                        <td style="font-weight: 700; width: 32%;">${s.item || '--'}</td>
-                        <td style="text-align: center; font-weight: 800; color: #0f2b48; width: 26%;">${s.val || '--'}</td>
-                        <td style="text-align: center; width: 14%;">${unitStr}</td>
-                        <td style="text-align: center; font-weight: 600; width: 22%;">${s.status || 'Hoạt động ở mức tốt'}</td>
+                        <td style="text-align: center; width: 6%;">${i + 1}</td>
+                        <td style="width: 34%;">${s.item || ''}</td>
+                        <td style="text-align: center; width: 22%; font-weight: 700;">${s.val || ''}</td>
+                        <td style="text-align: center; width: 14%;">${unitTxt}</td>
+                        <td style="text-align: center; width: 24%;">${s.status || 'Đạt'}</td>
                     </tr>
                 `;
             });
 
             return `
-                <div class="hicon-a4-page">
+                <div class="excel-a4-page">
                     <div>
-                        ${buildExcelCompanyHeaderHtml()}
-                        <div style="border: 1.5px solid #000; text-align: center; padding: 7px; font-weight: 900; font-size: 14px; text-transform: uppercase; margin-bottom: 8px; background: #f8fafc;">
+                        ${renderExcelHeaderBlock()}
+
+                        <div style="border: 1px solid #9ca3af; text-align: center; padding: 9px 6px; font-weight: 700; font-size: 15px; text-transform: uppercase; margin-bottom: 10px;">
                             BÁO CÁO DỊCH VỤ KỸ THUẬT &amp; BẢO TRÌ THIẾT BỊ
                         </div>
-                        ${buildExcelGeneralInfoHtml(dev)}
 
-                        <div class="hicon-excel-sec-bar">CÔNG VIỆC THỰC HIỆN &amp; ĐÁNH GIÁ TÌNH TRẠNG</div>
-                        <table class="hicon-excel-table">
+                        ${renderExcelGeneralInfoRows(dev)}
+
+                        <div class="excel-gray-section">CÔNG VIỆC THỰC HIỆN &amp; ĐÁNH GIÁ TÌNH TRẠNG</div>
+                        <table class="excel-data-table">
                             <thead>
                                 <tr>
                                     <th style="width: 6%;">STT</th>
-                                    <th style="width: 25%;">Hạng mục</th>
-                                    <th style="width: 39%;">Nội dung thực hiện</th>
+                                    <th style="width: 26%;">Hạng mục</th>
+                                    <th style="width: 40%;">Nội dung thực hiện</th>
                                     <th style="width: 12%;">Tình trạng</th>
-                                    <th style="width: 18%;">Ghi chú / Khuyến nghị</th>
+                                    <th style="width: 16%;">Ghi chú / Khuyến nghị</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                ${tasksRowsHtml}
+                                ${taskRows}
                             </tbody>
                         </table>
 
-                        <div class="hicon-excel-sec-bar">THÔNG SỐ ĐO ĐẠC THỰC TẾ / ĐỘNG CƠ</div>
-                        <table class="hicon-excel-table">
+                        <div class="excel-gray-section">THÔNG SỐ ĐO ĐẠC THỰC TẾ</div>
+                        <table class="excel-data-table">
                             <thead>
                                 <tr>
                                     <th style="width: 6%;">STT</th>
-                                    <th style="width: 32%;">Thông số / Hạng mục đo</th>
-                                    <th style="width: 26%;">Giá trị đo</th>
+                                    <th style="width: 34%;">Thông số</th>
+                                    <th style="width: 22%;">Giá trị đo</th>
                                     <th style="width: 14%;">Đơn vị</th>
-                                    <th style="width: 22%;">Ghi chú / Đánh giá</th>
+                                    <th style="width: 24%;">Ghi chú / Đánh giá</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                ${specsRowsHtml}
+                                ${specRows}
                             </tbody>
                         </table>
                     </div>
 
-                    <div style="margin-top: 10px;">
-                        <table style="width: 100%; border-collapse: collapse; border: 1.5px solid #000; font-size: 11.5px;">
+                    <div style="margin-top: 12px;">
+                        <table style="width: 100%; border-collapse: collapse; border: 1px solid #000000; font-size: 12px;">
                             <tr>
-                                <td style="width: 24%; background: #c0c0c0 !important; font-weight: 900; text-align: center; padding: 12px 8px; border-right: 1.5px solid #000; text-transform: uppercase; -webkit-print-color-adjust: exact; print-color-adjust: exact;">
+                                <td style="width: 24%; background-color: #bfbfbf !important; font-weight: 700; text-align: center; padding: 12px 6px; border-right: 1px solid #000000; text-transform: uppercase; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;">
                                     KẾT LUẬN TÌNH TRẠNG
                                 </td>
-                                <td style="padding: 10px 12px; font-weight: 700; color: #111827;">
-                                    ${dev.note || 'Thiết bị đã được bảo dưỡng đúng quy trình kỹ thuật, vận hành ổn định ở mức tốt.'}
+                                <td style="padding: 10px 12px; color: #000000;">
+                                    ${dev.note || 'Đã kiểm tra vận hành hệ thống đạt tiêu chuẩn.'}
                                 </td>
                             </tr>
                         </table>
@@ -5418,73 +5386,63 @@ if (data.devices) {
             `;
         }
 
-        // 8. Dựng TRANG 2 (Hình ảnh thực tế - Tự động căn chỉnh bố cục thông minh theo số lượng ảnh ít hoặc nhiều)
-        function buildDevicePage2Html(dev) {
+        // 7. Dựng TRANG 2 RIÊNG BIỆT: HÌNH ẢNH TRONG QUÁ TRÌNH BẢO TRÌ CÁC HẠNG MỤC
+        function buildExcelSheetPage2(dev) {
             const photos = Array.isArray(dev.photos) ? dev.photos.filter(Boolean) : [];
-            const tasks = Array.isArray(dev.tasks) && dev.tasks.length > 0 ? dev.tasks : [
-                { title: 'Kiểm tra & Vệ sinh bộ lọc / ngoại quan' },
-                { title: 'Vệ sinh dàn trao đổi nhiệt & khay nước ngưng' },
-                { title: 'Đo thông số động cơ & kiểm tra cơ khí' }
-            ];
+            const tasks = Array.isArray(dev.tasks) && dev.tasks.length > 0 ? dev.tasks : [];
 
-            let imageTableRowsHtml = '';
+            let photoRowsHtml = '';
 
             if (photos.length === 0) {
-                imageTableRowsHtml = `
+                photoRowsHtml = `
                     <tr>
-                        <td style="text-align: center; font-weight: 700;">1</td>
-                        <td style="font-weight: 700;">Hình ảnh bảo trì tổng quan</td>
-                        <td style="height: 180px; text-align: center; color: #6b7280; font-style: italic;">
-                            (Chưa có hình ảnh đính kèm cho thiết bị này)
+                        <td style="text-align: center; width: 6%;">1</td>
+                        <td style="width: 24%;">Hình ảnh bảo trì thực tế</td>
+                        <td style="width: 70%; height: 150px; text-align: center; color: #666; font-style: italic;">
+                            Chưa có hình ảnh cập nhật
                         </td>
                     </tr>
                 `;
             } else {
-                // Tự động tính toán kích thước ảnh và chia nhóm hợp lý theo tổng số lượng ảnh (từ 1 ảnh đến nhiều ảnh)
+                // Tự động phân bổ chiều cao và số cột ảnh để vừa khít 1 trang A4 dù ít hay nhiều ảnh
                 const total = photos.length;
-                let imgHeightPx = 195;
-                let maxGroups = 4;
+                let rowCount = 1;
+                let imgHeight = 200;
 
-                if (total === 1) { imgHeightPx = 280; maxGroups = 1; }
-                else if (total === 2) { imgHeightPx = 210; maxGroups = 2; }
-                else if (total <= 4) { imgHeightPx = 165; maxGroups = Math.min(total, 3); }
-                else if (total <= 6) { imgHeightPx = 140; maxGroups = 3; }
-                else if (total <= 9) { imgHeightPx = 120; maxGroups = 4; }
-                else { imgHeightPx = 100; maxGroups = 5; }
+                if (total === 1) { rowCount = 1; imgHeight = 290; }
+                else if (total === 2) { rowCount = 2; imgHeight = 210; }
+                else if (total <= 4) { rowCount = 2; imgHeight = 195; }
+                else if (total <= 6) { rowCount = 3; imgHeight = 145; }
+                else if (total <= 9) { rowCount = 3; imgHeight = 135; }
+                else { rowCount = 4; imgHeight = 105; }
 
-                const numGroups = Math.min(maxGroups, total);
-                const basePerGroup = Math.floor(total / numGroups);
-                let remainder = total % numGroups;
-                let photoCursor = 0;
+                const basePerRow = Math.floor(total / rowCount);
+                let extra = total % rowCount;
+                let idxCursor = 0;
 
-                for (let g = 0; g < numGroups; g++) {
-                    const countInThisGroup = basePerGroup + (remainder > 0 ? 1 : 0);
-                    if (remainder > 0) remainder--;
+                for (let r = 0; r < rowCount; r++) {
+                    const countInRow = basePerRow + (extra > 0 ? 1 : 0);
+                    if (extra > 0) extra--;
 
-                    const groupPhotos = photos.slice(photoCursor, photoCursor + countInThisGroup);
-                    photoCursor += countInThisGroup;
+                    const slicePhotos = photos.slice(idxCursor, idxCursor + countInRow);
+                    idxCursor += countInRow;
 
-                    // Lấy tên hạng mục tương ứng từ danh sách công việc bảo trì của máy
-                    let groupTitle = tasks[g] ? tasks[g].title : `Hạng mục kiểm tra & bảo dưỡng #${g + 1}`;
-                    if (numGroups === 1 && tasks.length > 1) {
-                        groupTitle = `${tasks[0].title} & Kiểm tra tổng quan thiết bị`;
-                    }
+                    const taskLabel = tasks[r] ? tasks[r].title : `Hình ảnh bảo trì thực tế #${r + 1}`;
+                    const cols = Math.min(slicePhotos.length, 4);
 
-                    // Căn số cột ảnh trong 1 ô tùy theo số ảnh của hàng đó (1, 2, 3 hoặc 4 ảnh/hàng như file Excel)
-                    const cols = Math.min(groupPhotos.length, 4);
-                    const imgsGridHtml = groupPhotos.map((src) => `
-                        <div style="border: 1px solid #d1d5db; border-radius: 4px; overflow: hidden; background: #f8fafc; display: flex; align-items: center; justify-content: center; height: ${imgHeightPx}px;">
+                    const imgsHtml = slicePhotos.map(src => `
+                        <div style="border: 1px solid #9ca3af; height: ${imgHeight}px; overflow: hidden; background: #f9fafb; display: flex; align-items: center; justify-content: center;">
                             <img src="${src}" crossorigin="anonymous" style="width: 100%; height: 100%; object-fit: cover; display: block;">
                         </div>
                     `).join('');
 
-                    imageTableRowsHtml += `
+                    photoRowsHtml += `
                         <tr>
-                            <td style="text-align: center; font-weight: 700; width: 6%;">${g + 1}</td>
-                            <td style="font-weight: 700; width: 24%; line-height: 1.4;">${groupTitle}</td>
+                            <td style="text-align: center; width: 6%; font-weight: 700;">${r + 1}</td>
+                            <td style="width: 24%; font-weight: 600; line-height: 1.4;">${taskLabel}</td>
                             <td style="width: 70%; padding: 8px;">
                                 <div style="display: grid; grid-template-columns: repeat(${cols}, minmax(0, 1fr)); gap: 8px;">
-                                    ${imgsGridHtml}
+                                    ${imgsHtml}
                                 </div>
                             </td>
                         </tr>
@@ -5493,15 +5451,17 @@ if (data.devices) {
             }
 
             return `
-                <div class="hicon-a4-page">
+                <div class="excel-a4-page">
                     <div>
-                        ${buildExcelCompanyHeaderHtml()}
-                        <div style="border: 1.5px solid #000; text-align: center; padding: 7px; font-weight: 900; font-size: 14px; text-transform: uppercase; margin-bottom: 8px; background: #f8fafc;">
+                        ${renderExcelHeaderBlock()}
+
+                        <div style="border: 1px solid #9ca3af; text-align: center; padding: 9px 6px; font-weight: 700; font-size: 15px; text-transform: uppercase; margin-bottom: 10px;">
                             HÌNH ẢNH TRONG QUÁ TRÌNH BẢO TRÌ CÁC HẠNG MỤC
                         </div>
-                        ${buildExcelGeneralInfoHtml(dev)}
 
-                        <table class="hicon-excel-table" style="margin-top: 8px;">
+                        ${renderExcelGeneralInfoRows(dev)}
+
+                        <table class="excel-data-table" style="margin-top: 8px;">
                             <thead>
                                 <tr>
                                     <th style="width: 6%;">STT</th>
@@ -5510,131 +5470,172 @@ if (data.devices) {
                                 </tr>
                             </thead>
                             <tbody>
-                                ${imageTableRowsHtml}
+                                ${photoRowsHtml}
                             </tbody>
                         </table>
                     </div>
 
-                    <div style="border-top: 1px solid #000; padding-top: 6px; display: flex; justify-content: space-between; font-size: 10px; color: #4b5563; font-weight: 600;">
-                        <span>HICON M&amp;E - Hồ sơ bảo trì định kỳ</span>
-                        <span>Mã thiết bị: ${dev.code || '--'} (Trang 2/2)</span>
+                    <div style="font-size: 10px; color: #555; text-align: right; padding-top: 4px;">
+                        Đối tượng bảo trì: ${dev.name || ''} (${dev.code || ''}) - Trang 2/2
                     </div>
                 </div>
             `;
         }
 
-        // 9. Mở màn hình Xem trước & Tải PDF cho danh sách thiết bị bất kỳ
-        function openBatchPdfPreview(devicesList, titleText, fileName) {
+        let currentExcelPdfFilename = 'Bao_Cao_Bao_Tri_HICON.pdf';
+
+        // 8. Mở hộp thoại Xem trước 2 trang Excel & Chuẩn bị sẵn vùng In đóng quyển
+        function openExcelReportPreviewForDevices(devicesList, titleText, fileName) {
             if (!devicesList || devicesList.length === 0) {
-                showTopErrorToast('Không có thiết bị nào trong mục này để xuất PDF!');
+                showTopErrorToast('Vui lòng chọn hoặc tra cứu ít nhất 1 thiết bị trước khi in/xuất báo cáo!');
                 return;
             }
 
-            currentPdfExportDevices = devicesList;
-            currentPdfExportFilename = fileName || 'Bao_Cao_Bao_Tri_HICON.pdf';
+            currentExcelPdfFilename = fileName || 'Bao_Cao_Bao_Tri_HICON.pdf';
 
-            document.getElementById('pdf-preview-modal-title').innerText = titleText;
-            document.getElementById('pdf-preview-modal-subtitle').innerText = `Tổng cộng: ${devicesList.length} thiết bị (${devicesList.length * 2} trang A4 chuẩn Form Excel)`;
-
-            const wrapper = document.getElementById('hicon-pdf-pages-wrapper');
-            wrapper.innerHTML = '';
-
+            let allPagesHtml = '';
             devicesList.forEach(dev => {
-                wrapper.innerHTML += buildDevicePage1Html(dev) + buildDevicePage2Html(dev);
+                allPagesHtml += buildExcelSheetPage1(dev) + buildExcelSheetPage2(dev);
             });
 
-            document.getElementById('hicon-pdf-preview-modal').classList.remove('hidden');
+            const previewContainer = document.getElementById('excel-preview-pages-container');
+            const printMount = document.getElementById('hicon-excel-print-mount');
+            if (previewContainer) previewContainer.innerHTML = allPagesHtml;
+            if (printMount) printMount.innerHTML = allPagesHtml;
+
+            const titleEl = document.getElementById('excel-modal-title');
+            const subEl = document.getElementById('excel-modal-subtitle');
+            if (titleEl) titleEl.innerText = titleText || 'BIỂU MẪU BÁO CÁO BẢO TRÌ (CHUẨN EXCEL 2 TRANG A4)';
+            if (subEl) subEl.innerText = `Tổng số: ${devicesList.length} thiết bị (${devicesList.length * 2} trang A4 • Không dính giao diện web • Không dính QR)`;
+
+            document.getElementById('hicon-excel-preview-modal').classList.remove('hidden');
         }
 
-        function closePdfPreviewModal() {
-            document.getElementById('hicon-pdf-preview-modal').classList.add('hidden');
+        function closeExcelPreviewModal() {
+            document.getElementById('hicon-excel-preview-modal').classList.add('hidden');
         }
 
-        // 10. Xuất PDF Hàng Loạt theo Chữ Cái đang chọn trong Danh Sách Tổng Hợp
-        function exportBatchPdfByCurrentFilter() {
-            const filtered = getFilteredDevicesInModal();
-            if (filtered.length === 0) {
-                showTopErrorToast('Không có thiết bị nào thuộc chữ cái này để xuất PDF!');
-                return;
-            }
-            const today = new Date().toISOString().split('T')[0];
-            const letterTag = currentSelectedLetter === 'ALL' ? 'Tat_Ca' : `Chu_${currentSelectedLetter}`;
-            const title = currentSelectedLetter === 'ALL'
-                ? `BÁO CÁO BẢO TRÌ TỔNG HỢP (${filtered.length} THIẾT BỊ)`
-                : `BÁO CÁO BẢO TRÌ THEO CHỮ CÁI "${currentSelectedLetter}" (${filtered.length} THIẾT BỊ)`;
-            const fileName = `Bao_Cao_Bao_Tri_HICON_${letterTag}_${today}.pdf`;
+        // Gọi lệnh In gốc của trình duyệt (Đã khóa chỉ in vùng #hicon-excel-print-mount)
+        const nativeBrowserPrint = window.print.bind(window);
 
-            openBatchPdfPreview(filtered, title, fileName);
+        function triggerNativeExcelPrint() {
+            nativeBrowserPrint();
         }
 
-        // 11. Xuất PDF 2 trang cho 1 thiết bị đơn lẻ
-        function exportSingleDevicePdf(code) {
-            const db = getDeviceDatabase();
-            const dev = db[code];
-            if (!dev) {
-                showTopErrorToast('Vui lòng chọn 1 thiết bị để xuất báo cáo PDF!');
-                return;
-            }
-            const safeCode = (dev.code || 'ThietBi').replace(/[^a-zA-Z0-9_-]/g, '_');
-            openBatchPdfPreview([dev], `BÁO CÁO BẢO TRÌ: ${dev.name} (${dev.code})`, `Bao_Cao_Bao_Tri_${safeCode}.pdf`);
-        }
-
-        // Kết nối nút "In Biên Bản" ở màn hình chính vào luôn Bộ Xuất PDF 2 Trang mới
-        (function hookSinglePrintButton() {
-            const printBtns = document.querySelectorAll('button[onclick="window.print()"]');
-            printBtns.forEach(btn => {
-                btn.setAttribute('onclick', 'if(currentViewingDeviceCode) exportSingleDevicePdf(currentViewingDeviceCode); else showTopErrorToast("Vui lòng tra cứu hoặc chọn 1 thiết bị trước khi xuất PDF!");');
-                btn.innerHTML = '<i class="fas fa-file-pdf mr-1.5 text-red-400"></i> Xuất Báo Cáo PDF';
-            });
-        })();
-
-        // 12. Tải trực tiếp file .PDF về máy tính / điện thoại bằng html2pdf.js
-        async function downloadRenderedPdfFile() {
-            const wrapper = document.getElementById('hicon-pdf-pages-wrapper');
-            const btn = document.getElementById('btn-direct-download-pdf');
-            if (!wrapper) return;
+        async function triggerDirectPdfDownload() {
+            const container = document.getElementById('excel-preview-pages-container');
+            const btn = document.getElementById('btn-direct-save-pdf');
+            if (!container) return;
 
             if (typeof html2pdf === 'undefined') {
-                showTopToast('Đang mở trình Lưu PDF chuẩn của trình duyệt...', false);
-                printRenderedPdfPages();
+                triggerNativeExcelPrint();
                 return;
             }
 
-            const origHtml = btn.innerHTML;
+            const oldHtml = btn.innerHTML;
             btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1.5"></i> ĐANG TẠO FILE PDF...';
-            showTopToast(`Đang kết xuất file "${currentPdfExportFilename}", vui lòng đợi giây lát...`, false);
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1.5"></i> ĐANG LƯU FILE PDF...';
 
             try {
                 const opt = {
                     margin: 0,
-                    filename: currentPdfExportFilename,
+                    filename: currentExcelPdfFilename,
                     image: { type: 'jpeg', quality: 0.96 },
                     html2canvas: { scale: 2, useCORS: true, logging: false },
                     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
                     pagebreak: { mode: ['css', 'legacy'] }
                 };
-                await html2pdf().set(opt).from(wrapper).save();
-                showTopToast(`Đã tải file "${currentPdfExportFilename}" về máy thành công!`, false);
-            } catch (err) {
-                printRenderedPdfPages();
+                await html2pdf().set(opt).from(container).save();
+                showTopToast(`Đã lưu file "${currentExcelPdfFilename}" thành công!`, false);
+            } catch (e) {
+                triggerNativeExcelPrint();
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = origHtml;
+                btn.innerHTML = oldHtml;
             }
         }
 
-        // 13. Chế độ In / Lưu PDF Vector sắc nét 100% qua hộp thoại hệ thống
-        function printRenderedPdfPages() {
-            let printContainer = document.getElementById('hicon-pdf-print-container');
-            if (!printContainer) {
-                printContainer = document.createElement('div');
-                printContainer.id = 'hicon-pdf-print-container';
-                document.body.appendChild(printContainer);
+        // 9. GHI ĐÈ TRỰC TIẾP window.print(): Bấm nút "In Biên Bản" ở bất kỳ đâu cũng mở đúng Biểu mẫu Excel 2 trang!
+        window.print = function() {
+            const db = getDeviceDatabase();
+            const code = currentViewingDeviceCode || document.getElementById('device-code-input')?.value.trim().toUpperCase();
+            if (code && db[code]) {
+                const dev = db[code];
+                const safeCode = (dev.code || 'ThietBi').replace(/[^a-zA-Z0-9_-]/g, '_');
+                openExcelReportPreviewForDevices([dev], `BÁO CÁO BẢO TRÌ: ${dev.name} (${dev.code})`, `Bao_Cao_Bao_Tri_${safeCode}.pdf`);
+            } else {
+                showTopErrorToast('Vui lòng tra cứu hoặc chọn 1 thiết bị trước khi bấm In Biên Bản!');
             }
-            printContainer.innerHTML = document.getElementById('hicon-pdf-pages-wrapper').innerHTML;
-            window.print();
+        };
+
+        // 10. Tự động thêm nút "Xuất PDF Hàng Loạt Theo Chữ Cái" vào Modal Danh Sách Tổng Hợp (kể cả khi chưa sửa HTML)
+        function getDevicesFilteredByLetter() {
+            const db = getDeviceDatabase();
+            const arr = Object.values(db);
+            const q = (document.getElementById('modal-search-input')?.value || '').trim().toLowerCase();
+
+            let list = arr.filter(dev => {
+                const matchQ = (dev.name || '').toLowerCase().includes(q) ||
+                               (dev.code || '').toLowerCase().includes(q) ||
+                               (dev.location || '').toLowerCase().includes(q);
+                if (currentSelectedLetter === 'ALL') return matchQ;
+                const firstChar = (dev.name || dev.code || '').trim().toUpperCase().charAt(0);
+                return matchQ && firstChar === currentSelectedLetter;
+            });
+
+            list.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+            return list;
         }
+
+        function exportBatchExcelPdfByLetter() {
+            const list = getDevicesFilteredByLetter();
+            if (list.length === 0) {
+                showTopErrorToast('Không có thiết bị nào thuộc chữ cái này để xuất PDF!');
+                return;
+            }
+            const today = new Date().toISOString().split('T')[0];
+            const tag = currentSelectedLetter === 'ALL' ? 'Tat_Ca' : `Chu_${currentSelectedLetter}`;
+            const title = currentSelectedLetter === 'ALL'
+                ? `XUẤT BÁO CÁO HÀNG LOẠT: TẤT CẢ (${list.length} THIẾT BỊ)`
+                : `XUẤT BÁO CÁO HÀNG LOẠT THEO CHỮ "${currentSelectedLetter}" (${list.length} THIẾT BỊ)`;
+
+            openExcelReportPreviewForDevices(list, title, `Bao_Cao_Bao_Tri_HICON_${tag}_${today}.pdf`);
+        }
+
+        function exportSingleDevicePdf(code) {
+            const db = getDeviceDatabase();
+            if (db[code]) {
+                const dev = db[code];
+                const safeCode = (dev.code || 'ThietBi').replace(/[^a-zA-Z0-9_-]/g, '_');
+                openExcelReportPreviewForDevices([dev], `BÁO CÁO BẢO TRÌ: ${dev.name} (${dev.code})`, `Bao_Cao_Bao_Tri_${safeCode}.pdf`);
+            }
+        }
+
+        // Tự động gắn nút Xuất PDF Hàng Loạt vào thanh công cụ của Danh Sách Tổng Hợp
+        const origRenderDeviceList = renderDeviceListModalContent;
+        renderDeviceListModalContent = function() {
+            origRenderDeviceList();
+
+            const indicator = document.getElementById('list-mode-indicator');
+            if (indicator && indicator.parentElement && !document.getElementById('btn-auto-batch-pdf')) {
+                const btn = document.createElement('button');
+                btn.id = 'btn-auto-batch-pdf';
+                btn.type = 'button';
+                btn.onclick = exportBatchExcelPdfByLetter;
+                btn.className = 'btn-interactive bg-red-600 hover:bg-red-700 text-white font-extrabold px-3.5 py-2 rounded-xl text-xs flex items-center shadow-md';
+                indicator.parentElement.insertBefore(btn, indicator);
+            }
+
+            const batchBtn = document.getElementById('btn-auto-batch-pdf') || document.getElementById('btn-export-batch-pdf-label');
+            const filteredCount = getDevicesFilteredByLetter().length;
+            if (batchBtn) {
+                const labelTxt = currentSelectedLetter === 'ALL'
+                    ? `<i class="fas fa-file-pdf mr-1.5 text-amber-300"></i> Xuất PDF Tất Cả (${filteredCount} máy)`
+                    : `<i class="fas fa-file-pdf mr-1.5 text-amber-300"></i> Xuất PDF Chữ "${currentSelectedLetter}" (${filteredCount} máy)`;
+                if (batchBtn.id === 'btn-auto-batch-pdf') batchBtn.innerHTML = labelTxt;
+                else batchBtn.innerText = labelTxt.replace(/<[^>]*>/g, '');
+            }
+        };
    </script>
 </body>
 </html>
