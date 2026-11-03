@@ -5248,7 +5248,7 @@ if (data.devices) {
             `;
         }
 
-        // 5. Hàm dựng Bảng Thông Tin Chung ở đầu mỗi trang (Giống hệt khung Excel + bổ sung Ngày bảo trì tiếp theo & Kỹ sư)
+       // 5. Dựng Bảng Thông Tin Chung (Đã chuẩn hóa tất cả chữ sau dấu hai chấm là chữ thường)
         function renderExcelGeneralInfoRows(dev) {
             const dateVN = typeof formatDateVN === 'function' ? formatDateVN(dev.date) : (dev.date || '');
             const nextDateRaw = dev.nextDate || (typeof computeNextDateByMonths === 'function' ? computeNextDateByMonths(dev.date, 3) : '');
@@ -5259,57 +5259,57 @@ if (data.devices) {
                     <tr>
                         <td style="width: 20%; font-weight: 700;">Chủ đầu tư</td>
                         <td style="width: 3%; text-align: center; font-weight: 700;">:</td>
-                        <td colspan="2">${dev.client || 'Nhà máy Tesa Tape DEEP C Hải Phòng'}</td>
+                        <td colspan="2">${dev.client || 'nhà máy tesa tape deep c hải phòng'}</td>
                     </tr>
                     <tr>
                         <td style="font-weight: 700;">Dự án</td>
                         <td style="text-align: center; font-weight: 700;">:</td>
-                        <td colspan="2">${dev.client || 'Nhà máy Tesa Tape DEEP C Hải Phòng'}</td>
+                        <td colspan="2">${dev.client || 'nhà máy tesa tape deep c hải phòng'}</td>
                     </tr>
                     <tr>
                         <td style="font-weight: 700;">Kỹ sư phụ trách</td>
                         <td style="text-align: center; font-weight: 700;">:</td>
-                        <td style="width: 42%;">${dev.tech || ''}</td>
-                        <td style="width: 35%; font-weight: 700;">Mã thiết bị : ${dev.code || ''}</td>
+                        <td style="width: 42%;">${(dev.tech || '').toLowerCase()}</td>
+                        <td style="width: 35%; font-weight: 700;">mã thiết bị : ${(dev.code || '').toLowerCase()}</td>
                     </tr>
                     <tr>
                         <td style="font-weight: 700;">Ngày thực hiện</td>
                         <td style="text-align: center; font-weight: 700;">:</td>
                         <td>${dateVN}</td>
-                        <td style="font-weight: 700;">Bảo trì tiếp theo : ${nextDateVN}</td>
+                        <td style="font-weight: 700;">bảo trì tiếp theo : ${nextDateVN}</td>
                     </tr>
                     <tr>
                         <td style="font-weight: 700;">Đối tượng bảo trì</td>
                         <td style="text-align: center; font-weight: 700;">:</td>
-                        <td>${dev.name || ''}</td>
-                        <td style="font-weight: 700;">Vị trí : ${dev.location || ''}</td>
+                        <td>${(dev.name || '').toLowerCase()}</td>
+                        <td style="font-weight: 700;">vị trí : ${(dev.location || '').toLowerCase()}</td>
                     </tr>
                 </table>
             `;
         }
 
-  // 6. Dựng TRANG 1: BÁO CÁO DỊCH VỤ KỸ THUẬT & BẢO TRÌ (Đã chuẩn hóa chữ đậm/thường & xóa sạch chữ thừa)
+        // 6. Dựng TRANG 1: BÁO CÁO DỊCH VỤ KỸ THUẬT & BẢO TRÌ
         function buildExcelSheetPage1(dev) {
             const tasks = Array.isArray(dev.tasks) && dev.tasks.length > 0 ? dev.tasks : [
-                { title: 'Kiểm tra ngoại quan', detail: 'Kiểm tra kết cấu & vệ sinh thiết bị', status: 'TỐT' }
+                { title: 'kiểm tra ngoại quan', detail: 'kiểm tra kết cấu & vệ sinh thiết bị', status: 'tốt' }
             ];
 
             let taskRows = '';
             tasks.forEach((t, i) => {
-                const st = (t.status || 'Đạt').toUpperCase();
+                const st = (t.status || 'đạt').toLowerCase();
                 taskRows += `
                     <tr>
                         <td style="text-align: center; width: 6%; font-weight: normal;">${i + 1}</td>
-                        <td style="width: 26%; font-weight: 700;">${t.title || ''}</td>
-                        <td style="width: 40%; font-weight: normal;">${t.detail || ''}</td>
-                        <td style="text-align: center; width: 12%; font-weight: 700;">${st === 'ĐẠT' ? 'TỐT' : st}</td>
-                        <td style="width: 16%; font-weight: normal;">${t.note || 'Đã bảo dưỡng'}</td>
+                        <td style="width: 26%; font-weight: 700;">${(t.title || '').toLowerCase()}</td>
+                        <td style="width: 40%; font-weight: normal;">${(t.detail || '').toLowerCase()}</td>
+                        <td style="text-align: center; width: 12%; font-weight: 700;">${st === 'đạt' ? 'tốt' : st}</td>
+                        <td style="width: 16%; font-weight: normal;">${(t.note || 'đã bảo dưỡng').toLowerCase()}</td>
                     </tr>
                 `;
             });
 
             const specs = Array.isArray(dev.specs) && dev.specs.length > 0 ? dev.specs : [
-                { item: 'Thông số vận hành', val: 'Ổn định', unit: '', status: 'Đạt' }
+                { item: 'thông số vận hành', val: 'ổn định', unit: '', status: 'đạt' }
             ];
 
             let specRows = '';
@@ -5318,10 +5318,10 @@ if (data.devices) {
                 specRows += `
                     <tr>
                         <td style="text-align: center; width: 6%; font-weight: normal;">${i + 1}</td>
-                        <td style="width: 34%; font-weight: 700;">${s.item || ''}</td>
+                        <td style="width: 34%; font-weight: 700;">${(s.item || '').toLowerCase()}</td>
                         <td style="text-align: center; width: 22%; font-weight: 700; color: #000;">${s.val || ''}</td>
                         <td style="text-align: center; width: 14%; font-weight: normal;">${unitTxt}</td>
-                        <td style="text-align: center; width: 24%; font-weight: normal;">${s.status || 'Đạt'}</td>
+                        <td style="text-align: center; width: 24%; font-weight: normal;">${(s.status || 'đạt').toLowerCase()}</td>
                     </tr>
                 `;
             });
@@ -5332,12 +5332,12 @@ if (data.devices) {
                         ${renderExcelHeaderBlock()}
 
                         <div style="border: 1px solid #000; text-align: center; padding: 9px 6px; font-weight: 700; font-size: 15px; text-transform: uppercase; margin-bottom: 10px; background: #fff;">
-                            BÁO CÁO DỊCH VỤ KỸ THUẬT &amp; BẢO TRÌ THIẾT BỊ
+                            báo cáo dịch vụ kỹ thuật &amp; bảo trì thiết bị
                         </div>
 
                         ${renderExcelGeneralInfoRows(dev)}
 
-                        <div class="excel-gray-section">CÔNG VIỆC THỰC HIỆN &amp; ĐÁNH GIÁ TÌNH TRẠNG</div>
+                        <div class="excel-gray-section">công việc thực hiện &amp; đánh giá tình trạng</div>
                         <table class="excel-data-table">
                             <thead>
                                 <tr>
@@ -5353,7 +5353,7 @@ if (data.devices) {
                             </tbody>
                         </table>
 
-                        <div class="excel-gray-section">THÔNG SỐ ĐO ĐẠC THỰC TẾ</div>
+                        <div class="excel-gray-section">thông số đo đạc thực tế</div>
                         <table class="excel-data-table">
                             <thead>
                                 <tr>
@@ -5374,10 +5374,10 @@ if (data.devices) {
                         <table style="width: 100%; border-collapse: collapse; border: 1px solid #000000; font-size: 12px;">
                             <tr>
                                 <td style="width: 24%; background-color: #bfbfbf !important; font-weight: 700; text-align: center; padding: 12px 6px; border-right: 1px solid #000000; text-transform: uppercase; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;">
-                                    KẾT LUẬN TÌNH TRẠNG
+                                    kết luận tình trạng
                                 </td>
                                 <td style="padding: 10px 12px; font-weight: normal; color: #000000;">
-                                    ${dev.note || 'Đã kiểm tra vận hành hệ thống đạt tiêu chuẩn.'}
+                                    ${(dev.note || 'đã kiểm tra vận hành hệ thống đạt tiêu chuẩn.').toLowerCase()}
                                 </td>
                             </tr>
                         </table>
@@ -5386,67 +5386,70 @@ if (data.devices) {
             `;
         }
 
-        // 7. Dựng TRANG 2: HÌNH ẢNH TRONG QUÁ TRÌNH BẢO TRÌ CÁC HẠNG MỤC (Đã xóa sạch chữ đánh dấu góc phải)
+        // 7. Dựng TRANG 2: HÌNH ẢNH THỰC TẾ (Đã xóa cột hạng mục, tối ưu hiển thị FULL 100% ảnh không bị cắt)
         function buildExcelSheetPage2(dev) {
             const photos = Array.isArray(dev.photos) ? dev.photos.filter(Boolean) : [];
-            const tasks = Array.isArray(dev.tasks) && dev.tasks.length > 0 ? dev.tasks : [];
-
             let photoRowsHtml = '';
 
             if (photos.length === 0) {
                 photoRowsHtml = `
                     <tr>
-                        <td style="text-align: center; width: 6%; font-weight: normal;">1</td>
-                        <td style="width: 24%; font-weight: 700;">Hình ảnh bảo trì thực tế</td>
-                        <td style="width: 70%; height: 180px; text-align: center; color: #666; font-style: italic;">
-                            Chưa có hình ảnh cập nhật
+                        <td style="text-align: center; width: 8%; font-weight: normal;">1</td>
+                        <td style="width: 92%; height: 220px; text-align: center; color: #666; font-style: italic;">
+                            chưa có hình ảnh cập nhật
                         </td>
                     </tr>
                 `;
             } else {
                 const total = photos.length;
-                let rowCount = 1;
-                let imgHeight = 200;
+                let rowsConfig = [];
 
-                if (total === 1) { rowCount = 1; imgHeight = 310; }
-                else if (total === 2) { rowCount = 2; imgHeight = 220; }
-                else if (total <= 4) { rowCount = 2; imgHeight = 195; }
-                else if (total <= 6) { rowCount = 3; imgHeight = 145; }
-                else if (total <= 9) { rowCount = 3; imgHeight = 135; }
-                else { rowCount = 4; imgHeight = 105; }
+                // Phân chia bố cục lưới ảnh thông minh để giữ nguyên tỷ lệ, xem full không bị cắt ảnh
+                if (total === 1) {
+                    rowsConfig = [{ list: photos, height: 280, cols: 1 }];
+                } else if (total === 2) {
+                    rowsConfig = [{ list: photos, height: 240, cols: 2 }];
+                } else if (total === 3) {
+                    rowsConfig = [{ list: photos, height: 210, cols: 3 }];
+                } else if (total === 4) {
+                    rowsConfig = [{ list: photos, height: 200, cols: 2 }];
+                } else if (total <= 6) {
+                    rowsConfig = [
+                        { list: photos.slice(0, 3), height: 160, cols: 3 },
+                        { list: photos.slice(3), height: 160, cols: 3 }
+                    ];
+                } else if (total <= 9) {
+                    rowsConfig = [
+                        { list: photos.slice(0, 3), height: 130, cols: 3 },
+                        { list: photos.slice(3, 6), height: 130, cols: 3 },
+                        { list: photos.slice(6), height: 130, cols: 3 }
+                    ];
+                } else {
+                    rowsConfig = [
+                        { list: photos.slice(0, 4), height: 110, cols: 4 },
+                        { list: photos.slice(4, 8), height: 110, cols: 4 },
+                        { list: photos.slice(8), height: 110, cols: 4 }
+                    ];
+                }
 
-                const basePerRow = Math.floor(total / rowCount);
-                let extra = total % rowCount;
-                let idxCursor = 0;
-
-                for (let r = 0; r < rowCount; r++) {
-                    const countInRow = basePerRow + (extra > 0 ? 1 : 0);
-                    if (extra > 0) extra--;
-
-                    const slicePhotos = photos.slice(idxCursor, idxCursor + countInRow);
-                    idxCursor += countInRow;
-
-                    const taskLabel = tasks[r] ? tasks[r].title : `Hình ảnh bảo trì thực tế #${r + 1}`;
-                    const cols = Math.min(slicePhotos.length, 4);
-
-                    const imgsHtml = slicePhotos.map(src => `
-                        <div style="border: 1px solid #9ca3af; height: ${imgHeight}px; overflow: hidden; background: #f9fafb; display: flex; align-items: center; justify-content: center;">
-                            <img src="${src}" crossorigin="anonymous" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                rowsConfig.forEach((rowObj, rIdx) => {
+                    const imgsHtml = rowObj.list.map(src => `
+                        <div style="border: 1px solid #9ca3af; border-radius: 4px; height: ${rowObj.height}px; overflow: hidden; background: #000; display: flex; align-items: center; justify-content: center;">
+                            <img src="${src}" crossorigin="anonymous" style="max-width: 100%; max-height: 100%; object-fit: contain; display: block;">
                         </div>
                     `).join('');
 
                     photoRowsHtml += `
                         <tr>
-                            <td style="text-align: center; width: 6%; font-weight: normal;">${r + 1}</td>
-                            <td style="width: 24%; font-weight: 700; line-height: 1.4;">${taskLabel}</td>
-                            <td style="width: 70%; padding: 8px;">
-                                <div style="display: grid; grid-template-columns: repeat(${cols}, minmax(0, 1fr)); gap: 8px;">
+                            <td style="text-align: center; width: 8%; font-weight: 700; vertical-align: middle;">${rIdx + 1}</td>
+                            <td style="width: 92%; padding: 8px; vertical-align: middle;">
+                                <div style="display: grid; grid-template-columns: repeat(${rowObj.cols}, minmax(0, 1fr)); gap: 8px;">
                                     ${imgsHtml}
                                 </div>
                             </td>
                         </tr>
                     `;
-                }
+                });
             }
 
             return `
@@ -5455,7 +5458,7 @@ if (data.devices) {
                         ${renderExcelHeaderBlock()}
 
                         <div style="border: 1px solid #000; text-align: center; padding: 9px 6px; font-weight: 700; font-size: 15px; text-transform: uppercase; margin-bottom: 10px; background: #fff;">
-                            HÌNH ẢNH TRONG QUÁ TRÌNH BẢO TRÌ CÁC HẠNG MỤC
+                            hình ảnh trong quá trình bảo trì các hạng mục
                         </div>
 
                         ${renderExcelGeneralInfoRows(dev)}
@@ -5463,9 +5466,8 @@ if (data.devices) {
                         <table class="excel-data-table" style="margin-top: 8px;">
                             <thead>
                                 <tr>
-                                    <th style="width: 6%;">STT</th>
-                                    <th style="width: 24%;">Hạng mục</th>
-                                    <th style="width: 70%;">Hình ảnh thực tế</th>
+                                    <th style="width: 8%;">STT</th>
+                                    <th style="width: 92%;">Hình ảnh thực tế (Full View)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -5474,7 +5476,6 @@ if (data.devices) {
                         </table>
                     </div>
 
-                    <!-- Đã xóa bỏ hoàn toàn dòng đánh dấu trang ở góc dưới -->
                     <div style="height: 10px;"></div>
                 </div>
             `;
