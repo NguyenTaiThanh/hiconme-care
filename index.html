@@ -187,24 +187,9 @@
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans flex flex-col min-h-screen relative pb-16 md:pb-0">
-<!-- ==================== MÀN HÌNH KHỞI ĐỘNG APP (CHỐNG ĐEN 100% TỪ MILI-GIÂY ĐẦU TIÊN) ==================== -->
-    <div id="hicon-app-splash">
+<!-- ==================== MÀN HÌNH KHỞI ĐỘNG APP (PHỦ KÍN 100% TRÀN VIỀN - CHỐNG TRÔI LÊN TRÊN) ==================== -->
+    <div id="hicon-app-splash" style="position: fixed; inset: 0; z-index: 999999; background: radial-gradient(circle at 50% 42%, #13548a 0%, #0f2b48 48%, #050d1a 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; user-select: none; font-family: 'Roboto', sans-serif; transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);">
         <style>
-            #hicon-app-splash {
-                position: fixed;
-                inset: 0;
-                z-index: 999999;
-                background: radial-gradient(circle at 50% 42%, #13548a 0%, #0f2b48 48%, #050d1a 100%);
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                overflow: hidden;
-                user-select: none;
-                -webkit-user-select: none;
-                font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
-                transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-            }
             #hicon-app-splash.splash-fade-out {
                 opacity: 0;
                 transform: scale(1.05);
@@ -295,6 +280,19 @@
                 <div class="splash-loader-fill"></div>
             </div>
         </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(function() {
+                    const splashEl = document.getElementById('hicon-app-splash');
+                    if (splashEl) {
+                        splashEl.classList.add('splash-fade-out');
+                        setTimeout(function() { splashEl.remove(); }, 450);
+                    }
+                }, 800);
+            });
+        </script>
+    </div>
 
         <script>
             document.addEventListener('DOMContentLoaded', function() {
