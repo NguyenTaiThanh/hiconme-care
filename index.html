@@ -5823,6 +5823,243 @@ if (data.devices) {
                 }
             } catch (e) {}
         };
+   /* ========================================================================================================= */
+        /* TÍNH NĂNG NHẬP LIÊN TIẾP NHIỀU THIẾT BỊ CÙNG FORM (KHÔNG THOÁT RA NGOÀI & KHÔNG CẦN NHẬP LẠI MẬT KHẨU)    */
+        /* ========================================================================================================= */
+
+        // 1. Tạo thanh điều hướng "Thoát" & "Thiết Bị Tiếp Theo" ngay dưới đáy Form cập nhật
+        function ensureContinuousEntryBarExists() {
+            const formEl = document.querySelector('#admin-step-form form');
+            if (!formEl) return;
+
+            let actionWrap = document.getElementById('continuous-entry-action-box');
+            if (!actionWrap) {
+                const submitBtn = formEl.querySelector('button[type="submit"]');
+                const bottomBar = submitBtn ? submitBtn.parentElement : null;
+
+                if (bottomBar) {
+                    bottomBar.className = "pt-3 border-t border-gray-200 flex flex-wrap items-center justify-end gap-2.5";
+                    bottomBar.innerHTML = `
+                        <button type="button" onclick="exitAfterSaveDevice()" class="btn-interactive px-5 py-2.5 bg-gray-200 hover:bg-red-600 hover:text-white text-gray-700 rounded-xl font-bold text-xs flex items-center transition">
+                            <i class="fas fa-sign-out-alt mr-1.5"></i> Thoát
+                        </button>
+                        <button type="button" id="btn-next-device-reset" onclick="prepareNextDeviceInForm()" class="hidden btn-interactive px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-brand-dark rounded-xl font-extrabold text-xs flex items-center shadow-lg border-2 border-amber-600">
+                            <i class="fas fa-forward mr-1.5"></i> Thiết Bị Tiếp Theo
+                        </button>
+                        <button type="submit" id="btn-submit-save-device" class="btn-interactive px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-extrabold text-xs shadow-lg flex items-center">
+                            <i class="fas fa-save mr-1.5"></i> LƯU BÁO CÁO &amp; ĐỒNG BỘ
+                        </button>
+                    `;
+                }
+
+                // Khung thông báo trạng thái đã lưu nằm ngay phía trên hàng nút bấm
+                actionWrap = document.createElement('div');
+                actionWrap.id = 'continuous-entry-action-box';
+                actionWrap.className = 'hidden bg-emerald-50 border-2 border-emerald-400 rounded-2xl p-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-md';
+                actionWrap.innerHTML = `
+                    <div class="flex items-center space-x-2.5 text-emerald-900">
+                        <div class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold shrink-0 shadow">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div>
+                            <div id="continuous-saved-msg" class="text-xs font-black uppercase tracking-wide text-emerald-800">
+                                Đã lưu báo cáo thành công!
+                            </div>
+                            <div class="text-[11px] text-emerald-700">
+                                Bấm <strong>"Thiết Bị Tiếp Theo"</strong> để làm mới Mã, Tên &amp; Ảnh (giữ nguyên thông tin mẫu) hoặc bấm <strong>"Thoát"</strong> để đóng.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0 w-full sm:w-auto justify-end">
+                        <button type="button" onclick="exitAfterSaveDevice()" class="btn-interactive bg-white hover:bg-red-600 hover:text-white text-gray-700 border border-gray-300 font-bold px-4 py-2 rounded-xl text-xs">
+                            Thoát
+                        </button>
+                        <button type="button" onclick="prepareNextDeviceInForm()" class="btn-interactive bg-amber-500 hover:bg-amber-400 text-brand-dark font-black px-4 py-2 rounded-xl text-xs shadow-md flex items-center">
+                            <span>Thiết Bị Tiếp Theo</span>
+                            <i class="fas fa-arrow-right ml-1.5"></i>
+                        </button>
+                    </div>
+                `;
+                if (bottomBar) {
+                    formEl.insertBefore(actionWrap, bottomBar);
+                } else {
+                    formEl.appendChild(actionWrap);
+                }
+            }
+        }
+
+        // 2. Hàm xử lý khi bấm nút "Thiết Bị Tiếp Theo": Chỉ làm mới Ảnh, Tên và Mã thiết bị; giữ nguyên mọi thông tin khác
+        window.prepareNextDeviceInForm = function() {
+            // Làm mới mảng ảnh và khung xem trước hình ảnh
+            uploadedPhotosBase64 = [];
+            renderPhotoPreviews();
+            const fileInput = document.getElementById('form-file-input');
+            if (fileInput) fileInput.value = '';
+
+            // Làm mới ô Mã QR Thiết Bị và Tên Thiết Bị
+            const codeInput = document.getElementById('form-code');
+            const nameInput = document.getElementById('form-name');
+            if (codeInput) codeInput.value = '';
+            if (nameInput) nameInput.value = '';
+
+            // Ẩn hộp thông báo lưu của máy cũ để sẵn sàng cho máy mới
+            const actionWrap = document.getElementById('continuous-entry-action-box');
+            if (actionWrap) actionWrap.classList.add('hidden');
+
+            // Cuộn Form lên đầu và đặt con trỏ vào ô Mã QR Thiết Bị
+            const formEl = document.querySelector('#admin-step-form form');
+            if (formEl) {
+                formEl.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            setTimeout(() => {
+                if (codeInput) codeInput.focus();
+            }, 150);
+
+            showTopToast('Đã làm mới Mã, Tên & Ảnh! Các thông tin chung và thông số mẫu được giữ nguyên.', false);
+        };
+
+        // 3. Hàm xử lý khi bấm nút "Thoát"
+        window.exitAfterSaveDevice = function() {
+            uploadedPhotosBase64 = [];
+            renderPhotoPreviews();
+            const actionWrap = document.getElementById('continuous-entry-action-box');
+            if (actionWrap) actionWrap.classList.add('hidden');
+
+            closeAdminModal();
+            if (currentViewingDeviceCode) {
+                navigateTo('maintenance-portal');
+                loadSampleDevice(currentViewingDeviceCode);
+            }
+        };
+
+        // 4. Ghi đè hàm Lưu Thiết Bị: Lưu & đồng bộ ngay nhưng KHÔNG đóng cửa sổ, hiện nút "Thiết Bị Tiếp Theo" & "Thoát"
+        handleSaveDevice = async function(e) {
+            e.preventDefault();
+            ensureContinuousEntryBarExists();
+
+            const code = document.getElementById('form-code').value.trim().toUpperCase();
+            const name = document.getElementById('form-name').value.trim();
+            const location = document.getElementById('form-location').value.trim();
+            const client = document.getElementById('form-client').value.trim();
+            const tech = document.getElementById('form-tech').value.trim();
+            const date = document.getElementById('form-date').value;
+            const nextDate = document.getElementById('form-next-date').value || computeNextDateByMonths(date, 3);
+            const statusVal = document.getElementById('form-status').value;
+            const note = document.getElementById('form-note').value.trim();
+
+            let statusBadge = '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800"><i class="fas fa-check-circle mr-1"></i> HOẠT ĐỘNG TỐT</span>';
+            if (statusVal === 'WARN') {
+                statusBadge = '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-800"><i class="fas fa-exclamation-triangle mr-1"></i> CẦN LƯU Ý KỸ THUẬT</span>';
+            } else if (statusVal === 'BAD') {
+                statusBadge = '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-red-100 text-red-800"><i class="fas fa-times-circle mr-1"></i> CẦN SỬA CHỮA NGAY</span>';
+            }
+
+            const taskRows = document.querySelectorAll('#form-tasks-container > div');
+            let collectedTasks = [];
+            taskRows.forEach(row => {
+                const tTitle = row.querySelector('.task-title-input').value.trim();
+                const tDetail = row.querySelector('.task-detail-input').value.trim();
+                if (tTitle) {
+                    collectedTasks.push({ title: tTitle, detail: tDetail || 'Đã kiểm tra kỹ thuật đạt yêu cầu.', status: 'Đạt' });
+                }
+            });
+
+            const specRows = document.querySelectorAll('#form-specs-container > div');
+            let collectedSpecs = [];
+            specRows.forEach(row => {
+                const sItem = row.querySelector('.spec-item-input').value.trim();
+                const sVal = row.querySelector('.spec-val-input').value.trim();
+                const sUnit = row.querySelector('.spec-unit-input').value.trim();
+                const sStatus = row.querySelector('.spec-status-input').value;
+                if (sItem) {
+                    collectedSpecs.push({
+                        item: sItem,
+                        val: sVal || '--',
+                        unit: sUnit || '--',
+                        status: sStatus,
+                        isOk: sStatus === 'Đạt'
+                    });
+                }
+            });
+
+            const db = getDeviceDatabase();
+
+            let finalPhotos = [...uploadedPhotosBase64];
+            if (finalPhotos.length === 0 && db[code] && db[code].photos) {
+                finalPhotos = db[code].photos;
+            } else if (finalPhotos.length === 0) {
+                finalPhotos = ['https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=600&auto=format&fit=crop'];
+            }
+
+            db[code] = {
+                name: name,
+                code: code,
+                location: location,
+                client: client,
+                tech: tech,
+                date: date,
+                nextDate: nextDate,
+                statusBadge: statusBadge,
+                note: note || 'Đã kiểm tra vận hành hệ thống đạt tiêu chuẩn.',
+                tasks: collectedTasks.length > 0 ? collectedTasks : [
+                    { title: 'Vệ sinh tổng quan thiết bị', detail: 'Lau chùi sạch sẽ.', status: 'Đạt' }
+                ],
+                specs: collectedSpecs.length > 0 ? collectedSpecs : [
+                    { item: 'Kiểm tra thông số vận hành', val: 'Ổn định', unit: 'TCVN', status: 'Đạt', isOk: true }
+                ],
+                photos: finalPhotos
+            };
+
+            const submitBtn = document.getElementById('btn-submit-save-device');
+            const origBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1.5"></i> ĐANG LƯU &amp; ĐỒNG BỘ...';
+            }
+
+            // Cập nhật dữ liệu nền ngoài màn hình tra cứu
+            currentViewingDeviceCode = code;
+            loadSampleDevice(code);
+            updateTotalCountDisplay();
+
+            const synced = await saveDeviceDatabase(db);
+
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = origBtnHtml;
+            }
+
+            // Hiển thị nút "Thiết Bị Tiếp Theo" và khung xác nhận ngay dưới Form (KHÔNG ĐÓNG FORM)
+            const nextBtn = document.getElementById('btn-next-device-reset');
+            if (nextBtn) nextBtn.classList.remove('hidden');
+
+            const actionWrap = document.getElementById('continuous-entry-action-box');
+            const savedMsg = document.getElementById('continuous-saved-msg');
+            if (savedMsg) {
+                savedMsg.innerText = synced
+                    ? `✅ Đã lưu & đồng bộ thiết bị "${name} (${code})" lên Cloud!`
+                    : `✅ Đã lưu thiết bị "${name} (${code})" (Chế độ Offline)!`;
+            }
+            if (actionWrap) {
+                actionWrap.classList.remove('hidden');
+                actionWrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+
+            if (synced) {
+                showTopToast(`Đã lưu "${code}" thành công! Bấm "Thiết Bị Tiếp Theo" để nhập máy mới hoặc "Thoát".`, false);
+            } else {
+                showTopToast(`Đã lưu Offline "${code}"! Bấm "Thiết Bị Tiếp Theo" để nhập tiếp.`, false);
+            }
+        };
+
+        // Tự động gắn thanh nút mới ngay khi mở Form thiết bị
+        const origSelectDeviceType = selectDeviceTypeAndOpenForm;
+        selectDeviceTypeAndOpenForm = function(tplId) {
+            origSelectDeviceType(tplId);
+            ensureContinuousEntryBarExists();
+            const actionWrap = document.getElementById('continuous-entry-action-box');
+            if (actionWrap) actionWrap.classList.add('hidden');
+        };
    </script>
 </body>
 </html>
