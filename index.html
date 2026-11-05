@@ -296,16 +296,49 @@
         </script>
     </div>
 
-    <!-- TOP-LEVEL FLOATING TOAST -->
-    <div id="top-error-toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-[140] hidden max-w-md w-11/12">
-        <div id="toast-box-bg" class="bg-red-600 text-white px-5 py-3.5 rounded-2xl shadow-2xl border-2 border-red-400 flex items-center justify-between gap-3 toast-animate-in">
-            <div class="flex items-center space-x-3">
-                <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center shrink-0">
-                    <i id="toast-icon" class="fas fa-exclamation-triangle text-amber-300 text-sm"></i>
+   <!-- TOP-LEVEL FLOATING TOAST (HIỂN THỊ CHÍNH GIỮA MÀN HÌNH TRÊN CẢ LAPTOP & ĐIỆN THOẠI) -->
+    <style>
+        #top-error-toast {
+            position: fixed !important;
+            inset: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            max-width: none !important;
+            transform: none !important;
+            z-index: 99999 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            pointer-events: none !important;
+            padding: 16px !important;
+        }
+        #top-error-toast.hidden {
+            display: none !important;
+        }
+        #toast-box-bg {
+            pointer-events: auto !important;
+            width: 100% !important;
+            max-width: 440px !important;
+            margin: 0 auto !important;
+            box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.65) !important;
+        }
+        @keyframes centerPopToast {
+            0% { transform: scale(0.88); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .toast-animate-in {
+            animation: centerPopToast 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+        }
+    </style>
+    <div id="top-error-toast" class="hidden">
+        <div id="toast-box-bg" class="bg-red-600 text-white px-6 py-4 rounded-2xl border-2 border-red-400 flex items-center justify-between gap-3.5 toast-animate-in">
+            <div class="flex items-center space-x-3.5">
+                <div class="w-9 h-9 bg-white/20 rounded-full flex items-center justify-center shrink-0">
+                    <i id="toast-icon" class="fas fa-exclamation-triangle text-amber-300 text-base"></i>
                 </div>
-                <span id="top-error-message" class="text-xs sm:text-sm font-bold tracking-wide">Thông báo hệ thống</span>
+                <span id="top-error-message" class="text-xs sm:text-sm font-bold tracking-wide leading-snug">Thông báo hệ thống</span>
             </div>
-            <button onclick="hideErrorToast()" class="text-white/80 hover:text-white p-1 transition rounded-lg hover:bg-white/10">
+            <button onclick="hideErrorToast()" class="text-white/80 hover:text-white p-1.5 transition rounded-lg hover:bg-white/10 shrink-0">
                 <i class="fas fa-times text-base"></i>
             </button>
         </div>
