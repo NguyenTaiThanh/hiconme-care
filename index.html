@@ -6273,6 +6273,595 @@ if (data.devices) {
             const actionWrap = document.getElementById('continuous-entry-action-box');
             if (actionWrap) actionWrap.classList.add('hidden');
         };
+        /* ========================================================================================================= */
+        /* ENGINE TỐI ƯU QUÉT QR & TẢI TRỰC TIẾP TỪNG THIẾT BỊ TỪ CLOUD (DIRECT-FETCH v6.0 - GIỮ NGUYÊN 100% UI)    */
+        /* ========================================================================================================= */
+
+        let _pendingQrLookupCode = null;
+        let _activeQrLookupToken = 0;
+        let _isQrScanLocked = false;
+
+        // 1. Lưu localStorage an toàn (không bao giờ sập luồng nếu ảnh Base64 vượt ngưỡng 5MB của trình duyệt)
+        function safeSetLocalStorage(key, value) {
+            try {
+                localStorage.setItem(key, value);
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // 2. Chuyển mã thiết bị sang Key hợp lệ của Firebase (xử lý được cả mã có dấu /, ., #, $, [, ])
+        function toFirebaseSafeKey(code) {
+            return String(code || '').trim().toUpperCase()
+                .replace(/\./g, '__DOT__')
+                .replace(/#/g, '__HASH__')
+                .replace(/\$/g, '__DOL__')
+                .replace(/\[/g, '__LB__')
+                .replace(/\]/g, '__RB__')
+                .replace(/\//g, '__SL__');
+        }
+
+        // Chuẩn hóa danh sách thiết bị từ Cloud về key là mã gốc dev.code để tra cứu đồng nhất
+        function normalizeDevicesMapFromCloud(rawMap) {
+            const normalized = {};
+            if (!rawMap || typeof rawMap !== 'object') return normalized;
+            Object.keys(rawMap).forEach(k => {
+                const dev = rawMap[k];
+                if (!dev || typeof dev !== 'object') return;
+                const realCode = String(dev.code || k)
+                    .replace(/__DOT__/g, '.')
+                    .replace(/__HASH__/g, '#')
+                    .replace(/__DOL__/g, '$')
+                    .replace(/__LB__/g, '[')
+                    .replace(/__RB__/g, ']')
+                    .replace(/__SL__/g, '/')
+                    .trim()
+                    .toUpperCase();
+                dev.code = realCode;
+                normalized[realCode] = dev;
+            });
+            return normalized;
+        }
+
+        // Chuẩn hóa danh sách thiết bị sang Key an toàn trước khi đẩy toàn bộ lên Firebase
+        function buildFirebaseSafeDevicesMap(db) {
+            const safeMap = {};
+            Object.keys(db || {}).forEach(k => {
+                const dev = db[k];
+                if (!dev || typeof dev !== 'object') return;
+                const realCode = String(dev.code || k).trim().toUpperCase();
+                dev.code = realCode;
+                safeMap[toFirebaseSafeKey(realCode)] = dev;
+            });
+            return safeMap;
+        }
+
+        // 3. Tách chính xác mã thiết bị từ mọi định dạng QR (URL đầy đủ, URL thiếu https, double-encode, hay text thuần)
+        function extractDeviceCodeFromQr(rawText) {
+            if (!rawText) return '';
+            const str = String(rawText).trim();
+            let code = str;
+
+            if (/[?&]code=/i.test(str)) {
+                try {
+                    const normalizedUrl = /^https?:\/\//i.test(str) ? str : 'https://' + str.replace(/^\/+/, '');
+                    const urlObj = new URL(normalizedUrl);
+                    for (const [k, v] of urlObj.searchParams.entries()) {
+                        if (k.toLowerCase() === 'code' && v) {
+                            code = v;
+                            break;
+                        }
+                    }
+                } catch (e) {
+                    const match = str.match(/[?&]code=([^&#]+)/i);
+                    if (match && match[1]) {
+                        try { code = decodeURIComponent(match[1].replace(/\+/g, ' ')); } catch (_) { code = match[1]; }
+                    }
+                }
+            }
+
+            if (/%[0-9A-Fa-f]{2}/.test(code)) {
+                try { code = decodeURIComponent(code); } catch (_) {}
+            }
+
+            return code.trim().toUpperCase();
+        }
+
+        // 4. Tìm thiết bị thông minh trong Map (khớp chính xác, khớp safeKey, hoặc khớp bỏ khoảng trắng thừa)
+        function findDeviceInMap(db, rawCode) {
+            if (!db || !rawCode) return null;
+            const upper = String(rawCode).trim().toUpperCase();
+            if (db[upper]) return db[upper];
+
+            const safeKey = toFirebaseSafeKey(upper);
+            if (db[safeKey]) return db[safeKey];
+
+            const compactTarget = upper.replace(/\s+/g, '');
+            const values = Object.values(db);
+            for (let i = 0; i < values.length; i++) {
+                const d = values[i];
+                if (!d || !d.code) continue;
+                const dc = String(d.code).trim().toUpperCase();
+                if (dc === upper || dc.replace(/\s+/g, '') === compactTarget) {
+                    return d;
+                }
+            }
+            return null;
+        }
+
+        // 5. Quản lý hàng đợi Offline theo từng thiết bị (không bao giờ ghi đè ngược cả DB Cloud)
+        function getOfflineDeviceQueue() {
+            try {
+                const raw = localStorage.getItem('hicon_offline_device_queue');
+                return raw ? JSON.parse(raw) : [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function addCodeToOfflineQueue(code) {
+            const q = getOfflineDeviceQueue();
+            if (!q.includes(code)) {
+                q.push(code);
+                safeSetLocalStorage('hicon_offline_device_queue', JSON.stringify(q));
+            }
+            safeSetLocalStorage('hicon_offline_pending_sync', 'true');
+            updateNetworkUI();
+        }
+
+        function removeCodeFromOfflineQueue(code) {
+            const q = getOfflineDeviceQueue().filter(c => c !== code);
+            safeSetLocalStorage('hicon_offline_device_queue', JSON.stringify(q));
+            if (q.length === 0) {
+                localStorage.removeItem('hicon_offline_pending_sync');
+            }
+            updateNetworkUI();
+        }
+
+        // 6. Tải TRỰC TIẾP 1 thiết bị từ Firebase (~0.2 giây, bỏ qua toàn bộ ảnh dự án/hệ thống)
+        async function fetchSingleDeviceFromCloud(code) {
+            const safeKey = toFirebaseSafeKey(code);
+            const keyCandidates = safeKey === code ? [safeKey] : [safeKey, code];
+
+            // Tầng 1: Tải đúng 1 node thiết bị (cực nhanh, không lo timeout)
+            for (let i = 0; i < keyCandidates.length; i++) {
+                const key = keyCandidates[i];
+                try {
+                    const controller = new AbortController();
+                    const timer = setTimeout(() => controller.abort(), 12000);
+                    const res = await fetch(`${FIREBASE_DB_URL}/hicon_system/devices/${encodeURIComponent(key)}.json?t=${Date.now()}`, {
+                        signal: controller.signal,
+                        cache: 'no-store'
+                    });
+                    clearTimeout(timer);
+
+                    if (res.status === 401 || res.status === 403) {
+                        return { device: null, error: `Firebase từ chối quyền đọc (Lỗi ${res.status}). Hãy kiểm tra mục Rules trên Firebase!` };
+                    }
+                    if (res.ok) {
+                        const dev = await res.json();
+                        if (dev && typeof dev === 'object' && (dev.name || dev.code)) {
+                            dev.code = String(dev.code || code).trim().toUpperCase();
+                            return { device: dev, error: null };
+                        }
+                    }
+                } catch (e) {}
+            }
+
+            // Tầng 2 (Dự phòng): Nếu mã có sai khác nhẹ, tải riêng nhánh devices.json để dò tìm
+            try {
+                const controller = new AbortController();
+                const timer = setTimeout(() => controller.abort(), 20000);
+                const res = await fetch(`${FIREBASE_DB_URL}/hicon_system/devices.json?t=${Date.now()}`, {
+                    signal: controller.signal,
+                    cache: 'no-store'
+                });
+                clearTimeout(timer);
+
+                if (res.status === 401 || res.status === 403) {
+                    return { device: null, error: `Firebase từ chối quyền đọc (Lỗi ${res.status}). Hãy kiểm tra mục Rules trên Firebase!` };
+                }
+                if (res.ok) {
+                    const rawMap = await res.json();
+                    if (rawMap && typeof rawMap === 'object') {
+                        const cloudDevices = normalizeDevicesMapFromCloud(rawMap);
+                        const merged = { ...getDeviceDatabase(), ...cloudDevices };
+                        _ramDeviceDbCache = merged;
+                        safeSetLocalStorage('hicon_device_db', JSON.stringify(merged));
+                        updateTotalCountDisplay();
+                        return { device: findDeviceInMap(merged, code), error: null };
+                    }
+                }
+            } catch (e) {
+                return { device: null, error: 'Mạng yếu hoặc quá thời gian kết nối Đám mây. Vui lòng bấm Tra Cứu lại!' };
+            }
+
+            return { device: null, error: null };
+        }
+
+        // 7. Hàm hiển thị thiết bị thông minh (dùng chung cho Quét từ Camera, Quét trong App, và bấm Tra Cứu)
+        async function loadAndDisplayDeviceSmart(rawCode, allowCloudFetch = true) {
+            const code = extractDeviceCodeFromQr(rawCode);
+            if (!code) {
+                showTopErrorToast('Vui lòng nhập hoặc quét mã QR hợp lệ!');
+                clearDeviceReportDefault();
+                return;
+            }
+
+            const lookupToken = ++_activeQrLookupToken;
+            _pendingQrLookupCode = code;
+
+            const inputEl = document.getElementById('device-code-input');
+            if (inputEl) inputEl.value = code;
+
+            // Hiển thị tức thì từ bộ nhớ máy (0ms - hoạt động 100% Offline)
+            const db = getDeviceDatabase();
+            const localDev = findDeviceInMap(db, code);
+            if (localDev) {
+                renderDeviceReport(localDev);
+            } else {
+                currentViewingDeviceCode = code;
+                const nameEl = document.getElementById('device-name');
+                const codeEl = document.getElementById('device-code');
+                const badgeEl = document.getElementById('device-status-badge');
+                if (nameEl) nameEl.innerText = 'Đang tải thông tin từ Đám mây...';
+                if (codeEl) codeEl.innerText = 'MÃ QR: ' + code;
+                if (badgeEl) {
+                    badgeEl.innerHTML = '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-cyan-100 text-brand-blue"><i class="fas fa-spinner fa-spin mr-1"></i> ĐANG TẢI CLOUD</span>';
+                }
+            }
+
+            if (!allowCloudFetch || !navigator.onLine) {
+                if (!localDev) {
+                    clearDeviceReportDefault();
+                    showTopErrorToast(`Không tìm thấy mã "${code}" trong bộ nhớ Offline!`);
+                }
+                return;
+            }
+
+            // Luôn kiểm tra bản mới nhất của đúng thiết bị này trên Firebase (mất ~0.2s)
+            const result = await fetchSingleDeviceFromCloud(code);
+            if (lookupToken !== _activeQrLookupToken) return;
+
+            if (result.error) {
+                if (!localDev) {
+                    clearDeviceReportDefault();
+                    showTopErrorToast(result.error);
+                }
+                return;
+            }
+
+            if (result.device) {
+                const freshDev = result.device;
+                const currentDb = getDeviceDatabase();
+                currentDb[freshDev.code] = freshDev;
+                _ramDeviceDbCache = currentDb;
+                safeSetLocalStorage('hicon_device_db', JSON.stringify(currentDb));
+                updateTotalCountDisplay();
+
+                renderDeviceReport(freshDev);
+                _pendingQrLookupCode = null;
+                if (!localDev) {
+                    showTopToast(`Đã tải hồ sơ thiết bị: ${freshDev.code}`, false);
+                }
+            } else if (!localDev) {
+                clearDeviceReportDefault();
+                showTopErrorToast(`Không tìm thấy mã "${code}" trên Đám mây! Hãy kiểm tra xem máy tạo thiết bị đã kết nối mạng đồng bộ chưa.`);
+                _pendingQrLookupCode = null;
+            }
+        }
+
+        // 8. Đồng bộ 1 thiết bị lên Firebase chuẩn Key an toàn & báo rõ lỗi nếu Firebase chặn
+        syncSingleDeviceInBackground = async function(code, deviceObj) {
+            const realCode = String(code || '').trim().toUpperCase();
+            deviceObj.code = realCode;
+            const safeKey = toFirebaseSafeKey(realCode);
+
+            if (!navigator.onLine) {
+                addCodeToOfflineQueue(realCode);
+                return false;
+            }
+
+            try {
+                const res = await fetch(`${FIREBASE_DB_URL}/hicon_system/devices/${encodeURIComponent(safeKey)}.json`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(deviceObj)
+                });
+                if (res.ok) {
+                    removeCodeFromOfflineQueue(realCode);
+                    return true;
+                }
+                if (res.status === 401 || res.status === 403) {
+                    showTopErrorToast(`Lỗi đồng bộ Cloud (Mã ${res.status}): Firebase đang khóa quyền ghi ở mục Rules!`);
+                }
+            } catch (e) {}
+
+            addCodeToOfflineQueue(realCode);
+            return false;
+        };
+
+        // Đẩy toàn bộ hệ thống với Key thiết bị đã được làm sạch chuẩn Firebase
+        pushFullSystemToCloud = async function() {
+            if (!navigator.onLine) {
+                safeSetLocalStorage('hicon_offline_pending_sync', 'true');
+                updateNetworkUI();
+                return false;
+            }
+            const projImgs = {};
+            hiconProjectsData.forEach(p => {
+                const saved = localStorage.getItem('hicon_proj_img_' + p.id);
+                if (saved) projImgs[p.id] = saved;
+            });
+            const payload = {
+                project_images: projImgs,
+                about_srv_imgs: getSavedAboutSrvImages(),
+                company_logo: localStorage.getItem('hicon_company_logo') || '',
+                hero_bg: localStorage.getItem('hicon_hero_bg') || '',
+                why_cards_data: whyCardsData,
+                services_data: servicesData,
+                projects_full_list: hiconProjectsData,
+                custom_sections_data: customSectionsData,
+                device_templates: deviceTemplatesData,
+                devices: buildFirebaseSafeDevicesMap(getDeviceDatabase()),
+                admin_pass: getStoredPassword(),
+                cms_texts: getSavedCmsTexts(),
+                updated_at: new Date().toISOString()
+            };
+            try {
+                const res = await fetch(`${FIREBASE_DB_URL}/hicon_system.json`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    localStorage.removeItem('hicon_offline_pending_sync');
+                    safeSetLocalStorage('hicon_offline_device_queue', '[]');
+                    updateNetworkUI();
+                    return true;
+                }
+            } catch (e) {}
+            safeSetLocalStorage('hicon_offline_pending_sync', 'true');
+            updateNetworkUI();
+            return false;
+        };
+
+        // 9. Tải đồng bộ nền không bao giờ làm cũ _ramDeviceDbCache và không ghi đè mất thiết bị mới
+        pullFromCloudInBackground = async function() {
+            if (!navigator.onLine) return;
+
+            // Đẩy trước các thiết bị nằm trong hàng đợi Offline (nếu có) mà không ghi đè cả hệ thống
+            const pendingCodes = getOfflineDeviceQueue();
+            if (pendingCodes.length > 0) {
+                const localDb = getDeviceDatabase();
+                for (let i = 0; i < pendingCodes.length; i++) {
+                    const c = pendingCodes[i];
+                    if (localDb[c]) {
+                        await syncSingleDeviceInBackground(c, localDb[c]);
+                    }
+                }
+            }
+
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 25000);
+                const res = await fetch(`${FIREBASE_DB_URL}/hicon_system.json?t=${Date.now()}`, {
+                    signal: controller.signal,
+                    cache: 'no-store'
+                });
+                clearTimeout(timeoutId);
+
+                if (!res.ok) return;
+                const data = await res.json();
+                if (!data) return;
+
+                if (data.project_images) {
+                    Object.keys(data.project_images).forEach(pid => {
+                        safeSetLocalStorage('hicon_proj_img_' + pid, data.project_images[pid]);
+                    });
+                }
+                if (data.about_srv_imgs) {
+                    safeSetLocalStorage('hicon_about_srv_imgs', JSON.stringify(data.about_srv_imgs));
+                    applySavedAboutSrvImagesToDom();
+                }
+                if (data.company_logo) safeSetLocalStorage('hicon_company_logo', data.company_logo);
+                if (data.hero_bg) safeSetLocalStorage('hicon_hero_bg', data.hero_bg);
+                if (data.why_cards_data) safeSetLocalStorage('hicon_why_cards_data', JSON.stringify(data.why_cards_data));
+                if (data.services_data) safeSetLocalStorage('hicon_services_data', JSON.stringify(data.services_data));
+                if (data.projects_full_list) safeSetLocalStorage('hicon_projects_full_list', JSON.stringify(data.projects_full_list));
+                if (data.custom_sections_data) safeSetLocalStorage('hicon_custom_sections_data', JSON.stringify(data.custom_sections_data));
+                if (data.device_templates) {
+                    safeSetLocalStorage('hicon_device_templates', JSON.stringify(data.device_templates));
+                    loadDeviceTemplatesFromStorage();
+                }
+                if (data.admin_pass) safeSetLocalStorage('hicon_admin_pass', data.admin_pass);
+                if (data.cms_texts) {
+                    safeSetLocalStorage('hicon_cms_texts', JSON.stringify(data.cms_texts));
+                    applySavedCmsTextsToDom();
+                }
+
+                // Cập nhật thẳng _ramDeviceDbCache SAU khi tải xong (khắc phục hoàn toàn lỗi cache cũ)
+                if (data.devices && typeof data.devices === 'object') {
+                    const cloudDevices = normalizeDevicesMapFromCloud(data.devices);
+                    const stillPending = getOfflineDeviceQueue();
+                    const localDb = getDeviceDatabase();
+                    stillPending.forEach(c => {
+                        if (localDb[c]) cloudDevices[c] = localDb[c];
+                    });
+                    _ramDeviceDbCache = cloudDevices;
+                    safeSetLocalStorage('hicon_device_db', JSON.stringify(cloudDevices));
+                }
+
+                loadAllDynamicDataFromStorage();
+                loadDeviceTemplatesFromStorage();
+                applySavedAboutSrvImagesToDom();
+                renderWhyChooseUsSection();
+                renderServicesSection();
+                renderProjectsSection();
+                renderCustomSections();
+                updateTotalCountDisplay();
+
+                const listModal = document.getElementById('device-list-modal');
+                if (listModal && !listModal.classList.contains('hidden')) {
+                    renderDeviceListModalContent();
+                }
+
+                const targetCode = _pendingQrLookupCode || currentViewingDeviceCode;
+                if (targetCode) {
+                    const matched = findDeviceInMap(getDeviceDatabase(), targetCode);
+                    if (matched) {
+                        renderDeviceReport(matched);
+                        _pendingQrLookupCode = null;
+                    }
+                }
+            } catch (e) {}
+        };
+
+        // 10. Ghi đè Xóa thiết bị để xóa trực tiếp node trên Firebase
+        executeDeleteDevice = async function() {
+            if (!deviceToDeleteCode) return;
+            const db = getDeviceDatabase();
+            const deletedCode = String(deviceToDeleteCode).trim().toUpperCase();
+            if (db[deletedCode]) {
+                delete db[deletedCode];
+                _ramDeviceDbCache = db;
+                safeSetLocalStorage('hicon_device_db', JSON.stringify(db));
+                updateTotalCountDisplay();
+                renderDeviceListModalContent();
+
+                let synced = false;
+                if (navigator.onLine) {
+                    try {
+                        const safeKey = toFirebaseSafeKey(deletedCode);
+                        const res = await fetch(`${FIREBASE_DB_URL}/hicon_system/devices/${encodeURIComponent(safeKey)}.json`, {
+                            method: 'DELETE'
+                        });
+                        if (safeKey !== deletedCode) {
+                            fetch(`${FIREBASE_DB_URL}/hicon_system/devices/${encodeURIComponent(deletedCode)}.json`, { method: 'DELETE' }).catch(() => {});
+                        }
+                        synced = res.ok;
+                    } catch (e) {}
+                }
+                showTopToast(synced ? `Đã xóa thiết bị ${deletedCode} & đồng bộ Cloud!` : `Đã xóa ${deletedCode} trên máy!`, false);
+            }
+            closeDeleteConfirmModal();
+        };
+
+        // 11. Ghi đè Camera quét QR trong App (chống bắn nhiều khung hình liên tiếp + tải Cloud trực tiếp)
+        openCameraQrScanner = function() {
+            _isQrScanLocked = false;
+            document.getElementById('qr-scanner-modal').classList.remove('hidden');
+
+            const startCam = () => {
+                html5QrScanner = new Html5Qrcode("qr-reader");
+                html5QrScanner.start(
+                    { facingMode: "environment" },
+                    { fps: 12, qrbox: { width: 230, height: 230 } },
+                    (decodedText) => {
+                        if (_isQrScanLocked) return;
+                        _isQrScanLocked = true;
+                        closeCameraQrScanner();
+                        handleScannedQrContent(decodedText);
+                    },
+                    () => {}
+                ).catch(() => {
+                    showTopToast('Vui lòng cấp quyền Camera cho ứng dụng để quét mã QR!', true);
+                    closeCameraQrScanner();
+                });
+            };
+
+            if (html5QrScanner) {
+                try {
+                    html5QrScanner.stop().then(() => {
+                        try { html5QrScanner.clear(); } catch (_) {}
+                        startCam();
+                    }).catch(() => {
+                        try { html5QrScanner.clear(); } catch (_) {}
+                        startCam();
+                    });
+                } catch (e) {
+                    startCam();
+                }
+            } else {
+                startCam();
+            }
+        };
+
+        handleScannedQrContent = function(rawText) {
+            const extractedCode = extractDeviceCodeFromQr(rawText);
+            if (!extractedCode) {
+                showTopErrorToast('Không đọc được mã thiết bị từ tem QR này!');
+                return;
+            }
+            navigateTo('maintenance-portal');
+            loadAndDisplayDeviceSmart(extractedCode, true);
+        };
+
+        searchDevice = function() {
+            const input = document.getElementById('device-code-input').value.trim();
+            loadAndDisplayDeviceSmart(input, true);
+        };
+
+        loadSampleDevice = function(code) {
+            loadAndDisplayDeviceSmart(code, true);
+        };
+
+        // Tự động làm mới danh sách khi mở Danh Sách Tổng Hợp (nếu có mạng)
+        const _origOpenDeviceListModalV6 = openDeviceListModal;
+        openDeviceListModal = function() {
+            _origOpenDeviceListModalV6();
+            if (navigator.onLine) {
+                fetch(`${FIREBASE_DB_URL}/hicon_system/devices.json?t=${Date.now()}`, { cache: 'no-store' })
+                    .then(r => r.ok ? r.json() : null)
+                    .then(rawMap => {
+                        if (rawMap && typeof rawMap === 'object') {
+                            const cloudDevices = normalizeDevicesMapFromCloud(rawMap);
+                            const pending = getOfflineDeviceQueue();
+                            const localDb = getDeviceDatabase();
+                            pending.forEach(c => { if (localDb[c]) cloudDevices[c] = localDb[c]; });
+                            _ramDeviceDbCache = cloudDevices;
+                            safeSetLocalStorage('hicon_device_db', JSON.stringify(cloudDevices));
+                            updateTotalCountDisplay();
+                            renderDeviceListModalContent();
+                        }
+                    })
+                    .catch(() => {});
+            }
+        };
+
+        // 12. Ghi đè window.onload để xử lý luồng Quét QR từ Camera sang Web (?code=...) tức thì
+        window.onload = function() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
+            }
+
+            updateNetworkUI();
+            loadAllDynamicDataFromStorage();
+            loadDeviceTemplatesFromStorage();
+            applySavedCmsTextsToDom();
+            applySavedAboutSrvImagesToDom();
+            renderWhyChooseUsSection();
+            renderServicesSection();
+            renderProjectsSection();
+            renderCustomSections();
+            updateTotalCountDisplay();
+            clearDeviceReportDefault();
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const scannedCode = urlParams.get('code') || urlParams.get('CODE');
+            if (scannedCode && scannedCode.trim() !== '') {
+                navigateTo('maintenance-portal');
+                loadAndDisplayDeviceSmart(scannedCode, true);
+            } else {
+                navigateTo('home');
+            }
+
+            // Chạy đồng bộ toàn bộ hệ thống trong nền sau khi ưu tiên tải QR xong
+            setTimeout(() => {
+                pullFromCloudInBackground();
+            }, 400);
+        };
    </script>
 </body>
 </html>
